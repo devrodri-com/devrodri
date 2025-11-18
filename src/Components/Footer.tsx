@@ -1,12 +1,8 @@
 // src/Components/Footer.tsx
 import { motion } from "framer-motion";
 import { FaEnvelope, FaWhatsapp, FaGithub, FaLinkedin } from "react-icons/fa";
-import { useLanguage } from "../LanguageContext";
-import translations from "../translations";
 
 export default function Footer() {
-  const { language } = useLanguage();
-  const t = translations[language];
 
   return (
     <motion.footer
