@@ -81,8 +81,10 @@ export default function SobreMiSection() {
             {language === "es" ? "Hablemos" : "Let’s talk"}
           </a>
         </div>
-        <ul className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[12.5px] tracking-wide text-gray-500/90 uppercase text-center">
-          <li>{language === "es" ? "Stack: Next.js · React · Node.js · Python · Firebase · Docker · CI/CD · Stripe · OpenAI API · Automatizaciones con n8n y MCP" : "Stack: Next.js · React · Node.js · Python · Firebase · Docker · CI/CD · Stripe · OpenAI API · Automations with n8n & MCP"}</li>
+        <ul className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[12.5px] tracking-wide text-gray-500/90">
+          <li>{language === "es"
+            ? "Next.js · React · Node.js · Python · Firebase · Docker · CI/CD · Stripe · OpenAI API · Automatizaciones con n8n y MCP"
+            : "Next.js · React · Node.js · Python · Firebase · Docker · CI/CD · Stripe · OpenAI API · Automations with n8n & MCP"}</li>
         </ul>
         {/* Certifications */}
         <div className="mt-4 flex flex-col items-center gap-1">

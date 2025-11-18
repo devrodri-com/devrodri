@@ -2,7 +2,7 @@
 import { motion } from "framer-motion";
 import { useLanguage } from "../LanguageContext";
 import translations from "../translations";
-import { ShieldCheck, Timer, Zap } from "lucide-react";
+import { CalendarCheck, Clock3, FileText } from "lucide-react";
 
 type BridgeProps = { variant?: "default" | "afterPortfolio" };
 
@@ -22,9 +22,9 @@ export default function TransitionServicesIntro({ variant = "default" }: BridgeP
             : "A clear, frictionless way to get started.",
         cta: language === "es" ? "Agendar llamada" : "Schedule a call",
         badges: [
-          { icon: <Timer className="h-5 w-5" />, es: "Diagnóstico 20′ gratis", en: "Free 20‑min diagnostic" },
-          { icon: <Zap className="h-5 w-5" />, es: "Propuesta en 24 hs", en: "Proposal within 24 hours" },
-          { icon: <ShieldCheck className="h-5 w-5" />, es: "Kickoff esta semana", en: "Kickoff this week" },
+          { icon: <Clock3 className="h-4 w-4 stroke-[2] text-[#3B82F6]" />, es: "Diagnóstico 20′ gratis", en: "Free 20-min diagnostic" },
+          { icon: <FileText className="h-4 w-4 stroke-[2] text-[#3B82F6]" />, es: "Propuesta en 24 hs", en: "Proposal within 24 hours" },
+          { icon: <CalendarCheck className="h-4 w-4 stroke-[2] text-[#3B82F6]" />, es: "Kickoff esta semana", en: "Kickoff this week" },
         ],
         href: "/#contacto",
       } as const;
@@ -70,9 +70,9 @@ export default function TransitionServicesIntro({ variant = "default" }: BridgeP
               {V.badges.map((b, i) => (
                 <div
                   key={i}
-                  className="flex h-11 items-center justify-center gap-2 rounded-xl ring-1 ring-gray-200 bg-white/95 shadow-sm px-4"
+                  className="flex h-11 items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-4"
                 >
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-50 text-blue-600" aria-hidden>
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-gray-600 ring-1 ring-gray-200" aria-hidden>
                     {b.icon}
                   </div>
                   <span className="text-[13.5px] font-medium text-gray-700 whitespace-normal sm:whitespace-nowrap">

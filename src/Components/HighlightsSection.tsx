@@ -1,6 +1,5 @@
 // src/Components/HighlightsSection.tsx
-import { LuZap, LuSmartphone, LuTarget, LuRocket, LuWorkflow, LuCreditCard } from "react-icons/lu";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Zap, Smartphone, Target, Rocket, Workflow, CreditCard } from "lucide-react";
 import { useLanguage } from "../LanguageContext";
 import translations from "../translations";
 import SeoHighlightsSection from "./SeoHighlightsSection";
@@ -8,33 +7,33 @@ import { useRef, useEffect } from "react";
 
 const iconMap = {
   fast: (
-    <div className="p-1.5 bg-white/75 rounded-full ring-1 ring-white/40 shadow-sm">
-      <LuZap className="text-[34px] text-blue-600" />
+    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/70 ring-1 ring-white/40 backdrop-blur-sm">
+      <Zap className="h-7 w-7 stroke-[1.8] text-[#3B82F6]" />
     </div>
   ),
   responsive: (
-    <div className="p-1.5 bg-white/75 rounded-full ring-1 ring-white/40 shadow-sm">
-      <LuSmartphone className="text-[34px] text-blue-600" />
+    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/70 ring-1 ring-white/40 backdrop-blur-sm">
+      <Smartphone className="h-7 w-7 stroke-[1.8] text-[#3B82F6]" />
     </div>
   ),
   results: (
-    <div className="p-1.5 bg-white/75 rounded-full ring-1 ring-white/40 shadow-sm">
-      <LuTarget className="text-[34px] text-blue-600" />
+    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/70 ring-1 ring-white/40 backdrop-blur-sm">
+      <Target className="h-7 w-7 stroke-[1.8] text-[#3B82F6]" />
     </div>
   ),
   seo: (
-    <div className="p-1.5 bg-white/75 rounded-full ring-1 ring-white/40 shadow-sm">
-      <LuRocket className="text-[34px] text-blue-600" />
+    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/70 ring-1 ring-white/40 backdrop-blur-sm">
+      <Rocket className="h-7 w-7 stroke-[1.8] text-[#3B82F6]" />
     </div>
   ),
   automation: (
-    <div className="p-1.5 bg-white/80 rounded-full ring-1 ring-white/40 shadow-sm">
-      <LuWorkflow className="text-3xl text-blue-600" />
+    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/70 ring-1 ring-white/40 backdrop-blur-sm">
+      <Workflow className="h-7 w-7 stroke-[1.8] text-[#3B82F6]" />
     </div>
   ),
   payments: (
-    <div className="p-1.5 bg-white/80 rounded-full ring-1 ring-white/40 shadow-sm">
-      <LuCreditCard className="text-3xl text-blue-600" />
+    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/70 ring-1 ring-white/40 backdrop-blur-sm">
+      <CreditCard className="h-7 w-7 stroke-[1.8] text-[#3B82F6]" />
     </div>
   ),
 };
