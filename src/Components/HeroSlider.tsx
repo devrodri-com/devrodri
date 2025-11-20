@@ -253,14 +253,21 @@ export default function HeroSlider() {
       <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-b from-transparent to-black pointer-events-none" />
 
       {/* Indicadores */}
-      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 z-20">
-        {slides.map((_, i) => (
+      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 z-20" role="tablist" aria-label={language === "es" ? "Navegación de slides" : "Slide navigation"}>
+        {slides.map((slide, i) => (
           <button
             key={i}
             onClick={() => setIndex(i)}
             className={`h-2 w-2 rounded-full transition-all duration-300 ${
               i === index ? "bg-white" : "border border-white"
             }`}
+            role="tab"
+            aria-label={language === "es" 
+              ? `Ir al slide ${i + 1} de ${slides.length}: ${slide.title[language]}`
+              : `Go to slide ${i + 1} of ${slides.length}: ${slide.title[language]}`
+            }
+            aria-selected={i === index}
+            aria-controls={`slide-${i}`}
           ></button>
         ))}
       </div>
@@ -270,14 +277,14 @@ export default function HeroSlider() {
         <button
           onClick={() => handleSwipe("right")}
           className="bg-black/40 hover:bg-black/70 text-white rounded-full p-2 transition-all duration-300 pointer-events-auto"
-          aria-label="Slide anterior"
+          aria-label={language === "es" ? "Slide anterior" : "Previous slide"}
         >
           <ChevronLeft className="h-6 w-6" />
         </button>
         <button
           onClick={() => handleSwipe("left")}
           className="bg-black/40 hover:bg-black/70 text-white rounded-full p-2 transition-all duration-300 pointer-events-auto"
-          aria-label="Slide siguiente"
+          aria-label={language === "es" ? "Slide siguiente" : "Next slide"}
         >
           <ChevronRight className="h-6 w-6" />
         </button>

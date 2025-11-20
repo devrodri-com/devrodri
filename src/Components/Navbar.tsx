@@ -30,7 +30,7 @@ export default function Navbar() {
         <Link
           to="/"
           className="text-lg font-medium text-white tracking-normal leading-snug hover:opacity-80 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded"
-          aria-label="Ir al inicio"
+          aria-label={language === "es" ? "Ir al inicio" : "Go to home"}
         >
           Rodrigo Opalo
         </Link>
@@ -40,7 +40,8 @@ export default function Navbar() {
           <button
             onClick={toggleMenu}
             className="text-white text-xl focus:outline-none"
-            aria-label="Toggle menu"
+            aria-label={menuOpen ? (language === "es" ? "Cerrar menú" : "Close menu") : (language === "es" ? "Abrir menú" : "Open menu")}
+            aria-expanded={menuOpen}
           >
             {menuOpen ? <FaTimes /> : <FaBars />}
           </button>
@@ -56,16 +57,20 @@ export default function Navbar() {
 
           {/* Selector de idioma */}
           <div className="flex items-center gap-2 ml-4">
-            <FiGlobe className="text-white text-lg" />
+            <FiGlobe className="text-white text-lg" aria-hidden="true" />
             <button
               onClick={() => setLanguage("es")}
               className={`text-sm ${language === "es" ? "text-primary" : "text-white"} hover:text-primary transition`}
+              aria-label={language === "es" ? "Idioma español seleccionado" : "Switch to Spanish"}
+              aria-pressed={language === "es"}
             >
               ES
             </button>
             <button
               onClick={() => setLanguage("en")}
               className={`text-sm ${language === "en" ? "text-primary" : "text-white"} hover:text-primary transition`}
+              aria-label={language === "es" ? "Cambiar a inglés" : "Switch to English"}
+              aria-pressed={language === "en"}
             >
               EN
             </button>
@@ -75,23 +80,31 @@ export default function Navbar() {
 
       {/* Menú desplegable mobile */}
       {menuOpen && (
-        <div className="sm:hidden px-4 pb-4 flex flex-col items-center space-y-4 text-sm font-medium bg-black/80 backdrop-blur-sm text-white">
+        <div 
+          className="sm:hidden px-4 pb-4 flex flex-col items-center space-y-4 text-sm font-medium bg-black/80 backdrop-blur-sm text-white"
+          role="menu"
+          aria-label={language === "es" ? "Menú de navegación" : "Navigation menu"}
+        >
           <Link to="/#sobremi" onClick={closeMenu} className="hover:text-primary transition">{t.nav.about}</Link>
           <Link to="/#porqueelegirnos" onClick={closeMenu} className="hover:text-primary transition">{t.nav.why}</Link>
           <Link to="/portfolio" onClick={closeMenu} className="hover:text-primary transition">{t.nav.portfolio}</Link>
           <Link to="/#contacto" onClick={closeMenu} className="hover:text-primary transition">{t.nav.contact}</Link>
           <Link to="/#faq" onClick={closeMenu} className="hover:text-primary transition">{t.nav.faq}</Link>
           <div className="flex items-center gap-2 mt-2">
-            <FiGlobe className="text-white text-lg" />
+            <FiGlobe className="text-white text-lg" aria-hidden="true" />
             <button
               onClick={() => setLanguage("es")}
               className={`text-sm ${language === "es" ? "text-primary" : "text-white"} hover:text-primary transition`}
+              aria-label={language === "es" ? "Idioma español seleccionado" : "Switch to Spanish"}
+              aria-pressed={language === "es"}
             >
               ES
             </button>
             <button
               onClick={() => setLanguage("en")}
               className={`text-sm ${language === "en" ? "text-primary" : "text-white"} hover:text-primary transition`}
+              aria-label={language === "es" ? "Cambiar a inglés" : "Switch to English"}
+              aria-pressed={language === "en"}
             >
               EN
             </button>
