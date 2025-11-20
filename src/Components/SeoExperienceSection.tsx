@@ -1,12 +1,9 @@
 // src/Components/SeoExperienceSection.tsx
-
 import { Helmet } from "react-helmet-async";
 import { useLanguage } from "../LanguageContext";
-import translations from "../translations";
 
 export default function SeoExperienceSection() {
   const { language } = useLanguage();
-  const t = translations[language];
 
   const seo = {
     title: language === "es" ? "Más que diseño, creo experiencias" : "More than design, I create experiences",
