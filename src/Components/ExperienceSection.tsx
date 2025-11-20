@@ -1,22 +1,14 @@
 // src/Components/ExperienceSection.tsx
 import { useLanguage } from "../LanguageContext";
 import translations from "../translations";
-import { useEffect, useState } from "react";
 import SeoExperienceSection from "./SeoExperienceSection";
 
 export default function ExperienceSection() {
   const { language } = useLanguage();
   const t = translations[language];
 
-  // 👇 Forzar re-render al cambiar idioma
-  const [key, setKey] = useState(0);
-  useEffect(() => {
-    setKey((prev) => prev + 1);
-  }, [language]);
-
   return (
     <section
-      key={key}
       id="experiencia"
       data-section="experience"
       className="bg-black text-white py-28 px-4 sm:px-6"

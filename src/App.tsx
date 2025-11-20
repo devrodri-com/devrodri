@@ -2,7 +2,7 @@
 import { useLanguage } from "./LanguageContext";
 import { HelmetProvider } from "react-helmet-async";
 import SeoHead from "./Components/SeoHead";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import HeroSlider from "./Components/HeroSlider";
 import SobreMiSection from "./Components/SobreMiSection";
 import HighlightsSection from "./Components/HighlightsSection";

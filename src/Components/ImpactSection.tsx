@@ -1,24 +1,16 @@
 // src/Components/ImpactSection.tsx
 import { useLanguage } from "../LanguageContext";
 import translations from "../translations";
-import { useEffect, useState } from "react";
 import SeoImpactSection from "./SeoImpactSection";
 
 export default function ImpactSection() {
   const { language } = useLanguage();
   const t = translations[language];
 
-  // 👇 Forzar re-render al cambiar idioma
-  const [key, setKey] = useState(0);
-  useEffect(() => {
-    setKey((prev) => prev + 1);
-  }, [language]);
-
   return (
     <>
       <SeoImpactSection />
       <section
-        key={key}
         id="impacto"
         className="bg-black text-white py-28 px-4 sm:px-6"
       >
