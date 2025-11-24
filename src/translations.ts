@@ -177,7 +177,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
       about: "Sobre mí",
       why: "Por qué elegirnos",
       services: "Servicios", // si lo dejás o lo quitás depende de si usarás esa sección
-      portfolio: "Portfolio",
+      portfolio: "Portafolio",
       contact: "Contacto",
       faq: "FAQ"
     },
