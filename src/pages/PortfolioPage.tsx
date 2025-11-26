@@ -87,12 +87,13 @@ const caseDetails: Record<ProjectKey, {
     summaryEs: "Sitio inmobiliario para preconstrucción en Miami. Incluye catálogo dinámico de proyectos, galerías, planos de pago, fichas multilenguaje (ES/EN), integración con WhatsApp y optimización SEO.",
     summaryEn: "Real‑estate site for Miami preconstruction. Dynamic project catalog, galleries, payment plans, ES/EN pages, WhatsApp integration and SEO optimization.",
     stack: [
-      "Frontend: Next.js (App Router) + TypeScript + Tailwind",
-      "Firebase: Hosting · Auth · Storage",
-      "Multilenguaje: next-intl"
+      "Frontend: Next.js 15 (App Router) + TypeScript + Tailwind",
+      "Multilenguaje: next-intl (ES/EN)",
+      "Deploy: Vercel",
+      "Sistema de diseño reutilizable (componentes React, Navy + Gold)"
     ],
     integrations: [
-      "Cloudinary/ImageKit (imágenes de proyectos)",
+      "ImageKit (imágenes optimizadas de proyectos)",
       "Google Maps embebido",
       "WhatsApp (botones de contacto)",
       "Google Calendar (agendar reunión)"
