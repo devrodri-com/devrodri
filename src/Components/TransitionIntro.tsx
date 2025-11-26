@@ -1,4 +1,4 @@
-// Components/TransitionIntro.tsx
+/*
 import { useLanguage } from "../LanguageContext";
 import translations from "../translations";
 import { LuChevronDown } from "react-icons/lu";
@@ -19,3 +19,4 @@ export default function TransitionIntro() {
     </div>
   );
 }
+*/

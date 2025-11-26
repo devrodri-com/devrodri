@@ -1,3 +1,4 @@
+/*
 import { motion } from "framer-motion";
 import { useLanguage } from "../LanguageContext";
 import translations from "../translations";
@@ -48,3 +49,4 @@ export default function TestimonialsSection() {
     </motion.section>
   );
 }
+*/

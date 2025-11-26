@@ -23,8 +23,8 @@ export default function SeoHead() {
         content={language === "es" ? "es_ES" : "en_US"}
       />
       <meta property="og:site_name" content="Rodrigo Opalo" />
-      <meta property="og:url" content="https://www.rodrigoopalo.com" />
-      {/* <meta property="og:image" content="https://www.rodrigoopalo.com/img/meta-cover.jpg" /> */}
+      <meta property="og:url" content="https://www.devrodri.com" />
+      <meta property="og:image" content="https://www.devrodri.com/img/meta-cover.jpg" />
     </Helmet>
   );
 }

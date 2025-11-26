@@ -51,7 +51,8 @@ export default function ContactSection() {
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
   <img
     src="/img/contact-bg.jpg"
-    alt="Contacto"
+    alt=""
+    aria-hidden="true"
     loading="lazy"
     decoding="async"
     className="absolute inset-0 w-full h-full object-cover opacity-100"

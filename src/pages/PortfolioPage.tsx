@@ -3,6 +3,7 @@ import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import { useLanguage } from "../LanguageContext";
 import translations from "../translations";
+import SeoPortfolioSection from "../Components/SeoPortfolioSection";
 
 type ProjectKey = "lem" | "esteban" | "mutter" | "federico" | "bionova" | "boating";
 type Project = { key: ProjectKey; href: string; cover: string };
@@ -334,8 +335,10 @@ export default function PortfolioPage() {
   };
 
   return (
-    <section className="py-24 bg-white">
-      <div className="max-w-7xl mx-auto px-6">
+    <>
+      <SeoPortfolioSection />
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold tracking-tight">{t.portfolio.title}</h1>
           <p className="text-gray-600 mt-2 max-w-[44rem] mx-auto">
@@ -379,7 +382,13 @@ export default function PortfolioPage() {
             >
               <div className="flex flex-col md:flex-row">
                 <div className="md:w-5/12 p-4 md:p-6">
-                  <img src={p.cover} alt={P[p.key].title} className="w-full h-64 md:h-full object-cover rounded-xl" />
+                  <img
+                    src={p.cover}
+                    alt={language === "es" ? `Imagen del proyecto ${P[p.key].title}` : `Project cover: ${P[p.key].title}`}
+                    className="w-full h-64 md:h-full object-cover rounded-xl"
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </div>
                 <div className="md:w-7/12 p-6">
                   <h3 className="text-xl font-semibold tracking-tight">{P[p.key].title}</h3>
@@ -437,7 +446,8 @@ export default function PortfolioPage() {
             </motion.div>
           ))}
         </div>
-      </div>
-    </section>
+        </div>
+      </section>
+    </>
   );
 }

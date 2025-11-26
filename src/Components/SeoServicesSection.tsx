@@ -1,3 +1,4 @@
+/* 
 import { Helmet } from "react-helmet-async";
 import { useLanguage } from "../LanguageContext";
 import translations from "../translations";
@@ -14,3 +15,4 @@ export default function SeoServicesSection() {
     </Helmet>
   );
 }
+*/

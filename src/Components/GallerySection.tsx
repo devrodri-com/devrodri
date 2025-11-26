@@ -1,3 +1,4 @@
+/*
 // src/Components/GallerySection.tsx
 
 import { motion } from "framer-motion";
@@ -55,3 +56,4 @@ export default function GallerySection() {
     </motion.section>
   );
 }
+*/

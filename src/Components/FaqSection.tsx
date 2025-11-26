@@ -78,8 +78,11 @@ export default function FaqSection() {
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <img
           src="/img/faq-bg.jpg"
-          alt="FAQ"
+          alt=""
+          aria-hidden="true"
           className="absolute inset-0 w-full h-full object-cover scale-125" // aumentamos el tamaño
+          loading="lazy"
+          decoding="async"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent" />
       </div>

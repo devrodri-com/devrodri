@@ -101,7 +101,8 @@ function App() {
         <SeoHead />
 
         {/* ✅ Navbar */}
-        <Navbar key={language} />
+        <Navbar />
+
         <ScrollToHash />
 
         <Routes>
