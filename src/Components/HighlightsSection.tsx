@@ -1,5 +1,5 @@
 // src/Components/HighlightsSection.tsx
-import { ChevronDown, Zap, Smartphone, Target, Rocket, Workflow, CreditCard } from "lucide-react";
+import { Zap, Smartphone, Target, Rocket, Workflow, CreditCard } from "lucide-react";
 import { useLanguage } from "../LanguageContext";
 import translations from "../translations";
 import SeoHighlightsSection from "./SeoHighlightsSection";
@@ -84,13 +84,10 @@ export default function HighlightsSection() {
 
   return (
     <>
-      <section className="bg-white text-center pt-6 pb-2">
+      <section className="bg-white text-center pt-6 pb-6">
         <p className="text-sm sm:text-base font-light text-gray-600 tracking-tight">
           {t.transitionIntro.text}
         </p>
-        <div className="flex justify-center mt-1">
-          <ChevronDown className="h-3.5 w-3.5 text-gray-400 animate-bounce" />
-        </div>
       </section>
 
       <section
