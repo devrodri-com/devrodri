@@ -67,7 +67,7 @@ export default function SobreMiSection() {
           <a
             href="/portfolio"
             className="px-5 py-2 rounded-lg bg-[#3B82F6] text-white font-medium hover:opacity-90 transition"
-            aria-label={language === "es" ? "Ver casos del portafolio" : "View portfolio work"}
+            aria-label={language === "es" ? "Ver casos del porfolio" : "View portfolio work"}
             data-analytics="about-cta-primary"
           >
             {language === "es" ? "Ver casos" : "View work"}

@@ -68,7 +68,7 @@ export default function PortfolioSection() {
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
         >
-          {language === "es" ? "Portafolio" : "Portfolio"}
+          {language === "es" ? "Porfolio" : "Portfolio"}
         </motion.p>
 
         <motion.h2

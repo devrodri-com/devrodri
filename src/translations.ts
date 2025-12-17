@@ -97,6 +97,11 @@ export type TranslationsStructure = {
       desc: string;
       link: string;
     };
+    magenta: {
+      title: string;
+      desc: string;
+      link: string;
+    };
     seo: {
       title: string;
       description: string;
@@ -177,7 +182,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
       about: "Sobre mí",
       why: "Por qué elegirnos",
       services: "Servicios", // si lo dejás o lo quitás depende de si usarás esa sección
-      portfolio: "Portafolio",
+      portfolio: "Porfolio",
       contact: "Contacto",
       faq: "FAQ"
     },
@@ -305,6 +310,11 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
         title: "Esteban Firpo · Miami Real Estate",
         desc: "Sitio inmobiliario de preconstrucción en Miami. Catálogo de proyectos, galerías, planes de pago y fichas ES/EN con integración a WhatsApp y SEO optimizado.",
         link: "Ver sitio web",
+      },
+      magenta: {
+        title: "Imprenta Magenta · Paysandú, Uruguay",
+        desc: "Imprenta moderna especializada en impresión digital, offset y packaging gastronómico. Catálogo optimizado, formulario dinámico y SEO completo. MVP funcional ya activo.",
+        link: "Ver sitio",
       },
       seo: {
         title: "Portfolio | Rodrigo Opalo",
@@ -562,6 +572,11 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
         title: "Esteban Firpo · Miami Real Estate",
         desc: "Miami preconstruction real‑estate site. Project catalog, galleries, payment plans and ES/EN pages with WhatsApp integration and optimized SEO.",
         link: "View website",
+      },
+      magenta: {
+        title: "Imprenta Magenta · Paysandú, Uruguay",
+        desc: "Modern print shop specializing in digital printing, offset and food packaging. Optimized catalog, dynamic quote form and full SEO. Functional MVP currently live.",
+        link: "Visit site",
       },
       seo: {
         title: "Portfolio | Rodrigo Opalo",

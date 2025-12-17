@@ -26,7 +26,7 @@ export default function ImpactSection() {
             <div className="flex flex-wrap gap-3">
               <a
                 href="/portfolio"
-                aria-label={language === "es" ? "Ver casos del portafolio" : "View portfolio work"}
+                aria-label={language === "es" ? "Ver casos del porfolio" : "View portfolio work"}
                 data-analytics="impact-cta-primary"
                 className="px-5 py-2 rounded-lg bg-[#3B82F6] text-white font-medium hover:opacity-90 transition"
               >
