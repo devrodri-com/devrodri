@@ -19,13 +19,22 @@ export default function PortfolioSection() {
           : "Real estate · Landing, catalog and technical SEO to capture pre-construction leads.",
     },
     {
-      key: "lem",
+      key: "lem_web",
       logo: "/img/lem-box-cover.jpg",
-      title: t.portfolio.lem.title,
+      title: t.portfolio.lem_web.title,
       summary:
         language === "es"
-          ? "Logística internacional · Web a medida e integraciones para gestionar envíos y clientes."
-          : "International logistics · Custom site and integrations to manage shipments and customers.",
+          ? "Logística internacional · Web multipaís (UY/AR), SEO y performance para captar clientes."
+          : "International logistics · Multi-country web (UY/AR), SEO and performance to acquire customers.",
+    },
+    {
+      key: "lem_portal",
+      logo: "/img/lem-box-cover.jpg",
+      title: t.portfolio.lem_portal.title,
+      summary:
+        language === "es"
+          ? "Operativa & pagos · Portal interno con roles, tracking, cajas/embarques y Stripe."
+          : "Ops & payments · Internal portal with roles, tracking, boxes/shipments and Stripe.",
     },
     {
       key: "mutter",

@@ -5,13 +5,14 @@ import { useLanguage } from "../LanguageContext";
 import translations from "../translations";
 import SeoPortfolioSection from "../Components/SeoPortfolioSection";
 
-type ProjectKey = "lem" | "esteban" | "mutter" | "federico" | "bionova" | "boating" | "magenta";
+type ProjectKey = "lem_web" | "lem_portal" | "esteban" | "mutter" | "federico" | "bionova" | "boating" | "magenta";
 type Project = { key: ProjectKey; href: string; cover: string };
 
 const projects: Project[] = [
   { key: "magenta", href: "https://magenta-paysandu-m5in.vercel.app", cover: "/img/magenta-cover.svg" },
   { key: "esteban", href: "https://estebanfirpo.com", cover: "/img/esteban.jpg" },
-  { key: "lem",   href: "https://lem-box.com.uy",            cover: "/img/lem-box-cover.jpg" },
+  { key: "lem_web",   href: "https://lem-box.com.uy",            cover: "/img/lem-box-cover.jpg" },
+  { key: "lem_portal",   href: "https://portal.lem-box.com",            cover: "/img/lem-box-cover.jpg" },
   { key: "mutter",   href: "https://www.muttergames.com",            cover: "/img/mutter-cover.jpg" },
   { key: "federico", href: "https://www.federicoroma.com",            cover: "/img/federico-cover.jpg" },
   { key: "bionova",  href: "https://www.getbionova.com",              cover: "/img/bionova-cover.jpg" },
@@ -20,7 +21,8 @@ const projects: Project[] = [
 
 type Category = "all" | "ecom" | "personal" | "services";
 const projectMeta: Record<ProjectKey, { category: Category; tags: string[]; tagsEn: string[] }> = {
-  lem:      { category: "services", tags: ["Logística", "Next.js"],         tagsEn: ["Logistics", "Next.js"] },
+  lem_web:      { category: "services", tags: ["Logística", "Next.js", "SEO", "Multi-país"],         tagsEn: ["Logistics", "Next.js", "SEO", "Multi-country"] },
+  lem_portal:      { category: "services", tags: ["Portal", "Firebase", "Stripe", "Permisos"],         tagsEn: ["Portal", "Firebase", "Stripe", "RBAC"] },
   esteban:  { category: "services", tags: ["Real Estate", "Next.js"],     tagsEn: ["Real Estate", "Next.js"] },
   mutter:   { category: "ecom",     tags: ["E‑commerce", "Mercado Pago"],            tagsEn: ["E‑commerce", "Mercado Pago"] },
   federico: { category: "personal", tags: ["Marca personal", "Cursos"],             tagsEn: ["Personal brand", "Courses"] },
@@ -44,47 +46,112 @@ const caseDetails: Record<ProjectKey, {
   solutionEs: string[]; solutionEn: string[];
   resultsEs: string[]; resultsEn: string[];
 }> = {
-  lem: {
-    summaryEs: "Logística en Miami y envíos internacionales (Uruguay + Argentina). Landing mobile-first, multipaís y contacto con Resend.",
-    summaryEn: "Logistics in Miami and international shipping (Uruguay + Argentina). Mobile-first, multi-country landing with Resend contact.",
+  lem_web: {
+    summaryEs: "Logística en Miami y envíos internacionales (Uruguay + Argentina). Landing mobile-first, multipaís y contacto con Resend. Sitios: lem-box.com.uy y lem-box.com.ar",
+    summaryEn: "Logistics in Miami and international shipping (Uruguay + Argentina). Mobile-first, multi-country landing with Resend contact. Sites: lem-box.com.uy and lem-box.com.ar",
     stack: [
       "Frontend: Next.js 15 + TypeScript + Tailwind",
       "Hosting: Vercel",
       "Integraciones: WhatsApp · Instagram · Email (Resend)",
-      "Roadmap multipaís: lem-box.com (selector), lem-box.com.uy, lem-box.com.ar"
+      "Arquitectura multipaís: lem-box.com (selector), lem-box.com.uy, lem-box.com.ar"
     ],
     integrations: ["Resend (email)", "WhatsApp", "Instagram"],
     challengesEs: [
       "Crear un sitio de logística con estética premium (Apple-like) en un rubro tradicional",
       "Alinear branding digital con la operativa real de un warehouse en Miami",
-      "Optimizar tiempos de carga y experiencia mobile"
+      "Optimizar tiempos de carga y experiencia mobile",
+      "Implementar arquitectura multipaís con SEO específico por país"
     ],
     challengesEn: [
       "Build a premium (Apple-like) logistics site in a traditional industry",
       "Align digital branding with the real Miami warehouse operations",
-      "Optimize load times and mobile UX"
+      "Optimize load times and mobile UX",
+      "Implement multi-country architecture with country-specific SEO"
     ],
     solutionEs: [
       "Diseño consistente y minimalista con colores corporativos (#02120F y #EB6619)",
       "Flujo de navegación claro: landing → contacto → WhatsApp/email",
       "Implementación de arquitectura multipaís (selector + sitios locales)",
-      "SEO optimizado para Uruguay y Argentina"
+      "SEO optimizado para Uruguay y Argentina con metadata específica"
     ],
     solutionEn: [
       "Consistent, minimal design with brand colors (#02120F and #EB6619)",
       "Clear navigation flow: landing → contact → WhatsApp/email",
       "Multi-country architecture (selector + local sites)",
-      "SEO optimized for Uruguay and Argentina"
+      "SEO optimized for Uruguay and Argentina with specific metadata"
     ],
     resultsEs: [
       "Primera versión productiva en Uruguay lista para producción",
-      "Roadmap claro para expansión regional",
-      "Sitio rápido, responsive y con identidad propia, diferenciado de la competencia"
+      "Roadmap claro para expansión regional (Argentina activa)",
+      "Sitio rápido, responsive y con identidad propia, diferenciado de la competencia",
+      "Performance optimizado para ambos países con carga rápida"
     ],
     resultsEn: [
       "First productive version for Uruguay, ready for production",
-      "Clear roadmap for regional expansion",
-      "Fast, responsive site with its own identity"
+      "Clear roadmap for regional expansion (Argentina active)",
+      "Fast, responsive site with its own identity",
+      "Optimized performance for both countries with fast loading"
+    ],
+  },
+  lem_portal: {
+    summaryEs: "Sistema operativo para gestión de logística con roles (superadmin/admin/operador/partner/client), trazabilidad, cajas/embarques, facturación y pagos con Stripe. Acceso restringido (requiere credenciales).",
+    summaryEn: "Operational system for logistics management with roles (superadmin/admin/operator/partner/client), traceability, boxes/shipments, invoicing and Stripe payments. Restricted access (credentials required).",
+    stack: [
+      "Frontend: React + TypeScript + TailwindCSS",
+      "Backend: Firebase (Auth, Firestore, Storage)",
+      "Pagos: Stripe Checkout + Webhooks",
+      "Seguridad: Firestore Rules + Custom Claims",
+      "Búsqueda: Paginación con tokens + índices escalables",
+      "UI: Componentes modulares + gestión de permisos"
+    ],
+    integrations: [
+      "Firebase Authentication (roles y claims)",
+      "Firestore (datos + reglas de seguridad)",
+      "Firebase Storage (multi-foto inbound)",
+      "Stripe (checkout + webhooks para facturación)",
+      "Sistema de permisos RBAC (Role-Based Access Control)"
+    ],
+    challengesEs: [
+      "Implementar sistema de roles granular (superadmin/admin/operador/partner/client) con permisos específicos",
+      "Gestionar trazabilidad completa de cajas y embarques con búsqueda escalable",
+      "Integrar facturación con Stripe y webhooks para sincronización en tiempo real",
+      "Crear sistema de inbound multi-foto con galería y gestión de permisos por rol",
+      "Asegurar Firestore Rules y Custom Claims para reconciliación de permisos"
+    ],
+    challengesEn: [
+      "Implement granular role system (superadmin/admin/operator/partner/client) with specific permissions",
+      "Manage complete traceability of boxes and shipments with scalable search",
+      "Integrate invoicing with Stripe and webhooks for real-time synchronization",
+      "Create multi-photo inbound system with gallery and role-based permission management",
+      "Secure Firestore Rules and Custom Claims for permission reconciliation"
+    ],
+    solutionEs: [
+      "Arquitectura de roles con Custom Claims en Firebase Auth y verificación en Firestore Rules",
+      "Búsqueda escalable con paginación basada en tokens y índices optimizados",
+      "Integración completa de Stripe: checkout embebido, webhooks para actualización de estado y facturación automática",
+      "Sistema de inbound con carga múltiple de fotos, galería organizada y permisos por operador",
+      "Firestore Rules dinámicas que validan roles y claims en tiempo real"
+    ],
+    solutionEn: [
+      "Role architecture with Custom Claims in Firebase Auth and verification in Firestore Rules",
+      "Scalable search with token-based pagination and optimized indexes",
+      "Complete Stripe integration: embedded checkout, webhooks for status updates and automatic invoicing",
+      "Inbound system with multiple photo upload, organized gallery and operator-based permissions",
+      "Dynamic Firestore Rules that validate roles and claims in real-time"
+    ],
+    resultsEs: [
+      "Sistema operativo completo con control de acceso granular y trazabilidad total",
+      "Facturación automatizada con Stripe y sincronización en tiempo real",
+      "Búsqueda escalable que maneja grandes volúmenes de datos sin degradación",
+      "Gestión eficiente de inbound con multi-foto y permisos por operador",
+      "Arquitectura segura lista para escalar con múltiples usuarios y roles"
+    ],
+    resultsEn: [
+      "Complete operational system with granular access control and full traceability",
+      "Automated invoicing with Stripe and real-time synchronization",
+      "Scalable search that handles large data volumes without degradation",
+      "Efficient inbound management with multi-photo and operator-based permissions",
+      "Secure architecture ready to scale with multiple users and roles"
     ],
   },
   esteban: {
@@ -396,7 +463,8 @@ export default function PortfolioPage() {
 
   const [filter, setFilter] = useState<Category>("all");
   const [expanded, setExpanded] = useState<Record<ProjectKey, boolean>>({
-    lem: false,
+    lem_web: false,
+    lem_portal: false,
     esteban: false,
     mutter: false,
     federico: false,
@@ -410,7 +478,8 @@ export default function PortfolioPage() {
 
   // Helper tipado para evitar problemas con acceso dinámico
   const P: Record<ProjectKey, { title: string; desc: string; link: string }> = {
-    lem: t.portfolio.lem,
+    lem_web: t.portfolio.lem_web,
+    lem_portal: t.portfolio.lem_portal,
     esteban: t.portfolio.esteban,
     mutter: t.portfolio.mutter,
     federico: t.portfolio.federico,
@@ -479,8 +548,21 @@ export default function PortfolioPage() {
                   <h3 className="text-xl font-semibold tracking-tight">{P[p.key].title}</h3>
                   <p className="text-gray-700 mt-2 max-w-[62ch]">{P[p.key].desc}</p>
                   <p className="mt-3 text-sm text-gray-600">• {(language === "es" ? projectMeta[p.key].tags : projectMeta[p.key].tagsEn).join(" · ")}</p>
-                  <div className="mt-4 flex items-center gap-4">
-                    <a href={p.href} target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:text-primary-dark underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">{P[p.key].link}</a>
+                  <div className="mt-4 flex items-center gap-4 flex-wrap">
+                    {p.key === "lem_web" ? (
+                      <>
+                        <a href="https://lem-box.com.uy" target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:text-primary-dark underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">UY</a>
+                        <span className="text-gray-400">·</span>
+                        <a href="https://lem-box.com.ar" target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:text-primary-dark underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">AR</a>
+                      </>
+                    ) : p.key === "lem_portal" ? (
+                      <>
+                        <a href={p.href} target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:text-primary-dark underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">{P[p.key].link}</a>
+                        <span className="text-xs text-gray-500">({language === "es" ? "requiere credenciales" : "credentials required"})</span>
+                      </>
+                    ) : (
+                      <a href={p.href} target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:text-primary-dark underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">{P[p.key].link}</a>
+                    )}
                     <button
                       onClick={() => setExpanded(e => ({ ...e, [p.key]: !e[p.key] }))}
                       className="text-sm text-gray-700 hover:text-black underline focus-visible:ring-2 ring-offset-2 ring-gray-300 rounded-sm"

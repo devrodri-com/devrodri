@@ -87,7 +87,12 @@ export type TranslationsStructure = {
       desc: string;
       link: string;
     };
-    lem: {
+    lem_web: {
+      title: string;
+      desc: string;
+      link: string;
+    };
+    lem_portal: {
       title: string;
       desc: string;
       link: string;
@@ -301,10 +306,15 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
         desc: "E-commerce de videojuegos, consolas y accesorios. Catálogo dinámico, carrito y checkout con Mercado Pago, SEO y diseño responsive.",
         link: "Ver sitio web",
       },
-      lem: {
-        title: "LEM-BOX",
-        desc: "Logística en Miami y envíos internacionales (Uruguay + Argentina). Landing mobile-first multipaís con contacto integrado (Resend) y SEO optimizado.",
+      lem_web: {
+        title: "LEM-BOX Web (UY/AR)",
+        desc: "Landing multipaís para logística (Uruguay/Argentina), mobile-first, SEO y contacto.",
         link: "Ver sitio web",
+      },
+      lem_portal: {
+        title: "LEM-BOX Portal (Sistema)",
+        desc: "Sistema operativo con roles, trazabilidad, cajas/embarques, facturación y pagos (Stripe).",
+        link: "Ver portal",
       },
       esteban: {
         title: "Esteban Firpo · Miami Real Estate",
@@ -563,10 +573,15 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
         desc: "E-commerce for video games, consoles and accessories. Dynamic catalog, cart and checkout with Mercado Pago, SEO and responsive design.",
         link: "View website",
       },
-      lem: {
-        title: "LEM-BOX",
-        desc: "Logistics in Miami and international shipping (Uruguay + Argentina). Mobile-first multi-country landing with integrated contact (Resend) and optimized SEO.",
+      lem_web: {
+        title: "LEM-BOX Web (UY/AR)",
+        desc: "Multi-country landing for logistics (Uruguay/Argentina), mobile-first, SEO and contact.",
         link: "View website",
+      },
+      lem_portal: {
+        title: "LEM-BOX Portal (System)",
+        desc: "Operational system with roles, traceability, boxes/shipments, invoicing and payments (Stripe).",
+        link: "View portal",
       },
       esteban: {
         title: "Esteban Firpo · Miami Real Estate",
