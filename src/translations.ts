@@ -215,9 +215,9 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
     },
     experience: {
       title1: "Más que diseño.",
-      title2: "Creamos experiencias.",
+      title2: "Creo experiencias.",
       description:
-        "Nos enfocamos en crear sitios que comuniquen antes de que el usuario haga clic. Interfaces intuitivas, limpias, veloces. Diseño funcional que se siente y se ve.",
+        "Me enfoco en crear sitios que comuniquen antes de que el usuario haga clic. Interfaces intuitivas, limpias y veloces. Diseño funcional que se siente y se ve.",
     },
     highlights: {
       title: "¿Por qué elegirnos?",
@@ -413,7 +413,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
       },
     },
     transitionIntro: {
-      text: "Transformamos ideas en experiencias digitales con propósito.",
+      text: "Transformo ideas en experiencias digitales con propósito.",
     },
     transitionServicesIntro: {
       smallTitle: "CONSTRUYAMOS ALGO INCREÍBLE",
@@ -481,9 +481,9 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
     },
     experience: {
       title1: "More than design.",
-      title2: "We create experiences.",
+      title2: "I create experiences.",
       description:
-        "We focus on building websites that communicate before the user even clicks. Intuitive, clean, and fast interfaces. Functional design that feels and looks right.",
+        "I focus on building websites that communicate before the user even clicks. Intuitive, clean and fast interfaces. Functional design that feels and looks right.",
     },
     highlights: {
       title: "Why choose me?",
@@ -678,7 +678,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
       },
     },
     transitionIntro: {
-      text: "We turn ideas into meaningful digital experiences.",
+      text: "I turn ideas into meaningful digital experiences.",
     },
     transitionServicesIntro: {
       smallTitle: "LET’S BUILD SOMETHING GREAT",
