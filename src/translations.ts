@@ -206,7 +206,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
     about: {
       title: "Sobre mí",
       description:
-  "Somos un equipo liderado por Rodrigo Opalo, desarrollador web y emprendedor. Creamos sitios modernos, rápidos y optimizados para marcas que buscan destacarse. Combinamos diseño, funcionalidad y tecnología de inteligencia artificial para lograr resultados reales. También desarrollamos proyectos como Boating Adventures Miami y LEM-BOX.",
+        "Soy Rodrigo Opalo, desarrollador web y emprendedor. Trabajo bajo la marca devrodri y creo sitios modernos, rápidos y optimizados para marcas que buscan destacarse. Combino diseño, funcionalidad y tecnología de inteligencia artificial para lograr resultados reales. También desarrollo proyectos como Boating Adventures Miami y LEM-BOX.",
       seo: {
         title: "Sobre mí | Rodrigo Opalo",
         description: "Conocé quién está detrás del diseño y desarrollo web. Emprendedor con visión, desarrollador con enfoque en resultados.",
@@ -254,9 +254,9 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
         },
       },
       seo: {
-        title: "¿Por qué elegirnos? | Rodrigo Opalo",
+        title: "¿Por qué elegirme? | Rodrigo Opalo",
         description:
-          "Explorá nuestros diferenciales como desarrolladores web: velocidad, diseño responsive, enfoque en resultados y optimización SEO.",
+          "Explorá mis diferenciales como desarrollador web: velocidad, diseño responsive, enfoque en resultados y optimización SEO.",
         keywords:
           "diseño web, responsive, SEO, velocidad, resultados, desarrollo web, diferencial, elección",
       },
@@ -328,7 +328,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
       },
       seo: {
         title: "Portfolio | Rodrigo Opalo",
-        description: "Explorá algunos de los sitios web desarrollados por nosotros, con diseño moderno, SEO y experiencia optimizada.",
+        description: "Explorá algunos de los sitios web desarrollados por mí, con diseño moderno, SEO y experiencia optimizada.",
         keywords: "portfolio, sitios web, trabajos, diseño, desarrollador web, Rodrigo Opalo",
       },
     },
@@ -426,7 +426,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
       button: "Empezar proyecto",
       seo: {
         title: "Contacto final | Rodrigo Opalo",
-        description: "Creamos juntos un sitio moderno, rápido y optimizado para que tu marca se destaque.",
+        description: "Construyamos juntos un sitio moderno, rápido y optimizado para que tu marca se destaque.",
         keywords: "contacto, empezar proyecto, diseño web, programador freelance, destacar online",
       },
     },
@@ -451,7 +451,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
     },
     nav: {
       about: "About me",
-      why: "Why us",
+      why: "Why choose me",
       services: "Services",
       portfolio: "Portfolio",
       contact: "Contact",
@@ -472,7 +472,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
     about: {
       title: "About me",
       description:
-        "We are a team passionate about modern web development. We combine design, functionality, and strategic positioning to help brands stand out online. Led by Rodrigo Opalo, this project powers initiatives like Boating Adventures Miami and LEM-BOX.",
+        "I’m Rodrigo Opalo, a web developer and entrepreneur. I work under the devrodri brand and build modern, fast, and optimized websites for brands that want to stand out online. I combine design, functionality, and applied AI to deliver real outcomes. I’ve also built projects like Boating Adventures Miami and LEM-BOX.",
       seo: {
         title: "About me | Rodrigo Opalo",
         description: "Meet the team behind the creation of modern, optimized, and purpose-driven websites.",
@@ -595,7 +595,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
       },
       seo: {
         title: "Portfolio | Rodrigo Opalo",
-        description: "Take a look at some of the websites we've built — modern, optimized and user-focused.",
+        description: "Take a look at some of the websites I’ve built — modern, optimized and user-focused.",
         keywords: "portfolio, web design, projects, websites, Rodrigo Opalo, developer",
       },
     },
@@ -690,7 +690,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
       button: "Start project",
       seo: {
         title: "Final contact | Rodrigo Opalo",
-        description: "Let’s build a modern, fast, and optimized site that helps your brand shine.",
+        description: "Let’s build a modern, fast, and optimized site so your brand stands out.",
         keywords: "contact, start project, web design, freelance developer, stand out online",
       },
     },
