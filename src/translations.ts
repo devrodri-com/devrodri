@@ -185,9 +185,9 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
     },
     nav: {
       about: "Sobre mí",
-      why: "Por qué elegirnos",
+      why: "Por qué elegirme",
       services: "Servicios", // si lo dejás o lo quitás depende de si usarás esa sección
-      portfolio: "Porfolio",
+      portfolio: "Portfolio",
       contact: "Contacto",
       faq: "FAQ"
     },
