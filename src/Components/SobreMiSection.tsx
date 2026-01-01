@@ -42,26 +42,30 @@ export default function SobreMiSection() {
                 <>
                   Integrador de tecnología con mentalidad de producto
                   <br />
-                  Full‑Stack (IBM) · React (Meta) · IA aplicada
+                  Full-stack · React · Automatizaciones · IA aplicada
                 </>
               )
             : (
                 <>
-                  Technology integrator with a product mindset
+                  Product-minded technologist
                   <br />
-                  Full‑Stack (IBM) · React (Meta) · Applied AI
+                  Full-stack · React · Automations · Applied AI
                 </>
               )}
         </p>
         <p className="text-gray-700 md:text-gray-600 text-base md:text-lg leading-relaxed md:leading-[1.8] max-w-[60ch] mx-auto mb-6">
           {language === "es"
-            ? "Somos un equipo liderado por Rodrigo Opalo. Diseñamos y desarrollamos productos digitales modernos, rápidos y orientados al negocio. Construimos sitios, apps y sistemas a medida combinando diseño, experiencia de usuario y tecnología."
-            : "We are a team led by Rodrigo Opalo. We design and develop modern, fast, business-oriented digital products. We build custom websites, apps, and systems combining design, user experience, and technology."}
+            ? (
+                <>Soy Rodrigo Opalo. Trabajo bajo la marca <span className="font-semibold">devrodri</span> y desarrollo productos digitales modernos, rápidos y orientados al negocio. Diseño y construyo sitios, aplicaciones y sistemas a medida combinando diseño, experiencia de usuario y tecnología.</>
+              )
+            : (
+                <>I'm Rodrigo Opalo. I work under the <span className="font-semibold">devrodri</span> brand and build modern, fast, business-driven digital products. I design and develop custom websites, applications and systems combining UX, design and engineering.</>
+              )}
         </p>
         <p className="text-gray-700 md:text-gray-600 text-base md:text-lg leading-relaxed max-w-[60ch] mx-auto mb-6">
           {language === "es"
-            ? "También integramos automatizaciones y asistentes con n8n y MCP: CRMs, pagos, webhooks y dashboards; además de APIs como OpenAI y Stripe para escalar procesos y reducir costos operativos."
-            : "We also integrate automations and assistants with n8n and MCP: CRMs, payments, webhooks, and dashboards; plus APIs like OpenAI and Stripe to scale processes and reduce operational costs."}
+            ? "También implemento automatizaciones y asistentes con n8n y MCP: CRMs, pagos, webhooks y dashboards; además de integraciones con APIs como OpenAI y Stripe para escalar procesos y reducir costos operativos."
+            : "I also implement automations and assistants using n8n and MCP: CRMs, payments, webhooks and dashboards — plus integrations with APIs like OpenAI and Stripe to scale operations and reduce costs."}
         </p>
         <div className="flex items-center justify-center gap-4 mt-2 md:mt-3">
           <a
