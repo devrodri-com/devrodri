@@ -262,7 +262,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
       },
     },
     services: {
-      title: "¿Qué podemos crear para vos?",
+      title: "¿Qué puedo crear para vos?",
       items: {
         web: {
           title: "Sitios Web Personalizados",
@@ -280,7 +280,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
       seoMeta: {
         title: "Servicios | Rodrigo Opalo",
         description:
-          "Creamos sitios web rápidos, optimizados, multilingües y con posicionamiento SEO.",
+          "Creo sitios web rápidos, optimizados, multilingües y con posicionamiento SEO.",
         keywords: "desarrollo web, seo, internacionalización, diseño, servicios digitales",
       },
     },
@@ -422,7 +422,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
     call: {
       title: "¿Listo para destacar online?",
       subtitle:
-        "Creamos juntos un sitio moderno, rápido y optimizado para que tu marca se destaque.",
+        "Construyamos juntos un sitio moderno, rápido y optimizado para que tu marca se destaque.",
       button: "Empezar proyecto",
       seo: {
         title: "Contacto final | Rodrigo Opalo",
@@ -528,7 +528,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
       },
     },
     services: {
-      title: "What can we build for you?",
+      title: "What can I build for you?",
       items: {
         web: {
           title: "Custom Websites",
@@ -546,7 +546,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
       seoMeta: {
         title: "Services | Rodrigo Opalo",
         description:
-          "We create fast, optimized, multilingual websites with SEO positioning.",
+          "I create fast, optimized, multilingual websites with SEO positioning.",
         keywords: "web development, seo, internationalization, design, digital services",
       },
     },
@@ -686,7 +686,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
 },
     call: {
       title: "Ready to stand out online?",
-      subtitle: "Let’s build a modern, fast, and optimized site that helps your brand shine.",
+      subtitle: "Let's build a modern, fast, and optimized site so your brand stands out.",
       button: "Start project",
       seo: {
         title: "Final contact | Rodrigo Opalo",
