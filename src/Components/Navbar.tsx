@@ -30,9 +30,9 @@ export default function Navbar() {
         <Link
           to="/"
           className="text-lg font-medium text-white tracking-normal leading-snug hover:opacity-80 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 rounded"
-          aria-label={language === "es" ? "Ir al inicio" : "Go to home"}
+          aria-label={language === "es" ? "DEVRODRI - Inicio" : "DEVRODRI - Home"}
         >
-          Rodrigo Opalo
+          DEVRODRI
         </Link>
 
         {/* Ícono hamburguesa mobile */}
