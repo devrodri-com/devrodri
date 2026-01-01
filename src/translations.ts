@@ -220,7 +220,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
         "Me enfoco en crear sitios que comuniquen antes de que el usuario haga clic. Interfaces intuitivas, limpias y veloces. Diseño funcional que se siente y se ve.",
     },
     highlights: {
-      title: "¿Por qué elegirnos?",
+      title: "¿Por qué elegirme?",
       items: {
         fast: {
           icon: "⚡️",
