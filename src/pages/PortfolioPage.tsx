@@ -1,19 +1,19 @@
 // src/pages/PortfolioPage.tsx
 import { useState, useMemo } from "react";
-import { motion } from "framer-motion";
 import { useLanguage } from "../LanguageContext";
 import translations from "../translations";
 import SeoPortfolioSection from "../Components/SeoPortfolioSection";
+import PortfolioCard from "../Components/portfolio/PortfolioCard";
 
 type ProjectKey = "lem_web" | "lem_portal" | "esteban" | "mutter" | "federico" | "boating" | "magenta";
 type Project = { key: ProjectKey; href: string; cover: string };
 
 const projects: Project[] = [
-  { key: "magenta", href: "https://magenta-paysandu-m5in.vercel.app", cover: "/img/magenta-cover.svg" },
-  { key: "esteban", href: "https://estebanfirpo.com", cover: "/img/esteban.jpg" },
-  { key: "lem_web",   href: "https://lem-box.com.uy",            cover: "/img/lem-box-cover2.jpg" },
-  { key: "lem_portal",   href: "https://portal.lem-box.com",            cover: "/img/lem-box-cover2.jpg" },
-  { key: "mutter",   href: "https://www.muttergames.com",            cover: "/img/mutter-cover.svg" },
+  { key: "magenta", href: "https://magenta-paysandu-m5in.vercel.app", cover: "/img/magenta-cover.png" },
+  { key: "esteban", href: "https://estebanfirpo.com", cover: "/img/esteban.png" },
+  { key: "lem_web",   href: "https://lem-box.com.uy",            cover: "/img/lem-box-cover.png" },
+  { key: "lem_portal",   href: "https://portal.lem-box.com",            cover: "/img/lem-box-cover.png" },
+  { key: "mutter",   href: "https://www.muttergames.com",            cover: "/img/mutter-cover.png" },
   { key: "federico", href: "https://www.federicoroma.com",            cover: "/img/federico-cover.jpg" },
   { key: "boating",  href: "https://www.boatingadventuresmiami.com", cover: "/img/Fondo.jpg" },
 ];
@@ -473,103 +473,82 @@ export default function PortfolioPage() {
 
         <div className="space-y-10">
           {list.map((p) => (
-            <motion.div
+            <PortfolioCard
               key={p.key}
-              className={`border border-gray-200 rounded-2xl shadow-sm bg-white ${expanded[p.key] ? "" : "md:h-[280px] md:overflow-hidden"}`}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45 }}
-              viewport={{ once: true }}
+              cover={p.cover}
+              title={P[p.key].title}
+              desc={P[p.key].desc}
+              tags={(language === "es" ? projectMeta[p.key].tags : projectMeta[p.key].tagsEn).join(" · ")}
+              expanded={expanded[p.key]}
             >
-              <div className="flex flex-col md:flex-row">
-                <div className="md:w-5/12 p-4 md:p-6">
-                  <div className="w-full h-64 md:h-full rounded-xl overflow-hidden bg-white">
-                    <img
-                      src={p.cover}
-                      alt={language === "es" ? `Imagen del proyecto ${P[p.key].title}` : `Project cover: ${P[p.key].title}`}
-                      className={`w-full h-full ${p.cover.endsWith(".svg") ? "object-contain p-10 md:p-12" : "object-cover"}`}
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </div>
-                </div>
-                <div className="md:w-7/12 p-6">
-                  <h3 className="text-xl font-semibold tracking-tight">{P[p.key].title}</h3>
-                  <p className="text-gray-700 mt-2 max-w-[62ch]">{P[p.key].desc}</p>
-                  <p className="mt-3 text-sm text-gray-600">• {(language === "es" ? projectMeta[p.key].tags : projectMeta[p.key].tagsEn).join(" · ")}</p>
-                  <div className="mt-4 flex items-center gap-4 flex-wrap">
-                    {p.key === "lem_web" ? (
-                      <>
-                        <a href="https://lem-box.com.uy" target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:text-primary-dark underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">UY</a>
-                        <span className="text-gray-400">·</span>
-                        <a href="https://lem-box.com.ar" target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:text-primary-dark underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">AR</a>
-                      </>
-                    ) : p.key === "lem_portal" ? (
-                      <>
-                        <a href={p.href} target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:text-primary-dark underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">{P[p.key].link}</a>
-                        <span className="text-xs text-gray-500">({language === "es" ? "requiere credenciales" : "credentials required"})</span>
-                      </>
-                    ) : (
-                      <a href={p.href} target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:text-primary-dark underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">{P[p.key].link}</a>
-                    )}
-                    <button
-                      onClick={() => setExpanded(e => ({ ...e, [p.key]: !e[p.key] }))}
-                      className="text-sm text-gray-700 hover:text-black underline focus-visible:ring-2 ring-offset-2 ring-gray-300 rounded-sm"
-                    >
-                      {expanded[p.key] ? (language === "es" ? "Ver menos" : "View less") : (language === "es" ? "Ver más" : "View details")}
-                    </button>
-                  </div>
-
-                  {expanded[p.key] && (
-                    <div className="mt-5 border-t border-gray-100 pt-6">
-                      <p className="text-gray-800 font-medium">{language === "es" ? caseDetails[p.key].summaryEs : caseDetails[p.key].summaryEn}</p>
-                      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div>
-                          <h4 className="text-sm font-semibold text-gray-900 mb-2">{language === "es" ? "Stack" : "Stack"}</h4>
-                          <ul className="text-sm text-gray-700 list-disc ml-5">
-                            {(language === "es"
-                              ? caseDetails[p.key].stack
-                              : (caseDetails[p.key].stackEn ?? caseDetails[p.key].stack)
-                            ).map((s, i) => (
-                              <li key={i}>{s}</li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div>
-                          <h4 className="text-sm font-semibold text-gray-900 mb-2">{language === "es" ? "Integraciones" : "Integrations"}</h4>
-                          <ul className="text-sm text-gray-700 list-disc ml-5">
-                            {(language === "es"
-                              ? caseDetails[p.key].integrations
-                              : (caseDetails[p.key].integrationsEn ?? caseDetails[p.key].integrations)
-                            ).map((s, i) => (
-                              <li key={i}>{s}</li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div>
-                          <h4 className="text-sm font-semibold text-gray-900 mb-2">{language === "es" ? "Retos" : "Challenges"}</h4>
-                          <ul className="text-sm text-gray-700 list-disc ml-5">
-                            {(language === "es" ? caseDetails[p.key].challengesEs : caseDetails[p.key].challengesEn).map((s,i)=>(<li key={i}>{s}</li>))}
-                          </ul>
-                        </div>
-                        <div>
-                          <h4 className="text-sm font-semibold text-gray-900 mb-2">{language === "es" ? "Solución" : "Solution"}</h4>
-                          <ul className="text-sm text-gray-700 list-disc ml-5">
-                            {(language === "es" ? caseDetails[p.key].solutionEs : caseDetails[p.key].solutionEn).map((s,i)=>(<li key={i}>{s}</li>))}
-                          </ul>
-                        </div>
-                      </div>
-                      <div className="mt-4">
-                        <h4 className="text-sm font-semibold text-gray-900 mb-2">{language === "es" ? "Impacto" : "Impact"}</h4>
-                        <ul className="text-sm text-gray-700 list-disc ml-5">
-                          {(language === "es" ? caseDetails[p.key].resultsEs : caseDetails[p.key].resultsEn).map((s,i)=>(<li key={i}>{s}</li>))}
-                        </ul>
-                      </div>
+              {p.key === "lem_web" ? (
+                <>
+                  <a href="https://lem-box.com.uy" target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:text-primary-dark underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">UY</a>
+                  <span className="text-gray-400">·</span>
+                  <a href="https://lem-box.com.ar" target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:text-primary-dark underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">AR</a>
+                </>
+              ) : p.key === "lem_portal" ? (
+                <>
+                  <a href={p.href} target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:text-primary-dark underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">{P[p.key].link}</a>
+                  <span className="text-xs text-gray-500">({language === "es" ? "requiere credenciales" : "credentials required"})</span>
+                </>
+              ) : (
+                <a href={p.href} target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:text-primary-dark underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">{P[p.key].link}</a>
+              )}
+              <button
+                onClick={() => setExpanded(e => ({ ...e, [p.key]: !e[p.key] }))}
+                className="text-sm text-gray-700 hover:text-black underline focus-visible:ring-2 ring-offset-2 ring-gray-300 rounded-sm"
+              >
+                {expanded[p.key] ? (language === "es" ? "Ver menos" : "View less") : (language === "es" ? "Ver más" : "View details")}
+              </button>
+              {expanded[p.key] && (
+                <div className="mt-5 border-t border-gray-100 pt-6">
+                  <p className="text-gray-800 font-medium">{language === "es" ? caseDetails[p.key].summaryEs : caseDetails[p.key].summaryEn}</p>
+                  <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                      <h4 className="text-sm font-semibold text-gray-900 mb-2">{language === "es" ? "Stack" : "Stack"}</h4>
+                      <ul className="text-sm text-gray-700 list-disc ml-5">
+                        {(language === "es"
+                          ? caseDetails[p.key].stack
+                          : (caseDetails[p.key].stackEn ?? caseDetails[p.key].stack)
+                        ).map((s, i) => (
+                          <li key={i}>{s}</li>
+                        ))}
+                      </ul>
                     </div>
-                  )}
+                    <div>
+                      <h4 className="text-sm font-semibold text-gray-900 mb-2">{language === "es" ? "Integraciones" : "Integrations"}</h4>
+                      <ul className="text-sm text-gray-700 list-disc ml-5">
+                        {(language === "es"
+                          ? caseDetails[p.key].integrations
+                          : (caseDetails[p.key].integrationsEn ?? caseDetails[p.key].integrations)
+                        ).map((s, i) => (
+                          <li key={i}>{s}</li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-semibold text-gray-900 mb-2">{language === "es" ? "Retos" : "Challenges"}</h4>
+                      <ul className="text-sm text-gray-700 list-disc ml-5">
+                        {(language === "es" ? caseDetails[p.key].challengesEs : caseDetails[p.key].challengesEn).map((s,i)=>(<li key={i}>{s}</li>))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-semibold text-gray-900 mb-2">{language === "es" ? "Solución" : "Solution"}</h4>
+                      <ul className="text-sm text-gray-700 list-disc ml-5">
+                        {(language === "es" ? caseDetails[p.key].solutionEs : caseDetails[p.key].solutionEn).map((s,i)=>(<li key={i}>{s}</li>))}
+                      </ul>
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <h4 className="text-sm font-semibold text-gray-900 mb-2">{language === "es" ? "Impacto" : "Impact"}</h4>
+                    <ul className="text-sm text-gray-700 list-disc ml-5">
+                      {(language === "es" ? caseDetails[p.key].resultsEs : caseDetails[p.key].resultsEn).map((s,i)=>(<li key={i}>{s}</li>))}
+                    </ul>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
+              )}
+            </PortfolioCard>
           ))}
         </div>
         </div>
