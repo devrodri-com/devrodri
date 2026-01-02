@@ -438,11 +438,11 @@ export default function PortfolioPage() {
   return (
     <>
       <SeoPortfolioSection />
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-black text-white">
         <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold tracking-tight">{t.portfolio.title}</h1>
-          <p className="text-gray-600 mt-2 max-w-[44rem] mx-auto">
+          <h1 className="text-4xl font-bold tracking-tight text-white">{t.portfolio.title}</h1>
+          <p className="text-white/70 mt-2 max-w-[44rem] mx-auto">
             {language === "es"
               ? "Casos seleccionados de e‑commerce, marca personal y servicios."
               : "Selected work across e‑commerce, personal brands and services."}
@@ -452,7 +452,7 @@ export default function PortfolioPage() {
               <button
                 key={f.key}
                 onClick={() => setFilter(f.key)}
-                className={`px-3 py-2 text-sm transition border-b-2 ${filter === f.key ? "border-black text-black" : "border-transparent text-gray-600 hover:text-black"}`}
+                className={`px-3 py-2 text-sm transition border-b-2 ${filter === f.key ? "border-white text-white" : "border-transparent text-white/70 hover:text-white"}`}
                 aria-pressed={filter === f.key}
               >
                 {language === "es" ? f.es : f.en}
