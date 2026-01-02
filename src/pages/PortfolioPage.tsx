@@ -11,9 +11,9 @@ type Project = { key: ProjectKey; href: string; cover: string };
 const projects: Project[] = [
   { key: "magenta", href: "https://magenta-paysandu-m5in.vercel.app", cover: "/img/magenta-cover.svg" },
   { key: "esteban", href: "https://estebanfirpo.com", cover: "/img/esteban.jpg" },
-  { key: "lem_web",   href: "https://lem-box.com.uy",            cover: "/img/lem-box-cover.jpg" },
-  { key: "lem_portal",   href: "https://portal.lem-box.com",            cover: "/img/lem-box-cover.jpg" },
-  { key: "mutter",   href: "https://www.muttergames.com",            cover: "/img/mutter-cover.jpg" },
+  { key: "lem_web",   href: "https://lem-box.com.uy",            cover: "/img/lem-box-cover2.jpg" },
+  { key: "lem_portal",   href: "https://portal.lem-box.com",            cover: "/img/lem-box-cover2.jpg" },
+  { key: "mutter",   href: "https://www.muttergames.com",            cover: "/img/mutter-cover.svg" },
   { key: "federico", href: "https://www.federicoroma.com",            cover: "/img/federico-cover.jpg" },
   { key: "boating",  href: "https://www.boatingadventuresmiami.com", cover: "/img/Fondo.jpg" },
 ];
@@ -475,7 +475,7 @@ export default function PortfolioPage() {
           {list.map((p) => (
             <motion.div
               key={p.key}
-              className="border border-gray-200 rounded-2xl shadow-sm bg-white"
+              className={`border border-gray-200 rounded-2xl shadow-sm bg-white ${expanded[p.key] ? "" : "md:h-[280px] md:overflow-hidden"}`}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.45 }}
@@ -483,13 +483,15 @@ export default function PortfolioPage() {
             >
               <div className="flex flex-col md:flex-row">
                 <div className="md:w-5/12 p-4 md:p-6">
-                  <img
-                    src={p.cover}
-                    alt={language === "es" ? `Imagen del proyecto ${P[p.key].title}` : `Project cover: ${P[p.key].title}`}
-                    className="w-full h-64 md:h-full object-cover rounded-xl"
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  <div className="w-full h-64 md:h-full rounded-xl overflow-hidden bg-white">
+                    <img
+                      src={p.cover}
+                      alt={language === "es" ? `Imagen del proyecto ${P[p.key].title}` : `Project cover: ${P[p.key].title}`}
+                      className={`w-full h-full ${p.cover.endsWith(".svg") ? "object-contain p-10 md:p-12" : "object-cover"}`}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
                 </div>
                 <div className="md:w-7/12 p-6">
                   <h3 className="text-xl font-semibold tracking-tight">{P[p.key].title}</h3>
