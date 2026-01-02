@@ -113,39 +113,55 @@ export default function PortfolioSection() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          {language === "es"
-            ? "Sitios a medida para real estate, logística, gaming, suplementos y turismo náutico. Diseño limpio, SEO técnico y rendimiento listo para escalar."
-            : "Custom sites for real estate, logistics, gaming, supplements and boat rentals. Clean design, technical SEO and performance ready to scale."}
+          {language === "es" ? (
+            <>
+              Sitios a medida para servicios, e-commerce y marcas personales.
+              <br />
+              Diseño limpio, SEO técnico y rendimiento listo para escalar.
+            </>
+          ) : (
+            <>
+              Custom sites for services, e-commerce and personal brands.
+              <br />
+              Clean design, technical SEO and performance ready to scale.
+            </>
+          )}
         </motion.p>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {highlights.map((p, index) => (
-            <motion.div
+            <Link
               key={p.key}
-              className="group rounded-2xl bg-white/95 backdrop-blur border border-gray-200/80 p-5 sm:p-6 flex flex-col gap-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, delay: 0.05 * index }}
-              viewport={{ once: true }}
+              to="/portfolio"
+              className="block rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+              aria-label={language === "es" ? `Ver portfolio completo: ${p.title}` : `View full portfolio: ${p.title}`}
             >
-              <div className="flex items-center gap-3">
-                <div className="h-11 w-11 rounded-xl overflow-hidden bg-white border border-gray-200">
-                  <img
-                    src={p.logo}
-                    alt={language === "es" ? `Logo de ${p.title}` : `Logo of ${p.title}`}
-                    className="h-full w-full object-cover"
-                    loading="lazy"
-                    decoding="async"
-                  />
+              <motion.div
+                className="group rounded-2xl bg-white/95 backdrop-blur border border-gray-200/80 p-5 sm:p-6 flex flex-col gap-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.45, delay: 0.05 * index }}
+                viewport={{ once: true }}
+              >
+                <div className="flex items-center gap-3">
+                  <div className="h-11 w-11 rounded-xl overflow-hidden bg-white border border-gray-200">
+                    <img
+                      src={p.logo}
+                      alt={language === "es" ? `Logo de ${p.title}` : `Logo of ${p.title}`}
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-900 tracking-tight">
+                      {p.title}
+                    </h3>
+                    <p className="text-xs text-gray-600 mt-0.5 leading-snug">{p.summary}</p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-900 tracking-tight">
-                    {p.title}
-                  </h3>
-                  <p className="text-xs text-gray-600 mt-0.5 leading-snug">{p.summary}</p>
-                </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            </Link>
           ))}
         </div>
 
