@@ -10,6 +10,15 @@ export default function PortfolioSection() {
 
   const highlights = [
     {
+      key: "magenta",
+      logo: "/img/magenta-cover.svg",
+      title: t.portfolio.magenta.title,
+      summary:
+        language === "es"
+          ? "Imprenta · MVP con catálogo, presupuesto dinámico y SEO completo."
+          : "Print shop · MVP with catalog, dynamic quote form and full SEO.",
+    },
+    {
       key: "esteban",
       logo: "/img/esteban.jpg",
       title: t.portfolio.esteban.title,
@@ -24,8 +33,8 @@ export default function PortfolioSection() {
       title: t.portfolio.lem_web.title,
       summary:
         language === "es"
-          ? "Logística internacional · Web multipaís (UY/AR), SEO y performance para captar clientes."
-          : "International logistics · Multi-country web (UY/AR), SEO and performance to acquire customers.",
+          ? "Logística · Web multipaís (UY/AR), SEO y performance para captar clientes."
+          : "Logistics · Multi-country web (UY/AR), SEO and performance to acquire customers.",
     },
     {
       key: "lem_portal",
@@ -42,8 +51,17 @@ export default function PortfolioSection() {
       title: t.portfolio.mutter.title,
       summary:
         language === "es"
-          ? "E‑commerce de videojuegos · Catálogo dinámico y checkout integrado para aumentar ventas."
-          : "Video‑games e‑commerce · Dynamic catalog and integrated checkout to drive sales.",
+          ? "E-commerce · Catálogo dinámico y checkout integrado para aumentar ventas."
+          : "E-commerce · Dynamic catalog and integrated checkout to drive sales.",
+    },
+    {
+      key: "federico",
+      logo: "/img/federico-cover.jpg",
+      title: t.portfolio.federico.title,
+      summary:
+        language === "es"
+          ? "Marca personal · Sitio profesional con contenido, cursos y presencia premium."
+          : "Personal brand · Professional site with content, courses and premium presence.",
     },
   ];
 
@@ -77,7 +95,7 @@ export default function PortfolioSection() {
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
         >
-          {language === "es" ? "Porfolio" : "Portfolio"}
+          Portfolio
         </motion.p>
 
         <motion.h2
@@ -100,7 +118,7 @@ export default function PortfolioSection() {
             : "Custom sites for real estate, logistics, gaming, supplements and boat rentals. Clean design, technical SEO and performance ready to scale."}
         </motion.p>
 
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {highlights.map((p, index) => (
             <motion.div
               key={p.key}

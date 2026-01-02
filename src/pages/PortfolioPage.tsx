@@ -5,7 +5,7 @@ import { useLanguage } from "../LanguageContext";
 import translations from "../translations";
 import SeoPortfolioSection from "../Components/SeoPortfolioSection";
 
-type ProjectKey = "lem_web" | "lem_portal" | "esteban" | "mutter" | "federico" | "bionova" | "boating" | "magenta";
+type ProjectKey = "lem_web" | "lem_portal" | "esteban" | "mutter" | "federico" | "boating" | "magenta";
 type Project = { key: ProjectKey; href: string; cover: string };
 
 const projects: Project[] = [
@@ -15,7 +15,6 @@ const projects: Project[] = [
   { key: "lem_portal",   href: "https://portal.lem-box.com",            cover: "/img/lem-box-cover.jpg" },
   { key: "mutter",   href: "https://www.muttergames.com",            cover: "/img/mutter-cover.jpg" },
   { key: "federico", href: "https://www.federicoroma.com",            cover: "/img/federico-cover.jpg" },
-  { key: "bionova",  href: "https://www.getbionova.com",              cover: "/img/bionova-cover.jpg" },
   { key: "boating",  href: "https://www.boatingadventuresmiami.com", cover: "/img/Fondo.jpg" },
 ];
 
@@ -26,7 +25,6 @@ const projectMeta: Record<ProjectKey, { category: Category; tags: string[]; tags
   esteban:  { category: "services", tags: ["Real Estate", "Next.js"],     tagsEn: ["Real Estate", "Next.js"] },
   mutter:   { category: "ecom",     tags: ["E‑commerce", "Mercado Pago"],            tagsEn: ["E‑commerce", "Mercado Pago"] },
   federico: { category: "personal", tags: ["Marca personal", "Cursos"],             tagsEn: ["Personal brand", "Courses"] },
-  bionova:  { category: "ecom",     tags: ["E‑commerce", "Stripe/PayPal"],          tagsEn: ["E‑commerce", "Stripe/PayPal"] },
   magenta:  { category: "services", tags: ["Imprenta", "Next.js"],                  tagsEn: ["Print shop", "Next.js"] },
   boating:  { category: "services", tags: ["Servicios", "Reservas"],                tagsEn: ["Services", "Bookings"] },
 };
@@ -314,55 +312,6 @@ const caseDetails: Record<ProjectKey, {
       "More WhatsApp inquiries on mobile"
     ],
   },
-  bionova: {
-    summaryEs: "Tienda online profesional en EE.UU. para venta de suplementos (ES/EN). Variantes por producto (60/120 caps), precios diferenciados, stock real, checkout con Stripe/PayPal y panel de administración.",
-    summaryEn: "Professional US‑based supplements store (ES/EN). Product variants (60/120 caps), tiered pricing, real stock, Stripe/PayPal checkout and an admin dashboard.",
-    stack: [
-      "Frontend: React + Vite + TypeScript",
-      "Firebase: Firestore · Auth · Hosting · Storage",
-      "i18n: i18next",
-      "Rich content: TipTap (descripciones)"
-    ],
-    integrations: [
-      "Stripe (Elements/Checkout)",
-      "PayPal Buttons",
-      "ImageKit/Cloudinary (medios optimizados)"
-    ],
-    challengesEs: [
-      "Gestionar variantes con stock y precios por variante",
-      "Checkout real para EE.UU. (Stripe/PayPal)",
-      "Migración y optimización de imágenes (ImageKit)",
-      "SEO on‑page y datos abiertos en multilenguaje"
-    ],
-    challengesEn: [
-      "Variant management with per‑variant stock & pricing",
-      "Real US checkout (Stripe/PayPal)",
-      "Image migration & optimization (ImageKit)",
-      "Multilingual on‑page SEO & Open Graph"
-    ],
-    solutionEs: [
-      "Modelo de producto tipado con variantes y stock",
-      "Stripe Elements + PayPal integrados en el flujo de compra",
-      "Pipeline de medios con transformaciones en CDN (ImageKit)",
-      "Editor enriquecido TipTap y metadatos por página"
-    ],
-    solutionEn: [
-      "Typed product model with variants & stock",
-      "Stripe Elements + PayPal integrated in the checkout flow",
-      "Media pipeline with CDN transforms (ImageKit)",
-      "TipTap rich editor and per‑page metadata"
-    ],
-    resultsEs: [
-      "UX más rápida y clara",
-      "Menos fricción en el pago (Stripe/PayPal)",
-      "Administración centralizada de catálogo y pedidos"
-    ],
-    resultsEn: [
-      "Faster, clearer UX",
-      "Lower payment friction (Stripe/PayPal)",
-      "Centralized catalog & orders management"
-    ],
-  },
   magenta: {
     summaryEs:
       "MVP funcional para una imprenta con 15 años de trayectoria. Incluye catálogo optimizado con mockups generados por IA, formulario dinámico de presupuestos y arquitectura moderna con Next.js 16.",
@@ -468,7 +417,6 @@ export default function PortfolioPage() {
     esteban: false,
     mutter: false,
     federico: false,
-    bionova: false,
     boating: false,
     magenta: false,
   });
@@ -483,7 +431,6 @@ export default function PortfolioPage() {
     esteban: t.portfolio.esteban,
     mutter: t.portfolio.mutter,
     federico: t.portfolio.federico,
-    bionova: t.portfolio.bionova,
     boating: t.portfolio.boating,
     magenta: t.portfolio.magenta,
   };
