@@ -174,6 +174,8 @@ export type TranslationsStructure = {
     title: string;
     description: string;
     keywords: string;
+    ogTitle: string;
+    ogDescription: string;
   };
 };
 
@@ -442,6 +444,8 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
       title: "Rodrigo Opalo | Diseñador y Desarrollador Web",
       description: "Desarrollo sitios web profesionales, multilenguaje y optimizados para SEO.",
       keywords: "sitios web, desarrollador, diseño web, seo, rodrigo opalo, sitios multilenguaje, programador",
+      ogTitle: "devrodri - Diseño y desarrollo web",
+      ogDescription: "Portfolio profesional de Rodrigo Opalo. Diseño y desarrollo sitios web modernos, rápidos y optimizados para marcas que quieren destacarse online.",
     },
   },  
   en: {
@@ -595,7 +599,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
       },
       seo: {
         title: "Portfolio | Rodrigo Opalo",
-        description: "Take a look at some of the websites I’ve built — modern, optimized and user-focused.",
+        description: "Take a look at some of the websites I’ve built - modern, optimized and user-focused.",
         keywords: "portfolio, web design, projects, websites, Rodrigo Opalo, developer",
       },
     },
@@ -707,6 +711,8 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
       description: "I build professional websites with SEO and multilingual support.",
       keywords:
         "websites, developer, web design, seo, rodrigo opalo, multilingual sites, web developer",
+      ogTitle: "devrodri - Web design & development",
+      ogDescription: "Professional portfolio of Rodrigo Opalo. I design and build modern, fast and optimized websites for brands that want to stand out online.",
     },
   },
 };

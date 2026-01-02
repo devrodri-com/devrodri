@@ -15,8 +15,8 @@ export default function SeoHead() {
       <meta name="description" content={seo.description} />
       <meta name="keywords" content={seo.keywords} />
       <meta name="author" content="Rodrigo Opalo" />
-      <meta property="og:title" content={seo.title} />
-      <meta property="og:description" content={seo.description} />
+      <meta property="og:title" content={seo.ogTitle} />
+      <meta property="og:description" content={seo.ogDescription} />
       <meta property="og:type" content="website" />
       <meta
         property="og:locale"
