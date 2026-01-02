@@ -438,7 +438,7 @@ export default function PortfolioPage() {
   return (
     <>
       <SeoPortfolioSection />
-      <section className="py-24 bg-black text-white">
+      <section className="py-24 bg-black text-white min-h-screen">
         <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold tracking-tight text-white">{t.portfolio.title}</h1>
