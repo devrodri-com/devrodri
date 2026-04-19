@@ -5,10 +5,11 @@ import translations from "../translations";
 import SeoPortfolioSection from "../Components/SeoPortfolioSection";
 import PortfolioCard from "../Components/portfolio/PortfolioCard";
 
-type ProjectKey = "lem_web" | "lem_portal" | "esteban" | "mutter" | "federico" | "boating" | "magenta";
-type Project = { key: ProjectKey; href: string; cover: string };
+type ProjectKey = "lem_web" | "lem_portal" | "esteban" | "mutter" | "federico" | "boating" | "magenta" | "campings_demo";
+type Project = { key: ProjectKey; href?: string; cover: string };
 
 const projects: Project[] = [
+  { key: "campings_demo", href: "https://reservas-campings-nacionales.vercel.app", cover: "/img/parques-nacionales-logo.png" },
   { key: "magenta", href: "https://magenta-paysandu-m5in.vercel.app", cover: "/img/magenta-cover.png" },
   { key: "esteban", href: "https://estebanfirpo.com", cover: "/img/esteban.png" },
   { key: "lem_web",   href: "https://lem-box.com.uy",            cover: "/img/lem-box-cover.png" },
@@ -27,6 +28,7 @@ const projectMeta: Record<ProjectKey, { category: Category; tags: string[]; tags
   federico: { category: "personal", tags: ["Marca personal", "Cursos"],             tagsEn: ["Personal brand", "Courses"] },
   magenta:  { category: "services", tags: ["Imprenta", "Next.js"],                  tagsEn: ["Print shop", "Next.js"] },
   boating:  { category: "services", tags: ["Servicios", "Reservas"],                tagsEn: ["Services", "Bookings"] },
+  campings_demo: { category: "services", tags: ["Reservas", "Next.js", "Firebase", "Admin", "MVP"], tagsEn: ["Bookings", "Next.js", "Firebase", "Admin", "MVP"] },
 };
 
 const filters: { key: Category; es: string; en: string }[] = [
@@ -404,6 +406,74 @@ const caseDetails: Record<ProjectKey, {
     resultsEs: ["Más leads", "Mejor visibilidad"],
     resultsEn: ["More leads", "Better visibility"],
   },
+  campings_demo: {
+    summaryEs:
+      "MVP funcional avanzado para gestionar reservas de campings y áreas recreativas. Incluye catálogo público, flujo de reserva, consulta por código, panel administrativo con roles y soporte de inventario híbrido: por capacidad o por unidades físicas.",
+    summaryEn:
+      "Advanced functional MVP to manage campground and recreational area bookings. It includes a public catalog, booking flow, code-based booking lookup, an admin panel with roles, and hybrid inventory support: by capacity or by physical units.",
+    stack: [
+      "Frontend: Next.js 16 + React 19 + TypeScript + App Router",
+      "Backend/servicios: Firebase Auth + Cloud Firestore",
+      "Server-side puntual: Firebase Admin SDK en rutas API",
+      "Arquitectura: flujo público + panel admin + inventario híbrido",
+      "Deploy compatible con Vercel",
+    ],
+    stackEn: [
+      "Frontend: Next.js 16 + React 19 + TypeScript + App Router",
+      "Backend/services: Firebase Auth + Cloud Firestore",
+      "Server-side actions: Firebase Admin SDK in selected API routes",
+      "Architecture: public flow + admin panel + hybrid inventory",
+      "Vercel-compatible deployment",
+    ],
+    integrations: [
+      "Firebase Auth",
+      "Cloud Firestore",
+      "Firebase Admin SDK",
+      "Mercado Pago (flujo simulado / no productivo)",
+    ],
+    integrationsEn: [
+      "Firebase Auth",
+      "Cloud Firestore",
+      "Firebase Admin SDK",
+      "Mercado Pago (simulated / non-production flow)",
+    ],
+    challengesEs: [
+      "Modelar dos tipos de inventario en un mismo sistema: por capacidad general y por unidades físicas.",
+      "Resolver disponibilidad, bloqueos y reservas por rango de fechas.",
+      "Separar flujo público y operación administrativa con roles.",
+      "Preparar la base técnica para evolución futura sin forzar features incompletas.",
+    ],
+    challengesEn: [
+      "Model two inventory types in the same system: general capacity and physical units.",
+      "Handle availability, blocks and bookings across date ranges.",
+      "Separate the public booking flow from role-based admin operations.",
+      "Prepare the technical foundation for future evolution without forcing unfinished features.",
+    ],
+    solutionEs: [
+      "Aplicación web con catálogo público, detalle de camping, reserva online y consulta por código.",
+      "Panel admin con roles, reservas manuales, cancelación, exportación y operación por camping.",
+      "Soporte para inventario híbrido con lógica específica según el tipo de camping.",
+      "Separación entre datos privados y proyección pública para disponibilidad.",
+    ],
+    solutionEn: [
+      "Web application with public catalog, campground detail pages, online booking and code-based lookup.",
+      "Admin panel with roles, manual bookings, cancellation, exports and per-campground operations.",
+      "Hybrid inventory support with specific logic depending on campground type.",
+      "Separation between private booking data and a public availability projection.",
+    ],
+    resultsEs: [
+      "Núcleo del producto resuelto en versión demostrable.",
+      "Operación administrativa principal ya modelada dentro del MVP.",
+      "Base técnica preparada para evolucionar a pagos reales, mapa interactivo y automatizaciones.",
+      "Caso apto para portfolio si se presenta explícitamente como MVP/demo.",
+    ],
+    resultsEn: [
+      "Core product flow solved in a demonstrable version.",
+      "Primary admin operations already modeled within the MVP.",
+      "Technical foundation prepared for real payments, interactive maps and automations.",
+      "Portfolio-ready only if presented explicitly as an MVP/demo.",
+    ],
+  },
 };
 
 export default function PortfolioPage() {
@@ -419,6 +489,7 @@ export default function PortfolioPage() {
     federico: false,
     boating: false,
     magenta: false,
+    campings_demo: false,
   });
   const list = useMemo(() =>
     projects.filter(p => filter === "all" || projectMeta[p.key].category === filter)
@@ -433,6 +504,7 @@ export default function PortfolioPage() {
     federico: t.portfolio.federico,
     boating: t.portfolio.boating,
     magenta: t.portfolio.magenta,
+    campings_demo: t.portfolio.campings_demo,
   };
 
   return (
@@ -492,9 +564,9 @@ export default function PortfolioPage() {
                   <a href={p.href} target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:text-primary-dark underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">{P[p.key].link}</a>
                   <span className="text-xs text-gray-500">({language === "es" ? "requiere credenciales" : "credentials required"})</span>
                 </>
-              ) : (
+              ) : p.href ? (
                 <a href={p.href} target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:text-primary-dark underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">{P[p.key].link}</a>
-              )}
+              ) : null}
               <button
                 onClick={() => setExpanded(e => ({ ...e, [p.key]: !e[p.key] }))}
                 className="text-sm text-gray-700 hover:text-black underline focus-visible:ring-2 ring-offset-2 ring-gray-300 rounded-sm"

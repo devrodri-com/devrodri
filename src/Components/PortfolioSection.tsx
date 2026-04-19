@@ -11,7 +11,7 @@ export default function PortfolioSection() {
   const highlights = [
     {
       key: "magenta",
-      logo: "/img/magenta-cover.svg",
+      logo: "/img/magenta-cover.png",
       title: t.portfolio.magenta.title,
       summary:
         language === "es"
@@ -20,7 +20,7 @@ export default function PortfolioSection() {
     },
     {
       key: "esteban",
-      logo: "/img/esteban.jpg",
+      logo: "/img/esteban.png",
       title: t.portfolio.esteban.title,
       summary:
         language === "es"
@@ -29,7 +29,7 @@ export default function PortfolioSection() {
     },
     {
       key: "lem_web",
-      logo: "/img/lem-box-cover.jpg",
+      logo: "/img/lem-box-cover.png",
       title: t.portfolio.lem_web.title,
       summary:
         language === "es"
@@ -38,7 +38,7 @@ export default function PortfolioSection() {
     },
     {
       key: "lem_portal",
-      logo: "/img/lem-box-cover.jpg",
+      logo: "/img/lem-box-cover.png",
       title: t.portfolio.lem_portal.title,
       summary:
         language === "es"
@@ -47,7 +47,7 @@ export default function PortfolioSection() {
     },
     {
       key: "mutter",
-      logo: "/img/mutter-cover.jpg",
+      logo: "/img/mutter-cover.png",
       title: t.portfolio.mutter.title,
       summary:
         language === "es"

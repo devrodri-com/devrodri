@@ -107,6 +107,11 @@ export type TranslationsStructure = {
       desc: string;
       link: string;
     };
+    campings_demo: {
+      title: string;
+      desc: string;
+      link: string;
+    };
     seo: {
       title: string;
       description: string;
@@ -327,6 +332,11 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
         title: "Imprenta Magenta · Paysandú, Uruguay",
         desc: "Imprenta moderna especializada en impresión digital, offset y packaging gastronómico. Catálogo optimizado, formulario dinámico y SEO completo. MVP funcional ya activo.",
         link: "Ver sitio",
+      },
+      campings_demo: {
+        title: "Campings reservas (demo)",
+        desc: "MVP funcional avanzado para reservas de campings, con flujo público, panel administrativo e inventario híbrido por cupo o por unidades.",
+        link: "Ver caso",
       },
       seo: {
         title: "Portfolio | Rodrigo Opalo",
@@ -596,6 +606,11 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
         title: "Imprenta Magenta · Paysandú, Uruguay",
         desc: "Modern print shop specializing in digital printing, offset and food packaging. Optimized catalog, dynamic quote form and full SEO. Functional MVP currently live.",
         link: "Visit site",
+      },
+      campings_demo: {
+        title: "Campings bookings (demo)",
+        desc: "Advanced functional MVP for campground bookings, with public flow, admin panel and hybrid inventory by capacity or physical units.",
+        link: "View case",
       },
       seo: {
         title: "Portfolio | Rodrigo Opalo",
