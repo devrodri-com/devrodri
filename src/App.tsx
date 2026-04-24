@@ -7,7 +7,7 @@ import HeroSlider from "./Components/HeroSlider";
 import SobreMiSection from "./Components/SobreMiSection";
 import HighlightsSection from "./Components/HighlightsSection";
 import PortfolioSection from "./Components/PortfolioSection";
-import ContactSection from "./Components/ContactSection"; // 👈 Sigue importado igual
+import ContactSection from "./Components/ContactSection";
 import FaqSection from "./Components/FaqSection";
 import Footer from "./Components/Footer";
 import Navbar from "./Components/Navbar";

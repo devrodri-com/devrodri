@@ -1,8 +1,9 @@
 // src/Components/TransitionServicesIntro.tsx
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
+import { FiCheckCircle, FiLayers, FiMessageCircle } from "react-icons/fi";
 import { useLanguage } from "../LanguageContext";
 import translations from "../translations";
-import { CalendarCheck, Clock3, FileText } from "lucide-react";
 
 type BridgeProps = { variant?: "default" | "afterPortfolio" };
 
@@ -14,17 +15,17 @@ export default function TransitionServicesIntro({ variant = "default" }: BridgeP
   const V = (() => {
     if (variant === "afterPortfolio") {
       return {
-        kicker: language === "es" ? "Empezar es simple" : "Getting started is simple",
-        title: language === "es" ? "De la idea al lanzamiento" : "From idea to launch",
+        kicker: language === "es" ? "Próximo paso" : "Next step",
+        title: language === "es" ? "De la idea a una solución clara" : "From idea to a clear solution",
         subtitle:
           language === "es"
-            ? "Un proceso claro para empezar sin fricción."
-            : "A clear, frictionless way to get started.",
+            ? "Contame tu contexto y vemos alcance, prioridades y el mejor camino para avanzar."
+            : "Share your context and we’ll define scope, priorities and the best path forward.",
         cta: language === "es" ? "Ir al contacto" : "Go to contact",
         badges: [
-          { icon: <Clock3 className="h-4 w-4 stroke-[2] text-[#3B82F6]" />, es: "Diagnóstico 20′ gratis", en: "Free 20-min diagnostic" },
-          { icon: <FileText className="h-4 w-4 stroke-[2] text-[#3B82F6]" />, es: "Propuesta en 24 hs", en: "Proposal within 24 hours" },
-          { icon: <CalendarCheck className="h-4 w-4 stroke-[2] text-[#3B82F6]" />, es: "Kickoff esta semana", en: "Kickoff this week" },
+          { icon: "message" as const, es: "Contacto directo", en: "Direct contact" },
+          { icon: "check" as const, es: "Alcance por etapas", en: "Phased scope" },
+          { icon: "layers" as const, es: "Stack a medida", en: "Tailored stack" },
         ],
         href: "/#contacto",
       } as const;
@@ -66,31 +67,39 @@ export default function TransitionServicesIntro({ variant = "default" }: BridgeP
 
         {variant === "afterPortfolio" ? (
           <>
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6 max-w-[42rem] mx-auto">
+            <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4 max-w-[42rem] mx-auto w-full">
               {V.badges.map((b, i) => (
                 <div
                   key={i}
-                  className="flex h-11 items-center justify-center gap-2 rounded-xl border border-gray-200 bg-white px-4"
+                  className="flex w-full min-h-[52px] items-center gap-3 rounded-xl border border-gray-200/90 bg-white px-3.5 py-2.5 sm:min-h-0 sm:px-4 sm:py-3"
                 >
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full bg-gray-100 text-gray-600 ring-1 ring-gray-200" aria-hidden>
-                    {b.icon}
-                  </div>
-                  <span className="text-[13.5px] font-medium text-gray-700 whitespace-normal sm:whitespace-nowrap">
+                  <span
+                    className="inline-flex h-[22px] w-[22px] shrink-0 items-center justify-center text-[#3B82F6]"
+                    aria-hidden
+                  >
+                    {b.icon === "message" ? (
+                      <FiMessageCircle className="h-[18px] w-[18px]" strokeWidth={1.75} />
+                    ) : b.icon === "check" ? (
+                      <FiCheckCircle className="h-[18px] w-[18px]" strokeWidth={1.75} />
+                    ) : (
+                      <FiLayers className="h-[18px] w-[18px]" strokeWidth={1.75} />
+                    )}
+                  </span>
+                  <span className="min-w-0 flex-1 text-left text-[13px] sm:text-sm font-medium text-gray-800 leading-snug">
                     {language === "es" ? b.es : b.en}
                   </span>
                 </div>
               ))}
             </div>
             <div className="mt-6">
-              <a
-                href={V.href}
+              <Link
+                to={V.href}
                 aria-label={language === "es" ? "Ir al formulario de contacto" : "Go to contact form"}
-                rel="nofollow"
                 data-analytics={`bridge-cta-${variant}`}
-                className="inline-flex items-center justify-center rounded-lg bg-[#3B82F6] text-white text-sm font-medium px-5 py-2 shadow-md hover:shadow-lg hover:opacity-90 transition w-full sm:w-auto focus-visible:ring-2 ring-offset-2 ring-[#3B82F6]"
+                className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg bg-[#3B82F6] text-white text-sm font-medium px-5 py-2.5 shadow-md hover:shadow-lg hover:opacity-90 transition w-full sm:w-auto focus-visible:ring-2 ring-offset-2 ring-[#3B82F6]"
               >
                 {V.cta}
-              </a>
+              </Link>
               <p className="mt-2 text-sm text-gray-600">
                 {language === "es" ? (
                   <>O escribime por <a href="mailto:r.opalo@icloud.com" className="underline hover:opacity-80">email</a>.</>

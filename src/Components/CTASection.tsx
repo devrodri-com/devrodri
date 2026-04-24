@@ -40,14 +40,12 @@ export default function CTASection() {
           to="/#contacto"
           aria-label={language === "es" ? "Ir al formulario de contacto" : "Go to contact form"}
           data-analytics="cta-start-project"
-          className="inline-block bg-white text-black font-semibold px-6 py-3 rounded-xl shadow-md hover:bg-gray-200 transition-all duration-300 focus-visible:ring-2 ring-offset-2 ring-white w-full sm:w-auto text-center"
+          className="inline-flex items-center justify-center min-h-[44px] bg-white text-black font-semibold px-6 py-3 rounded-xl shadow-md hover:bg-gray-200 transition-all duration-300 focus-visible:ring-2 ring-offset-2 ring-white w-full sm:w-auto text-center"
         >
           {t.call.button}
         </Link>
       </motion.div>
       <p className="mt-1 text-sm text-gray-400">
-        {language === "es" ? "Respuesta < 24 h" : "Reply within 24 h"}
-        <span className="mx-2">·</span>
         <a
           href="https://wa.me/17544653318?text=Hola%20Rodrigo%2C%20vengo%20de%20devrodri.com%20y%20quiero%20empezar%20un%20proyecto"
           target="_blank"

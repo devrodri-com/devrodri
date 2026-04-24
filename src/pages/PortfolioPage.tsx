@@ -509,13 +509,16 @@ export default function PortfolioPage() {
     const raw = (st as { focusCase: unknown }).focusCase;
     if (typeof raw !== "string" || !(raw in projectMeta)) return;
     const key = raw as ProjectKey;
+    const id = `portfolio-case-${key}`;
     setFilter("all");
     setExpanded((e) => ({ ...e, [key]: true }));
     navigate(".", { replace: true, state: {} });
-    const id = `portfolio-case-${key}`;
-    requestAnimationFrame(() => {
-      document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    });
+    const scrollToCase = () => {
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+    requestAnimationFrame(() => requestAnimationFrame(scrollToCase));
+    const timeoutId = window.setTimeout(scrollToCase, 220);
+    return () => window.clearTimeout(timeoutId);
   }, [location.state, navigate]);
 
   // Helper tipado para evitar problemas con acceso dinámico
@@ -566,7 +569,7 @@ export default function PortfolioPage() {
 
         <div className="space-y-10">
           {list.map((p) => (
-            <div key={p.key} id={`portfolio-case-${p.key}`}>
+            <div key={p.key} id={`portfolio-case-${p.key}`} className="scroll-mt-28">
             <PortfolioCard
               cover={p.cover}
               title={P[p.key].title}
@@ -589,13 +592,16 @@ export default function PortfolioPage() {
                 <a href={p.href} target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:text-primary-dark underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">{P[p.key].link}</a>
               ) : null}
               <button
+                type="button"
+                aria-expanded={expanded[p.key]}
+                aria-controls={`portfolio-details-${p.key}`}
                 onClick={() => setExpanded(e => ({ ...e, [p.key]: !e[p.key] }))}
-                className="text-sm text-gray-700 hover:text-black underline focus-visible:ring-2 ring-offset-2 ring-gray-300 rounded-sm"
+                className="text-sm text-gray-700 hover:text-black underline focus-visible:ring-2 ring-offset-2 ring-gray-300 rounded-sm min-h-[44px] min-w-[44px] inline-flex items-center"
               >
                 {expanded[p.key] ? (language === "es" ? "Ver menos" : "View less") : (language === "es" ? "Ver más" : "View details")}
               </button>
               {expanded[p.key] && (
-                <div className="mt-5 border-t border-gray-100 pt-6">
+                <div id={`portfolio-details-${p.key}`} className="mt-5 border-t border-gray-100 pt-6">
                   <p className="text-gray-800 font-medium">{language === "es" ? caseDetails[p.key].summaryEs : caseDetails[p.key].summaryEn}</p>
                   <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div>
