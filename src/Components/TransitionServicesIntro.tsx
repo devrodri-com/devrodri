@@ -20,7 +20,7 @@ export default function TransitionServicesIntro({ variant = "default" }: BridgeP
           language === "es"
             ? "Un proceso claro para empezar sin fricción."
             : "A clear, frictionless way to get started.",
-        cta: language === "es" ? "Agendar llamada" : "Schedule a call",
+        cta: language === "es" ? "Ir al contacto" : "Go to contact",
         badges: [
           { icon: <Clock3 className="h-4 w-4 stroke-[2] text-[#3B82F6]" />, es: "Diagnóstico 20′ gratis", en: "Free 20-min diagnostic" },
           { icon: <FileText className="h-4 w-4 stroke-[2] text-[#3B82F6]" />, es: "Propuesta en 24 hs", en: "Proposal within 24 hours" },
@@ -84,7 +84,7 @@ export default function TransitionServicesIntro({ variant = "default" }: BridgeP
             <div className="mt-6">
               <a
                 href={V.href}
-                aria-label={language === "es" ? "Agendar una llamada" : "Schedule a call"}
+                aria-label={language === "es" ? "Ir al formulario de contacto" : "Go to contact form"}
                 rel="nofollow"
                 data-analytics={`bridge-cta-${variant}`}
                 className="inline-flex items-center justify-center rounded-lg bg-[#3B82F6] text-white text-sm font-medium px-5 py-2 shadow-md hover:shadow-lg hover:opacity-90 transition w-full sm:w-auto focus-visible:ring-2 ring-offset-2 ring-[#3B82F6]"

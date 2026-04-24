@@ -2,7 +2,6 @@
 import { Zap, Smartphone, Target, Rocket, Workflow, CreditCard } from "lucide-react";
 import { useLanguage } from "../LanguageContext";
 import translations from "../translations";
-import SeoHighlightsSection from "./SeoHighlightsSection";
 import { useRef, useEffect } from "react";
 
 const iconMap = {
@@ -94,8 +93,6 @@ export default function HighlightsSection() {
         id="porqueelegirnos"
         className="relative bg-white py-28 px-4 sm:px-6 overflow-hidden"
       >
-        <SeoHighlightsSection />
-
         <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
           <video
             ref={videoRef}
@@ -105,7 +102,7 @@ export default function HighlightsSection() {
             preload="metadata"
             disableRemotePlayback
             aria-hidden="true"
-            poster="/img/highlights-bg.jpg"
+            poster="/img/hero-visual.jpg"
             className="absolute inset-0 w-full h-full object-cover opacity-100"
             id="bgVideo"
             muted

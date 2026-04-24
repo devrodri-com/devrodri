@@ -2,7 +2,7 @@
 import { useLanguage } from "./LanguageContext";
 import { HelmetProvider } from "react-helmet-async";
 import SeoHead from "./Components/SeoHead";
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import HeroSlider from "./Components/HeroSlider";
 import SobreMiSection from "./Components/SobreMiSection";
 import HighlightsSection from "./Components/HighlightsSection";
@@ -15,11 +15,10 @@ import ImpactSection from "./Components/ImpactSection";
 import ExperienceSection from "./Components/ExperienceSection";
 import TransitionServicesIntro from "./Components/TransitionServicesIntro";
 import "./index.css";
-import SeoFooterSection from "./Components/SeoFooterSection";
 import CTASection from "./Components/CTASection";
 import { Routes, Route, useLocation } from "react-router-dom";
 
-import PortfolioPage from "./pages/PortfolioPage";
+const PortfolioPage = lazy(() => import("./pages/PortfolioPage"));
 
 const HomePage = () => (
   <>
@@ -107,11 +106,22 @@ function App() {
 
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/portfolio" element={<PortfolioPage />} />
+          <Route
+            path="/portfolio"
+            element={
+              <Suspense
+                fallback={
+                  <div className="min-h-[45vh] flex items-center justify-center bg-black text-white/70 text-sm px-4 text-center">
+                    {language === "es" ? "Cargando portfolio…" : "Loading portfolio…"}
+                  </div>
+                }
+              >
+                <PortfolioPage />
+              </Suspense>
+            }
+          />
         </Routes>
 
-        {/* Footer SEO + visual */}
-        <SeoFooterSection />
         <Footer />
       </div>
     </HelmetProvider>

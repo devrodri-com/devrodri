@@ -3,8 +3,6 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useLanguage } from "../LanguageContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import SeoHeroSlide from "./SeoHeroSlide";
-
 const slides = [
   {
     id: 1,
@@ -188,8 +186,6 @@ export default function HeroSlider() {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <SeoHeroSlide index={index} />
-
       <AnimatePresence mode="wait">
         <motion.div
           key={slides[index].id}

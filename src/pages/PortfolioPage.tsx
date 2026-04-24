@@ -1,8 +1,8 @@
 // src/pages/PortfolioPage.tsx
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useLanguage } from "../LanguageContext";
 import translations from "../translations";
-import SeoPortfolioSection from "../Components/SeoPortfolioSection";
 import PortfolioCard from "../Components/portfolio/PortfolioCard";
 
 type ProjectKey = "lem_web" | "lem_portal" | "esteban" | "mutter" | "federico" | "boating" | "magenta" | "campings_demo";
@@ -267,7 +267,13 @@ const caseDetails: Record<ProjectKey, {
       "Frontend: React + Vite + TypeScript",
       "Animaciones: Framer Motion",
       "Firebase: Firestore · Auth · Hosting · Storage",
-      "i18n: i18next (ES/EN)"
+      "i18n: ES/EN con contenido centralizado (archivos por idioma)",
+    ],
+    stackEn: [
+      "Frontend: React + Vite + TypeScript",
+      "Motion: Framer Motion",
+      "Firebase: Firestore · Auth · Hosting · Storage",
+      "i18n: ES/EN with centralized content (per-locale data files)",
     ],
     integrations: [
       "Vimeo (video courses)",
@@ -296,7 +302,7 @@ const caseDetails: Record<ProjectKey, {
     ],
     solutionEn: [
       "Reusable blocks (Hero, About, Gallery, Classes, Testimonials, Contact)",
-      "Centralized i18n content (es.json / en.json)",
+      "Centralized bilingual content (es.json / en.json pattern)",
       "Scalable testimonials with typed schema and data loader",
       "Media gallery with hovers, fullscreen and CTA",
       "Clean URLs, on‑page SEO and per‑page metadata"
@@ -479,6 +485,8 @@ const caseDetails: Record<ProjectKey, {
 export default function PortfolioPage() {
   const { language } = useLanguage();
   const t = translations[language];
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const [filter, setFilter] = useState<Category>("all");
   const [expanded, setExpanded] = useState<Record<ProjectKey, boolean>>({
@@ -495,6 +503,21 @@ export default function PortfolioPage() {
     projects.filter(p => filter === "all" || projectMeta[p.key].category === filter)
   , [filter]);
 
+  useEffect(() => {
+    const st = location.state;
+    if (st === null || typeof st !== "object" || !("focusCase" in st)) return;
+    const raw = (st as { focusCase: unknown }).focusCase;
+    if (typeof raw !== "string" || !(raw in projectMeta)) return;
+    const key = raw as ProjectKey;
+    setFilter("all");
+    setExpanded((e) => ({ ...e, [key]: true }));
+    navigate(".", { replace: true, state: {} });
+    const id = `portfolio-case-${key}`;
+    requestAnimationFrame(() => {
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+  }, [location.state, navigate]);
+
   // Helper tipado para evitar problemas con acceso dinámico
   const P: Record<ProjectKey, { title: string; desc: string; link: string }> = {
     lem_web: t.portfolio.lem_web,
@@ -508,8 +531,6 @@ export default function PortfolioPage() {
   };
 
   return (
-    <>
-      <SeoPortfolioSection />
       <section className="py-24 bg-black text-white min-h-screen">
         <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-8">
@@ -545,8 +566,8 @@ export default function PortfolioPage() {
 
         <div className="space-y-10">
           {list.map((p) => (
+            <div key={p.key} id={`portfolio-case-${p.key}`}>
             <PortfolioCard
-              key={p.key}
               cover={p.cover}
               title={P[p.key].title}
               desc={P[p.key].desc}
@@ -621,10 +642,10 @@ export default function PortfolioPage() {
                 </div>
               )}
             </PortfolioCard>
+            </div>
           ))}
         </div>
         </div>
       </section>
-    </>
   );
 }

@@ -281,7 +281,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
         },
         lang: {
           title: "Multilenguaje",
-          desc: "Sitios en español, inglés y portugués con sistema de traducción.",
+          desc: "Sitios en español e inglés con sistema de traducción.",
         },
       },
       seoMeta: {
@@ -366,7 +366,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
     contact: {
       title: "Contacto",
       subtitle:
-        "¿Listo para llevar tu marca al siguiente nivel? Escribime por WhatsApp o correo y coordinamos una reunión o una llamada.",
+        "¿Listo para llevar tu marca al siguiente nivel? Dejame un mensaje en el formulario o escribime por WhatsApp o correo; te respondo pronto para ver cómo encaja tu proyecto.",
       namePlaceholder: "Nombre",
       emailPlaceholder: "Correo electrónico",
       messagePlaceholder: "¿En qué te puedo ayudar?",
@@ -434,7 +434,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
     call: {
       title: "¿Listo para destacar online?",
       subtitle:
-        "Construyamos juntos un sitio moderno, rápido y optimizado para que tu marca se destaque.",
+        "Contame tu idea desde el formulario de contacto y te respondo con propuesta y próximos pasos.",
       button: "Empezar proyecto",
       seo: {
         title: "Contacto final | Rodrigo Opalo",
@@ -638,7 +638,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
     contact: {
       title: "Contact",
       subtitle:
-        "Ready to take your brand to the next level? Send me a message via WhatsApp or email and let’s schedule a meeting or a call.",
+        "Ready to take your brand to the next level? Leave a message in the form or reach me on WhatsApp or email — I’ll reply soon to see how your project fits.",
       namePlaceholder: "Name",
       emailPlaceholder: "Email",
       messagePlaceholder: "How can I help you?",
@@ -705,7 +705,8 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
 },
     call: {
       title: "Ready to stand out online?",
-      subtitle: "Let's build a modern, fast, and optimized site so your brand stands out.",
+      subtitle:
+        "Tell me about your idea via the contact form and I’ll reply with next steps and a proposal outline.",
       button: "Start project",
       seo: {
         title: "Final contact | Rodrigo Opalo",

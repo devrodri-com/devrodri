@@ -1,15 +1,12 @@
 // src/Components/ImpactSection.tsx
 import { useLanguage } from "../LanguageContext";
 import translations from "../translations";
-import SeoImpactSection from "./SeoImpactSection";
-
 export default function ImpactSection() {
   const { language } = useLanguage();
   const t = translations[language];
 
   return (
     <>
-      <SeoImpactSection />
       <section
         id="impacto"
         className="bg-black text-white py-28 px-4 sm:px-6"
