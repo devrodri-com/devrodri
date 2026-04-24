@@ -54,12 +54,13 @@ export default function FaqSection() {
 
   // Patch the "technologies" answer to include Next.js and stack items
   const techAnswerEs =
-    "Next.js, React, Vite (según proyecto), TypeScript, Tailwind, Firebase (Firestore/Auth/Hosting/Storage), Stripe/PayPal, n8n y MCP (automatizaciones), ImageKit/Cloudinary (medios), Framer Motion e i18next (multilenguaje).";
+    "Next.js, React, Vite (según proyecto), TypeScript, Tailwind, Firebase (Firestore/Auth/Hosting/Storage), Stripe/PayPal, n8n y MCP (automatizaciones), ImageKit/Cloudinary (medios), Framer Motion y multilenguaje según proyecto (p. ej. React Context o next-intl).";
   const techAnswerEn =
-    "Next.js, React, Vite (per project), TypeScript, Tailwind, Firebase (Firestore/Auth/Hosting/Storage), Stripe/PayPal, n8n & MCP (automations), ImageKit/Cloudinary (media), Framer Motion and i18next (multilanguage).";
+    "Next.js, React, Vite (per project), TypeScript, Tailwind, Firebase (Firestore/Auth/Hosting/Storage), Stripe/PayPal, n8n & MCP (automations), ImageKit/Cloudinary (media), Framer Motion, and multilingual setups as needed (e.g. React Context or next-intl).";
 
-  const baseFaqs = [...t.faq.questions];
-  const techIdx = baseFaqs.findIndex((q: any) => /tecnolog|technolog/i.test(q.question));
+  type FaqItem = { question: string; answer: string };
+  const baseFaqs: FaqItem[] = t.faq.questions.map((q) => ({ ...q }));
+  const techIdx = baseFaqs.findIndex((q) => /tecnolog|technolog/i.test(q.question));
   if (techIdx > -1) {
     baseFaqs[techIdx] = {
       ...baseFaqs[techIdx],
@@ -67,7 +68,7 @@ export default function FaqSection() {
     };
   }
 
-  const faqs = [...baseFaqs, ...extraFaq];
+  const faqs: FaqItem[] = [...baseFaqs, ...extraFaq];
 
   return (
     <section
@@ -102,7 +103,7 @@ export default function FaqSection() {
         </h2>
 
         <div className="space-y-8">
-          {faqs.map((q: any, index: number) => (
+          {faqs.map((q, index) => (
             <div
               key={index}
               className="bg-white p-6 sm:p-7 px-5 sm:px-6 rounded-2xl shadow-md border border-gray-100 cursor-default transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)] hover:shadow-lg hover:scale-[1.01]"

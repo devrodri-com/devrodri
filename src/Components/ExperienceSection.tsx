@@ -1,8 +1,6 @@
 // src/Components/ExperienceSection.tsx
 import { useLanguage } from "../LanguageContext";
 import translations from "../translations";
-import SeoExperienceSection from "./SeoExperienceSection";
-
 export default function ExperienceSection() {
   const { language } = useLanguage();
   const t = translations[language];
@@ -13,7 +11,6 @@ export default function ExperienceSection() {
       data-section="experience"
       className="bg-black text-white py-28 px-4 sm:px-6"
     >
-      <SeoExperienceSection />
       <div className="max-w-6xl mx-auto grid md:grid-cols-12 items-center gap-12">
         {/* Imagen */}
         <div className="relative rounded-xl overflow-hidden shadow-xl md:col-span-6 order-1 md:order-none min-h-[360px]">

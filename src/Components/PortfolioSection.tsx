@@ -133,8 +133,13 @@ export default function PortfolioSection() {
             <Link
               key={p.key}
               to="/portfolio"
+              state={{ focusCase: p.key }}
               className="block rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
-              aria-label={language === "es" ? `Ver portfolio completo: ${p.title}` : `View full portfolio: ${p.title}`}
+              aria-label={
+                language === "es"
+                  ? `Ver este caso en el portfolio: ${p.title}`
+                  : `View this case in the portfolio: ${p.title}`
+              }
             >
               <motion.div
                 className="group rounded-2xl bg-white/95 backdrop-blur border border-gray-200/80 p-5 sm:p-6 flex flex-col gap-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"

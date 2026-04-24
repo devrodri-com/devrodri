@@ -2,8 +2,6 @@
 import { motion } from "framer-motion";
 import { useLanguage } from "../LanguageContext";
 import translations from "../translations";
-import SeoSobreMiSection from "./SeoSobreMiSection";
-
 export default function SobreMiSection() {
   const { language } = useLanguage();
   const t = translations[language];
@@ -17,7 +15,6 @@ export default function SobreMiSection() {
       viewport={{ once: true, amount: 0.25 }}
       transition={{ duration: 0.55 }}
     >
-      <SeoSobreMiSection />
       <div className="flex justify-center mb-5">
         <img
           src="/img/sobremi.jpg"
