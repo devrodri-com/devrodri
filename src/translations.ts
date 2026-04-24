@@ -366,7 +366,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
     contact: {
       title: "Contacto",
       subtitle:
-        "¿Listo para llevar tu marca al siguiente nivel? Dejame un mensaje en el formulario o escribime por WhatsApp o correo; te respondo pronto para ver cómo encaja tu proyecto.",
+        "¿Listo para llevar tu marca al siguiente nivel? Escribime por el formulario, WhatsApp o correo y vemos juntos encaje y próximos pasos.",
       namePlaceholder: "Nombre",
       emailPlaceholder: "Correo electrónico",
       messagePlaceholder: "¿En qué te puedo ayudar?",
@@ -434,7 +434,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
     call: {
       title: "¿Listo para destacar online?",
       subtitle:
-        "Contame tu idea desde el formulario de contacto y te respondo con propuesta y próximos pasos.",
+        "Contame tu idea por el formulario y te respondo para alinear alcance y próximos pasos.",
       button: "Empezar proyecto",
       seo: {
         title: "Contacto final | Rodrigo Opalo",
@@ -638,7 +638,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
     contact: {
       title: "Contact",
       subtitle:
-        "Ready to take your brand to the next level? Leave a message in the form or reach me on WhatsApp or email — I’ll reply soon to see how your project fits.",
+        "Ready to take your brand to the next level? Message me via the form, WhatsApp or email and we’ll align fit and next steps together.",
       namePlaceholder: "Name",
       emailPlaceholder: "Email",
       messagePlaceholder: "How can I help you?",
@@ -706,7 +706,7 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
     call: {
       title: "Ready to stand out online?",
       subtitle:
-        "Tell me about your idea via the contact form and I’ll reply with next steps and a proposal outline.",
+        "Tell me about your idea via the form and I’ll follow up to align scope and next steps.",
       button: "Start project",
       seo: {
         title: "Final contact | Rodrigo Opalo",

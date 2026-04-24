@@ -134,7 +134,7 @@ export default function PortfolioSection() {
               key={p.key}
               to="/portfolio"
               state={{ focusCase: p.key }}
-              className="block rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+              className="block rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 min-h-[72px]"
               aria-label={
                 language === "es"
                   ? `Ver este caso en el portfolio: ${p.title}`
@@ -173,19 +173,19 @@ export default function PortfolioSection() {
         <div className="mt-10 flex flex-col items-center gap-4">
           <p className="text-sm text-white/75 text-center max-w-xl">
             {language === "es"
-              ? "En el portfolio completo podés ver más casos, métricas y detalles del proceso."
-              : "In the full portfolio you can see more projects, metrics and process details."}
+              ? "En el portfolio completo hay más casos y el detalle técnico de cada uno."
+              : "The full portfolio lists more cases and the technical detail for each one."}
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <a
-              href="/#contacto"
-              className="inline-flex items-center rounded-lg px-4 py-2 text-sm font-semibold bg-[#3B82F6] text-white hover:opacity-90 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+            <Link
+              to="/#contacto"
+              className="inline-flex items-center justify-center min-h-[44px] rounded-lg px-4 py-2 text-sm font-semibold bg-[#3B82F6] text-white hover:opacity-90 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
             >
-              {language === "es" ? "Hablemos de tu proyecto" : "Let's talk about your project"}
-            </a>
+              {language === "es" ? "Escribime por el formulario" : "Message me via the form"}
+            </Link>
             <Link
               to="/portfolio"
-              className="inline-flex items-center rounded-lg px-4 py-2 text-sm font-semibold border border-white/30 bg-white/5 text-white/90 hover:bg-white/15 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+              className="inline-flex items-center justify-center min-h-[44px] rounded-lg px-4 py-2 text-sm font-semibold border border-white/30 bg-white/5 text-white/90 hover:bg-white/15 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
             >
               {language === "es" ? "Ver portfolio completo" : "View full portfolio"}
             </Link>
