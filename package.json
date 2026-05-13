@@ -2,6 +2,7 @@
   "name": "minisitio-rodrigo",
   "version": "1.0.0",
   "private": true,
+  "packageManager": "npm@9.9.4",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
