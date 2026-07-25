@@ -110,6 +110,8 @@ export type TranslationsStructure = {
     campings_demo: {
       title: string;
       desc: string;
+      status: string;
+      disclaimer: string;
       link: string;
     };
     seo: {
@@ -334,9 +336,11 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
         link: "Ver sitio",
       },
       campings_demo: {
-        title: "Campings reservas (demo)",
-        desc: "MVP funcional avanzado para reservas de campings, con flujo público, panel administrativo e inventario híbrido por cupo o por unidades.",
-        link: "Ver caso",
+        title: "Plataforma de reservas de campings",
+        desc: "Prototipo full-stack presentado como propuesta para explorar la gestión de disponibilidad, reservas, pagos simulados y administración de campings. No fue encargado ni adoptado por la organización destinataria.",
+        status: "Prototipo conceptual",
+        disclaimer: "Proyecto conceptual e independiente. No es un sistema oficial ni está afiliado a Administración de Parques Nacionales.",
+        link: "Ver código",
       },
       seo: {
         title: "Portfolio | Rodrigo Opalo",
@@ -608,9 +612,11 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
         link: "Visit site",
       },
       campings_demo: {
-        title: "Campings bookings (demo)",
-        desc: "Advanced functional MVP for campground bookings, with public flow, admin panel and hybrid inventory by capacity or physical units.",
-        link: "View case",
+        title: "Campground booking platform",
+        desc: "Full-stack prototype presented as a proposal to explore campground availability, bookings, simulated payments and administration. It was not commissioned or adopted by the intended organization.",
+        status: "Concept prototype",
+        disclaimer: "Independent concept project. It is not an official system and is not affiliated with Administración de Parques Nacionales.",
+        link: "View code",
       },
       seo: {
         title: "Portfolio | Rodrigo Opalo",
