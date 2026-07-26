@@ -25,7 +25,7 @@ export default function ImpactSection() {
                 href="/portfolio"
                 aria-label={language === "es" ? "Ver casos del porfolio" : "View portfolio work"}
                 data-analytics="impact-cta-primary"
-                className="px-5 py-2 rounded-lg bg-[#3B82F6] text-white font-medium hover:opacity-90 transition"
+                className="px-5 py-2 rounded-lg bg-primary-on-light text-white font-medium hover:opacity-90 transition"
               >
                 {language === "es" ? "Ver casos" : "View work"}
               </a>

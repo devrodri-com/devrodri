@@ -108,7 +108,7 @@ export default function FaqSection() {
               key={index}
               className="bg-white p-6 sm:p-7 px-5 sm:px-6 rounded-2xl shadow-md border border-gray-100 cursor-default transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)] hover:shadow-lg hover:scale-[1.01]"
             >
-              <h3 className="font-semibold text-lg sm:text-xl text-primary mb-2">
+              <h3 className="font-semibold text-lg sm:text-xl text-primary-on-light mb-2">
                 {q.question}
               </h3>
               <p className="text-neutral-800 text-base leading-relaxed">
