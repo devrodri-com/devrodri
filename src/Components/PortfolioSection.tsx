@@ -104,7 +104,7 @@ export default function PortfolioSection() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          {language === "es" ? "Algunos resultados recientes" : "Recent work & results"}
+          {language === "es" ? "Casos seleccionados" : "Selected work"}
         </motion.h2>
 
         <motion.p
@@ -113,19 +113,9 @@ export default function PortfolioSection() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          {language === "es" ? (
-            <>
-              Sitios a medida para servicios, e-commerce y marcas personales.
-              <br />
-              Diseño limpio, SEO técnico y rendimiento listo para escalar.
-            </>
-          ) : (
-            <>
-              Custom sites for services, e-commerce and personal brands.
-              <br />
-              Clean design, technical SEO and performance ready to scale.
-            </>
-          )}
+          {language === "es"
+            ? "Una selección de proyectos propios y para clientes, con distintos desafíos de negocio y desarrollo."
+            : "A selection of my own projects and client work, spanning different business and development challenges."}
         </motion.p>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -187,7 +177,7 @@ export default function PortfolioSection() {
               to="/portfolio"
               className="inline-flex items-center justify-center min-h-[44px] rounded-lg px-4 py-2 text-sm font-semibold border border-white/30 bg-white/5 text-white/90 hover:bg-white/15 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
             >
-              {language === "es" ? "Ver portfolio completo" : "View full portfolio"}
+              {language === "es" ? "Ver casos" : "View case studies"}
             </Link>
           </div>
         </div>

@@ -12,10 +12,40 @@ export type TranslationsStructure = {
     contact: string;
     faq: string;
   };
-  hero: { title: string; subtitle: string };
+  hero: {
+    eyebrow: string;
+    primaryCta: string;
+    slides: {
+      websites: {
+        title: string;
+        description: string;
+      };
+      customSystems: {
+        title: string;
+        description: string;
+      };
+      integrations: {
+        title: string;
+        description: string;
+      };
+      brandLaunches: {
+        title: string;
+        description: string;
+      };
+    };
+    carouselLabel: string;
+    goToSlide: string;
+    slideCountConnector: string;
+    previousSlide: string;
+    nextSlide: string;
+  };
   about: {
     title: string;
-    description: string;
+    role: string;
+    expertise: string;
+    introduction: string;
+    experience: string;
+    collaboration: string;
     seo: {
       title: string;
       description: string;
@@ -40,16 +70,17 @@ export type TranslationsStructure = {
   };
   services: {
     title: string;
+    intro: string;
     items: {
+      systems: {
+        title: string;
+        desc: string;
+      };
       web: {
         title: string;
         desc: string;
       };
-      seo: {
-        title: string;
-        desc: string;
-      };
-      lang: {
+      brand: {
         title: string;
         desc: string;
       };
@@ -149,15 +180,12 @@ export type TranslationsStructure = {
   transitionIntro: {
     text: string;
   };
-  transitionServicesIntro: {
-    smallTitle: string;
-    text: string;
-  };
   transitionVisual: {
     title: string;
     subtitleLine1: string;
     subtitleLine2: string;
     paragraph: string;
+    principles: string[];
   };
   call: {
     title: string;
@@ -201,21 +229,59 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
       faq: "FAQ"
     },
     hero: {
-      title: "Diseño web profesional.",
-      subtitle:
-        "Desarrollo sitios web elegantes, funcionales y optimizados. Ideal para marcas que buscan diferenciarse.",
+      eyebrow: "RODRIGO OPALO · DESARROLLADOR FULL-STACK",
+      primaryCta: "Contame tu proyecto",
+      slides: {
+        websites: {
+          title: "Sitios web profesionales.",
+          description:
+            "Diseño y desarrollo sitios claros, rápidos y orientados a objetivos reales de negocio.",
+        },
+        customSystems: {
+          title: "Sistemas y aplicaciones a medida.",
+          description:
+            "Creo herramientas para ordenar procesos, administrar operaciones y hacer crecer tu negocio.",
+        },
+        integrations: {
+          title: "Integraciones y automatización.",
+          description:
+            "Conecto servicios y automatizo tareas para reducir trabajo manual y mejorar la operación.",
+        },
+        brandLaunches: {
+          title: "Marcas con una base digital sólida.",
+          description:
+            "Coordino identidad, dominio, correo y sitio para lanzar una marca de forma profesional.",
+        },
+      },
+      carouselLabel: "Capacidades destacadas",
+      goToSlide: "Ir a la capacidad",
+      slideCountConnector: "de",
+      previousSlide: "Capacidad anterior",
+      nextSlide: "Capacidad siguiente",
     },
     transitionVisual: {
-      title: "Diseño con intención.",
+      title: "Trabajo técnico con visión de negocio.",
       subtitleLine1: "Funciona, conecta",
       subtitleLine2: "y se ve bien.",
       paragraph:
-        "Cada proyecto es único, como cada cliente. No se trata de decorar, sino de proyectar lo que tu marca quiere decir.",
+        "Defino cada solución a partir del problema, el contexto operativo y las prioridades reales del proyecto.",
+      principles: [
+        "Trabajo directo",
+        "Soluciones a medida",
+        "Desarrollo por etapas",
+        "Visión técnica y de negocio",
+      ],
     },
     about: {
       title: "Sobre mí",
-      description:
-        "Soy Rodrigo Opalo, desarrollador web y emprendedor. Trabajo bajo la marca devrodri y creo sitios modernos, rápidos y optimizados para marcas que buscan destacarse. Combino diseño, funcionalidad y tecnología de inteligencia artificial para lograr resultados reales. También desarrollo proyectos como Boating Adventures Miami y LEM-BOX.",
+      role: "Desarrollador full-stack independiente con mentalidad de producto",
+      expertise: "Full-stack · Producto · Operaciones · Automatización",
+      introduction:
+        "Soy Rodrigo Opalo. Trabajo bajo la marca devrodri, dirijo cada proyecto y trato directamente con el cliente para diseñar y desarrollar sitios, aplicaciones, sistemas e integraciones.",
+      experience:
+        "Mi experiencia en operaciones, logística, e-commerce y producto me ayuda a entender tanto la solución técnica como la forma en que el negocio necesita usarla y hacerla evolucionar.",
+      collaboration:
+        "Cuando el alcance requiere diseño visual u otra especialidad, coordino profesionales seleccionados para ese proyecto y mantengo un único punto de contacto.",
       seo: {
         title: "Sobre mí | Rodrigo Opalo",
         description: "Conocé quién está detrás del diseño y desarrollo web. Emprendedor con visión, desarrollador con enfoque en resultados.",
@@ -239,27 +305,27 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
         responsive: {
           icon: "📱",
           title: "Diseño responsive",
-          desc: "Tu sitio se verá perfecto en todos los dispositivos.",
+          desc: "Interfaces preparadas y revisadas para adaptarse a distintos tamaños de pantalla.",
         },
         results: {
           icon: "🎯",
-          title: "Enfocado en resultados",
-          desc: "Diseño con propósito que convierte visitantes en clientes.",
+          title: "Decisiones con contexto",
+          desc: "Prioridades definidas según la necesidad del negocio y de quienes usan la solución.",
         },
         seo: {
           icon: "🚀",
-          title: "SEO integrado",
-          desc: "Optimización técnica y estratégica para posicionar en Google.",
+          title: "Base técnica para SEO",
+          desc: "Estructura, metadatos y accesibilidad técnica preparados para buscadores.",
         },
         automation: {
           icon: "🤖",
-          title: "Automatizaciones",
-          desc: "Integraciones y flujos con n8n y MCP que ahorran tiempo y escalan tu negocio.",
+          title: "Integraciones y automatización",
+          desc: "Flujos con n8n, MCP y APIs conectados con los procesos definidos para el proyecto.",
         },
         payments: {
           icon: "💳",
-          title: "Pagos online embebidos",
-          desc: "Checkout integrado con Stripe/PayPal/Mercado Pago, seguro y sin fricción.",
+          title: "Pagos según el proyecto",
+          desc: "Integraciones con Stripe, PayPal o Mercado Pago cuando el flujo lo requiere.",
         },
       },
       seo: {
@@ -271,19 +337,21 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
       },
     },
     services: {
-      title: "¿Qué puedo crear para vos?",
+      title: "Soluciones digitales de punta a punta",
+      intro:
+        "Me involucro desde la definición del problema hasta el lanzamiento y la evolución de la solución.",
       items: {
+        systems: {
+          title: "Sistemas, aplicaciones e integraciones a medida",
+          desc: "Portales, herramientas internas, productos web, roles, administración, trazabilidad, pagos, APIs y automatización de procesos.",
+        },
         web: {
-          title: "Sitios Web Personalizados",
-          desc: "Diseño moderno, responsivo y adaptado a tu marca.",
+          title: "Sitios web y e-commerce",
+          desc: "Sitios profesionales, catálogos, reservas, captación de clientes, tiendas y experiencias multilenguaje.",
         },
-        seo: {
-          title: "Optimizado para SEO",
-          desc: "Posicionamiento orgánico con metadatos y estructura profesional.",
-        },
-        lang: {
-          title: "Multilenguaje",
-          desc: "Sitios en español e inglés con sistema de traducción.",
+        brand: {
+          title: "Desarrollo de marcas y lanzamiento digital",
+          desc: "Dirección del proyecto, identidad visual, dominio, correo corporativo y presencia digital. Cuando hace falta una especialidad concreta, coordino el trabajo con profesionales seleccionados para el proyecto.",
         },
       },
       seoMeta: {
@@ -368,9 +436,9 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
       ],
     },
     contact: {
-      title: "Contacto",
+      title: "Contame tu proyecto",
       subtitle:
-        "¿Listo para llevar tu marca al siguiente nivel? Escribime por el formulario, WhatsApp o correo y vemos juntos encaje y próximos pasos.",
+        "Contame qué necesitás resolver. Te respondo en menos de 24 horas con los próximos pasos.",
       namePlaceholder: "Nombre",
       emailPlaceholder: "Correo electrónico",
       messagePlaceholder: "¿En qué te puedo ayudar?",
@@ -387,40 +455,69 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
       questions: [
         {
           question: "¿Cuánto tarda en estar listo un sitio web?",
-          answer: "Depende del tipo de sitio, pero generalmente entre 5 y 15 días hábiles.",
+          answer:
+            "El plazo depende del alcance. Después de entender el proyecto, organizo el trabajo por etapas y dejo tiempos y entregables definidos en la propuesta.",
         },
         {
           question: "¿Puedo pedir cambios luego de publicado?",
-          answer: "¡Sí! Incluyo ajustes posteriores para que quedes conforme.",
+          answer:
+            "Sí. Los ajustes, mejoras o nuevas etapas después del lanzamiento se acuerdan según las necesidades del proyecto.",
         },
         {
           question: "¿Cómo se realiza el pago?",
-          answer: "Seña al comenzar y saldo al entregar. A convenir.",
+          answer:
+            "La forma de pago se define en la propuesta según el alcance y las etapas acordadas.",
         },
         {
           question: "¿Qué tecnologías usás para desarrollar los sitios?",
-          answer: "Trabajo con tecnologías modernas como React, Tailwind, TypeScript, Vite y más.",
+          answer:
+            "Trabajo con herramientas como Next.js, React, Vite, TypeScript, Tailwind, Firebase, Node.js, Python, Stripe, n8n y APIs. Elijo el stack según las necesidades del proyecto.",
         },
         {
           question: "¿Hacés sitios autoadministrables?",
-          answer: "Sí. Puedo ofrecerte un panel para que edites textos, imágenes o productos fácilmente.",
+          answer:
+            "Sí. Cuando el proyecto lo requiere, puedo incluir un panel para administrar textos, imágenes, productos u otros contenidos.",
         },
         {
           question: "¿Puedo tener más de un idioma en mi sitio?",
-          answer: "Claro, puedo hacerlo multilingüe desde el inicio o dejarlo listo para sumar idiomas luego.",
+          answer:
+            "Sí. Puedo planificar una experiencia multilenguaje desde el inicio o preparar la estructura para sumar idiomas después.",
         },
         {
           question: "¿Ofrecés diseño personalizado?",
-          answer: "Sí. Cada sitio es único y se adapta a tu marca, estilo y necesidades.",
+          answer:
+            "Sí. Defino la interfaz según la identidad, el contenido y los objetivos concretos del proyecto.",
         },
         {
           question: "¿Mi sitio estará optimizado para celulares?",
-          answer: "Por supuesto. Todos los sitios que desarrollo son 100% responsivos y se ven perfectos en cualquier dispositivo.",
+          answer:
+            "Diseño y reviso cada interfaz para que se adapte a celulares, tablets y pantallas de escritorio.",
         },
         {
           question: "¿Incluye SEO?",
-          answer: "Sí, aplico prácticas básicas de SEO técnico y estructura optimizada para buscadores.",
-        }
+          answer:
+            "Puedo incluir una base de SEO técnico con estructura, metadatos y criterios de accesibilidad. El alcance se define en la propuesta.",
+        },
+        {
+          question: "¿Qué procesos puedo automatizar?",
+          answer:
+            "Puedo conectar herramientas, pagos, formularios, catálogos, reportes y tareas internas mediante APIs, webhooks, n8n o MCP. Primero reviso el proceso para definir qué conviene automatizar.",
+        },
+        {
+          question: "¿Cómo definís tiempos y costo de una automatización?",
+          answer:
+            "Dependen del alcance, las integraciones y las validaciones necesarias. Después de entender el flujo, organizo el trabajo por etapas y detallo tiempos y entregables en la propuesta.",
+        },
+        {
+          question: "¿Cómo manejás la seguridad y el acceso a mis cuentas?",
+          answer:
+            "Trabajo con credenciales por entorno, permisos mínimos y accesos revocables. La configuración concreta depende de las herramientas incluidas en el proyecto.",
+        },
+        {
+          question: "¿Incluís mantenimiento, monitoreo y backups?",
+          answer:
+            "El soporte, mantenimiento, monitoreo y backups se acuerdan según las necesidades del proyecto y quedan detallados en la propuesta.",
+        },
       ],
       seo: {
         title: "Preguntas Frecuentes | Rodrigo Opalo",
@@ -431,10 +528,6 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
     transitionIntro: {
       text: "Transformo ideas en experiencias digitales con propósito.",
     },
-    transitionServicesIntro: {
-      smallTitle: "CONSTRUYAMOS ALGO INCREÍBLE",
-  text: "Ahora que sabés cómo trabajo, veamos qué podemos construir juntos.",
-},
     call: {
       title: "¿Listo para destacar online?",
       subtitle:
@@ -476,21 +569,59 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
       faq: "FAQ"
     },
     hero: {
-      title: "Professional web design.",
-      subtitle:
-        "I create elegant, functional, and optimized websites. Ideal for brands that want to stand out.",
+      eyebrow: "RODRIGO OPALO · INDEPENDENT FULL-STACK DEVELOPER",
+      primaryCta: "Tell me about your project",
+      slides: {
+        websites: {
+          title: "Professional websites.",
+          description:
+            "I design and build clear, fast websites focused on real business goals.",
+        },
+        customSystems: {
+          title: "Custom systems and applications.",
+          description:
+            "I build tools that organize processes, support operations and help businesses grow.",
+        },
+        integrations: {
+          title: "Integrations and automation.",
+          description:
+            "I connect services and automate tasks to reduce manual work and improve operations.",
+        },
+        brandLaunches: {
+          title: "Brands with a solid digital foundation.",
+          description:
+            "I coordinate identity, domain, business email and website for a professional launch.",
+        },
+      },
+      carouselLabel: "Featured capabilities",
+      goToSlide: "Go to capability",
+      slideCountConnector: "of",
+      previousSlide: "Previous capability",
+      nextSlide: "Next capability",
     },
     transitionVisual: {
-      title: "Design with intention.",
+      title: "Technical work with a business perspective.",
       subtitleLine1: "It works, it connects",
       subtitleLine2: "and it looks good.",
       paragraph:
-        "Each project is as unique as each client. It's not about decoration, but about projecting what your brand wants to express.",
+        "I define each solution around the problem, the operating context and the project's real priorities.",
+      principles: [
+        "Direct collaboration",
+        "Tailored solutions",
+        "Phased development",
+        "Technical and business perspective",
+      ],
     },
     about: {
       title: "About me",
-      description:
-        "I’m Rodrigo Opalo, a web developer and entrepreneur. I work under the devrodri brand and build modern, fast, and optimized websites for brands that want to stand out online. I combine design, functionality, and applied AI to deliver real outcomes. I’ve also built projects like Boating Adventures Miami and LEM-BOX.",
+      role: "Independent full-stack developer with a product mindset",
+      expertise: "Full-stack · Product · Operations · Automation",
+      introduction:
+        "I am Rodrigo Opalo. I work under the devrodri brand, lead each project and work directly with the client to design and build websites, applications, systems and integrations.",
+      experience:
+        "My experience in operations, logistics, e-commerce and product helps me understand both the technical solution and how the business needs to use and evolve it.",
+      collaboration:
+        "When the scope requires visual design or another specialty, I coordinate professionals selected for that project and remain the single point of contact.",
       seo: {
         title: "About me | Rodrigo Opalo",
         description: "Meet the team behind the creation of modern, optimized, and purpose-driven websites.",
@@ -514,27 +645,27 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
         responsive: {
           icon: "📱",
           title: "Responsive design",
-          desc: "Your site will look perfect on every screen.",
+          desc: "Interfaces prepared and reviewed to adapt across different screen sizes.",
         },
         results: {
           icon: "🎯",
-          title: "Results-driven",
-          desc: "Purposeful design that converts visitors into clients.",
+          title: "Context-aware decisions",
+          desc: "Priorities shaped by the needs of the business and the people using the solution.",
         },
         seo: {
           icon: "🚀",
-          title: "Built-in SEO",
-          desc: "Technical and strategic optimization to rank on Google.",
+          title: "Technical SEO foundation",
+          desc: "Structure, metadata and technical accessibility prepared for search engines.",
         },
         automation: {
           icon: "🤖",
-          title: "Automations",
-          desc: "Integrations and workflows with n8n and MCP that save time and scale your business.",
+          title: "Integrations and automation",
+          desc: "Workflows using n8n, MCP and APIs connected to the processes defined for the project.",
         },
         payments: {
           icon: "💳",
-          title: "Embedded payments",
-          desc: "Integrated checkout with Stripe/PayPal/Mercado Pago – secure and frictionless.",
+          title: "Payments when needed",
+          desc: "Integrations with Stripe, PayPal or Mercado Pago when the project flow requires them.",
         },
       },
       seo: {
@@ -546,19 +677,21 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
       },
     },
     services: {
-      title: "What can I build for you?",
+      title: "End-to-end digital solutions",
+      intro:
+        "I work from problem definition through launch and the ongoing evolution of the solution.",
       items: {
+        systems: {
+          title: "Custom systems, applications and integrations",
+          desc: "Portals, internal tools, web products, roles, administration, traceability, payments, APIs and process automation.",
+        },
         web: {
-          title: "Custom Websites",
-          desc: "Modern, responsive design tailored to your brand.",
+          title: "Websites and e-commerce",
+          desc: "Professional websites, catalogs, booking flows, lead generation, online stores and multilingual experiences.",
         },
-        seo: {
-          title: "SEO Optimization",
-          desc: "Organic positioning with metadata and professional structure.",
-        },
-        lang: {
-          title: "Multilanguage",
-          desc: "Sites in Spanish and English with translation system.",
+        brand: {
+          title: "Brand development and digital launch",
+          desc: "Project direction, visual identity, domain, business email and digital presence. When a project requires a specific specialty, I coordinate professionals selected for that work.",
         },
       },
       seoMeta: {
@@ -642,9 +775,9 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
       ],
     },
     contact: {
-      title: "Contact",
+      title: "Tell me about your project",
       subtitle:
-        "Ready to take your brand to the next level? Message me via the form, WhatsApp or email and we’ll align fit and next steps together.",
+        "Tell me what you need to solve. I will reply within 24 hours with the next steps.",
       namePlaceholder: "Name",
       emailPlaceholder: "Email",
       messagePlaceholder: "How can I help you?",
@@ -661,40 +794,69 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
       questions: [
         {
           question: "How long does it take to build a website?",
-          answer: "It depends on the type of site, but usually between 5 and 15 business days.",
+          answer:
+            "The timeline depends on the scope. Once I understand the project, I organize the work in stages and define timing and deliverables in the proposal.",
         },
         {
           question: "Can I request changes after the site is live?",
-          answer: "Absolutely! I include post-launch adjustments to ensure you're fully satisfied.",
+          answer:
+            "Yes. Adjustments, improvements or new stages after launch are agreed according to the project's needs.",
         },
         {
           question: "How is the payment handled?",
-          answer: "A deposit to get started and the balance upon delivery. Terms are flexible.",
+          answer:
+            "Payment terms are defined in the proposal according to the scope and agreed stages.",
         },
         {
           question: "What technologies do you use to build websites?",
-          answer: "I use modern tech like React, Tailwind, TypeScript, Vite, and more.",
+          answer:
+            "I work with tools such as Next.js, React, Vite, TypeScript, Tailwind, Firebase, Node.js, Python, Stripe, n8n and APIs. I choose the stack according to the project's needs.",
         },
         {
           question: "Can I manage the site myself?",
-          answer: "Yes. I can provide a dashboard so you can easily update content, images, or products.",
+          answer:
+            "Yes. When the project requires it, I can include a dashboard for managing text, images, products or other content.",
         },
         {
           question: "Can the site have more than one language?",
-          answer: "Absolutely. I can make it multilingual from the start or prepare it for future languages.",
+          answer:
+            "Yes. I can plan a multilingual experience from the start or prepare the structure for additional languages later.",
         },
         {
           question: "Do you offer custom design?",
-          answer: "Yes. Every site is tailored to your brand, style, and business goals.",
+          answer:
+            "Yes. I define the interface around the project's identity, content and specific goals.",
         },
         {
           question: "Will my site be mobile-friendly?",
-          answer: "Of course. All sites I develop are fully responsive and look great on any device.",
+          answer:
+            "I design and review each interface to adapt across phones, tablets and desktop screens.",
         },
         {
           question: "Is SEO included?",
-          answer: "Yes. I apply technical SEO basics and optimized structure so your site ranks better.",
-        }
+          answer:
+            "I can include a technical SEO foundation covering structure, metadata and accessibility criteria. The scope is defined in the proposal.",
+        },
+        {
+          question: "What processes can I automate?",
+          answer:
+            "I can connect tools, payments, forms, catalogs, reports and internal tasks through APIs, webhooks, n8n or MCP. I first review the process to define what is worth automating.",
+        },
+        {
+          question: "How do you define the timeline and cost of an automation?",
+          answer:
+            "They depend on the scope, integrations and required validation. Once I understand the workflow, I organize the work in stages and define timing and deliverables in the proposal.",
+        },
+        {
+          question: "How do you handle security and access to my accounts?",
+          answer:
+            "I work with environment-specific credentials, minimum permissions and revocable access. The exact setup depends on the tools included in the project.",
+        },
+        {
+          question: "Do you include maintenance, monitoring and backups?",
+          answer:
+            "Support, maintenance, monitoring and backups are agreed according to the project's needs and documented in the proposal.",
+        },
       ],
       seo: {
         title: "FAQ | Rodrigo Opalo",
@@ -705,10 +867,6 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
     transitionIntro: {
       text: "I turn ideas into meaningful digital experiences.",
     },
-    transitionServicesIntro: {
-      smallTitle: "LET’S BUILD SOMETHING GREAT",
-  text: "Now that you know how I work, let’s see what we can build together.",
-},
     call: {
       title: "Ready to stand out online?",
       subtitle:

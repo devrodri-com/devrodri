@@ -20,7 +20,7 @@ export default function ContactSection() {
     const formData = new FormData(form);
 
     try {
-      const res = await fetch(form.action!, {
+      const res = await fetch(form.action, {
         method: "POST",
         body: formData,
         headers: { Accept: "application/json" },
@@ -30,11 +30,11 @@ export default function ContactSection() {
       setSuccess(true);
       form.reset();
       setTimeout(() => setSuccess(false), 5000);
-    } catch (err) {
+    } catch {
       setError(
         language === "es"
-          ? "No pudimos enviar el mensaje. Probá nuevamente o escribime a r.opalo@icloud.com"
-          : "We couldn't send your message. Please try again or email me at r.opalo@icloud.com"
+          ? "No se pudo enviar el mensaje. Probá nuevamente o escribime a r.opalo@icloud.com"
+          : "The message could not be sent. Please try again or email me at r.opalo@icloud.com"
       );
     } finally {
       setSubmitting(false);
@@ -155,14 +155,14 @@ export default function ContactSection() {
           )}
         </form>
 
-        <div className="mt-10 flex justify-center gap-8 text-sm text-gray-500">
+        <div className="mt-10 flex flex-col items-center justify-center gap-4 text-sm text-gray-500 sm:flex-row sm:gap-6">
           <a
             href="mailto:r.opalo@icloud.com?subject=Consulta%20devrodri.com"
-            className="hover:text-primary-on-light flex items-center gap-2"
+            className="flex items-center gap-2 break-all hover:text-primary-on-light"
           >
-            <FaEnvelope /> Email
+            <FaEnvelope aria-hidden="true" /> r.opalo@icloud.com
           </a>
-          <span>|</span>
+          <span className="hidden sm:inline" aria-hidden="true">|</span>
           <a
             href="https://wa.me/17544653318?text=Hola%20Rodrigo%2C%20vengo%20de%20devrodri.com%20y%20me%20gustar%C3%ADa%20hablar%20sobre%20un%20proyecto"
             target="_blank"
@@ -170,7 +170,8 @@ export default function ContactSection() {
             className="hover:text-primary-on-light flex items-center gap-2"
             data-analytics="contact-whatsapp"
           >
-            <FaWhatsapp /> WhatsApp
+            <FaWhatsapp aria-hidden="true" />
+            {language === "es" ? "WhatsApp (alternativo)" : "WhatsApp (alternative)"}
           </a>
         </div>
       </motion.div>

@@ -1,288 +1,311 @@
-// src/Components/HeroSlider.tsx
-import { useState, useEffect, useRef, useCallback } from "react";
-import { useLanguage } from "../LanguageContext";
-import { motion, AnimatePresence } from "framer-motion";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type TouchEvent,
+} from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-const slides = [
+import { useLanguage } from "../LanguageContext";
+import translations, { type TranslationsStructure } from "../translations";
+
+type HeroSlideKey = keyof TranslationsStructure["hero"]["slides"];
+
+type HeroSlide = {
+  id: string;
+  image: string;
+  imageMobile: string;
+  copyKey: HeroSlideKey;
+};
+
+const slides: HeroSlide[] = [
   {
-    id: 1,
+    id: "websites",
     image: "/img/hero-visual.jpg",
     imageMobile: "/img/hero-visual-mobile.jpg",
-    imageAlt: "Man working on web design project on laptop",
-    claim: {
-      es: "SEO · Impacto visual · Experiencia de usuario",
-      en: "SEO · Visual impact · User experience",
-    },
-    title: {
-      es: "Diseño web profesional.",
-      en: "Professional web design.",
-    },
-    description: {
-      es: "Desarrollamos sitios modernos, optimizados y con propósito. Experiencias digitales que comunican, convierten y hacen destacar tu marca.",
-      en: "We build modern, optimized, purpose-driven websites. Digital experiences that connect, convert, and elevate your brand.",
-    },
-    button: {
-      es: "Ver trabajos",
-      en: "See portfolio",
-    },
-    buttonLink: "/portfolio",
+    copyKey: "websites",
   },
   {
-    id: 2,
+    id: "custom-systems",
     image: "/img/software-slide.jpg",
     imageMobile: "/img/software-slide-mobile.jpg",
-    imageAlt: "Dashboard of a custom software with charts and code",
-    claim: {
-      es: "SaaS · Apps Web · Desarrollo a medida",
-      en: "SaaS · Web apps · Custom development",
-    },
-    title: {
-      es: "Software funcional y escalable.",
-      en: "Functional and scalable software.",
-    },
-    description: {
-      es: "Creamos soluciones a medida con arquitectura moderna, integración de APIs y foco en la experiencia del usuario.",
-      en: "We build custom solutions with modern architecture, API integration, and a strong focus on user experience.",
-    },
-    button: {
-      es: "Solicitar desarrollo",
-      en: "Request development",
-    },
-    buttonLink: "mailto:rodrigo@lem-box.com",
+    copyKey: "customSystems",
   },
   {
-    id: 3,
-    image: "/img/branding-slide.jpg",
-    imageMobile: "/img/branding-slide-mobile.jpg",
-    imageAlt: "Brand strategy and color palette design on tablet",
-    claim: {
-      es: "Identidad visual · Marca · Estrategia",
-      en: "Visual identity · Branding · Strategy",
-    },
-    title: {
-      es: <>Partiendo de tu visión,<br />somos tu proyección.</>,
-      en: <>Starting from your vision,<br />we become your projection.</>,
-    },
-    description: {
-      es: "Diseño coherente, memorable y alineado a tu visión. Creamos marcas que conectan y perduran.",
-      en: "Consistent, memorable design aligned with your vision. We build brands that connect and endure.",
-    },
-    button: {
-      es: "Impulsar mi marca",
-      en: "Boost my brand",
-    },
-    buttonLink: "mailto:r.opalo@icloud.com", // ✨ Cambio aquí
-  },
-  {
-    id: 4,
+    id: "integrations",
     image: "/img/automations-slide.jpg",
     imageMobile: "/img/automations-slide-mobile.jpg",
-    imageAlt: "Automation workflows dashboard",
-    claim: {
-      es: "Automatizaciones · MCP · n8n",
-      en: "Automations · MCP · n8n",
-    },
-    title: {
-      es: "Procesos que trabajan por vos.",
-      en: "Workflows that work for you.",
-    },
-    description: {
-      es: "Bots, integraciones y flujos que ahorran tiempo y escalan tu negocio.",
-      en: "Bots, integrations and flows that save time and scale your business.",
-    },
-    button: {
-      es: "Automatizar mi empresa",
-      en: "Automate my business",
-    },
-    buttonLink: "#contacto",
+    copyKey: "integrations",
+  },
+  {
+    id: "brand-launches",
+    image: "/img/branding-slide.jpg",
+    imageMobile: "/img/branding-slide-mobile.jpg",
+    copyKey: "brandLaunches",
   },
 ];
 
+const SWIPE_DISTANCE = 48;
+const SWIPE_DOMINANCE = 1.25;
+const WHEEL_DOMINANCE = 1.15;
+const WHEEL_TRIGGER_DISTANCE = 24;
+const WHEEL_DIRECTION_DISTANCE = 12;
+const WHEEL_IDLE_MS = 160;
+const WHEEL_COOLDOWN_MS = 420;
+
 export default function HeroSlider() {
   const { language } = useLanguage();
+  const t = translations[language].hero;
+  const prefersReducedMotion = useReducedMotion();
   const [index, setIndex] = useState(0);
-  const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
-  const isTransitioning = useRef(false);
-  const wheelTimer = useRef<number | null>(null);
+  const touchStart = useRef<{ x: number; y: number } | null>(null);
+  const wheelAbsoluteX = useRef(0);
+  const wheelAbsoluteY = useRef(0);
+  const wheelDirectionX = useRef(0);
+  const wheelConsumed = useRef(false);
+  const wheelCooldownUntil = useRef(0);
+  const wheelResetTimer = useRef<number | null>(null);
 
-  // Swipe handler with shortened protection time
-  const handleSwipe = useCallback((direction: "left" | "right") => {
-    if (isTransitioning.current) return;
-    
-    isTransitioning.current = true;
-    if (direction === "left") {
-      setIndex((prev) => (prev + 1) % slides.length);
-    } else if (direction === "right") {
-      setIndex((prev) => (prev - 1 + slides.length) % slides.length);
-    }
-    
-    // Reduced timeout to 300ms (animation is 500ms but we want to be responsive)
-    setTimeout(() => {
-      isTransitioning.current = false;
-    }, 300);
+  const setActiveSlide = useCallback((nextIndex: number) => {
+    setIndex((nextIndex + slides.length) % slides.length);
   }, []);
 
-  // Touch handling for mobile - improved
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStartX(e.touches[0].clientX);
+  const showPreviousSlide = useCallback(() => {
+    setIndex((currentIndex) =>
+      (currentIndex - 1 + slides.length) % slides.length
+    );
+  }, []);
+
+  const showNextSlide = useCallback(() => {
+    setIndex((currentIndex) => (currentIndex + 1) % slides.length);
+  }, []);
+
+  const handleTouchStart = (event: TouchEvent<HTMLElement>) => {
+    const touch = event.touches[0];
+    touchStart.current = { x: touch.clientX, y: touch.clientY };
   };
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX === null) return;
-    const touchEndX = e.changedTouches[0].clientX;
-    const distance = touchStartX - touchEndX;
-    
-    // Even lower threshold for better sensitivity
-    if (distance > 20) handleSwipe("left");
-    else if (distance < -20) handleSwipe("right");
-    
-    setTouchStartX(null);
+  const handleTouchEnd = (event: TouchEvent<HTMLElement>) => {
+    const start = touchStart.current;
+    touchStart.current = null;
+    if (!start) return;
+
+    const touch = event.changedTouches[0];
+    const deltaX = start.x - touch.clientX;
+    const deltaY = start.y - touch.clientY;
+    const horizontalDistance = Math.abs(deltaX);
+    const verticalDistance = Math.abs(deltaY);
+
+    if (
+      horizontalDistance < SWIPE_DISTANCE ||
+      horizontalDistance <= verticalDistance * SWIPE_DOMINANCE
+    ) {
+      return;
+    }
+
+    if (deltaX > 0) showNextSlide();
+    else showPreviousSlide();
   };
 
-  // Optimized wheel handling for trackpads
   useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
+    const section = sectionRef.current;
+    if (!section) return;
 
-    // Simplified, more responsive wheel handler
-    const handleWheel = (e: WheelEvent) => {
-      // Only handle horizontal scrolling or diagonal scrolling that's primarily horizontal
-      if (Math.abs(e.deltaX) > Math.abs(e.deltaY) * 0.5) {
-        e.preventDefault();
-        
-        // Use a smaller threshold for immediate response
-        const threshold = 15;
-        
-        // Clear any existing timer
-        if (wheelTimer.current !== null) {
-          window.clearTimeout(wheelTimer.current);
-          wheelTimer.current = null;
-        }
-        
-        // Set a very short delay (15ms) just to batch rapid events
-        wheelTimer.current = window.setTimeout(() => {
-          if (e.deltaX > threshold) handleSwipe("left");
-          else if (e.deltaX < -threshold) handleSwipe("right");
-        }, 15);
-      }
+    const resetWheelGesture = () => {
+      wheelAbsoluteX.current = 0;
+      wheelAbsoluteY.current = 0;
+      wheelDirectionX.current = 0;
+      wheelConsumed.current = false;
+      wheelResetTimer.current = null;
     };
 
-    el.addEventListener("wheel", handleWheel, { passive: false });
-    
+    const scheduleWheelReset = () => {
+      if (wheelResetTimer.current !== null) {
+        window.clearTimeout(wheelResetTimer.current);
+      }
+      wheelResetTimer.current = window.setTimeout(
+        resetWheelGesture,
+        WHEEL_IDLE_MS
+      );
+    };
+
+    const handleWheel = (event: WheelEvent) => {
+      const deltaScale =
+        event.deltaMode === WheelEvent.DOM_DELTA_LINE
+          ? 16
+          : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
+            ? window.innerWidth
+            : 1;
+      const deltaX = event.deltaX * deltaScale;
+      const deltaY = event.deltaY * deltaScale;
+      const isHorizontalEvent =
+        Math.abs(deltaX) > Math.abs(deltaY) * WHEEL_DOMINANCE;
+
+      if (wheelConsumed.current) {
+        if (isHorizontalEvent) event.preventDefault();
+        scheduleWheelReset();
+        return;
+      }
+
+      if (Date.now() < wheelCooldownUntil.current) {
+        scheduleWheelReset();
+        return;
+      }
+
+      wheelAbsoluteX.current += Math.abs(deltaX);
+      wheelAbsoluteY.current += Math.abs(deltaY);
+      wheelDirectionX.current += deltaX;
+
+      const isHorizontalGesture =
+        wheelAbsoluteX.current >= WHEEL_TRIGGER_DISTANCE &&
+        wheelAbsoluteX.current >
+          wheelAbsoluteY.current * WHEEL_DOMINANCE &&
+        Math.abs(wheelDirectionX.current) >= WHEEL_DIRECTION_DISTANCE;
+
+      if (isHorizontalGesture) {
+        event.preventDefault();
+        wheelConsumed.current = true;
+        wheelCooldownUntil.current = Date.now() + WHEEL_COOLDOWN_MS;
+        if (wheelDirectionX.current > 0) showNextSlide();
+        else showPreviousSlide();
+      }
+
+      scheduleWheelReset();
+    };
+
+    section.addEventListener("wheel", handleWheel, { passive: false });
     return () => {
-      el.removeEventListener("wheel", handleWheel);
-      if (wheelTimer.current !== null) {
-        window.clearTimeout(wheelTimer.current);
+      section.removeEventListener("wheel", handleWheel);
+      if (wheelResetTimer.current !== null) {
+        window.clearTimeout(wheelResetTimer.current);
       }
     };
-  }, [handleSwipe]);
+  }, [showNextSlide, showPreviousSlide]);
+
+  const activeSlide = slides[index];
+  const activeCopy = t.slides[activeSlide.copyKey];
+  const motionOffset = prefersReducedMotion ? 0 : 80;
+  const transitionDuration = prefersReducedMotion ? 0 : 0.5;
 
   return (
     <section
       ref={sectionRef}
-      className="relative bg-black text-white overflow-hidden"
       id="hero"
+      className="relative min-h-[600px] overflow-hidden bg-black text-white"
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
+      onTouchCancel={() => {
+        touchStart.current = null;
+      }}
     >
-      <AnimatePresence mode="wait">
+      <AnimatePresence initial={false} mode="sync">
         <motion.div
-          key={slides[index].id}
+          key={activeSlide.id}
           className="absolute inset-0"
-          initial={{ opacity: 0, x: 100 }}
+          initial={{ opacity: 0, x: motionOffset }}
           animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -100 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
+          exit={{ opacity: 0, x: -motionOffset }}
+          transition={{ duration: transitionDuration, ease: "easeInOut" }}
         >
-          {/* Mobile background image (full-bleed) */}
           <div className="absolute inset-0 md:hidden">
             <img
-              src={slides[index].imageMobile}
-              alt={slides[index].imageAlt}
+              src={activeSlide.imageMobile}
+              alt=""
+              aria-hidden="true"
               className="h-full w-full object-cover object-center"
               draggable="false"
             />
-            {/* Softer overlay for mobile to avoid harsh cuts and keep text legible */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-black/25" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/65 to-black/35" />
           </div>
 
-          {/* Desktop image on the right half (unchanged) */}
-          <div className="absolute inset-y-0 right-0 w-1/2 hidden md:block">
+          <div className="absolute inset-y-0 right-0 hidden w-1/2 md:block">
             <img
-              src={slides[index].image}
-              alt={slides[index].imageAlt}
+              src={activeSlide.image}
+              alt=""
+              aria-hidden="true"
               className="h-full w-full object-cover object-center"
               draggable="false"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent pointer-events-none" />
-            <div className="absolute left-0 top-0 h-full w-24 sm:w-40 md:w-56 bg-gradient-to-r from-black to-transparent pointer-events-none" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent" />
+            <div className="absolute inset-y-0 left-0 w-56 bg-gradient-to-r from-black to-transparent" />
           </div>
         </motion.div>
       </AnimatePresence>
 
-      {/* Contenido */}
-      <div className="relative z-10 max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center px-4 sm:px-6 py-28 min-h-[600px]">
-        <div className="min-h-[320px] flex flex-col justify-center">
-          <p className="text-xs uppercase tracking-widest text-primary mb-2 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] md:drop-shadow-none">
-            {slides[index].claim[language]}
+      <div className="relative z-10 mx-auto grid min-h-[600px] max-w-6xl items-center gap-10 px-4 py-24 sm:px-6 sm:py-28 md:grid-cols-2">
+        <div className="flex min-h-[320px] max-w-[34rem] flex-col justify-center">
+          <p className="mb-3 text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-white/80 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] md:drop-shadow-none">
+            {t.eyebrow}
           </p>
-          <h1 className="text-3xl sm:text-5xl font-bold text-primary mb-6 leading-tight break-words max-w-[90vw] sm:max-w-full drop-shadow-[0_4px_18px_rgba(0,0,0,0.95)] md:drop-shadow-none">
-  {slides[index].title[language]}
-</h1>
-<p className="text-base sm:text-lg text-gray-300 mb-8 leading-relaxed max-w-[90vw] sm:max-w-2xl drop-shadow-[0_3px_14px_rgba(0,0,0,0.9)] md:drop-shadow-none">
-  {slides[index].description[language]}
-</p>
+          <h1
+            className="mb-6 break-words text-4xl font-bold leading-[1.06] text-[#66B3FF] drop-shadow-[0_4px_18px_rgba(0,0,0,0.95)] sm:text-5xl md:text-[2.125rem] md:text-primary md:drop-shadow-none lg:text-4xl xl:text-[2.75rem]"
+            aria-live="polite"
+          >
+            {activeCopy.title}
+          </h1>
+          <p className="mb-8 max-w-[34rem] text-base leading-relaxed text-gray-200 drop-shadow-[0_3px_14px_rgba(0,0,0,0.9)] sm:text-lg md:drop-shadow-none">
+            {activeCopy.description}
+          </p>
           <div className="w-fit">
             <a
-              href={slides[index].buttonLink}
-              className="bg-primary-on-light text-white font-medium px-6 py-3 rounded-full shadow-md hover:bg-primary-on-light-hover transition-all whitespace-nowrap"
+              href="#contacto"
+              data-analytics="hero-cta-primary"
+              className="inline-flex min-h-[44px] items-center justify-center rounded-full bg-primary-on-light px-6 py-3 font-medium text-white shadow-md transition hover:bg-primary-on-light-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
             >
-              {slides[index].button[language]}
+              {t.primaryCta}
             </a>
           </div>
         </div>
         <div className="hidden md:block" />
       </div>
 
-      {/* Gradiente inferior */}
-      <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-b from-transparent to-black pointer-events-none" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-black" />
 
-      {/* Indicadores */}
-      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 z-20" role="tablist" aria-label={language === "es" ? "Navegación de slides" : "Slide navigation"}>
-        {slides.map((slide, i) => (
+      <div
+        className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 gap-1"
+        role="group"
+        aria-label={t.carouselLabel}
+      >
+        {slides.map((slide, slideIndex) => (
           <button
-            key={i}
-            onClick={() => setIndex(i)}
-            className={`h-2 w-2 rounded-full transition-all duration-300 ${
-              i === index ? "bg-white" : "border border-white"
-            }`}
-            role="tab"
-            aria-label={language === "es" 
-              ? `Ir al slide ${i + 1} de ${slides.length}: ${slide.title[language]}`
-              : `Go to slide ${i + 1} of ${slides.length}: ${slide.title[language]}`
-            }
-            aria-selected={i === index}
-            aria-controls={`slide-${i}`}
-          ></button>
+            key={slide.id}
+            type="button"
+            onClick={() => setActiveSlide(slideIndex)}
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+            aria-label={`${t.goToSlide} ${slideIndex + 1} ${t.slideCountConnector} ${slides.length}: ${t.slides[slide.copyKey].title}`}
+            aria-current={slideIndex === index ? "true" : undefined}
+          >
+            <span
+              className={`h-2.5 w-2.5 rounded-full transition-colors ${
+                slideIndex === index
+                  ? "bg-white"
+                  : "border border-white bg-black/30"
+              }`}
+              aria-hidden="true"
+            />
+          </button>
         ))}
       </div>
 
-      {/* Flechas navegación */}
-      <div className="hidden md:flex justify-between items-center absolute top-1/2 left-0 right-0 px-6 z-20 pointer-events-none transform -translate-y-1/2">
+      <div className="pointer-events-none absolute inset-x-0 top-1/2 z-20 hidden -translate-y-1/2 items-center justify-between px-5 lg:flex">
         <button
-          onClick={() => handleSwipe("right")}
-          className="bg-black/40 hover:bg-black/70 text-white rounded-full p-2 transition-all duration-300 pointer-events-auto"
-          aria-label={language === "es" ? "Slide anterior" : "Previous slide"}
+          type="button"
+          onClick={showPreviousSlide}
+          className="pointer-events-auto inline-flex h-11 w-11 items-center justify-center rounded-full bg-black/50 text-white transition hover:bg-black/75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+          aria-label={t.previousSlide}
         >
-          <ChevronLeft className="h-6 w-6" />
+          <ChevronLeft className="h-6 w-6" aria-hidden="true" />
         </button>
         <button
-          onClick={() => handleSwipe("left")}
-          className="bg-black/40 hover:bg-black/70 text-white rounded-full p-2 transition-all duration-300 pointer-events-auto"
-          aria-label={language === "es" ? "Slide siguiente" : "Next slide"}
+          type="button"
+          onClick={showNextSlide}
+          className="pointer-events-auto inline-flex h-11 w-11 items-center justify-center rounded-full bg-black/50 text-white transition hover:bg-black/75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+          aria-label={t.nextSlide}
         >
-          <ChevronRight className="h-6 w-6" />
+          <ChevronRight className="h-6 w-6" aria-hidden="true" />
         </button>
       </div>
     </section>

@@ -23,32 +23,36 @@ export default function ImpactSection() {
             <div className="flex flex-wrap gap-3">
               <a
                 href="/portfolio"
-                aria-label={language === "es" ? "Ver casos del porfolio" : "View portfolio work"}
+                aria-label={language === "es" ? "Ver casos seleccionados" : "View selected case studies"}
                 data-analytics="impact-cta-primary"
                 className="px-5 py-2 rounded-lg bg-primary-on-light text-white font-medium hover:opacity-90 transition"
               >
-                {language === "es" ? "Ver casos" : "View work"}
+                {language === "es" ? "Ver casos" : "View case studies"}
               </a>
               <a
                 href="/#contacto"
-                aria-label={language === "es" ? "Solicitar una propuesta" : "Request a proposal"}
+                aria-label={language === "es" ? "Contar mi proyecto" : "Tell Rodrigo about my project"}
                 data-analytics="impact-cta-secondary"
                 className="px-5 py-2 rounded-lg border border-gray-600 hover:bg-gray-800 transition"
               >
-                {language === "es" ? "Solicitar propuesta" : "Request proposal"}
+                {language === "es" ? "Contame tu proyecto" : "Tell me about your project"}
               </a>
             </div>
-            <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm leading-relaxed text-gray-300/90">
-              <li>• {language === "es" ? "Velocidad 90+" : "Speed 90+"}</li>
-              <li>• {language === "es" ? "SEO técnico" : "Technical SEO"}</li>
-              <li>• {language === "es" ? "Integraciones & multilenguaje" : "Integrations & multilingual"}</li>
+            <ul className="mt-6 grid gap-x-6 gap-y-2 text-sm leading-relaxed text-gray-300/90 sm:grid-cols-2">
+              {t.transitionVisual.principles.map((principle) => (
+                <li key={principle} className="flex items-start gap-2">
+                  <span aria-hidden="true">•</span>
+                  <span>{principle}</span>
+                </li>
+              ))}
             </ul>
           </div>
           {/* Imagen con overlay limpio */}
           <div className="relative rounded-xl overflow-hidden shadow-xl md:col-span-6">
             <img
               src="/img/impact.jpg"
-              alt="Detalle visual en blanco y negro con patrón de malla y luz difusa"
+              alt=""
+              aria-hidden="true"
               width={1200}
               height={900}
               loading="lazy"
