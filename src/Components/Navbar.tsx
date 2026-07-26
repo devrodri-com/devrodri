@@ -24,7 +24,7 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="fixed top-0 w-full z-50 bg-black/20 backdrop-blur-md shadow-sm transition-all duration-300">
+    <nav className="fixed top-0 w-full z-50 bg-black/90 backdrop-blur-md shadow-sm transition-all duration-300">
       <div className="max-w-6xl mx-auto px-4 py-1 flex justify-between items-center">
         {/* Nombre (link to Home) */}
         <Link
@@ -81,7 +81,7 @@ export default function Navbar() {
       {/* Menú desplegable mobile */}
       {menuOpen && (
         <div 
-          className="sm:hidden px-4 pb-4 flex flex-col items-center space-y-4 text-sm font-medium bg-black/80 backdrop-blur-sm text-white"
+          className="sm:hidden px-4 pb-4 flex flex-col items-center space-y-4 text-sm font-medium bg-black/90 backdrop-blur-sm text-white"
           role="menu"
           aria-label={language === "es" ? "Menú de navegación" : "Navigation menu"}
         >
