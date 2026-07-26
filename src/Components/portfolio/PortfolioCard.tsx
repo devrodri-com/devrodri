@@ -27,7 +27,7 @@ export default function PortfolioCard({
 }: PortfolioCardProps) {
   return (
     <motion.div
-      className={`border border-gray-200 rounded-2xl shadow-sm bg-white ${status ? "text-gray-900" : ""} ${expanded || status ? "" : "md:h-[280px] md:overflow-hidden"}`}
+      className={`border border-gray-200 rounded-2xl shadow-sm bg-white ${expanded || status ? "" : "md:h-[280px] md:overflow-hidden"}`}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45 }}
@@ -51,7 +51,7 @@ export default function PortfolioCard({
               {status}
             </p>
           )}
-          <h3 className="text-xl font-semibold tracking-tight">{title}</h3>
+          <h3 className="text-xl font-semibold tracking-tight text-gray-900">{title}</h3>
           <p className="text-gray-700 mt-2 max-w-[62ch]">{desc}</p>
           {disclaimer && (
             <p className="mt-3 max-w-[62ch] border-l-2 border-blue-200 pl-3 text-sm text-gray-700">
