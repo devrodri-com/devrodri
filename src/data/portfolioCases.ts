@@ -9,7 +9,6 @@ export type ProjectKey = "lem_web" | "lem_portal" | "esteban" | "mutter" | "fede
 export type Project = { key: ProjectKey; href?: string; cover: string };
 
 export const projects: Project[] = [
-  { key: "campings_demo", href: "https://reservas-campings-nacionales.vercel.app", cover: "/img/parques-nacionales-logo.png" },
   { key: "magenta", href: "https://magenta-paysandu-m5in.vercel.app", cover: "/img/magenta-cover.png" },
   { key: "esteban", href: "https://estebanfirpo.com", cover: "/img/esteban.png" },
   { key: "lem_web",   href: "https://lem-box.com.uy",            cover: "/img/lem-box-cover.png" },
@@ -17,6 +16,7 @@ export const projects: Project[] = [
   { key: "mutter",   href: "https://www.muttergames.com",            cover: "/img/mutter-cover.png" },
   { key: "federico", href: "https://www.federicoroma.com",            cover: "/img/federico-cover.jpg" },
   { key: "boating",  href: "https://www.boatingadventuresmiami.com", cover: "/img/Fondo.jpg" },
+  { key: "campings_demo", href: "https://github.com/devrodri-com/reservas-campings-nacionales", cover: "/img/campings-concept-cover.jpg" },
 ];
 
 export type Category = "all" | "ecom" | "personal" | "services";
@@ -28,7 +28,7 @@ export const projectMeta: Record<ProjectKey, { category: Category; tags: string[
   federico: { category: "personal", tags: ["Marca personal", "Cursos"],             tagsEn: ["Personal brand", "Courses"] },
   magenta:  { category: "services", tags: ["Imprenta", "Next.js"],                  tagsEn: ["Print shop", "Next.js"] },
   boating:  { category: "services", tags: ["Servicios", "Reservas"],                tagsEn: ["Services", "Bookings"] },
-  campings_demo: { category: "services", tags: ["Reservas", "Next.js", "Firebase", "Admin", "MVP"], tagsEn: ["Bookings", "Next.js", "Firebase", "Admin", "MVP"] },
+  campings_demo: { category: "services", tags: ["Labs", "Prototipo", "Next.js", "Firebase", "Admin"], tagsEn: ["Labs", "Prototype", "Next.js", "Firebase", "Admin"] },
 };
 
 export const filters: { key: Category; es: string; en: string }[] = [
@@ -423,9 +423,9 @@ export const caseDetails: Record<ProjectKey, PortfolioCaseDetail> = {
   },
   campings_demo: {
     summaryEs:
-      "MVP funcional avanzado para gestionar reservas de campings y áreas recreativas. Incluye catálogo público, flujo de reserva, consulta por código, panel administrativo con roles y soporte de inventario híbrido: por capacidad o por unidades físicas.",
+      "Prototipo técnico con flujo público, consulta de reservas, panel administrativo con roles e inventario híbrido por capacidad o unidades físicas.",
     summaryEn:
-      "Advanced functional MVP to manage campground and recreational area bookings. It includes a public catalog, booking flow, code-based booking lookup, an admin panel with roles, and hybrid inventory support: by capacity or by physical units.",
+      "Technical prototype with a public flow, booking lookup, role-based admin panel and hybrid inventory by capacity or physical units.",
     stack: [
       "Frontend: Next.js 16 + React 19 + TypeScript + App Router",
       "Backend/servicios: Firebase Auth + Cloud Firestore",
@@ -477,16 +477,16 @@ export const caseDetails: Record<ProjectKey, PortfolioCaseDetail> = {
       "Separation between private booking data and a public availability projection.",
     ],
     resultsEs: [
-      "Núcleo del producto resuelto en versión demostrable.",
-      "Operación administrativa principal ya modelada dentro del MVP.",
-      "Base técnica preparada para evolucionar a pagos reales, mapa interactivo y automatizaciones.",
-      "Caso apto para portfolio si se presenta explícitamente como MVP/demo.",
+      "Flujo público y panel administrativo disponibles en un prototipo navegable.",
+      "Disponibilidad, reservas e inventario híbrido modelados de extremo a extremo.",
+      "Pagos mantenidos de forma explícitamente simulada y no productiva.",
+      "Base técnica preparada para experimentación futura.",
     ],
     resultsEn: [
-      "Core product flow solved in a demonstrable version.",
-      "Primary admin operations already modeled within the MVP.",
-      "Technical foundation prepared for real payments, interactive maps and automations.",
-      "Portfolio-ready only if presented explicitly as an MVP/demo.",
+      "Public flow and admin panel available in a navigable prototype.",
+      "Availability, bookings and hybrid inventory modeled end to end.",
+      "Payments kept explicitly simulated and non-production.",
+      "Technical foundation prepared for future experimentation.",
     ],
   },
 };

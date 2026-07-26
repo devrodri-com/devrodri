@@ -10,6 +10,8 @@ interface PortfolioCardProps {
   desc: string;
   tags: string;
   expanded: boolean;
+  status?: string;
+  disclaimer?: string;
   children?: ReactNode;
 }
 
@@ -19,11 +21,13 @@ export default function PortfolioCard({
   desc,
   tags,
   expanded,
+  status,
+  disclaimer,
   children,
 }: PortfolioCardProps) {
   return (
     <motion.div
-      className={`border border-gray-200 rounded-2xl shadow-sm bg-white ${expanded ? "" : "md:h-[280px] md:overflow-hidden"}`}
+      className={`border border-gray-200 rounded-2xl shadow-sm bg-white ${status ? "text-gray-900" : ""} ${expanded || status ? "" : "md:h-[280px] md:overflow-hidden"}`}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45 }}
@@ -42,8 +46,18 @@ export default function PortfolioCard({
           </div>
         </div>
         <div className="md:w-7/12 p-6">
+          {status && (
+            <p className="mb-2 inline-flex rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800">
+              {status}
+            </p>
+          )}
           <h3 className="text-xl font-semibold tracking-tight">{title}</h3>
           <p className="text-gray-700 mt-2 max-w-[62ch]">{desc}</p>
+          {disclaimer && (
+            <p className="mt-3 max-w-[62ch] border-l-2 border-blue-200 pl-3 text-sm text-gray-700">
+              {disclaimer}
+            </p>
+          )}
           <p className="mt-3 text-sm text-gray-600">• {tags}</p>
           <div className="mt-4 flex items-center gap-4 flex-wrap">
             {Children.toArray(children).filter((child) => {
