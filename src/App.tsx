@@ -2,7 +2,7 @@
 import { useLanguage } from "./LanguageContext";
 import { HelmetProvider } from "react-helmet-async";
 import SeoHead from "./Components/SeoHead";
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect, useRef } from "react";
 import HeroSlider from "./Components/HeroSlider";
 import SobreMiSection from "./Components/SobreMiSection";
 import HighlightsSection from "./Components/HighlightsSection";
@@ -17,6 +17,11 @@ import TransitionServicesIntro from "./Components/TransitionServicesIntro";
 import "./index.css";
 import CTASection from "./Components/CTASection";
 import { Routes, Route, useLocation } from "react-router-dom";
+import {
+  isAnalyticsClickLabel,
+  trackAnalyticsClick,
+  trackPageView,
+} from "./lib/analytics";
 
 const PortfolioPage = lazy(() => import("./pages/PortfolioPage"));
 
@@ -64,27 +69,26 @@ function ScrollToHash() {
 
 function usePageview() {
   const location = useLocation();
+  const lastTrackedPathname = useRef<string | null>(null);
+
   useEffect(() => {
-    const id = import.meta.env.VITE_GA_ID;
-    if (!id || !window.gtag) return;
-    window.gtag('event', 'page_view', {
-      page_title: document.title,
-      page_location: window.location.href,
-      page_path: location.pathname + location.search,
-    });
-  }, [location]);
+    if (lastTrackedPathname.current === location.pathname) return;
+    lastTrackedPathname.current = location.pathname;
+    trackPageView(location.pathname);
+  }, [location.pathname]);
 }
 
 function useAnalyticsEvents() {
   useEffect(() => {
     const handler = (e: Event) => {
-      const target = (e.target as HTMLElement).closest('[data-analytics]') as HTMLElement | null;
-      if (!target || !window.gtag) return;
-      const label = target.getAttribute('data-analytics') || 'unknown';
-      window.gtag('event', 'click', { label });
+      if (!(e.target instanceof Element)) return;
+      const target = e.target.closest<HTMLElement>("[data-analytics]");
+      const label = target?.dataset.analytics;
+      if (label === undefined || !isAnalyticsClickLabel(label)) return;
+      trackAnalyticsClick(label);
     };
-    document.addEventListener('click', handler);
-    return () => document.removeEventListener('click', handler);
+    document.addEventListener("click", handler);
+    return () => document.removeEventListener("click", handler);
   }, []);
 }
 

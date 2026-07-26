@@ -1,9 +1,20 @@
 // src/Components/ContactSection.tsx
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "../LanguageContext";
 import translations from "../translations";
 import { motion } from "framer-motion";
 import { FaWhatsapp, FaEnvelope } from "react-icons/fa";
+import {
+  CONTACT_FORM_ENDPOINT,
+  CONTACT_FORM_LIMITS,
+  submitContactForm,
+} from "../services/contactForm";
+import {
+  trackContactAttempt,
+  trackContactError,
+  trackContactSuccess,
+  trackContactTimeout,
+} from "../lib/analytics";
 
 export default function ContactSection() {
   const { language } = useLanguage();
@@ -11,33 +22,75 @@ export default function ContactSection() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const activeRequestRef = useRef<AbortController | null>(null);
+  const successTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isMountedRef = useRef(false);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    return () => {
+      isMountedRef.current = false;
+      activeRequestRef.current?.abort();
+      activeRequestRef.current = null;
+      if (successTimerRef.current !== null) {
+        globalThis.clearTimeout(successTimerRef.current);
+        successTimerRef.current = null;
+      }
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (activeRequestRef.current !== null) return;
+
     setError(null);
+    setSuccess(false);
     setSubmitting(true);
     const form = e.currentTarget;
     const formData = new FormData(form);
+    trackContactAttempt(language);
+    const request = submitContactForm(form.action, formData);
+    activeRequestRef.current = request.controller;
 
     try {
-      const res = await fetch(form.action!, {
-        method: "POST",
-        body: formData,
-        headers: { Accept: "application/json" },
-      });
+      const result = await request.result;
+      if (!isMountedRef.current) return;
 
-      if (!res.ok) throw new Error("Network response was not ok");
-      setSuccess(true);
-      form.reset();
-      setTimeout(() => setSuccess(false), 5000);
-    } catch {
-      setError(
-        language === "es"
-          ? "No pudimos enviar el mensaje. Probá nuevamente o escribime a r.opalo@icloud.com"
-          : "We couldn't send your message. Please try again or email me at r.opalo@icloud.com"
-      );
+      if (result.status === "success") {
+        trackContactSuccess(language);
+        setSuccess(true);
+        form.reset();
+        if (successTimerRef.current !== null) {
+          globalThis.clearTimeout(successTimerRef.current);
+        }
+        successTimerRef.current = globalThis.setTimeout(() => {
+          if (isMountedRef.current) setSuccess(false);
+          successTimerRef.current = null;
+        }, 5_000);
+      } else if (result.status === "timeout") {
+        trackContactTimeout(language);
+        setError(
+          language === "es"
+            ? "El envío tardó demasiado. Probá nuevamente o escribime a r.opalo@icloud.com"
+            : "The request took too long. Please try again or email me at r.opalo@icloud.com",
+        );
+      } else {
+        trackContactError(language, result.status);
+        setError(
+          result.status === "validation_error"
+            ? language === "es"
+              ? "Revisá que el nombre, email y mensaje respeten los límites indicados."
+              : "Check that your name, email and message meet the indicated limits."
+            : language === "es"
+              ? "No pudimos enviar el mensaje. Probá nuevamente o escribime a r.opalo@icloud.com"
+              : "We couldn't send your message. Please try again or email me at r.opalo@icloud.com",
+        );
+      }
     } finally {
-      setSubmitting(false);
+      if (activeRequestRef.current === request.controller) {
+        activeRequestRef.current = null;
+      }
+      if (isMountedRef.current) setSubmitting(false);
     }
   };
 
@@ -82,10 +135,11 @@ export default function ContactSection() {
         </p>
 
         <form
-          action="https://formsubmit.co/ajax/r.opalo@icloud.com"
+          action={CONTACT_FORM_ENDPOINT}
           method="POST"
           onSubmit={handleSubmit}
           className="space-y-5"
+          aria-describedby="contact-privacy-disclosure"
         >
           <input type="hidden" name="_captcha" value="false" />
           <input type="hidden" name="_subject" value="Nuevo mensaje desde devrodri.com" />
@@ -97,7 +151,8 @@ export default function ContactSection() {
             name="name"
             placeholder={t.contact.namePlaceholder}
             autoComplete="name"
-            minLength={2}
+            minLength={CONTACT_FORM_LIMITS.name.min}
+            maxLength={CONTACT_FORM_LIMITS.name.max}
             required
             className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-primary"
           />
@@ -109,6 +164,7 @@ export default function ContactSection() {
             name="email"
             placeholder={t.contact.emailPlaceholder}
             autoComplete="email"
+            maxLength={CONTACT_FORM_LIMITS.email.max}
             required
             className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-primary"
           />
@@ -118,7 +174,8 @@ export default function ContactSection() {
             name="message"
             placeholder={t.contact.messagePlaceholder}
             autoComplete="off"
-            minLength={10}
+            minLength={CONTACT_FORM_LIMITS.message.min}
+            maxLength={CONTACT_FORM_LIMITS.message.max}
             required
             rows={5}
             className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-primary resize-none"
@@ -126,7 +183,6 @@ export default function ContactSection() {
 
           <motion.button
             type="submit"
-            data-analytics="contact-submit"
             disabled={submitting}
             aria-busy={submitting}
             className="bg-primary-on-light text-white px-6 py-3 rounded-xl font-medium hover:bg-primary-on-light-hover transition-all duration-300 ease-in-out shadow-md flex items-center justify-center gap-2 focus-visible:ring-2 ring-offset-2 ring-primary disabled:opacity-70 disabled:cursor-not-allowed"
@@ -153,6 +209,13 @@ export default function ContactSection() {
               </p>
             </div>
           )}
+
+          <p
+            id="contact-privacy-disclosure"
+            className="mt-6 text-xs leading-relaxed text-gray-500"
+          >
+            {t.contact.privacyDisclosure}
+          </p>
         </form>
 
         <div className="mt-10 flex justify-center gap-8 text-sm text-gray-500">

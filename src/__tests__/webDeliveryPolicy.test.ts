@@ -1,4 +1,8 @@
 import { describe, expect, it, vi } from "vitest";
+import {
+  ibmFullStackCredential,
+  metaReactCredential,
+} from "../seo/homeCredentialsJsonLd";
 
 interface FileSystemApi {
   readFileSync(path: string, encoding: "utf8"): string;
@@ -11,6 +15,15 @@ interface PathApi {
 
 interface UrlApi {
   fileURLToPath(url: string): string;
+}
+
+interface HashApi {
+  update(value: string): HashApi;
+  digest(encoding: "base64"): string;
+}
+
+interface CryptoApi {
+  createHash(algorithm: "sha256"): HashApi;
 }
 
 interface HeaderEntry {
@@ -36,10 +49,15 @@ interface VercelConfiguration {
 const fs = await vi.importActual<FileSystemApi>("node:fs");
 const path = await vi.importActual<PathApi>("node:path");
 const url = await vi.importActual<UrlApi>("node:url");
+const crypto = await vi.importActual<CryptoApi>("node:crypto");
 
 const testDirectory = path.dirname(url.fileURLToPath(import.meta.url));
 const projectRoot = path.join(testDirectory, "../..");
 const vercelConfigurationPath = path.join(projectRoot, "vercel.json");
+const indexHtmlPath = path.join(projectRoot, "index.html");
+
+const expectedContentSecurityPolicy =
+  "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://formsubmit.co; script-src 'self' https://www.googletagmanager.com 'sha256-P01WC+VRcpA8HZ8Eg8qvHTell49g+1+ojplDsdfvSJY=' 'sha256-NGTPVuZtJv6KrQNvN78pj9Fz+4CuArpGSOhRfc3CjvI='; script-src-attr 'none'; style-src 'self' https://fonts.googleapis.com; style-src-attr 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' https://*.google-analytics.com https://www.googletagmanager.com; media-src 'self'; connect-src 'self' https://formsubmit.co https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; frame-src 'none'; manifest-src 'self'; worker-src 'none'; upgrade-insecure-requests";
 
 const expectedSecurityHeaders = new Map([
   ["x-content-type-options", "nosniff"],
@@ -49,10 +67,7 @@ const expectedSecurityHeaders = new Map([
     "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
   ],
   ["x-frame-options", "DENY"],
-  [
-    "content-security-policy",
-    "base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://formsubmit.co",
-  ],
+  ["content-security-policy", expectedContentSecurityPolicy],
 ]);
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -126,6 +141,22 @@ function parseVercelConfiguration(value: unknown): VercelConfiguration | null {
   };
 }
 
+function parseContentSecurityPolicy(
+  policy: string,
+): Map<string, readonly string[]> {
+  return new Map(
+    policy.split(";").map((directive) => {
+      const [name = "", ...sources] = directive.trim().split(/\s+/);
+      return [name, sources] as const;
+    }),
+  );
+}
+
+function sha256Source(value: string): string {
+  const digest = crypto.createHash("sha256").update(value).digest("base64");
+  return `'sha256-${digest}'`;
+}
+
 describe("web delivery policy", () => {
   it("keeps the approved security, cache, and SPA delivery rules", () => {
     const source = fs.readFileSync(vercelConfigurationPath, "utf8");
@@ -177,27 +208,89 @@ describe("web delivery policy", () => {
     const contentSecurityPolicy = globalHeaders.get(
       "content-security-policy",
     );
-    expect(contentSecurityPolicy).toBe(
-      "base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://formsubmit.co",
-    );
-    expect(contentSecurityPolicy).toContain("base-uri 'self'");
-    expect(contentSecurityPolicy).toContain("object-src 'none'");
-    expect(contentSecurityPolicy).toContain("frame-ancestors 'none'");
-    expect(contentSecurityPolicy).toContain(
-      "form-action 'self' https://formsubmit.co",
+    expect(contentSecurityPolicy).toBe(expectedContentSecurityPolicy);
+    const directives = parseContentSecurityPolicy(
+      contentSecurityPolicy ?? "",
     );
 
-    const normalizedPolicy = contentSecurityPolicy?.toLowerCase() ?? "";
-    for (const forbiddenValue of [
-      "*",
-      "unsafe-inline",
-      "unsafe-eval",
-      "default-src",
-      "script-src",
-      "style-src",
-    ]) {
-      expect(normalizedPolicy).not.toContain(forbiddenValue);
-    }
+    expect(directives).toEqual(
+      new Map([
+        ["default-src", ["'self'"]],
+        ["base-uri", ["'self'"]],
+        ["object-src", ["'none'"]],
+        ["frame-ancestors", ["'none'"]],
+        ["form-action", ["'self'", "https://formsubmit.co"]],
+        [
+          "script-src",
+          [
+            "'self'",
+            "https://www.googletagmanager.com",
+            "'sha256-P01WC+VRcpA8HZ8Eg8qvHTell49g+1+ojplDsdfvSJY='",
+            "'sha256-NGTPVuZtJv6KrQNvN78pj9Fz+4CuArpGSOhRfc3CjvI='",
+          ],
+        ],
+        ["script-src-attr", ["'none'"]],
+        ["style-src", ["'self'", "https://fonts.googleapis.com"]],
+        ["style-src-attr", ["'unsafe-inline'"]],
+        ["font-src", ["'self'", "https://fonts.gstatic.com"]],
+        [
+          "img-src",
+          [
+            "'self'",
+            "https://*.google-analytics.com",
+            "https://www.googletagmanager.com",
+          ],
+        ],
+        ["media-src", ["'self'"]],
+        [
+          "connect-src",
+          [
+            "'self'",
+            "https://formsubmit.co",
+            "https://www.googletagmanager.com",
+            "https://*.google-analytics.com",
+            "https://*.analytics.google.com",
+          ],
+        ],
+        ["frame-src", ["'none'"]],
+        ["manifest-src", ["'self'"]],
+        ["worker-src", ["'none'"]],
+        ["upgrade-insecure-requests", []],
+      ]),
+    );
+
+    const allSources = [...directives.values()].flat();
+    expect(allSources).not.toContain("*");
+    expect(allSources).not.toContain("https:");
+
+    const scriptSources = directives.get("script-src") ?? [];
+    expect(scriptSources).not.toContain("'unsafe-inline'");
+    expect(scriptSources).not.toContain("'unsafe-eval'");
+    expect(scriptSources).not.toContain("data:");
+    expect(scriptSources).toContain("https://www.googletagmanager.com");
+    expect(
+      scriptSources.filter((source) => source.startsWith("'sha256-")),
+    ).toEqual(
+      [metaReactCredential, ibmFullStackCredential].map((credential) =>
+        sha256Source(JSON.stringify(credential)),
+      ),
+    );
+
+    expect(directives.get("form-action")).toContain("https://formsubmit.co");
+    expect(directives.get("connect-src")).toContain("https://formsubmit.co");
+    expect(directives.get("style-src")).toContain(
+      "https://fonts.googleapis.com",
+    );
+    expect(directives.get("font-src")).toContain(
+      "https://fonts.gstatic.com",
+    );
+    expect(directives.get("media-src")).toEqual(["'self'"]);
+    expect(directives.get("img-src")).toContain("'self'");
+
+    const indexHtml = fs.readFileSync(indexHtmlPath, "utf8");
+    expect(indexHtml).not.toContain("googletagmanager.com/gtag/js");
+    expect(indexHtml).not.toContain("function gtag");
+    expect(indexHtml).not.toMatch(/G-[A-Z0-9]{6,}/);
 
     const cacheControlRules = configuration.headers.flatMap((rule) =>
       rule.headers
