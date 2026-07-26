@@ -67,7 +67,7 @@ export default function SobreMiSection() {
         <div className="flex items-center justify-center gap-4 mt-2 md:mt-3">
           <a
             href="/portfolio"
-            className="px-5 py-2 rounded-lg bg-[#3B82F6] text-white font-medium hover:opacity-90 transition"
+            className="px-5 py-2 rounded-lg bg-primary-on-light text-white font-medium hover:opacity-90 transition"
             aria-label={language === "es" ? "Ver casos del porfolio" : "View portfolio work"}
             data-analytics="about-cta-primary"
           >
@@ -97,7 +97,7 @@ export default function SobreMiSection() {
             aria-label={language === "es" ? "Verificar certificado IBM Full Stack en Credly" : "Verify IBM Full Stack certificate on Credly"}
           >
             <span className="font-medium">IBM Full Stack Software Developer Professional Certificate (V5)</span>
-            <span className="text-primary underline">{language === "es" ? "Verificar" : "Verify"}</span>
+            <span className="text-primary-on-light underline">{language === "es" ? "Verificar" : "Verify"}</span>
           </a>
           <a
             href="/img/certs/ibm-fullstack.png"

@@ -179,7 +179,7 @@ export default function PortfolioSection() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               to="/#contacto"
-              className="inline-flex items-center justify-center min-h-[44px] rounded-lg px-4 py-2 text-sm font-semibold bg-[#3B82F6] text-white hover:opacity-90 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+              className="inline-flex items-center justify-center min-h-[44px] rounded-lg px-4 py-2 text-sm font-semibold bg-primary-on-light text-white hover:opacity-90 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
             >
               {language === "es" ? "Escribime por el formulario" : "Message me via the form"}
             </Link>

@@ -96,7 +96,7 @@ export default function TransitionServicesIntro({ variant = "default" }: BridgeP
                 to={V.href}
                 aria-label={language === "es" ? "Ir al formulario de contacto" : "Go to contact form"}
                 data-analytics={`bridge-cta-${variant}`}
-                className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg bg-[#3B82F6] text-white text-sm font-medium px-5 py-2.5 shadow-md hover:shadow-lg hover:opacity-90 transition w-full sm:w-auto focus-visible:ring-2 ring-offset-2 ring-[#3B82F6]"
+                className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg bg-primary-on-light text-white text-sm font-medium px-5 py-2.5 shadow-md hover:shadow-lg hover:opacity-90 transition w-full sm:w-auto focus-visible:ring-2 ring-offset-2 ring-[#3B82F6]"
               >
                 {V.cta}
               </Link>

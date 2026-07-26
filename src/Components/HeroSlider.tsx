@@ -236,7 +236,7 @@ export default function HeroSlider() {
           <div className="w-fit">
             <a
               href={slides[index].buttonLink}
-              className="bg-primary text-white font-medium px-6 py-3 rounded-full shadow-md hover:bg-primary-dark transition-all whitespace-nowrap"
+              className="bg-primary-on-light text-white font-medium px-6 py-3 rounded-full shadow-md hover:bg-primary-on-light-hover transition-all whitespace-nowrap"
             >
               {slides[index].button[language]}
             </a>

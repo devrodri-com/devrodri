@@ -83,7 +83,7 @@ export default function PortfolioPage() {
           <div className="mt-5">
             <a
               href={`mailto:r.opalo@icloud.com?subject=${encodeURIComponent(language === "es" ? "Solicitud de caso detallado" : "Request detailed case")}`}
-              className="inline-flex items-center justify-center rounded-lg bg-[#3B82F6] text-white text-sm font-medium px-5 py-2 shadow-md hover:shadow-lg hover:opacity-90 transition"
+              className="inline-flex items-center justify-center rounded-lg bg-primary-on-light text-white text-sm font-medium px-5 py-2 shadow-md hover:shadow-lg hover:opacity-90 transition"
               aria-label={language === "es" ? "Solicitar caso detallado" : "Request detailed case"}
               data-analytics="portfolio-request-case"
             >
@@ -106,17 +106,17 @@ export default function PortfolioPage() {
             >
               {p.key === "lem_web" ? (
                 <>
-                  <a href="https://lem-box.com.uy" target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:text-primary-dark underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">UY</a>
+                  <a href="https://lem-box.com.uy" target="_blank" rel="noopener noreferrer" className="text-primary-on-light font-medium hover:text-primary-on-light-hover underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">UY</a>
                   <span className="text-gray-400">·</span>
-                  <a href="https://lem-box.com.ar" target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:text-primary-dark underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">AR</a>
+                  <a href="https://lem-box.com.ar" target="_blank" rel="noopener noreferrer" className="text-primary-on-light font-medium hover:text-primary-on-light-hover underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">AR</a>
                 </>
               ) : p.key === "lem_portal" ? (
                 <>
-                  <a href={p.href} target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:text-primary-dark underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">{P[p.key].link}</a>
+                  <a href={p.href} target="_blank" rel="noopener noreferrer" className="text-primary-on-light font-medium hover:text-primary-on-light-hover underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">{P[p.key].link}</a>
                   <span className="text-xs text-gray-500">({language === "es" ? "requiere credenciales" : "credentials required"})</span>
                 </>
               ) : p.href ? (
-                <a href={p.href} target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:text-primary-dark underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">{P[p.key].link}</a>
+                <a href={p.href} target="_blank" rel="noopener noreferrer" className="text-primary-on-light font-medium hover:text-primary-on-light-hover underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">{P[p.key].link}</a>
               ) : null}
               <button
                 type="button"
