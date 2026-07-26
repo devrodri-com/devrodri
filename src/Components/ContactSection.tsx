@@ -30,7 +30,7 @@ export default function ContactSection() {
       setSuccess(true);
       form.reset();
       setTimeout(() => setSuccess(false), 5000);
-    } catch (err) {
+    } catch {
       setError(
         language === "es"
           ? "No pudimos enviar el mensaje. Probá nuevamente o escribime a r.opalo@icloud.com"
