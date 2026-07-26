@@ -66,8 +66,8 @@ function usePageview() {
   const location = useLocation();
   useEffect(() => {
     const id = import.meta.env.VITE_GA_ID;
-    if (!id || !(window as any).gtag) return;
-    (window as any).gtag('event', 'page_view', {
+    if (!id || !window.gtag) return;
+    window.gtag('event', 'page_view', {
       page_title: document.title,
       page_location: window.location.href,
       page_path: location.pathname + location.search,
@@ -79,9 +79,9 @@ function useAnalyticsEvents() {
   useEffect(() => {
     const handler = (e: Event) => {
       const target = (e.target as HTMLElement).closest('[data-analytics]') as HTMLElement | null;
-      if (!target || !(window as any).gtag) return;
+      if (!target || !window.gtag) return;
       const label = target.getAttribute('data-analytics') || 'unknown';
-      (window as any).gtag('event', 'click', { label });
+      window.gtag('event', 'click', { label });
     };
     document.addEventListener('click', handler);
     return () => document.removeEventListener('click', handler);
