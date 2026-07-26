@@ -66,3 +66,5 @@ jobs:
         uses: actions/dependency-review-action@2031cfc080254a8a887f58cffee85186f0e49e48 # v4
         with:
           fail-on-severity: high
+          # RSC-only advisory; DevRodri does not use RSC. See docs/security/accepted-advisories.md for justification and removal triggers.
+          allow-ghsas: GHSA-qwww-vcr4-c8h2
