@@ -96,7 +96,7 @@ const slides = [
     },
     buttonLink: "#contacto",
   },
-];
+] as const;
 
 export default function HeroSlider() {
   const { language } = useLanguage();
@@ -104,6 +104,7 @@ export default function HeroSlider() {
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const sectionRef = useRef<HTMLElement | null>(null);
   const isTransitioning = useRef(false);
+  const transitionTimer = useRef<number | null>(null);
   const wheelTimer = useRef<number | null>(null);
 
   // Swipe handler with shortened protection time
@@ -118,19 +119,24 @@ export default function HeroSlider() {
     }
     
     // Reduced timeout to 300ms (animation is 500ms but we want to be responsive)
-    setTimeout(() => {
+    transitionTimer.current = window.setTimeout(() => {
       isTransitioning.current = false;
+      transitionTimer.current = null;
     }, 300);
   }, []);
 
   // Touch handling for mobile - improved
   const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStartX(e.touches[0].clientX);
+    const firstTouch = e.touches[0];
+    if (firstTouch === undefined) return;
+    setTouchStartX(firstTouch.clientX);
   };
 
   const handleTouchEnd = (e: React.TouchEvent) => {
     if (touchStartX === null) return;
-    const touchEndX = e.changedTouches[0].clientX;
+    const changedTouch = e.changedTouches[0];
+    if (changedTouch === undefined) return;
+    const touchEndX = changedTouch.clientX;
     const distance = touchStartX - touchEndX;
     
     // Even lower threshold for better sensitivity
@@ -162,6 +168,7 @@ export default function HeroSlider() {
         
         // Set a very short delay (15ms) just to batch rapid events
         wheelTimer.current = window.setTimeout(() => {
+          wheelTimer.current = null;
           if (e.deltaX > threshold) handleSwipe("left");
           else if (e.deltaX < -threshold) handleSwipe("right");
         }, 15);
@@ -174,9 +181,22 @@ export default function HeroSlider() {
       el.removeEventListener("wheel", handleWheel);
       if (wheelTimer.current !== null) {
         window.clearTimeout(wheelTimer.current);
+        wheelTimer.current = null;
       }
     };
   }, [handleSwipe]);
+
+  useEffect(() => {
+    return () => {
+      if (transitionTimer.current !== null) {
+        window.clearTimeout(transitionTimer.current);
+        transitionTimer.current = null;
+      }
+      isTransitioning.current = false;
+    };
+  }, []);
+
+  const currentSlide = slides[index] ?? slides[0];
 
   return (
     <section
@@ -188,7 +208,7 @@ export default function HeroSlider() {
     >
       <AnimatePresence mode="wait">
         <motion.div
-          key={slides[index].id}
+          key={currentSlide.id}
           className="absolute inset-0"
           initial={{ opacity: 0, x: 100 }}
           animate={{ opacity: 1, x: 0 }}
@@ -198,8 +218,8 @@ export default function HeroSlider() {
           {/* Mobile background image (full-bleed) */}
           <div className="absolute inset-0 md:hidden">
             <img
-              src={slides[index].imageMobile}
-              alt={slides[index].imageAlt}
+              src={currentSlide.imageMobile}
+              alt={currentSlide.imageAlt}
               className="h-full w-full object-cover object-center"
               draggable="false"
             />
@@ -210,8 +230,8 @@ export default function HeroSlider() {
           {/* Desktop image on the right half (unchanged) */}
           <div className="absolute inset-y-0 right-0 w-1/2 hidden md:block">
             <img
-              src={slides[index].image}
-              alt={slides[index].imageAlt}
+              src={currentSlide.image}
+              alt={currentSlide.imageAlt}
               className="h-full w-full object-cover object-center"
               draggable="false"
             />
@@ -225,20 +245,20 @@ export default function HeroSlider() {
       <div className="relative z-10 max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center px-4 sm:px-6 py-28 min-h-[600px]">
         <div className="min-h-[320px] flex flex-col justify-center">
           <p className="text-xs uppercase tracking-widest text-primary mb-2 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] md:drop-shadow-none">
-            {slides[index].claim[language]}
+            {currentSlide.claim[language]}
           </p>
           <h1 className="text-3xl sm:text-5xl font-bold text-primary mb-6 leading-tight break-words max-w-[90vw] sm:max-w-full drop-shadow-[0_4px_18px_rgba(0,0,0,0.95)] md:drop-shadow-none">
-  {slides[index].title[language]}
+  {currentSlide.title[language]}
 </h1>
 <p className="text-base sm:text-lg text-gray-300 mb-8 leading-relaxed max-w-[90vw] sm:max-w-2xl drop-shadow-[0_3px_14px_rgba(0,0,0,0.9)] md:drop-shadow-none">
-  {slides[index].description[language]}
+  {currentSlide.description[language]}
 </p>
           <div className="w-fit">
             <a
-              href={slides[index].buttonLink}
+              href={currentSlide.buttonLink}
               className="bg-primary-on-light text-white font-medium px-6 py-3 rounded-full shadow-md hover:bg-primary-on-light-hover transition-all whitespace-nowrap"
             >
-              {slides[index].button[language]}
+              {currentSlide.button[language]}
             </a>
           </div>
         </div>

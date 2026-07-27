@@ -22,14 +22,6 @@ export default function Navbar() {
   };
 
   useEffect(() => {
-    const savedLang = localStorage.getItem("language");
-    if (!savedLang) {
-      const browserLang = navigator.language.startsWith("en") ? "en" : "es";
-      setLanguage(browserLang);
-    }
-  }, []);
-
-  useEffect(() => {
     if (!menuOpen) return;
 
     const handleEscape = (event: KeyboardEvent) => {

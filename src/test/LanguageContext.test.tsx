@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   LanguageProvider,
   useLanguage,
@@ -69,9 +69,44 @@ describe("LanguageProvider", () => {
     await user.click(screen.getByRole("button", { name: "EN" }));
     expect(screen.getByText("English content")).toBeInTheDocument();
     expect(localStorage.getItem("language")).toBe("en");
+    expect(document.documentElement.lang).toBe("en");
 
     await user.click(screen.getByRole("button", { name: "ES" }));
     expect(screen.getByText("Contenido ES")).toBeInTheDocument();
     expect(localStorage.getItem("language")).toBe("es");
+    expect(document.documentElement.lang).toBe("es");
+  });
+
+  it("continues with browser detection when storage reads are blocked", async () => {
+    vi.spyOn(Storage.prototype, "getItem").mockImplementation(() => {
+      throw new DOMException("Storage blocked", "SecurityError");
+    });
+
+    renderLanguageProbe();
+
+    expect(await screen.findByText("Contenido ES")).toBeInTheDocument();
+    expect(document.documentElement.lang).toBe("es");
+  });
+
+  it("keeps language changes in memory when storage writes fail", async () => {
+    localStorage.setItem("language", "es");
+    vi.spyOn(Storage.prototype, "setItem").mockImplementation(() => {
+      throw new DOMException("Storage blocked", "SecurityError");
+    });
+    const user = userEvent.setup();
+
+    renderLanguageProbe();
+    await user.click(screen.getByRole("button", { name: "EN" }));
+
+    expect(screen.getByText("English content")).toBeInTheDocument();
+    expect(document.documentElement.lang).toBe("en");
+  });
+
+  it("fails descriptively when useLanguage is outside its provider", () => {
+    vi.spyOn(console, "error").mockImplementation(() => {});
+
+    expect(() => render(<LanguageProbe />)).toThrow(
+      "useLanguage must be used within a LanguageProvider",
+    );
   });
 });

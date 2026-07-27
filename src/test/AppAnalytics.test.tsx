@@ -37,4 +37,21 @@ describe("App analytics integration", () => {
     expect(isAnalyticsClickLabel).not.toHaveBeenCalled();
     expect(trackAnalyticsClick).not.toHaveBeenCalled();
   });
+
+  it("ignores a click whose EventTarget is not an Element", async () => {
+    render(
+      <LanguageProvider>
+        <MemoryRouter initialEntries={["/portfolio"]}>
+          <App />
+        </MemoryRouter>
+      </LanguageProvider>,
+    );
+    await waitFor(() => expect(trackPageView).toHaveBeenCalledWith("/portfolio"));
+
+    expect(() => {
+      document.dispatchEvent(new Event("click", { bubbles: true }));
+    }).not.toThrow();
+    expect(isAnalyticsClickLabel).not.toHaveBeenCalled();
+    expect(trackAnalyticsClick).not.toHaveBeenCalled();
+  });
 });

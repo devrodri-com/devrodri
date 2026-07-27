@@ -61,9 +61,10 @@ export default function FaqSection() {
   type FaqItem = { question: string; answer: string };
   const baseFaqs: FaqItem[] = t.faq.questions.map((q) => ({ ...q }));
   const techIdx = baseFaqs.findIndex((q) => /tecnolog|technolog/i.test(q.question));
-  if (techIdx > -1) {
+  const techFaq = baseFaqs[techIdx];
+  if (techFaq !== undefined) {
     baseFaqs[techIdx] = {
-      ...baseFaqs[techIdx],
+      ...techFaq,
       answer: language === "es" ? techAnswerEs : techAnswerEn,
     };
   }
