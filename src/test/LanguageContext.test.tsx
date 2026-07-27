@@ -1,10 +1,25 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import {
-  LanguageProvider,
-  useLanguage,
-} from "../LanguageContext";
+import translations from "../i18n";
+import { LanguageProvider } from "../i18n/LanguageProvider";
+import { isLanguage } from "../i18n/language";
+import { useLanguage } from "../i18n/useLanguage";
+
+function collectTranslationPaths(value: unknown, path = "$"): string[] {
+  if (typeof value === "string") return [path];
+  if (Array.isArray(value)) {
+    return value.flatMap((item, index) =>
+      collectTranslationPaths(item, `${path}[${index}]`),
+    );
+  }
+  if (value !== null && typeof value === "object") {
+    return Object.entries(value).flatMap(([key, item]) =>
+      collectTranslationPaths(item, `${path}.${key}`),
+    );
+  }
+  throw new Error(`Translation value at ${path} is not serializable copy`);
+}
 
 function LanguageProbe() {
   const { language, setLanguage } = useLanguage();
@@ -29,6 +44,28 @@ function renderLanguageProbe() {
     </LanguageProvider>,
   );
 }
+
+describe("i18n contract", () => {
+  it("keeps the supported languages behind one guard", () => {
+    expect(isLanguage("es")).toBe(true);
+    expect(isLanguage("en")).toBe(true);
+    expect(isLanguage(null)).toBe(false);
+    expect(isLanguage(undefined)).toBe(false);
+    expect(isLanguage("")).toBe(false);
+    expect(isLanguage("invalid")).toBe(false);
+    expect(isLanguage("EN")).toBe(false);
+  });
+
+  it("keeps exact ES/EN key parity and serializable values", () => {
+    const esPaths = collectTranslationPaths(translations.es);
+    const enPaths = collectTranslationPaths(translations.en);
+
+    expect(Object.keys(translations)).toEqual(["es", "en"]);
+    expect(esPaths).toHaveLength(144);
+    expect(enPaths).toEqual(esPaths);
+    expect(JSON.parse(JSON.stringify(translations))).toEqual(translations);
+  });
+});
 
 describe("LanguageProvider", () => {
   beforeEach(() => {

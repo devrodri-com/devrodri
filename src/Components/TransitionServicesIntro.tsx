@@ -2,8 +2,8 @@
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { FiCheckCircle, FiLayers, FiMessageCircle } from "react-icons/fi";
-import { useLanguage } from "../LanguageContext";
-import translations from "../translations";
+import translations from "../i18n";
+import { useLanguage } from "../i18n/useLanguage";
 
 type BridgeProps = { variant?: "default" | "afterPortfolio" };
 

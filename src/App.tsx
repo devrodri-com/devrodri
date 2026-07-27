@@ -1,5 +1,5 @@
 // src/App.tsx
-import { useLanguage } from "./LanguageContext";
+import { useLanguage } from "./i18n/useLanguage";
 import { HelmetProvider } from "react-helmet-async";
 import SeoHead from "./Components/SeoHead";
 import { lazy, Suspense, useEffect, useRef } from "react";
@@ -15,7 +15,6 @@ import ImpactSection from "./Components/ImpactSection";
 import ExperienceSection from "./Components/ExperienceSection";
 import TransitionServicesIntro from "./Components/TransitionServicesIntro";
 import NotFoundPage from "./pages/NotFoundPage";
-import "./index.css";
 import CTASection from "./Components/CTASection";
 import { Routes, Route, useLocation } from "react-router-dom";
 import {

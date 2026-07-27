@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { useLanguage } from "../LanguageContext";
+import { useLanguage } from "../i18n/useLanguage";
 
 export default function NotFoundPage() {
   const { language } = useLanguage();

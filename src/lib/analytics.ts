@@ -1,4 +1,4 @@
-import type { LanguageKeys } from "../LanguageContext";
+import type { Language } from "../i18n/language";
 
 const GOOGLE_TAG_SCRIPT_ID = "devrodri-google-tag";
 const GOOGLE_TAG_CONFIGURED_ATTRIBUTE = "data-devrodri-ga-configured";
@@ -113,7 +113,7 @@ function setCleanPageLocation(gtag: Gtag, pathname: string): void {
 }
 
 function getContactParameters(
-  language: LanguageKeys,
+  language: Language,
 ): AnalyticsContactParameters {
   return {
     language,
@@ -171,20 +171,20 @@ export function trackAnalyticsClick(label: AnalyticsClickLabel): void {
   window.gtag("event", "click", { label });
 }
 
-export function trackContactAttempt(language: LanguageKeys): void {
+export function trackContactAttempt(language: Language): void {
   if (!initializeAnalytics() || window.gtag === undefined) return;
   setCleanPageLocation(window.gtag, window.location.pathname);
   window.gtag("event", "contact_form_attempt", getContactParameters(language));
 }
 
-export function trackContactSuccess(language: LanguageKeys): void {
+export function trackContactSuccess(language: Language): void {
   if (!initializeAnalytics() || window.gtag === undefined) return;
   setCleanPageLocation(window.gtag, window.location.pathname);
   window.gtag("event", "generate_lead", getContactParameters(language));
 }
 
 export function trackContactError(
-  language: LanguageKeys,
+  language: Language,
   errorType: ContactFormErrorType,
 ): void {
   if (!initializeAnalytics() || window.gtag === undefined) return;
@@ -195,7 +195,7 @@ export function trackContactError(
   });
 }
 
-export function trackContactTimeout(language: LanguageKeys): void {
+export function trackContactTimeout(language: Language): void {
   if (!initializeAnalytics() || window.gtag === undefined) return;
   setCleanPageLocation(window.gtag, window.location.pathname);
   window.gtag("event", "contact_form_timeout", {

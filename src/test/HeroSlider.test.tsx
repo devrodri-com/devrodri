@@ -2,7 +2,7 @@ import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import HeroSlider from "../Components/HeroSlider";
-import { LanguageProvider } from "../LanguageContext";
+import { LanguageProvider } from "../i18n/LanguageProvider";
 
 function renderHero() {
   return render(

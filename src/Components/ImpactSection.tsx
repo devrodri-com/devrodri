@@ -1,6 +1,6 @@
 // src/Components/ImpactSection.tsx
-import { useLanguage } from "../LanguageContext";
-import translations from "../translations";
+import translations from "../i18n";
+import { useLanguage } from "../i18n/useLanguage";
 export default function ImpactSection() {
   const { language } = useLanguage();
   const t = translations[language];

@@ -1,69 +1,17 @@
 // src/components/PortfolioSection.tsx
 import { motion } from "framer-motion";
-import { useLanguage } from "../LanguageContext";
-import translations from "../translations";
+import { homePortfolioCases } from "../data/portfolio";
+import { useLanguage } from "../i18n/useLanguage";
 import { Link } from "react-router-dom";
 
 export default function PortfolioSection() {
   const { language } = useLanguage();
-  const t = translations[language];
-
-  const highlights = [
-    {
-      key: "magenta",
-      logo: "/img/magenta-cover.png",
-      title: t.portfolio.magenta.title,
-      summary:
-        language === "es"
-          ? "Imprenta · MVP con catálogo, presupuesto dinámico y SEO completo."
-          : "Print shop · MVP with catalog, dynamic quote form and full SEO.",
-    },
-    {
-      key: "esteban",
-      logo: "/img/esteban.png",
-      title: t.portfolio.esteban.title,
-      summary:
-        language === "es"
-          ? "Real estate · Landing, catálogo y SEO técnico para captar leads de preconstrucción."
-          : "Real estate · Landing, catalog and technical SEO to capture pre-construction leads.",
-    },
-    {
-      key: "lem_web",
-      logo: "/img/lem-box-cover.png",
-      title: t.portfolio.lem_web.title,
-      summary:
-        language === "es"
-          ? "Logística · Web multipaís (UY/AR), SEO y performance para captar clientes."
-          : "Logistics · Multi-country web (UY/AR), SEO and performance to acquire customers.",
-    },
-    {
-      key: "lem_portal",
-      logo: "/img/lem-box-cover.png",
-      title: t.portfolio.lem_portal.title,
-      summary:
-        language === "es"
-          ? "Operativa & pagos · Portal interno con roles, tracking, cajas/embarques y Stripe."
-          : "Ops & payments · Internal portal with roles, tracking, boxes/shipments and Stripe.",
-    },
-    {
-      key: "mutter",
-      logo: "/img/mutter-cover.png",
-      title: t.portfolio.mutter.title,
-      summary:
-        language === "es"
-          ? "E-commerce · Catálogo dinámico y checkout integrado para aumentar ventas."
-          : "E-commerce · Dynamic catalog and integrated checkout to drive sales.",
-    },
-    {
-      key: "federico",
-      logo: "/img/federico-cover.jpg",
-      title: t.portfolio.federico.title,
-      summary:
-        language === "es"
-          ? "Marca personal · Sitio profesional con contenido, cursos y presencia premium."
-          : "Personal brand · Professional site with content, courses and premium presence.",
-    },
-  ];
+  const highlights = homePortfolioCases.map((portfolioCase) => ({
+    key: portfolioCase.key,
+    logo: portfolioCase.cover,
+    title: portfolioCase.content[language].title,
+    summary: portfolioCase.home.summary[language],
+  }));
 
   return (
     <motion.section

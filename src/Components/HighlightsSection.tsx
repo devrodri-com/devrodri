@@ -1,7 +1,7 @@
 // src/Components/HighlightsSection.tsx
 import { Zap, Smartphone, Target, Rocket, Workflow, CreditCard } from "lucide-react";
-import { useLanguage } from "../LanguageContext";
-import translations from "../translations";
+import translations from "../i18n";
+import { useLanguage } from "../i18n/useLanguage";
 import { useRef, useEffect } from "react";
 
 const iconMap = {
