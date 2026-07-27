@@ -4,7 +4,7 @@ export type Localized<T> = {
   readonly [Locale in Language]: T;
 };
 
-export type ProjectCategory = "ecom" | "personal" | "services";
+export type ProjectCategory = "systems" | "web" | "ecommerce" | "brand";
 
 export type PortfolioAction = {
   href: string;
@@ -15,7 +15,9 @@ export type PortfolioAction = {
 export type PortfolioCaseDetails = {
   summary: string;
   stack: readonly string[];
+  stackLabel?: string;
   integrations: readonly string[];
+  integrationsLabel?: string;
   challenges: readonly string[];
   solution: readonly string[];
   impact: readonly string[];
@@ -27,6 +29,7 @@ export type PortfolioCaseContent = {
   tags: readonly string[];
   status?: string;
   disclaimer?: string;
+  role?: string;
   details: PortfolioCaseDetails;
 };
 

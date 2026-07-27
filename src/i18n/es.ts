@@ -126,15 +126,20 @@ export const es = {
         desc: "E-commerce de videojuegos, consolas y accesorios. Catálogo dinámico, carrito y checkout con Mercado Pago, SEO y diseño responsive.",
         link: "Ver sitio web",
       },
-      lem_web: {
-        title: "LEM-BOX Web (UY/AR)",
-        desc: "Landing multipaís para logística (Uruguay/Argentina), mobile-first, SEO y contacto.",
-        link: "Ver sitio web",
+      lem_box: {
+        title: "LEM-BOX",
+        desc: "LEM-BOX es un negocio logístico con más de 10 años de trayectoria y operación vinculada con Estados Unidos, Uruguay y Argentina. Su ecosistema digital reúne presencia comercial por mercado y una plataforma central utilizada en la operación real del negocio.",
+        status: "Producto activo",
+        platformLink: "Ver plataforma",
+        platformNote: "Acceso con credenciales",
+        uruguayLink: "Uruguay",
+        argentinaLink: "Argentina",
       },
-      lem_portal: {
-        title: "LEM-BOX Portal (Sistema)",
-        desc: "Sistema operativo con roles, trazabilidad, cajas/embarques, facturación y pagos (Stripe).",
-        link: "Ver portal",
+      zentra: {
+        title: "ZENTRA",
+        desc: "ZENTRA es una marca de aromatización profesional para espacios comerciales y residenciales. El proyecto comenzó con una necesidad más amplia que una web: definir posicionamiento, naming, identidad y una base digital coherente para presentarse y crecer.",
+        status: "En desarrollo",
+        link: "Visitar sitio en desarrollo",
       },
       esteban: {
         title: "Esteban Firpo · Miami Real Estate",

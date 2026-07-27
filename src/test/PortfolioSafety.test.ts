@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import {
+  filters,
   homePortfolioCases,
   isProjectKey,
   portfolioCases,
@@ -8,7 +9,19 @@ import {
 import translations from "../i18n";
 
 interface FileSystemApi {
+  existsSync(path: string): boolean;
   readFileSync(path: string, encoding: "utf8"): string;
+  readFileSync(path: string): Uint8Array;
+  statSync(path: string): { size: number };
+}
+
+interface HashApi {
+  update(value: string): HashApi;
+  digest(encoding: "hex"): string;
+}
+
+interface CryptoApi {
+  createHash(algorithm: "sha256"): HashApi;
 }
 
 interface PathApi {
@@ -21,6 +34,7 @@ interface UrlApi {
 }
 
 const fs = await vi.importActual<FileSystemApi>("node:fs");
+const crypto = await vi.importActual<CryptoApi>("node:crypto");
 const path = await vi.importActual<PathApi>("node:path");
 const url = await vi.importActual<UrlApi>("node:url");
 const projectRoot = path.join(
@@ -29,16 +43,42 @@ const projectRoot = path.join(
 );
 
 const expectedProjectKeys = [
-  "magenta",
+  "lem_box",
+  "zentra",
   "esteban",
-  "lem_web",
-  "lem_portal",
   "mutter",
+  "magenta",
   "federico",
   "boating",
   "campings_demo",
+] as const;
+const expectedHomeKeys = ["lem_box", "zentra", "esteban", "mutter"];
+const expectedCategories = {
+  lem_box: "systems",
+  zentra: "brand",
+  esteban: "web",
+  mutter: "ecommerce",
+  magenta: "web",
+  federico: "web",
+  boating: "web",
+  campings_demo: "systems",
+} as const;
+const expectedFilters = [
+  { key: "all", label: { es: "Todos", en: "All" } },
+  { key: "systems", label: { es: "Sistemas", en: "Systems" } },
+  { key: "web", label: { es: "Sitios web", en: "Websites" } },
+  { key: "ecommerce", label: { es: "E-commerce", en: "E-commerce" } },
+  { key: "brand", label: { es: "Marca", en: "Brand" } },
 ];
-const expectedHomeKeys = expectedProjectKeys.slice(0, 6);
+const expectedPreservedCaseHashes = {
+  esteban: "643b388f7f34ce4b90e2ba1890b007fef0f2c485694647bf56cc0c04a4c421e4",
+  mutter: "aa118ae6042f19d18ec824d988519e28a8a36aef2b94be6a80ec3634dac1ec25",
+  magenta: "e705f225be4bb4ea1f0158d65198f206657f7ead2d892e4169902c9df5935c89",
+  federico: "bb8a9ebb7529473d3e6952ba0870c16b309559e09b76524abc7e678a92f8145d",
+  boating: "7754ed5cab71d070f83f13d70fcd761440018bb2927881ebecb30e6104b2e418",
+  campings_demo:
+    "25ded1c5d93a2eba7ec3f9a5b81e5b2d634d5d5a4f80c8d64d182dd51f783ad0",
+} as const;
 const campingsRepository =
   "https://github.com/devrodri-com/reservas-campings-nacionales";
 const removedLiveDemo = [
@@ -46,35 +86,166 @@ const removedLiveDemo = [
   "vercel.app",
 ].join(".");
 
+function getCase(key: (typeof expectedProjectKeys)[number]) {
+  const portfolioCase = portfolioCases.find((item) => item.key === key);
+  if (portfolioCase === undefined) {
+    throw new Error(`Missing portfolio case: ${key}`);
+  }
+  return portfolioCase;
+}
+
+function digestPublicCase(portfolioCase: (typeof portfolioCases)[number]) {
+  const publicValues = {
+    key: portfolioCase.key,
+    cover: portfolioCase.cover,
+    actions: portfolioCase.actions,
+    content: portfolioCase.content,
+  };
+
+  return crypto
+    .createHash("sha256")
+    .update(JSON.stringify(publicValues))
+    .digest("hex");
+}
+
+function byteAt(data: Uint8Array, index: number) {
+  const value = data[index];
+  if (value === undefined) {
+    throw new Error("Unexpected end of JPEG data");
+  }
+  return value;
+}
+
+function readJpegDimensions(data: Uint8Array) {
+  if (byteAt(data, 0) !== 0xff || byteAt(data, 1) !== 0xd8) {
+    throw new Error("Expected a JPEG image");
+  }
+
+  const startOfFrameMarkers = new Set([
+    0xc0, 0xc1, 0xc2, 0xc3, 0xc5, 0xc6, 0xc7, 0xc9, 0xca, 0xcb, 0xcd, 0xce,
+    0xcf,
+  ]);
+  let offset = 2;
+
+  while (offset < data.length) {
+    if (byteAt(data, offset) !== 0xff) {
+      offset += 1;
+      continue;
+    }
+
+    const marker = byteAt(data, offset + 1);
+    offset += 2;
+
+    if (marker === 0xd8 || marker === 0xd9) {
+      continue;
+    }
+    if (marker === 0xda) {
+      break;
+    }
+
+    const segmentLength =
+      (byteAt(data, offset) << 8) + byteAt(data, offset + 1);
+    if (startOfFrameMarkers.has(marker)) {
+      return {
+        height:
+          (byteAt(data, offset + 3) << 8) + byteAt(data, offset + 4),
+        width:
+          (byteAt(data, offset + 5) << 8) + byteAt(data, offset + 6),
+      };
+    }
+    if (segmentLength < 2) {
+      break;
+    }
+    offset += segmentLength;
+  }
+
+  throw new Error("JPEG dimensions were not found");
+}
+
 describe("portfolio architecture invariants", () => {
-  it("derives eight unique keys in the exact portfolio order", () => {
+  it("derives eight unique keys in the exact approved order", () => {
     expect(projectKeys).toEqual(expectedProjectKeys);
     expect(new Set(projectKeys).size).toBe(8);
     expect(portfolioCases.map(({ portfolioOrder }) => portfolioOrder)).toEqual(
       [0, 1, 2, 3, 4, 5, 6, 7],
     );
-    expect(isProjectKey("magenta")).toBe(true);
-    expect(isProjectKey("campings_demo")).toBe(true);
+    expect(projectKeys).not.toContain("lem_web");
+    expect(projectKeys).not.toContain("lem_portal");
+    expect(isProjectKey("lem_box")).toBe(true);
+    expect(isProjectKey("zentra")).toBe(true);
     expect(isProjectKey("toString")).toBe(false);
     expect(isProjectKey("unknown")).toBe(false);
   });
 
-  it("derives the six home highlights from the central catalog", () => {
+  it("uses the approved category and filter contracts in both languages", () => {
+    expect(filters).toEqual(expectedFilters);
+    expect(
+      Object.fromEntries(
+        portfolioCases.map(({ category, key }) => [key, category]),
+      ),
+    ).toEqual(expectedCategories);
+
+    const categoryFilters = new Set(filters.slice(1).map(({ key }) => key));
+    expect(new Set(portfolioCases.map(({ category }) => category))).toEqual(
+      categoryFilters,
+    );
+    expect(
+      portfolioCases.every(({ category }) => categoryFilters.has(category)),
+    ).toBe(true);
+  });
+
+  it("derives exactly four approved home highlights", () => {
     expect(homePortfolioCases.map(({ key }) => key)).toEqual(expectedHomeKeys);
     expect(homePortfolioCases.map(({ home }) => home.order)).toEqual([
-      0, 1, 2, 3, 4, 5,
+      0, 1, 2, 3,
     ]);
   });
 
-  it("keeps Campings last, conceptual, not featured, and GitHub-only", () => {
-    const campings = portfolioCases.find(
-      (portfolioCase) => portfolioCase.key === "campings_demo",
-    );
+  it("publishes only the approved LEM-BOX links and claims", () => {
+    const lemBox = getCase("lem_box");
+    const serialized = JSON.stringify(lemBox);
 
-    expect(campings).toBeDefined();
-    if (campings === undefined) {
-      throw new Error("Campings is missing from the portfolio catalog");
-    }
+    expect(lemBox.actions.map(({ href }) => href)).toEqual([
+      "https://lem-box.com",
+      "https://lem-box.com.uy",
+      "https://lem-box.com.ar",
+    ]);
+    expect(serialized).not.toMatch(/\/mi|\/partner|\/admin/);
+    expect(serialized).not.toContain("Stripe");
+    expect(serialized).not.toMatch(
+      /selector multipaís|mobile ready|app móvil en desarrollo|SEO completamente optimizado|canonical perfecto|100 % segura|sin vulnerabilidades|grandes volúmenes sin degradación/i,
+    );
+    expect(lemBox.content.es.role).toBeDefined();
+    expect(lemBox.content.en.role).toBeDefined();
+  });
+
+  it("publishes ZENTRA without private documents or restricted names", () => {
+    const zentra = getCase("zentra");
+    const serialized = JSON.stringify(zentra);
+
+    expect(zentra.actions.map(({ href }) => href)).toEqual([
+      "https://zentrascent.com",
+    ]);
+    expect(serialized).not.toMatch(
+      /ESSENZA|Andrés|Artemov|Manual de imagen|Brand & Growth Plan|Google Workspace|\.pdf/i,
+    );
+    expect(zentra.content.es.role).toBeDefined();
+    expect(zentra.content.en.role).toBeDefined();
+  });
+
+  it("keeps the approved ZENTRA cover within its exact asset budget", () => {
+    const coverPath = path.join(projectRoot, "public/img/zentra-cover.jpg");
+
+    expect(fs.existsSync(coverPath)).toBe(true);
+    expect(readJpegDimensions(fs.readFileSync(coverPath))).toEqual({
+      width: 1600,
+      height: 800,
+    });
+    expect(fs.statSync(coverPath).size).toBeLessThanOrEqual(300_000);
+  });
+
+  it("keeps Campings last, conceptual, not featured, and GitHub-only", () => {
+    const campings = getCase("campings_demo");
 
     expect(portfolioCases[portfolioCases.length - 1]?.key).toBe(
       "campings_demo",
@@ -98,6 +269,34 @@ describe("portfolio architecture invariants", () => {
     expect(JSON.stringify({ portfolioCases, translations })).not.toContain(
       removedLiveDemo,
     );
+  });
+
+  it("preserves the six existing cases outside approved metadata changes", () => {
+    for (const [key, expectedHash] of Object.entries(
+      expectedPreservedCaseHashes,
+    )) {
+      const portfolioCase = portfolioCases.find((item) => item.key === key);
+      expect(portfolioCase).toBeDefined();
+      if (portfolioCase === undefined) {
+        throw new Error(`Missing preserved portfolio case: ${key}`);
+      }
+      expect(digestPublicCase(portfolioCase)).toBe(expectedHash);
+    }
+  });
+
+  it("keeps ES and EN structures aligned without long public dashes", () => {
+    for (const portfolioCase of portfolioCases) {
+      expect(Object.keys(portfolioCase.content.es).sort()).toEqual(
+        Object.keys(portfolioCase.content.en).sort(),
+      );
+      expect(Object.keys(portfolioCase.content.es.details).sort()).toEqual(
+        Object.keys(portfolioCase.content.en.details).sort(),
+      );
+    }
+
+    expect(
+      JSON.stringify([getCase("lem_box"), getCase("zentra")]),
+    ).not.toMatch(/[—–]/);
   });
 
   it("uses explicit card slots and a stable FAQ id contract", () => {

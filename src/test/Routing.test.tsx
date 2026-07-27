@@ -12,6 +12,17 @@ type TestRouteEntry =
       state: Record<string, unknown>;
     };
 
+const portfolioCases = [
+  { key: "lem_box", title: "LEM-BOX" },
+  { key: "zentra", title: "ZENTRA" },
+  { key: "esteban", title: "Esteban Firpo · Miami Real Estate" },
+  { key: "mutter", title: "Mutter Games" },
+  { key: "magenta", title: "Imprenta Magenta · Paysandú, Uruguay" },
+  { key: "federico", title: "Federico Roma" },
+  { key: "boating", title: "Boating Adventures Miami" },
+  { key: "campings_demo", title: "Plataforma de reservas de campings" },
+] as const;
+
 function renderApp(entry: TestRouteEntry) {
   return render(
     <LanguageProvider>
@@ -83,6 +94,27 @@ describe("application routing", () => {
     ).toBeInTheDocument();
   });
 
+  it("shows the four approved home cases with case-study deep links", async () => {
+    renderApp("/");
+    await screen.findByRole("heading", {
+      level: 2,
+      name: "Algunos resultados recientes",
+    });
+
+    expect(
+      screen
+        .getAllByRole("link", {
+          name: /Ver este caso en el portfolio:/,
+        })
+        .map((link) => link.getAttribute("aria-label")),
+    ).toEqual([
+      "Ver este caso en el portfolio: LEM-BOX",
+      "Ver este caso en el portfolio: ZENTRA",
+      "Ver este caso en el portfolio: Esteban Firpo · Miami Real Estate",
+      "Ver este caso en el portfolio: Mutter Games",
+    ]);
+  });
+
   it("filters the central portfolio catalog", async () => {
     const user = userEvent.setup();
     renderApp("/portfolio");
@@ -91,10 +123,10 @@ describe("application routing", () => {
       name: "Algunos trabajos",
     });
 
-    await user.click(screen.getByRole("button", { name: "Personal" }));
+    await user.click(screen.getByRole("button", { name: "Marca" }));
 
     expect(
-      screen.getByRole("heading", { level: 3, name: "Federico Roma" }),
+      screen.getByRole("heading", { level: 3, name: "ZENTRA" }),
     ).toBeInTheDocument();
     expect(
       screen.queryByRole("heading", {
@@ -104,53 +136,51 @@ describe("application routing", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("expands and contracts case details with the same ARIA contract", async () => {
+  it("expands and contracts all eight cases with the same ARIA contract", async () => {
     const user = userEvent.setup();
     renderApp("/portfolio");
-    const title = await screen.findByRole("heading", {
-      level: 3,
-      name: "Imprenta Magenta · Paysandú, Uruguay",
-    });
-    const cardContent = title.parentElement;
-    expect(cardContent).not.toBeNull();
-    if (cardContent === null) {
-      throw new Error("Portfolio card content is missing");
+    await screen.findByRole("heading", { level: 3, name: "LEM-BOX" });
+
+    for (const portfolioCase of portfolioCases) {
+      const title = screen.getByRole("heading", {
+        level: 3,
+        name: portfolioCase.title,
+      });
+      const cardContent = title.parentElement;
+      expect(cardContent).not.toBeNull();
+      if (cardContent === null) {
+        throw new Error(`Portfolio card content is missing: ${portfolioCase.key}`);
+      }
+
+      const detailsId = `portfolio-details-${portfolioCase.key}`;
+      const expandButton = within(cardContent).getByRole("button", {
+        name: "Ver más",
+      });
+      expect(expandButton).toHaveAttribute("aria-expanded", "false");
+      expect(expandButton).toHaveAttribute("aria-controls", detailsId);
+
+      await user.click(expandButton);
+      expect(document.getElementById(detailsId)).toBeInTheDocument();
+      expect(
+        within(cardContent).getByRole("button", { name: "Ver menos" }),
+      ).toHaveAttribute("aria-expanded", "true");
+
+      await user.click(
+        within(cardContent).getByRole("button", { name: "Ver menos" }),
+      );
+      expect(document.getElementById(detailsId)).not.toBeInTheDocument();
     }
-
-    const expandButton = within(cardContent).getByRole("button", {
-      name: "Ver más",
-    });
-    expect(expandButton).toHaveAttribute("aria-expanded", "false");
-    expect(expandButton).toHaveAttribute(
-      "aria-controls",
-      "portfolio-details-magenta",
-    );
-
-    await user.click(expandButton);
-    expect(
-      document.getElementById("portfolio-details-magenta"),
-    ).toBeInTheDocument();
-    expect(
-      within(cardContent).getByRole("button", { name: "Ver menos" }),
-    ).toHaveAttribute("aria-expanded", "true");
-
-    await user.click(
-      within(cardContent).getByRole("button", { name: "Ver menos" }),
-    );
-    expect(
-      document.getElementById("portfolio-details-magenta"),
-    ).not.toBeInTheDocument();
   });
 
   it("opens a valid home deep link from route state", async () => {
     renderApp({
       pathname: "/portfolio",
-      state: { focusCase: "lem_portal" },
+      state: { focusCase: "lem_box" },
     });
 
     const title = await screen.findByRole("heading", {
       level: 3,
-      name: "LEM-BOX Portal (Sistema)",
+      name: "LEM-BOX",
     });
     const cardContent = title.parentElement;
     expect(cardContent).not.toBeNull();
@@ -163,8 +193,9 @@ describe("application routing", () => {
         within(cardContent).getByRole("button", { name: "Ver menos" }),
       ).toHaveAttribute("aria-expanded", "true");
       expect(
-        document.getElementById("portfolio-details-lem_portal"),
+        document.getElementById("portfolio-details-lem_box"),
       ).toBeInTheDocument();
+      expect(within(cardContent).getByText("Mi rol")).toBeInTheDocument();
     });
   });
 

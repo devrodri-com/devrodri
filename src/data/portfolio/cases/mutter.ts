@@ -22,8 +22,8 @@ const integrationsEn = integrationsEs;
 
 export const mutterCase = definePortfolioCase({
   key: "mutter",
-  portfolioOrder: 4,
-  category: "ecom",
+  portfolioOrder: 3,
+  category: "ecommerce",
   cover: "/img/mutter-cover.png",
   actions: [
     {
@@ -99,7 +99,7 @@ export const mutterCase = definePortfolioCase({
     },
   },
   home: {
-    order: 4,
+    order: 3,
     summary: {
       "es": "E-commerce · Catálogo dinámico y checkout integrado para aumentar ventas.",
       "en": "E-commerce · Dynamic catalog and integrated checkout to drive sales."
