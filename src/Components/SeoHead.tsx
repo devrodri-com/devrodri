@@ -9,13 +9,20 @@ const SITE_ORIGIN = "https://www.devrodri.com";
 /** Imagen OG/poster referenciada también en el hero; evita rutas rotas tipo meta-cover.jpg */
 const DEFAULT_OG_IMAGE_PATH = "/img/hero-visual.jpg";
 
+function normalizeRoutedPathname(pathname: string): string {
+  const pathnameWithoutTrailingSlash =
+    pathname.length > 1 ? pathname.replace(/\/+$/, "") : pathname;
+  return pathnameWithoutTrailingSlash.toLowerCase();
+}
+
 export default function SeoHead() {
   const { language } = useLanguage();
   const { pathname } = useLocation();
   const t = translations[language];
 
-  const isPortfolio = pathname === "/portfolio";
-  const isNotFound = pathname !== "/" && !isPortfolio;
+  const normalizedPathname = normalizeRoutedPathname(pathname);
+  const isPortfolio = normalizedPathname === "/portfolio";
+  const isNotFound = normalizedPathname !== "/" && !isPortfolio;
   const notFoundSeo = {
     title:
       language === "es"
@@ -32,8 +39,12 @@ export default function SeoHead() {
     : isPortfolio
       ? t.portfolio.seo
       : t.seo;
-  const path = pathname === "/" ? "/" : pathname;
-  const canonicalUrl = `${SITE_ORIGIN}${path === "/" ? "" : path}`;
+  const canonicalPath = isPortfolio
+    ? "/portfolio"
+    : pathname === "/"
+      ? ""
+      : pathname;
+  const canonicalUrl = `${SITE_ORIGIN}${canonicalPath}`;
   const ogImageUrl = `${SITE_ORIGIN}${DEFAULT_OG_IMAGE_PATH}`;
   const ogTitle =
     isPortfolio || isNotFound ? seo.title : t.seo.ogTitle;

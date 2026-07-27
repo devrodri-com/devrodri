@@ -29,18 +29,34 @@ describe("application routing", () => {
         name: "Diseño web profesional.",
       }),
     ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(
+        document.head.querySelector('link[rel="canonical"]'),
+      ).toHaveAttribute("href", "https://www.devrodri.com");
+    });
   });
 
-  it("loads the lazy portfolio route", async () => {
-    renderApp("/portfolio");
+  it.each(["/portfolio", "/portfolio/", "/Portfolio"])(
+    "loads the lazy portfolio route and canonical metadata for %s",
+    async (path) => {
+      renderApp(path);
 
-    expect(
-      await screen.findByRole("heading", {
-        level: 1,
-        name: "Algunos trabajos",
-      }),
-    ).toBeInTheDocument();
-  });
+      expect(
+        await screen.findByRole("heading", {
+          level: 1,
+          name: "Algunos trabajos",
+        }),
+      ).toBeInTheDocument();
+      await waitFor(() => {
+        expect(
+          document.head.querySelector('link[rel="canonical"]'),
+        ).toHaveAttribute("href", "https://www.devrodri.com/portfolio");
+        expect(
+          document.head.querySelector('meta[name="robots"]'),
+        ).not.toBeInTheDocument();
+      });
+    },
+  );
 
   it("navigates internally from home to portfolio without throwing", async () => {
     const user = userEvent.setup();
