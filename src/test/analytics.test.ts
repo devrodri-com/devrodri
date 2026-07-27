@@ -1,0 +1,281 @@
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+
+const VALID_TEST_MEASUREMENT_ID = "G-TEST123456";
+const GOOGLE_TAG_SCRIPT_ID = "devrodri-google-tag";
+
+type ConfigCommand = Extract<
+  GtagCommand,
+  ["config", string, GoogleTagConfig]
+>;
+type PageViewCommand = Extract<
+  GtagCommand,
+  ["event", "page_view", AnalyticsPageViewParameters]
+>;
+type AnalyticsEventCommand = Extract<GtagCommand, ["event", string, unknown]>;
+type SetPageLocationCommand = Extract<
+  GtagCommand,
+  ["set", "page_location", string]
+>;
+
+function dataLayerCommands(): GtagCommand[] {
+  return (window.dataLayer ?? []).map(
+    (entry) => Array.from(entry) as GtagCommand,
+  );
+}
+
+function configCommands(): ConfigCommand[] {
+  return dataLayerCommands().filter(
+    (command): command is ConfigCommand => command[0] === "config",
+  );
+}
+
+function pageViewCommands(): PageViewCommand[] {
+  return dataLayerCommands().filter(
+    (command): command is PageViewCommand =>
+      command[0] === "event" && command[1] === "page_view",
+  );
+}
+
+function analyticsEventCommands(): AnalyticsEventCommand[] {
+  return dataLayerCommands().filter(
+    (command): command is AnalyticsEventCommand => command[0] === "event",
+  );
+}
+
+function pageLocationCommands(): SetPageLocationCommand[] {
+  return dataLayerCommands().filter(
+    (command): command is SetPageLocationCommand => command[0] === "set",
+  );
+}
+
+describe("analytics", () => {
+  beforeEach(() => {
+    vi.resetModules();
+    vi.unstubAllEnvs();
+    document.getElementById(GOOGLE_TAG_SCRIPT_ID)?.remove();
+    Reflect.deleteProperty(window, "dataLayer");
+    Reflect.deleteProperty(window, "gtag");
+    window.history.replaceState(null, "", "/");
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it.each(["", "UA-12345", "G-invalid-value", "G-TOOSHORT"])(
+    "degrades to a no-op for a missing or invalid measurement ID",
+    async (measurementId) => {
+      vi.stubEnv("VITE_GA_ID", measurementId);
+      const { initializeAnalytics, trackPageView } = await import(
+        "../lib/analytics"
+      );
+
+      expect(initializeAnalytics()).toBe(false);
+      expect(() => trackPageView("/portfolio")).not.toThrow();
+      expect(document.getElementById(GOOGLE_TAG_SCRIPT_ID)).toBeNull();
+      expect(window.dataLayer).toBeUndefined();
+    },
+  );
+
+  it("loads and configures Google tag exactly once", async () => {
+    vi.stubEnv("VITE_GA_ID", VALID_TEST_MEASUREMENT_ID);
+    const { initializeAnalytics } = await import("../lib/analytics");
+
+    expect(initializeAnalytics()).toBe(true);
+    expect(initializeAnalytics()).toBe(true);
+
+    expect(document.querySelectorAll(`#${GOOGLE_TAG_SCRIPT_ID}`)).toHaveLength(
+      1,
+    );
+    expect(window.dataLayer).toHaveLength(3);
+    expect(window.dataLayer?.every((entry) => !Array.isArray(entry))).toBe(true);
+    expect(
+      window.dataLayer?.every(
+        (entry) => Object.prototype.toString.call(entry) === "[object Arguments]",
+      ),
+    ).toBe(true);
+    expect(
+      window.dataLayer?.every((entry) =>
+        Object.prototype.hasOwnProperty.call(entry, "callee"),
+      ),
+    ).toBe(true);
+    expect(configCommands()).toHaveLength(1);
+    expect(configCommands()[0]?.[2]).toEqual({
+      send_page_view: false,
+      allow_google_signals: false,
+      allow_ad_personalization_signals: false,
+    });
+    expect(pageLocationCommands()).toEqual([
+      ["set", "page_location", `${window.location.origin}/`],
+    ]);
+  });
+
+  it("keeps allowlisted campaign attribution only on the first pageview", async () => {
+    vi.stubEnv("VITE_GA_ID", VALID_TEST_MEASUREMENT_ID);
+    window.history.replaceState(
+      null,
+      "",
+      "/?utm_source=google&utm_medium=cpc&utm_campaign=lanzamiento&email=privado%40example.com#contacto",
+    );
+    const { trackPageView } = await import("../lib/analytics");
+
+    document.title = "Inicio";
+    trackPageView(window.location.pathname);
+
+    window.history.replaceState(
+      null,
+      "",
+      "/portfolio?utm_source=must-not-persist#sensitive",
+    );
+    document.title = "Portfolio";
+    trackPageView(window.location.pathname);
+
+    expect(pageViewCommands()).toHaveLength(2);
+    expect(pageViewCommands()[0]?.[2]).toEqual({
+      page_title: "Inicio",
+      page_location: `${window.location.origin}/?utm_source=google&utm_medium=cpc&utm_campaign=lanzamiento`,
+      page_path: "/",
+    });
+    expect(pageViewCommands()[1]?.[2]).toEqual({
+      page_title: "Portfolio",
+      page_location: `${window.location.origin}/portfolio`,
+      page_path: "/portfolio",
+    });
+    expect(JSON.stringify(dataLayerCommands())).not.toContain(
+      "privado@example.com",
+    );
+    expect(JSON.stringify(dataLayerCommands())).not.toContain("contacto");
+    expect(JSON.stringify(dataLayerCommands())).not.toContain(
+      "must-not-persist",
+    );
+    const cleanLocationCommands = pageLocationCommands();
+    expect(cleanLocationCommands[cleanLocationCommands.length - 1]).toEqual([
+      "set",
+      "page_location",
+      `${window.location.origin}/portfolio`,
+    ]);
+  });
+
+  it("supports the complete campaign allowlist and excludes every other query", async () => {
+    vi.stubEnv("VITE_GA_ID", VALID_TEST_MEASUREMENT_ID);
+    const campaignParameters = [
+      "utm_id",
+      "utm_source",
+      "utm_medium",
+      "utm_campaign",
+      "utm_source_platform",
+      "utm_term",
+      "utm_content",
+      "utm_creative_format",
+      "utm_marketing_tactic",
+      "gclid",
+      "dclid",
+      "gbraid",
+      "wbraid",
+      "srsltid",
+    ] as const;
+    const campaignQuery = campaignParameters
+      .map((key, index) => `${key}=value-${index}`)
+      .join("&");
+    window.history.replaceState(
+      null,
+      "",
+      `/?${campaignQuery}&arbitrary=private#sensitive`,
+    );
+    const { trackPageView } = await import("../lib/analytics");
+
+    trackPageView(window.location.pathname);
+
+    const pageLocation = pageViewCommands()[0]?.[2].page_location;
+    expect(pageLocation).toBe(`${window.location.origin}/?${campaignQuery}`);
+    expect(pageLocation).not.toContain("arbitrary");
+    expect(pageLocation).not.toContain("private");
+    expect(pageLocation).not.toContain("#");
+  });
+
+  it("maps unrecognized paths to a non-sensitive analytics bucket", async () => {
+    vi.stubEnv("VITE_GA_ID", VALID_TEST_MEASUREMENT_ID);
+    const sensitivePath = "/client/alice@example.com?token=private#message";
+    window.history.replaceState(null, "", sensitivePath);
+    const { trackContactAttempt, trackPageView } = await import(
+      "../lib/analytics"
+    );
+
+    trackPageView(sensitivePath);
+    trackContactAttempt("en");
+
+    const serializedCommands = JSON.stringify(dataLayerCommands());
+    expect(serializedCommands).not.toContain("alice@example.com");
+    expect(serializedCommands).not.toContain("token");
+    expect(serializedCommands).not.toContain("private");
+    expect(pageViewCommands()[0]?.[2]).toMatchObject({
+      page_location: `${window.location.origin}/unknown`,
+      page_path: "/unknown",
+    });
+    const events = analyticsEventCommands();
+    expect(events[events.length - 1]?.[2]).toMatchObject({
+      page_path: "/unknown",
+    });
+  });
+
+  it("uses closed, PII-free contact events", async () => {
+    vi.stubEnv("VITE_GA_ID", VALID_TEST_MEASUREMENT_ID);
+    window.history.replaceState(null, "", "/portfolio?lead=private#contact");
+    const {
+      trackContactAttempt,
+      trackContactError,
+      trackContactSuccess,
+      trackContactTimeout,
+    } = await import("../lib/analytics");
+
+    trackContactAttempt("es");
+    trackContactSuccess("es");
+    trackContactError("es", "provider_error");
+    trackContactTimeout("es");
+
+    const contactEvents = analyticsEventCommands().filter(
+      (command) => command[1] !== "page_view",
+    );
+    expect(contactEvents.map((command) => command[1])).toEqual([
+      "contact_form_attempt",
+      "generate_lead",
+      "contact_form_error",
+      "contact_form_timeout",
+    ]);
+
+    for (const [, , parameters] of contactEvents) {
+      expect(parameters).not.toHaveProperty("name");
+      expect(parameters).not.toHaveProperty("email");
+      expect(parameters).not.toHaveProperty("message");
+      expect(parameters).not.toHaveProperty("endpoint");
+      expect(parameters).not.toHaveProperty("response");
+      expect(parameters).toMatchObject({
+        language: "es",
+        page_path: "/portfolio",
+        method: "formsubmit",
+      });
+    }
+
+    expect(contactEvents[2]?.[2]).toHaveProperty(
+      "error_type",
+      "provider_error",
+    );
+    expect(contactEvents[3]?.[2]).toHaveProperty("error_type", "timeout");
+    expect(
+      pageLocationCommands().every(
+        (command) =>
+          command[2] === `${window.location.origin}/portfolio` &&
+          !command[2].includes("?") &&
+          !command[2].includes("#"),
+      ),
+    ).toBe(true);
+  });
+
+  it("accepts only the approved click labels", async () => {
+    const { isAnalyticsClickLabel } = await import("../lib/analytics");
+
+    expect(isAnalyticsClickLabel("cta-start-project")).toBe(true);
+    expect(isAnalyticsClickLabel("contact-submit")).toBe(false);
+    expect(isAnalyticsClickLabel("visitor-provided-value")).toBe(false);
+  });
+});

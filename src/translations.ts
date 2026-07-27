@@ -131,6 +131,7 @@ export type TranslationsStructure = {
     emailPlaceholder: string;
     messagePlaceholder: string;
     submit: string;
+    privacyDisclosure: string;
     seo: {
       title: string;
       description: string;
@@ -375,6 +376,8 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
       emailPlaceholder: "Correo electrónico",
       messagePlaceholder: "¿En qué te puedo ayudar?",
       submit: "Enviar mensaje",
+      privacyDisclosure:
+        "Al enviar este formulario, tu nombre, email y mensaje se usarán únicamente para responder tu consulta. El envío se procesa mediante FormSubmit. Google Analytics mide el uso general del sitio, pero no recibe el contenido del formulario.",
       seo: {
         title: "Contacto | Rodrigo Opalo",
         description:
@@ -649,6 +652,8 @@ const translations: Record<LanguageKeys, TranslationsStructure> = {
       emailPlaceholder: "Email",
       messagePlaceholder: "How can I help you?",
       submit: "Send message",
+      privacyDisclosure:
+        "When you submit this form, your name, email and message are used only to reply to your inquiry. The submission is processed through FormSubmit. Google Analytics measures general site usage and does not receive the form contents.",
       seo: {
         title: "Contact | Rodrigo Opalo",
         description:
