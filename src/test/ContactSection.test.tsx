@@ -2,7 +2,8 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import ContactSection from "../Components/ContactSection";
-import { LanguageProvider } from "../LanguageContext";
+import { LanguageProvider } from "../i18n/LanguageProvider";
+import type { Language } from "../i18n/language";
 import {
   CONTACT_FORM_ENDPOINT,
   CONTACT_FORM_LIMITS,
@@ -20,7 +21,7 @@ vi.mock("../lib/analytics", () => ({
   trackContactTimeout: vi.fn(),
 }));
 
-function renderContactSection(language: "es" | "en" = "es") {
+function renderContactSection(language: Language = "es") {
   localStorage.setItem("language", language);
   return render(
     <LanguageProvider>

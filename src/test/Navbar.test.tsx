@@ -3,7 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import Navbar from "../Components/Navbar";
-import { LanguageProvider } from "../LanguageContext";
+import { LanguageProvider } from "../i18n/LanguageProvider";
 
 function renderNavbar() {
   return render(

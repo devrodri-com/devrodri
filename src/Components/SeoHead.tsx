@@ -1,7 +1,7 @@
 // src/Components/SeoHead.tsx
 import { Helmet } from "react-helmet-async";
-import { useLanguage } from "../LanguageContext";
-import translations from "../translations";
+import translations from "../i18n";
+import { useLanguage } from "../i18n/useLanguage";
 import { useLocation } from "react-router-dom";
 import { metaReactCredential, ibmFullStackCredential } from "../seo/homeCredentialsJsonLd";
 

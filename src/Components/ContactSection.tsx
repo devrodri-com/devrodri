@@ -1,7 +1,7 @@
 // src/Components/ContactSection.tsx
 import { useEffect, useRef, useState } from "react";
-import { useLanguage } from "../LanguageContext";
-import translations from "../translations";
+import translations from "../i18n";
+import { useLanguage } from "../i18n/useLanguage";
 import { motion } from "framer-motion";
 import { FaWhatsapp, FaEnvelope } from "react-icons/fa";
 import {

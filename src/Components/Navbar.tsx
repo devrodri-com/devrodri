@@ -1,8 +1,8 @@
 // src/Components/Navbar.tsx
 
 import { useState, useEffect, useRef } from "react";
-import { useLanguage } from "../LanguageContext";
-import translations from "../translations";
+import translations from "../i18n";
+import { useLanguage } from "../i18n/useLanguage";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { FiGlobe } from "react-icons/fi";
 import { Link } from "react-router-dom";

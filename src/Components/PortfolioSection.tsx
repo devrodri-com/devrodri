@@ -1,7 +1,7 @@
 // src/components/PortfolioSection.tsx
 import { motion } from "framer-motion";
-import { useLanguage } from "../LanguageContext";
-import translations from "../translations";
+import translations from "../i18n";
+import { useLanguage } from "../i18n/useLanguage";
 import { Link } from "react-router-dom";
 
 export default function PortfolioSection() {

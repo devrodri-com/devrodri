@@ -1,8 +1,8 @@
 // src/pages/PortfolioPage.tsx
 import { useState, useMemo, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useLanguage } from "../LanguageContext";
-import translations from "../translations";
+import translations from "../i18n";
+import { useLanguage } from "../i18n/useLanguage";
 import PortfolioCard from "../Components/portfolio/PortfolioCard";
 import {
   type Category,

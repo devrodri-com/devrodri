@@ -1,9 +1,10 @@
 import { Component, Fragment, type ReactNode } from "react";
-import { useLanguage, type LanguageKeys } from "../LanguageContext";
+import type { Language } from "../i18n/language";
+import { useLanguage } from "../i18n/useLanguage";
 
 type AppErrorBoundaryProps = {
   children: ReactNode;
-  language?: LanguageKeys;
+  language?: Language;
 };
 
 type AppErrorBoundaryState = {

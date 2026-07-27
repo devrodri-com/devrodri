@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { projects } from "../data/portfolioCases";
-import translations from "../translations";
+import translations from "../i18n";
 
 const CAMPINGS_REPOSITORY =
   "https://github.com/devrodri-com/reservas-campings-nacionales";

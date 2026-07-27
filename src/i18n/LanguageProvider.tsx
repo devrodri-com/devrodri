@@ -1,36 +1,18 @@
-// src/LanguageContext.tsx
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
   type ReactNode,
 } from "react";
+import { isLanguage, type Language } from "./language";
+import { LanguageContext } from "./languageContext";
 
-// Idiomas disponibles
-export type LanguageKeys = "es" | "en";
-
-// Tipo del contexto
-type LanguageContextType = {
-  language: LanguageKeys;
-  setLanguage: (lang: LanguageKeys) => void;
-};
-
-const LanguageContext = createContext<LanguageContextType | undefined>(
-  undefined,
-);
-
-function isLanguage(value: string | null): value is LanguageKeys {
-  return value === "es" || value === "en";
-}
-
-function detectBrowserLanguage(): LanguageKeys {
+function detectBrowserLanguage(): Language {
   return navigator.language.toLowerCase().startsWith("en") ? "en" : "es";
 }
 
-function readInitialLanguage(): LanguageKeys {
+function readInitialLanguage(): Language {
   try {
     const savedLanguage = window.localStorage.getItem("language");
     if (isLanguage(savedLanguage)) return savedLanguage;
@@ -41,7 +23,7 @@ function readInitialLanguage(): LanguageKeys {
   return detectBrowserLanguage();
 }
 
-function persistLanguage(language: LanguageKeys): void {
+function persistLanguage(language: Language): void {
   try {
     window.localStorage.setItem("language", language);
   } catch {
@@ -49,17 +31,16 @@ function persistLanguage(language: LanguageKeys): void {
   }
 }
 
-// Proveedor del contexto
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [language, setLanguageState] =
-    useState<LanguageKeys>(readInitialLanguage);
+    useState<Language>(readInitialLanguage);
 
   useEffect(() => {
     document.documentElement.lang = language;
     persistLanguage(language);
   }, [language]);
 
-  const setLanguage = useCallback((nextLanguage: LanguageKeys) => {
+  const setLanguage = useCallback((nextLanguage: Language) => {
     setLanguageState(nextLanguage);
   }, []);
 
@@ -73,13 +54,4 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
       {children}
     </LanguageContext.Provider>
   );
-}
-
-// Hook para consumir el contexto
-export function useLanguage() {
-  const context = useContext(LanguageContext);
-  if (context === undefined) {
-    throw new Error("useLanguage must be used within a LanguageProvider");
-  }
-  return context;
 }

@@ -1,6 +1,6 @@
 // src/Components/HeroSlider.tsx
 import { useState, useEffect, useRef, useCallback } from "react";
-import { useLanguage } from "../LanguageContext";
+import { useLanguage } from "../i18n/useLanguage";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 const slides = [

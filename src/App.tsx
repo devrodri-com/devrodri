@@ -1,5 +1,5 @@
 // src/App.tsx
-import { useLanguage } from "./LanguageContext";
+import { useLanguage } from "./i18n/useLanguage";
 import { HelmetProvider } from "react-helmet-async";
 import SeoHead from "./Components/SeoHead";
 import { lazy, Suspense, useEffect, useRef } from "react";

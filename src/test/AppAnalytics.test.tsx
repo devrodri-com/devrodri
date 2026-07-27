@@ -3,7 +3,7 @@ import { StrictMode } from "react";
 import { MemoryRouter } from "react-router-dom";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import App from "../App";
-import { LanguageProvider } from "../LanguageContext";
+import { LanguageProvider } from "../i18n/LanguageProvider";
 import {
   isAnalyticsClickLabel,
   trackAnalyticsClick,

@@ -1,4 +1,3 @@
-type AnalyticsLanguage = "es" | "en";
 type AnalyticsFormMethod = "formsubmit";
 type AnalyticsPagePath = "/" | "/portfolio" | "/unknown";
 type ContactFormErrorType =
@@ -30,7 +29,7 @@ interface AnalyticsPageViewParameters {
 }
 
 interface AnalyticsContactParameters {
-  language: AnalyticsLanguage;
+  language: import("./i18n/language").Language;
   page_path: AnalyticsPagePath;
   method: AnalyticsFormMethod;
 }
