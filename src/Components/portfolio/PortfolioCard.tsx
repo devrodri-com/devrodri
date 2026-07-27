@@ -2,28 +2,29 @@
 
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
-import { Children, isValidElement } from "react";
 
 interface PortfolioCardProps {
+  actions: ReactNode;
   cover: string;
-  title: string;
   desc: string;
-  tags: string;
+  details: ReactNode;
   expanded: boolean;
-  status?: string;
   disclaimer?: string;
-  children?: ReactNode;
+  status?: string;
+  tags: string;
+  title: string;
 }
 
 export default function PortfolioCard({
+  actions,
   cover,
-  title,
   desc,
-  tags,
+  details,
   expanded,
-  status,
   disclaimer,
-  children,
+  status,
+  tags,
+  title,
 }: PortfolioCardProps) {
   return (
     <motion.div
@@ -60,19 +61,9 @@ export default function PortfolioCard({
           )}
           <p className="mt-3 text-sm text-gray-600">• {tags}</p>
           <div className="mt-4 flex items-center gap-4 flex-wrap">
-            {Children.toArray(children).filter((child) => {
-              if (isValidElement(child)) {
-                return !(child.type === 'div' && child.props.className?.includes('border-t'));
-              }
-              return true;
-            })}
+            {actions}
           </div>
-          {Children.toArray(children).find((child) => {
-            if (isValidElement(child)) {
-              return child.type === 'div' && child.props.className?.includes('border-t');
-            }
-            return false;
-          })}
+          {details}
         </div>
       </div>
     </motion.div>

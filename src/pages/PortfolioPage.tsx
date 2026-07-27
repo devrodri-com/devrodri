@@ -1,18 +1,17 @@
-// src/pages/PortfolioPage.tsx
-import { useState, useMemo, useEffect } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import translations from "../i18n";
 import { useLanguage } from "../i18n/useLanguage";
 import PortfolioCard from "../Components/portfolio/PortfolioCard";
+import PortfolioCaseDetails from "../Components/portfolio/PortfolioCaseDetails";
 import {
   type Category,
   type ProjectKey,
-  projects,
-  projectMeta,
   filters,
-  caseDetails,
   initialExpandedState,
-} from "../data/portfolioCases";
+  isProjectKey,
+  portfolioCases,
+} from "../data/portfolio";
 
 export default function PortfolioPage() {
   const { language } = useLanguage();
@@ -25,15 +24,18 @@ export default function PortfolioPage() {
     ...initialExpandedState,
   }));
   const list = useMemo(() =>
-    projects.filter(p => filter === "all" || projectMeta[p.key].category === filter)
+    portfolioCases.filter(
+      (portfolioCase) =>
+        filter === "all" || portfolioCase.category === filter,
+    )
   , [filter]);
 
   useEffect(() => {
     const st = location.state;
     if (st === null || typeof st !== "object" || !("focusCase" in st)) return;
     const raw = (st as { focusCase: unknown }).focusCase;
-    if (typeof raw !== "string" || !(raw in projectMeta)) return;
-    const key = raw as ProjectKey;
+    if (!isProjectKey(raw)) return;
+    const key = raw;
     const id = `portfolio-case-${key}`;
     setFilter("all");
     setExpanded((e) => ({ ...e, [key]: true }));
@@ -45,18 +47,6 @@ export default function PortfolioPage() {
     const timeoutId = window.setTimeout(scrollToCase, 220);
     return () => window.clearTimeout(timeoutId);
   }, [location.state, navigate]);
-
-  // Helper tipado para evitar problemas con acceso dinámico
-  const P: Record<ProjectKey, { title: string; desc: string; link: string }> = {
-    lem_web: t.portfolio.lem_web,
-    lem_portal: t.portfolio.lem_portal,
-    esteban: t.portfolio.esteban,
-    mutter: t.portfolio.mutter,
-    federico: t.portfolio.federico,
-    boating: t.portfolio.boating,
-    magenta: t.portfolio.magenta,
-    campings_demo: t.portfolio.campings_demo,
-  };
 
   return (
       <section className="py-24 bg-black text-white min-h-screen">
@@ -76,7 +66,7 @@ export default function PortfolioPage() {
                 className={`px-3 py-2 text-sm transition border-b-2 ${filter === f.key ? "border-white text-white" : "border-transparent text-white/70 hover:text-white"}`}
                 aria-pressed={filter === f.key}
               >
-                {language === "es" ? f.es : f.en}
+                {f.label[language]}
               </button>
             ))}
           </div>
@@ -93,94 +83,86 @@ export default function PortfolioPage() {
         </div>
 
         <div className="space-y-10">
-          {list.map((p) => (
-            <div key={p.key} id={`portfolio-case-${p.key}`} className="scroll-mt-28">
-            <PortfolioCard
-              cover={p.cover}
-              title={P[p.key].title}
-              desc={P[p.key].desc}
-              tags={(language === "es" ? projectMeta[p.key].tags : projectMeta[p.key].tagsEn).join(" · ")}
-              expanded={expanded[p.key]}
-              {...(p.key === "campings_demo"
-                ? {
-                    status: t.portfolio.campings_demo.status,
-                    disclaimer: t.portfolio.campings_demo.disclaimer,
-                  }
-                : {})}
-            >
-              {p.key === "lem_web" ? (
-                <>
-                  <a href="https://lem-box.com.uy" target="_blank" rel="noopener noreferrer" className="text-primary-on-light font-medium hover:text-primary-on-light-hover underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">UY</a>
-                  <span className="text-gray-400">·</span>
-                  <a href="https://lem-box.com.ar" target="_blank" rel="noopener noreferrer" className="text-primary-on-light font-medium hover:text-primary-on-light-hover underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">AR</a>
-                </>
-              ) : p.key === "lem_portal" ? (
-                <>
-                  <a href={p.href} target="_blank" rel="noopener noreferrer" className="text-primary-on-light font-medium hover:text-primary-on-light-hover underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">{P[p.key].link}</a>
-                  <span className="text-xs text-gray-500">({language === "es" ? "requiere credenciales" : "credentials required"})</span>
-                </>
-              ) : p.href ? (
-                <a href={p.href} target="_blank" rel="noopener noreferrer" className="text-primary-on-light font-medium hover:text-primary-on-light-hover underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm">{P[p.key].link}</a>
-              ) : null}
-              <button
-                type="button"
-                aria-expanded={expanded[p.key]}
-                aria-controls={`portfolio-details-${p.key}`}
-                onClick={() => setExpanded(e => ({ ...e, [p.key]: !e[p.key] }))}
-                className="text-sm text-gray-700 hover:text-black underline focus-visible:ring-2 ring-offset-2 ring-gray-300 rounded-sm min-h-[44px] min-w-[44px] inline-flex items-center"
+          {list.map((portfolioCase) => {
+            const content = portfolioCase.content[language];
+            const detailsId = `portfolio-details-${portfolioCase.key}`;
+
+            return (
+              <div
+                key={portfolioCase.key}
+                id={`portfolio-case-${portfolioCase.key}`}
+                className="scroll-mt-28"
               >
-                {expanded[p.key] ? (language === "es" ? "Ver menos" : "View less") : (language === "es" ? "Ver más" : "View details")}
-              </button>
-              {expanded[p.key] && (
-                <div id={`portfolio-details-${p.key}`} className="mt-5 border-t border-gray-100 pt-6">
-                  <p className="text-gray-800 font-medium">{language === "es" ? caseDetails[p.key].summaryEs : caseDetails[p.key].summaryEn}</p>
-                  <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div>
-                      <h4 className="text-sm font-semibold text-gray-900 mb-2">{language === "es" ? "Stack" : "Stack"}</h4>
-                      <ul className="text-sm text-gray-700 list-disc ml-5">
-                        {(language === "es"
-                          ? caseDetails[p.key].stack
-                          : (caseDetails[p.key].stackEn ?? caseDetails[p.key].stack)
-                        ).map((s, i) => (
-                          <li key={i}>{s}</li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-semibold text-gray-900 mb-2">{language === "es" ? "Integraciones" : "Integrations"}</h4>
-                      <ul className="text-sm text-gray-700 list-disc ml-5">
-                        {(language === "es"
-                          ? caseDetails[p.key].integrations
-                          : (caseDetails[p.key].integrationsEn ?? caseDetails[p.key].integrations)
-                        ).map((s, i) => (
-                          <li key={i}>{s}</li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-semibold text-gray-900 mb-2">{language === "es" ? "Retos" : "Challenges"}</h4>
-                      <ul className="text-sm text-gray-700 list-disc ml-5">
-                        {(language === "es" ? caseDetails[p.key].challengesEs : caseDetails[p.key].challengesEn).map((s,i)=>(<li key={i}>{s}</li>))}
-                      </ul>
-                    </div>
-                    <div>
-                      <h4 className="text-sm font-semibold text-gray-900 mb-2">{language === "es" ? "Solución" : "Solution"}</h4>
-                      <ul className="text-sm text-gray-700 list-disc ml-5">
-                        {(language === "es" ? caseDetails[p.key].solutionEs : caseDetails[p.key].solutionEn).map((s,i)=>(<li key={i}>{s}</li>))}
-                      </ul>
-                    </div>
-                  </div>
-                  <div className="mt-4">
-                    <h4 className="text-sm font-semibold text-gray-900 mb-2">{language === "es" ? "Impacto" : "Impact"}</h4>
-                    <ul className="text-sm text-gray-700 list-disc ml-5">
-                      {(language === "es" ? caseDetails[p.key].resultsEs : caseDetails[p.key].resultsEn).map((s,i)=>(<li key={i}>{s}</li>))}
-                    </ul>
-                  </div>
-                </div>
-              )}
-            </PortfolioCard>
-            </div>
-          ))}
+                <PortfolioCard
+                  actions={
+                    <>
+                      {portfolioCase.actions.map((action, actionIndex) => (
+                        <Fragment key={action.href}>
+                          {actionIndex > 0 && (
+                            <span className="text-gray-400">·</span>
+                          )}
+                          <a
+                            href={action.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-primary-on-light font-medium hover:text-primary-on-light-hover underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm"
+                          >
+                            {action.label[language]}
+                          </a>
+                          {action.note !== undefined && (
+                            <span className="text-xs text-gray-500">
+                              {action.note[language]}
+                            </span>
+                          )}
+                        </Fragment>
+                      ))}
+                      <button
+                        type="button"
+                        aria-expanded={expanded[portfolioCase.key]}
+                        aria-controls={detailsId}
+                        onClick={() =>
+                          setExpanded((current) => ({
+                            ...current,
+                            [portfolioCase.key]:
+                              !current[portfolioCase.key],
+                          }))
+                        }
+                        className="text-sm text-gray-700 hover:text-black underline focus-visible:ring-2 ring-offset-2 ring-gray-300 rounded-sm min-h-[44px] min-w-[44px] inline-flex items-center"
+                      >
+                        {expanded[portfolioCase.key]
+                          ? language === "es"
+                            ? "Ver menos"
+                            : "View less"
+                          : language === "es"
+                            ? "Ver más"
+                            : "View details"}
+                      </button>
+                    </>
+                  }
+                  cover={portfolioCase.cover}
+                  desc={content.description}
+                  details={
+                    expanded[portfolioCase.key] ? (
+                      <PortfolioCaseDetails
+                        details={content.details}
+                        id={detailsId}
+                        language={language}
+                      />
+                    ) : null
+                  }
+                  expanded={expanded[portfolioCase.key]}
+                  tags={content.tags.join(" · ")}
+                  title={content.title}
+                  {...(content.status === undefined
+                    ? {}
+                    : { status: content.status })}
+                  {...(content.disclaimer === undefined
+                    ? {}
+                    : { disclaimer: content.disclaimer })}
+                />
+              </div>
+            );
+          })}
         </div>
         </div>
       </section>
