@@ -101,8 +101,12 @@ export default function PortfolioPage() {
               desc={P[p.key].desc}
               tags={(language === "es" ? projectMeta[p.key].tags : projectMeta[p.key].tagsEn).join(" · ")}
               expanded={expanded[p.key]}
-              status={p.key === "campings_demo" ? t.portfolio.campings_demo.status : undefined}
-              disclaimer={p.key === "campings_demo" ? t.portfolio.campings_demo.disclaimer : undefined}
+              {...(p.key === "campings_demo"
+                ? {
+                    status: t.portfolio.campings_demo.status,
+                    disclaimer: t.portfolio.campings_demo.disclaimer,
+                  }
+                : {})}
             >
               {p.key === "lem_web" ? (
                 <>

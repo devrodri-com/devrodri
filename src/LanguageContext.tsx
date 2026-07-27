@@ -1,5 +1,13 @@
 // src/LanguageContext.tsx
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+  type ReactNode,
+} from "react";
 
 // Idiomas disponibles
 export type LanguageKeys = "es" | "en";
@@ -10,41 +18,58 @@ type LanguageContextType = {
   setLanguage: (lang: LanguageKeys) => void;
 };
 
-// Contexto con valores por defecto
-const LanguageContext = createContext<LanguageContextType>({
-  language: "es",
-  setLanguage: () => {},
-});
+const LanguageContext = createContext<LanguageContextType | undefined>(
+  undefined,
+);
+
+function isLanguage(value: string | null): value is LanguageKeys {
+  return value === "es" || value === "en";
+}
+
+function detectBrowserLanguage(): LanguageKeys {
+  return navigator.language.toLowerCase().startsWith("en") ? "en" : "es";
+}
+
+function readInitialLanguage(): LanguageKeys {
+  try {
+    const savedLanguage = window.localStorage.getItem("language");
+    if (isLanguage(savedLanguage)) return savedLanguage;
+  } catch {
+    // Storage is optional; browser language remains a safe in-memory fallback.
+  }
+
+  return detectBrowserLanguage();
+}
+
+function persistLanguage(language: LanguageKeys): void {
+  try {
+    window.localStorage.setItem("language", language);
+  } catch {
+    // Keep the selected language in React state when storage is unavailable.
+  }
+}
 
 // Proveedor del contexto
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguageState] = useState<LanguageKeys>("es");
+  const [language, setLanguageState] =
+    useState<LanguageKeys>(readInitialLanguage);
 
   useEffect(() => {
-    const savedLang = localStorage.getItem("language") as LanguageKeys;
+    document.documentElement.lang = language;
+    persistLanguage(language);
+  }, [language]);
 
-    if (savedLang === "es" || savedLang === "en") {
-      // Si hay uno guardado, usarlo
-      setLanguageState(savedLang);
-    } else {
-      // Detectar del navegador
-      const browserLang = navigator.language.toLowerCase();
-      const detectedLang: LanguageKeys = browserLang.startsWith("en")
-        ? "en"
-        : "es";
-
-      setLanguageState(detectedLang);
-      localStorage.setItem("language", detectedLang);
-    }
+  const setLanguage = useCallback((nextLanguage: LanguageKeys) => {
+    setLanguageState(nextLanguage);
   }, []);
 
-  const setLanguage = (lang: LanguageKeys) => {
-    setLanguageState(lang);
-    localStorage.setItem("language", lang);
-  };
+  const contextValue = useMemo(
+    () => ({ language, setLanguage }),
+    [language, setLanguage],
+  );
 
   return (
-    <LanguageContext.Provider value={{ language, setLanguage }}>
+    <LanguageContext.Provider value={contextValue}>
       {children}
     </LanguageContext.Provider>
   );
@@ -52,5 +77,9 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
 
 // Hook para consumir el contexto
 export function useLanguage() {
-  return useContext(LanguageContext);
+  const context = useContext(LanguageContext);
+  if (context === undefined) {
+    throw new Error("useLanguage must be used within a LanguageProvider");
+  }
+  return context;
 }

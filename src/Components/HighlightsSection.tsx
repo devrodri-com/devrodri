@@ -37,6 +37,16 @@ const iconMap = {
   ),
 };
 
+function handlePlaybackRejection(error: unknown): void {
+  if (
+    error instanceof DOMException &&
+    (error.name === "AbortError" || error.name === "NotAllowedError")
+  ) {
+    return;
+  }
+  throw error;
+}
+
 export default function HighlightsSection() {
   const { language } = useLanguage();
   const t = translations[language];
@@ -65,7 +75,7 @@ export default function HighlightsSection() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            video.play().catch(() => {});
+            void video.play().catch(handlePlaybackRejection);
           } else {
             video.pause();
           }

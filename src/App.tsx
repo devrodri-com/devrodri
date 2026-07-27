@@ -14,6 +14,7 @@ import Navbar from "./Components/Navbar";
 import ImpactSection from "./Components/ImpactSection";
 import ExperienceSection from "./Components/ExperienceSection";
 import TransitionServicesIntro from "./Components/TransitionServicesIntro";
+import NotFoundPage from "./pages/NotFoundPage";
 import "./index.css";
 import CTASection from "./Components/CTASection";
 import { Routes, Route, useLocation } from "react-router-dom";
@@ -124,6 +125,7 @@ function App() {
               </Suspense>
             }
           />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
 
         <Footer />
