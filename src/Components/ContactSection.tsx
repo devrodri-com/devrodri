@@ -126,7 +126,7 @@ export default function ContactSection() {
         transition={{ duration: 0.7 }}
         viewport={{ once: true }}
       >
-        <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-primary drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
+        <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-primary-on-light drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]">
           {t.contact.title}
         </h2>
 
@@ -221,7 +221,7 @@ export default function ContactSection() {
         <div className="mt-10 flex justify-center gap-8 text-sm text-gray-500">
           <a
             href="mailto:r.opalo@icloud.com?subject=Consulta%20devrodri.com"
-            className="hover:text-primary-on-light flex items-center gap-2"
+            className="hover:text-primary-on-light-hover flex items-center gap-2"
           >
             <FaEnvelope /> Email
           </a>
@@ -230,7 +230,7 @@ export default function ContactSection() {
             href="https://wa.me/17544653318?text=Hola%20Rodrigo%2C%20vengo%20de%20devrodri.com%20y%20me%20gustar%C3%ADa%20hablar%20sobre%20un%20proyecto"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-primary-on-light flex items-center gap-2"
+            className="hover:text-primary-on-light-hover flex items-center gap-2"
             data-analytics="contact-whatsapp"
           >
             <FaWhatsapp /> WhatsApp

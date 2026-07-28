@@ -67,7 +67,7 @@ export default function SobreMiSection() {
         <div className="flex items-center justify-center gap-4 mt-2 md:mt-3">
           <a
             href="/portfolio"
-            className="px-5 py-2 rounded-lg bg-primary-on-light text-white font-medium hover:opacity-90 transition"
+            className="px-5 py-2 rounded-lg bg-primary-on-light text-white font-medium hover:bg-primary-on-light-hover transition"
             aria-label={language === "es" ? "Ver casos del porfolio" : "View portfolio work"}
             data-analytics="about-cta-primary"
           >

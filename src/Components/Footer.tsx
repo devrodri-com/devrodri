@@ -21,7 +21,7 @@ export default function Footer() {
             rel="noopener noreferrer"
             aria-label="GitHub"
             title="GitHub"
-            className="hover:text-primary-dark transition-all duration-300 text-[18px]"
+            className="hover:text-primary-on-light-hover transition-all duration-300 text-[18px]"
           >
             <FaGithub />
           </a>
@@ -31,7 +31,7 @@ export default function Footer() {
             rel="noopener noreferrer"
             aria-label="LinkedIn"
             title="LinkedIn"
-            className="hover:text-primary-dark transition-all duration-300 text-[18px]"
+            className="hover:text-primary-on-light-hover transition-all duration-300 text-[18px]"
           >
             <FaLinkedin />
           </a>
@@ -41,7 +41,7 @@ export default function Footer() {
             rel="noopener noreferrer"
             aria-label="Email"
             title="Email"
-            className="hover:text-primary-dark transition-all duration-300 text-[18px]"
+            className="hover:text-primary-on-light-hover transition-all duration-300 text-[18px]"
           >
             <FaEnvelope />
           </a>
@@ -51,7 +51,7 @@ export default function Footer() {
             rel="noopener noreferrer"
             aria-label="WhatsApp"
             title="WhatsApp"
-            className="hover:text-primary-dark transition-all duration-300 text-[18px]"
+            className="hover:text-primary-on-light-hover transition-all duration-300 text-[18px]"
           >
             <FaWhatsapp />
           </a>
