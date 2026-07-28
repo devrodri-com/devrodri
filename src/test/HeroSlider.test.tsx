@@ -167,24 +167,32 @@ describe("HeroSlider resilience", () => {
         desktop: "/img/hero-visual.jpg",
         mobile: "/img/hero-visual-mobile.jpg",
         mobilePosition: "58% center",
+        mobileOverlay:
+          "bg-[linear-gradient(90deg,rgba(0,0,0,0.99)_0%,rgba(0,0,0,0.95)_72%,rgba(0,0,0,0.7)_100%)]",
       },
       {
         alt: "Dashboard of a custom software with charts and code",
         desktop: "/img/software-slide.jpg",
         mobile: "/img/software-slide-mobile.jpg",
         mobilePosition: "64% center",
+        mobileOverlay:
+          "bg-[linear-gradient(90deg,rgba(0,0,0,0.95)_0%,rgba(0,0,0,0.84)_72%,rgba(0,0,0,0.4)_100%)]",
       },
       {
         alt: "Brand strategy and color palette design on tablet",
         desktop: "/img/branding-slide.jpg",
         mobile: "/img/branding-slide-mobile.jpg",
         mobilePosition: "68% center",
+        mobileOverlay:
+          "bg-[linear-gradient(90deg,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.93)_72%,rgba(0,0,0,0.65)_100%)]",
       },
       {
         alt: "Automation workflows dashboard",
         desktop: "/img/automations-slide.jpg",
         mobile: "/img/automations-slide-mobile.jpg",
         mobilePosition: "72% center",
+        mobileOverlay:
+          "bg-[linear-gradient(90deg,rgba(0,0,0,0.96)_0%,rgba(0,0,0,0.9)_72%,rgba(0,0,0,0.56)_100%)]",
       },
     ] as const;
 
@@ -202,6 +210,7 @@ describe("HeroSlider resilience", () => {
       expect(mobileImage).toHaveStyle({
         objectPosition: asset.mobilePosition,
       });
+      expect(mobileImage?.nextElementSibling).toHaveClass(asset.mobileOverlay);
     }
 
     const mobileLayer = container.querySelector(".md\\:hidden");
@@ -238,6 +247,9 @@ describe("HeroSlider resilience", () => {
 
     expect(hero).toHaveClass("overflow-hidden");
     expect(copyColumn).toHaveClass("max-w-[34rem]");
+    expect(copyColumn?.parentElement).toHaveClass(
+      "xl:grid-cols-[minmax(0,40rem)_minmax(0,1fr)]",
+    );
     expect(heading.className).not.toContain("drop-shadow");
     expect(copyColumn?.className).not.toMatch(/\b(bg-|backdrop-blur)/);
   });

@@ -13,7 +13,7 @@ const slides = [
     imageAlt: "Man working on web design project on laptop",
     mobileObjectPosition: "58% center",
     mobileOverlayClassName:
-      "bg-[linear-gradient(90deg,rgba(0,0,0,0.99)_0%,rgba(0,0,0,0.95)_72%,rgba(0,0,0,0.8)_100%)]",
+      "bg-[linear-gradient(90deg,rgba(0,0,0,0.99)_0%,rgba(0,0,0,0.95)_72%,rgba(0,0,0,0.7)_100%)]",
     claim: {
       es: "RODRIGO OPALO · DESARROLLO FULL-STACK",
       en: "RODRIGO OPALO · FULL-STACK DEVELOPMENT",
@@ -40,7 +40,7 @@ const slides = [
     imageAlt: "Dashboard of a custom software with charts and code",
     mobileObjectPosition: "64% center",
     mobileOverlayClassName:
-      "bg-[linear-gradient(90deg,rgba(0,0,0,0.95)_0%,rgba(0,0,0,0.84)_72%,rgba(0,0,0,0.5)_100%)]",
+      "bg-[linear-gradient(90deg,rgba(0,0,0,0.95)_0%,rgba(0,0,0,0.84)_72%,rgba(0,0,0,0.4)_100%)]",
     claim: {
       es: "SISTEMAS · PORTALES · HERRAMIENTAS INTERNAS",
       en: "CUSTOM SYSTEMS · PORTALS · INTERNAL TOOLS",
@@ -67,7 +67,7 @@ const slides = [
     imageAlt: "Brand strategy and color palette design on tablet",
     mobileObjectPosition: "68% center",
     mobileOverlayClassName:
-      "bg-[linear-gradient(90deg,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.93)_72%,rgba(0,0,0,0.75)_100%)]",
+      "bg-[linear-gradient(90deg,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.93)_72%,rgba(0,0,0,0.65)_100%)]",
     claim: {
       es: "ESTRATEGIA DE MARCA · DIRECCIÓN CREATIVA · LANZAMIENTO DIGITAL",
       en: "BRAND STRATEGY · CREATIVE DIRECTION · DIGITAL LAUNCH",
@@ -94,7 +94,7 @@ const slides = [
     imageAlt: "Automation workflows dashboard",
     mobileObjectPosition: "72% center",
     mobileOverlayClassName:
-      "bg-[linear-gradient(90deg,rgba(0,0,0,0.96)_0%,rgba(0,0,0,0.9)_72%,rgba(0,0,0,0.66)_100%)]",
+      "bg-[linear-gradient(90deg,rgba(0,0,0,0.96)_0%,rgba(0,0,0,0.9)_72%,rgba(0,0,0,0.56)_100%)]",
     claim: {
       es: "AUTOMATIZACIONES · INTEGRACIONES · IA APLICADA",
       en: "AUTOMATION · INTEGRATIONS · APPLIED AI",
@@ -262,7 +262,7 @@ export default function HeroSlider() {
       </AnimatePresence>
 
       {/* Contenido */}
-      <div className="relative z-10 max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center px-4 sm:px-6 py-28 min-h-[600px]">
+      <div className="relative z-10 max-w-6xl mx-auto grid md:grid-cols-2 xl:grid-cols-[minmax(0,40rem)_minmax(0,1fr)] gap-10 items-center px-4 sm:px-6 py-28 min-h-[600px]">
         <div className="min-h-[320px] flex max-w-[34rem] flex-col justify-center md:max-w-none">
           <p className="mb-2 max-w-[22rem] text-[0.6875rem] uppercase tracking-[0.16em] text-primary sm:max-w-none sm:text-xs sm:tracking-widest">
             {currentSlide.claim[language]}
