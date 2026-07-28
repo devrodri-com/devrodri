@@ -19,13 +19,13 @@ export const es = {
     transitionVisual: {
       title: "Primero el problema. Después, la solución.",
       paragraph:
-        "Trabajo directamente con cada cliente para entender el negocio y definir prioridades. Después construyo la solución adecuada: un sitio web, un sistema a medida, una automatización o una presencia digital completa.",
+        "Trabajo directamente con cada cliente para entender su negocio, definir prioridades y construir una solución útil, clara y preparada para crecer.",
       primaryCta: "Ver casos",
       secondaryCta: "Contame tu proyecto",
       points: {
         discovery: "Diagnóstico y alcance",
         development: "Desarrollo a medida",
-        stages: "Evolución por etapas",
+        stages: "Implementación por etapas",
       },
     },
     about: {

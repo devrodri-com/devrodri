@@ -25,7 +25,7 @@ describe("ImpactSection", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "Trabajo directamente con cada cliente para entender el negocio y definir prioridades. Después construyo la solución adecuada: un sitio web, un sistema a medida, una automatización o una presencia digital completa.",
+        "Trabajo directamente con cada cliente para entender su negocio, definir prioridades y construir una solución útil, clara y preparada para crecer.",
       ),
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Ver casos" })).toHaveAttribute(
@@ -37,7 +37,7 @@ describe("ImpactSection", () => {
     ).toHaveAttribute("href", "#contacto");
     expect(screen.getByText(/Diagnóstico y alcance/)).toBeInTheDocument();
     expect(screen.getByText(/Desarrollo a medida/)).toBeInTheDocument();
-    expect(screen.getByText(/Evolución por etapas/)).toBeInTheDocument();
+    expect(screen.getByText(/Implementación por etapas/)).toBeInTheDocument();
     expect(screen.queryByText("Velocidad 90+")).not.toBeInTheDocument();
     expect(screen.queryByText("SEO técnico")).not.toBeInTheDocument();
     expect(screen.queryByText("Solicitar propuesta")).not.toBeInTheDocument();
@@ -54,7 +54,7 @@ describe("ImpactSection", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "I work directly with each client to understand the business and define priorities. Then I build the right solution: a website, a custom system, an automation, or a complete digital presence.",
+        "I work directly with each client to understand the business, define priorities, and build a clear, useful solution designed to grow.",
       ),
     ).toBeInTheDocument();
     expect(
@@ -65,7 +65,7 @@ describe("ImpactSection", () => {
     ).toHaveAttribute("href", "#contacto");
     expect(screen.getByText(/Discovery and scope/)).toBeInTheDocument();
     expect(screen.getByText(/Custom development/)).toBeInTheDocument();
-    expect(screen.getByText(/Built in stages/)).toBeInTheDocument();
+    expect(screen.getByText(/Phased delivery/)).toBeInTheDocument();
     expect(screen.queryByText("Speed 90+")).not.toBeInTheDocument();
     expect(screen.queryByText("Technical SEO")).not.toBeInTheDocument();
     expect(screen.queryByText("Request proposal")).not.toBeInTheDocument();

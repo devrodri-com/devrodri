@@ -22,13 +22,13 @@ export const en = {
     transitionVisual: {
       title: "Start with the problem. Build the right solution.",
       paragraph:
-        "I work directly with each client to understand the business and define priorities. Then I build the right solution: a website, a custom system, an automation, or a complete digital presence.",
+        "I work directly with each client to understand the business, define priorities, and build a clear, useful solution designed to grow.",
       primaryCta: "View case studies",
       secondaryCta: "Tell me about your project",
       points: {
         discovery: "Discovery and scope",
         development: "Custom development",
-        stages: "Built in stages",
+        stages: "Phased delivery",
       },
     },
     about: {
