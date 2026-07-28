@@ -20,11 +20,16 @@ export const en = {
         "I create elegant, functional, and optimized websites. Ideal for brands that want to stand out.",
     },
     transitionVisual: {
-      title: "Design with intention.",
-      subtitleLine1: "It works, it connects",
-      subtitleLine2: "and it looks good.",
+      title: "Start with the problem. Build the right solution.",
       paragraph:
-        "Each project is as unique as each client. It's not about decoration, but about projecting what your brand wants to express.",
+        "I work directly with each client to understand the business and define priorities. Then I build the right solution: a website, a custom system, an automation, or a complete digital presence.",
+      primaryCta: "View case studies",
+      secondaryCta: "Tell me about your project",
+      points: {
+        discovery: "Discovery and scope",
+        development: "Custom development",
+        stages: "Built in stages",
+      },
     },
     about: {
       title: "About me",

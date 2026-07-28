@@ -4,6 +4,7 @@ import { useLanguage } from "../i18n/useLanguage";
 export default function ImpactSection() {
   const { language } = useLanguage();
   const t = translations[language];
+  const supportingPoints = Object.values(t.transitionVisual.points);
 
   return (
     <>
@@ -23,25 +24,25 @@ export default function ImpactSection() {
             <div className="flex flex-wrap gap-3">
               <a
                 href="/portfolio"
-                aria-label={language === "es" ? "Ver casos del porfolio" : "View portfolio work"}
+                aria-label={t.transitionVisual.primaryCta}
                 data-analytics="impact-cta-primary"
                 className="px-5 py-2 rounded-lg bg-primary-on-light text-white font-medium hover:opacity-90 transition"
               >
-                {language === "es" ? "Ver casos" : "View work"}
+                {t.transitionVisual.primaryCta}
               </a>
               <a
-                href="/#contacto"
-                aria-label={language === "es" ? "Solicitar una propuesta" : "Request a proposal"}
+                href="#contacto"
+                aria-label={t.transitionVisual.secondaryCta}
                 data-analytics="impact-cta-secondary"
                 className="px-5 py-2 rounded-lg border border-gray-600 hover:bg-gray-800 transition"
               >
-                {language === "es" ? "Solicitar propuesta" : "Request proposal"}
+                {t.transitionVisual.secondaryCta}
               </a>
             </div>
             <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm leading-relaxed text-gray-300/90">
-              <li>• {language === "es" ? "Velocidad 90+" : "Speed 90+"}</li>
-              <li>• {language === "es" ? "SEO técnico" : "Technical SEO"}</li>
-              <li>• {language === "es" ? "Integraciones & multilenguaje" : "Integrations & multilingual"}</li>
+              {supportingPoints.map((point) => (
+                <li key={point}>• {point}</li>
+              ))}
             </ul>
           </div>
           {/* Imagen con overlay limpio */}
