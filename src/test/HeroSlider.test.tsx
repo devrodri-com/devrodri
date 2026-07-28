@@ -16,6 +16,7 @@ const expectedCopy = {
   es: [
     {
       claim: "RODRIGO OPALO · DESARROLLO FULL-STACK",
+      mobileEyebrow: "RODRIGO OPALO · FULL-STACK",
       title: "Sitios web que comunican y convierten.",
       description:
         "Diseño y desarrollo experiencias digitales claras, rápidas y orientadas a objetivos reales de negocio.",
@@ -23,6 +24,7 @@ const expectedCopy = {
     },
     {
       claim: "SISTEMAS · PORTALES · HERRAMIENTAS INTERNAS",
+      mobileEyebrow: "SISTEMAS · PORTALES",
       title: "Software a medida para operar mejor.",
       description:
         "Construyo plataformas alineadas con los procesos reales de cada negocio y preparadas para crecer.",
@@ -31,6 +33,7 @@ const expectedCopy = {
     {
       claim:
         "ESTRATEGIA DE MARCA · DIRECCIÓN CREATIVA · LANZAMIENTO DIGITAL",
+      mobileEyebrow: "MARCA · DIRECCIÓN CREATIVA",
       title: "Marcas con dirección y presencia digital.",
       description:
         "Defino la estrategia y coordino la identidad, la infraestructura y la web para lanzar una marca con coherencia.",
@@ -38,6 +41,7 @@ const expectedCopy = {
     },
     {
       claim: "AUTOMATIZACIONES · INTEGRACIONES · IA APLICADA",
+      mobileEyebrow: "AUTOMATIZACIÓN · INTEGRACIONES",
       title: "Menos tareas manuales. Más tiempo para crecer.",
       description:
         "Conecto herramientas, APIs y flujos para reducir trabajo repetitivo y mejorar la operación.",
@@ -47,6 +51,7 @@ const expectedCopy = {
   en: [
     {
       claim: "RODRIGO OPALO · FULL-STACK DEVELOPMENT",
+      mobileEyebrow: "RODRIGO OPALO · FULL-STACK",
       title: "Websites built to communicate and convert.",
       description:
         "I design and develop clear, fast digital experiences aligned with real business goals.",
@@ -54,6 +59,7 @@ const expectedCopy = {
     },
     {
       claim: "CUSTOM SYSTEMS · PORTALS · INTERNAL TOOLS",
+      mobileEyebrow: "SYSTEMS · PORTALS",
       title: "Custom software for better operations.",
       description:
         "I build platforms around real business processes, designed to evolve and grow.",
@@ -61,6 +67,7 @@ const expectedCopy = {
     },
     {
       claim: "BRAND STRATEGY · CREATIVE DIRECTION · DIGITAL LAUNCH",
+      mobileEyebrow: "BRAND · CREATIVE DIRECTION",
       title: "Brands with direction and a strong digital presence.",
       description:
         "I shape the strategy and coordinate identity, infrastructure, and web development to launch a coherent brand.",
@@ -68,6 +75,7 @@ const expectedCopy = {
     },
     {
       claim: "AUTOMATION · INTEGRATIONS · APPLIED AI",
+      mobileEyebrow: "AUTOMATION · INTEGRATIONS",
       title: "Less manual work. More time to grow.",
       description:
         "I connect tools, APIs, and workflows to reduce repetitive tasks and improve operations.",
@@ -78,6 +86,7 @@ const expectedCopy = {
   Language,
   readonly {
     claim: string;
+    mobileEyebrow: string;
     title: string;
     description: string;
     button: string;
@@ -119,6 +128,7 @@ describe("HeroSlider resilience", () => {
           screen.getByRole("heading", { level: 1, name: copy.title }),
         ).toBeInTheDocument();
         expect(screen.getByText(copy.claim)).toBeInTheDocument();
+        expect(screen.getByText(copy.mobileEyebrow)).toBeInTheDocument();
         expect(screen.getByText(copy.description)).toBeInTheDocument();
         expect(screen.getByRole("link", { name: copy.button })).toBeInTheDocument();
       }
@@ -157,7 +167,7 @@ describe("HeroSlider resilience", () => {
     }
   });
 
-  it("keeps asset order and restores the baseline mobile image treatment", async () => {
+  it("keeps asset order and uses the approved split mobile image treatment", async () => {
     const user = userEvent.setup();
     const { container } = renderHero();
     const tabs = screen.getAllByRole("tab");
@@ -166,21 +176,25 @@ describe("HeroSlider resilience", () => {
         alt: "Man working on web design project on laptop",
         desktop: "/img/hero-visual.jpg",
         mobile: "/img/hero-visual-mobile.jpg",
+        mobilePosition: "center 46%",
       },
       {
         alt: "Dashboard of a custom software with charts and code",
         desktop: "/img/software-slide.jpg",
         mobile: "/img/software-slide-mobile.jpg",
+        mobilePosition: "center 44%",
       },
       {
         alt: "Brand strategy and color palette design on tablet",
         desktop: "/img/branding-slide.jpg",
         mobile: "/img/branding-slide-mobile.jpg",
+        mobilePosition: "center 50%",
       },
       {
         alt: "Automation workflows dashboard",
         desktop: "/img/automations-slide.jpg",
         mobile: "/img/automations-slide-mobile.jpg",
+        mobilePosition: "center 48%",
       },
     ] as const;
 
@@ -195,20 +209,26 @@ describe("HeroSlider resilience", () => {
       const mobileImage = images.find(
         (image) => image.getAttribute("src") === asset.mobile,
       );
-      expect(mobileImage).toHaveClass("object-center");
-      expect(mobileImage).not.toHaveAttribute("style");
+      expect(mobileImage).toHaveClass("object-cover");
+      expect(mobileImage).toHaveStyle({
+        objectPosition: asset.mobilePosition,
+      });
       expect(mobileImage?.nextElementSibling).toHaveClass(
-        "bg-gradient-to-r",
-        "from-black/80",
-        "via-black/50",
-        "to-transparent",
+        "h-12",
+        "bg-gradient-to-b",
+        "from-transparent",
+        "to-black",
       );
     }
 
     const mobileLayer = container.querySelector(".md\\:hidden");
     const desktopLayer = container.querySelector(".md\\:block");
     expect(mobileLayer).toBeInTheDocument();
-    expect(mobileLayer?.lastElementChild).toHaveClass("bg-gradient-to-r");
+    expect(mobileLayer).toHaveClass(
+      "top-[3.3125rem]",
+      "h-[clamp(18rem,38svh,21rem)]",
+    );
+    expect(mobileLayer?.lastElementChild).toHaveClass("bg-gradient-to-b");
     expect(desktopLayer?.querySelector("img")).toHaveClass("object-center");
   });
 
@@ -231,7 +251,7 @@ describe("HeroSlider resilience", () => {
     },
   );
 
-  it("restores baseline mobile text shadows without an opaque card", () => {
+  it("separates mobile image and content without a card or text shadow", () => {
     const { container } = renderHero();
     const hero = container.querySelector("#hero");
     const heading = screen.getByRole("heading", { level: 1 });
@@ -239,12 +259,16 @@ describe("HeroSlider resilience", () => {
 
     expect(hero).toHaveClass("overflow-hidden");
     expect(copyColumn?.parentElement).toHaveClass(
+      "min-h-[100svh]",
+      "pt-[calc(3.3125rem+clamp(18rem,38svh,21rem))]",
       "xl:grid-cols-[minmax(0,40rem)_minmax(0,1fr)]",
     );
     expect(heading).toHaveClass(
-      "max-w-[90vw]",
-      "max-md:drop-shadow-[0_4px_18px_rgba(0,0,0,0.95)]",
+      "max-md:text-[2.5rem]",
+      "max-md:leading-[1.05]",
+      "sm:text-5xl",
     );
+    expect(heading.className).not.toContain("drop-shadow");
     expect(copyColumn?.className).not.toMatch(/\b(bg-|backdrop-blur)/);
   });
 

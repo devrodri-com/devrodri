@@ -11,9 +11,14 @@ const slides = [
     image: "/img/hero-visual.jpg",
     imageMobile: "/img/hero-visual-mobile.jpg",
     imageAlt: "Man working on web design project on laptop",
+    mobileObjectPosition: "center 46%",
     claim: {
       es: "RODRIGO OPALO · DESARROLLO FULL-STACK",
       en: "RODRIGO OPALO · FULL-STACK DEVELOPMENT",
+    },
+    mobileEyebrow: {
+      es: "RODRIGO OPALO · FULL-STACK",
+      en: "RODRIGO OPALO · FULL-STACK",
     },
     title: {
       es: "Sitios web que comunican y convierten.",
@@ -35,9 +40,14 @@ const slides = [
     image: "/img/software-slide.jpg",
     imageMobile: "/img/software-slide-mobile.jpg",
     imageAlt: "Dashboard of a custom software with charts and code",
+    mobileObjectPosition: "center 44%",
     claim: {
       es: "SISTEMAS · PORTALES · HERRAMIENTAS INTERNAS",
       en: "CUSTOM SYSTEMS · PORTALS · INTERNAL TOOLS",
+    },
+    mobileEyebrow: {
+      es: "SISTEMAS · PORTALES",
+      en: "SYSTEMS · PORTALS",
     },
     title: {
       es: "Software a medida para operar mejor.",
@@ -59,9 +69,14 @@ const slides = [
     image: "/img/branding-slide.jpg",
     imageMobile: "/img/branding-slide-mobile.jpg",
     imageAlt: "Brand strategy and color palette design on tablet",
+    mobileObjectPosition: "center 50%",
     claim: {
       es: "ESTRATEGIA DE MARCA · DIRECCIÓN CREATIVA · LANZAMIENTO DIGITAL",
       en: "BRAND STRATEGY · CREATIVE DIRECTION · DIGITAL LAUNCH",
+    },
+    mobileEyebrow: {
+      es: "MARCA · DIRECCIÓN CREATIVA",
+      en: "BRAND · CREATIVE DIRECTION",
     },
     title: {
       es: "Marcas con dirección y presencia digital.",
@@ -83,9 +98,14 @@ const slides = [
     image: "/img/automations-slide.jpg",
     imageMobile: "/img/automations-slide-mobile.jpg",
     imageAlt: "Automation workflows dashboard",
+    mobileObjectPosition: "center 48%",
     claim: {
       es: "AUTOMATIZACIONES · INTEGRACIONES · IA APLICADA",
       en: "AUTOMATION · INTEGRATIONS · APPLIED AI",
+    },
+    mobileEyebrow: {
+      es: "AUTOMATIZACIÓN · INTEGRACIONES",
+      en: "AUTOMATION · INTEGRATIONS",
     },
     title: {
       es: "Menos tareas manuales. Más tiempo para crecer.",
@@ -221,15 +241,16 @@ export default function HeroSlider() {
           exit={{ opacity: 0, x: -100 }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
         >
-          {/* Mobile background image (full-bleed) */}
-          <div className="absolute inset-0 md:hidden">
+          {/* Mobile image zone */}
+          <div className="absolute inset-x-0 top-[3.3125rem] h-[clamp(18rem,38svh,21rem)] md:hidden">
             <img
               src={currentSlide.imageMobile}
               alt={currentSlide.imageAlt}
-              className="h-full w-full object-cover object-center"
+              className="h-full w-full object-cover"
+              style={{ objectPosition: currentSlide.mobileObjectPosition }}
               draggable="false"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent pointer-events-none" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-gradient-to-b from-transparent to-black" />
           </div>
 
           {/* Desktop image on the right half (unchanged) */}
@@ -247,15 +268,20 @@ export default function HeroSlider() {
       </AnimatePresence>
 
       {/* Contenido */}
-      <div className="relative z-10 max-w-6xl mx-auto grid md:grid-cols-2 xl:grid-cols-[minmax(0,40rem)_minmax(0,1fr)] gap-10 items-center px-4 sm:px-6 py-28 min-h-[600px]">
-        <div className="min-h-[320px] flex flex-col justify-center">
-          <p className="text-xs uppercase tracking-widest text-primary mb-2 max-md:drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
-            {currentSlide.claim[language]}
+      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-6xl flex-col px-6 pb-20 pt-[calc(3.3125rem+clamp(18rem,38svh,21rem))] md:grid md:min-h-[600px] md:grid-cols-2 md:items-center md:gap-10 md:px-6 md:py-28 xl:grid-cols-[minmax(0,40rem)_minmax(0,1fr)]">
+        <div className="flex flex-col pt-4 md:min-h-[320px] md:justify-center md:pt-0">
+          <p className="mb-2 max-w-[22rem] text-[0.6875rem] uppercase tracking-[0.16em] text-primary sm:max-w-none sm:text-xs sm:tracking-widest max-md:max-w-none max-md:text-sm max-md:tracking-[0.12em]">
+            <span className="md:hidden">
+              {currentSlide.mobileEyebrow[language]}
+            </span>
+            <span className="hidden md:inline">
+              {currentSlide.claim[language]}
+            </span>
           </p>
-          <h1 className="text-3xl sm:text-5xl font-bold text-primary mb-6 leading-tight break-words max-w-[90vw] sm:max-w-full max-md:drop-shadow-[0_4px_18px_rgba(0,0,0,0.95)]">
+          <h1 className="mb-6 max-w-[22rem] break-words text-3xl font-bold leading-tight text-primary sm:max-w-full sm:text-5xl max-md:mb-5 max-md:max-w-none max-md:text-[2.5rem] max-md:leading-[1.05]">
             {currentSlide.title[language]}
           </h1>
-          <p className="text-base sm:text-lg text-gray-300 mb-8 leading-relaxed max-w-[90vw] sm:max-w-2xl max-md:drop-shadow-[0_3px_14px_rgba(0,0,0,0.9)]">
+          <p className="mb-8 max-w-[22rem] text-base leading-relaxed text-gray-300 sm:max-w-2xl sm:text-lg max-md:mb-6 max-md:max-w-none max-md:text-lg max-md:leading-[1.5]">
             {currentSlide.description[language]}
           </p>
           <div className="w-fit">
@@ -285,7 +311,7 @@ export default function HeroSlider() {
       </div>
 
       {/* Gradiente inferior */}
-      <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-b from-transparent to-black pointer-events-none" />
+      <div className="pointer-events-none absolute bottom-0 left-0 hidden h-24 w-full bg-gradient-to-b from-transparent to-black md:block" />
 
       {/* Indicadores */}
       <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 z-20" role="tablist" aria-label={language === "es" ? "Navegación de slides" : "Slide navigation"}>
