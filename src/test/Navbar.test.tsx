@@ -88,3 +88,35 @@ describe("Navbar mobile menu", () => {
     expect(localStorage.getItem("language")).toBe("en");
   });
 });
+
+describe("Navbar color tokens", () => {
+  beforeEach(() => {
+    localStorage.setItem("language", "es");
+  });
+
+  it("uses the approved primary token for desktop hover and active language states", async () => {
+    const user = userEvent.setup();
+    renderNavbar();
+    const navigation = screen.getByRole("navigation");
+
+    for (const label of ["Sobre mí", "Por qué elegirme", "Portfolio", "Contacto", "FAQ"]) {
+      expect(within(navigation).getByRole("link", { name: label })).toHaveClass("hover:text-primary");
+    }
+
+    const spanishButton = within(navigation).getByRole("button", {
+      name: "Idioma español seleccionado",
+    });
+    const englishButton = within(navigation).getByRole("button", {
+      name: "Cambiar a inglés",
+    });
+
+    expect(spanishButton).toHaveClass("text-primary", "hover:text-primary");
+    expect(englishButton).toHaveClass("text-white", "hover:text-primary");
+    expect(navigation.innerHTML).not.toContain("blue-300");
+
+    await user.click(englishButton);
+
+    expect(spanishButton).toHaveClass("text-white", "hover:text-primary");
+    expect(englishButton).toHaveClass("text-primary", "hover:text-primary");
+  });
+});
