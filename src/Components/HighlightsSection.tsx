@@ -121,7 +121,6 @@ export default function HighlightsSection() {
           </h2>
 
           <div className="relative grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 md:gap-10 gap-y-12">
-            <div className="pointer-events-none absolute inset-0 bg-black/10 md:bg-black/15 backdrop-blur-[1px] rounded-none z-0" />
             {Object.entries(t.highlights.items).map(([key, item]) => {
               const iconKey = key as HighlightKey;
               const Icon = iconMap[iconKey];
