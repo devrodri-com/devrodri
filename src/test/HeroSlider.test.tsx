@@ -261,15 +261,31 @@ describe("HeroSlider resilience", () => {
     expect(copyColumn?.parentElement).toHaveClass(
       "min-h-[100svh]",
       "pt-[calc(3.3125rem+clamp(18rem,38svh,21rem))]",
+      "max-md:pb-[max(1.5rem,env(safe-area-inset-bottom))]",
       "xl:grid-cols-[minmax(0,40rem)_minmax(0,1fr)]",
     );
     expect(heading).toHaveClass(
+      "max-md:flex",
+      "max-md:min-h-[10.5rem]",
+      "max-md:items-center",
       "max-md:text-[2.5rem]",
       "max-md:leading-[1.05]",
       "sm:text-5xl",
     );
-    expect(copyColumn).toHaveClass("max-md:min-h-[24.25rem]");
-    expect(copyColumn?.querySelector(".w-fit")).toHaveClass("max-md:mt-auto");
+    expect(heading.nextElementSibling).toHaveClass(
+      "max-md:flex",
+      "max-md:min-h-[6.75rem]",
+      "max-md:items-center",
+      "min-[420px]:max-md:min-h-[5.0625rem]",
+    );
+    expect(copyColumn).not.toHaveClass("max-md:min-h-[24.25rem]");
+    expect(copyColumn?.querySelector(".w-fit")).not.toHaveClass("max-md:mt-auto");
+    expect(screen.getByRole("tablist")).toHaveClass(
+      "mt-[2.625rem]",
+      "self-center",
+      "md:absolute",
+      "md:bottom-6",
+    );
     expect(heading.className).not.toContain("drop-shadow");
     expect(copyColumn?.className).not.toMatch(/\b(bg-|backdrop-blur)/);
   });

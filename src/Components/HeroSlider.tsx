@@ -268,8 +268,8 @@ export default function HeroSlider() {
       </AnimatePresence>
 
       {/* Contenido */}
-      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-6xl flex-col px-6 pb-20 pt-[calc(3.3125rem+clamp(18rem,38svh,21rem))] md:grid md:min-h-[600px] md:grid-cols-2 md:items-center md:gap-10 md:px-6 md:py-28 xl:grid-cols-[minmax(0,40rem)_minmax(0,1fr)]">
-        <div className="flex flex-col pt-4 max-md:min-h-[24.25rem] md:min-h-[320px] md:justify-center md:pt-0">
+      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-6xl flex-col px-6 pb-20 pt-[calc(3.3125rem+clamp(18rem,38svh,21rem))] max-md:pb-[max(1.5rem,env(safe-area-inset-bottom))] md:grid md:min-h-[600px] md:grid-cols-2 md:items-center md:gap-10 md:px-6 md:py-28 xl:grid-cols-[minmax(0,40rem)_minmax(0,1fr)]">
+        <div className="flex flex-col pt-4 max-md:pt-[0.875rem] md:min-h-[320px] md:justify-center md:pt-0">
           <p className="mb-2 max-w-[22rem] text-[0.6875rem] uppercase tracking-[0.16em] text-primary sm:max-w-none sm:text-xs sm:tracking-widest max-md:max-w-none max-md:text-sm max-md:tracking-[0.12em]">
             <span className="md:hidden">
               {currentSlide.mobileEyebrow[language]}
@@ -278,13 +278,13 @@ export default function HeroSlider() {
               {currentSlide.claim[language]}
             </span>
           </p>
-          <h1 className="mb-6 max-w-[22rem] break-words text-3xl font-bold leading-tight text-primary sm:max-w-full sm:text-5xl max-md:mb-5 max-md:max-w-none max-md:text-[2.5rem] max-md:leading-[1.05]">
+          <h1 className="mb-6 max-w-[22rem] break-words text-3xl font-bold leading-tight text-primary sm:max-w-full sm:text-5xl max-md:mb-5 max-md:flex max-md:min-h-[10.5rem] max-md:max-w-none max-md:items-center max-md:text-[2.5rem] max-md:leading-[1.05]">
             {currentSlide.title[language]}
           </h1>
-          <p className="mb-8 max-w-[22rem] text-base leading-relaxed text-gray-300 sm:max-w-2xl sm:text-lg max-md:mb-6 max-md:max-w-none max-md:text-lg max-md:leading-[1.5]">
+          <p className="mb-8 max-w-[22rem] text-base leading-relaxed text-gray-300 sm:max-w-2xl sm:text-lg max-md:mb-6 max-md:flex max-md:min-h-[6.75rem] max-md:max-w-none max-md:items-center max-md:text-lg max-md:leading-[1.5] min-[420px]:max-md:min-h-[5.0625rem]">
             {currentSlide.description[language]}
           </p>
-          <div className="w-fit max-md:mt-auto">
+          <div className="w-fit">
             {currentSlide.buttonLink === "#contacto" ? (
               <a
                 href={currentSlide.buttonLink}
@@ -306,32 +306,37 @@ export default function HeroSlider() {
               </Link>
             )}
           </div>
+          <div
+            className="z-20 mt-[2.625rem] flex self-center gap-3 md:absolute md:bottom-6 md:left-1/2 md:mt-0 md:-translate-x-1/2 md:self-auto"
+            role="tablist"
+            aria-label={
+              language === "es" ? "Navegación de slides" : "Slide navigation"
+            }
+          >
+            {slides.map((slide, i) => (
+              <button
+                key={i}
+                onClick={() => setIndex(i)}
+                className={`h-2 w-2 rounded-full transition-all duration-300 ${
+                  i === index ? "bg-white" : "border border-white"
+                }`}
+                role="tab"
+                aria-label={
+                  language === "es"
+                    ? `Ir al slide ${i + 1} de ${slides.length}: ${slide.title[language]}`
+                    : `Go to slide ${i + 1} of ${slides.length}: ${slide.title[language]}`
+                }
+                aria-selected={i === index}
+                aria-controls={`slide-${i}`}
+              ></button>
+            ))}
+          </div>
         </div>
         <div className="hidden md:block" />
       </div>
 
       {/* Gradiente inferior */}
       <div className="pointer-events-none absolute bottom-0 left-0 hidden h-24 w-full bg-gradient-to-b from-transparent to-black md:block" />
-
-      {/* Indicadores */}
-      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 z-20" role="tablist" aria-label={language === "es" ? "Navegación de slides" : "Slide navigation"}>
-        {slides.map((slide, i) => (
-          <button
-            key={i}
-            onClick={() => setIndex(i)}
-            className={`h-2 w-2 rounded-full transition-all duration-300 ${
-              i === index ? "bg-white" : "border border-white"
-            }`}
-            role="tab"
-            aria-label={language === "es" 
-              ? `Ir al slide ${i + 1} de ${slides.length}: ${slide.title[language]}`
-              : `Go to slide ${i + 1} of ${slides.length}: ${slide.title[language]}`
-            }
-            aria-selected={i === index}
-            aria-controls={`slide-${i}`}
-          ></button>
-        ))}
-      </div>
 
       {/* Flechas navegación */}
       <div className="hidden md:flex justify-between items-center absolute top-1/2 left-0 right-0 px-6 z-20 pointer-events-none transform -translate-y-1/2">
