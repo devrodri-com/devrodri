@@ -269,7 +269,7 @@ export default function HeroSlider() {
 
       {/* Contenido */}
       <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-6xl flex-col px-6 pb-20 pt-[calc(3.3125rem+clamp(18rem,38svh,21rem))] md:grid md:min-h-[600px] md:grid-cols-2 md:items-center md:gap-10 md:px-6 md:py-28 xl:grid-cols-[minmax(0,40rem)_minmax(0,1fr)]">
-        <div className="flex flex-col pt-4 md:min-h-[320px] md:justify-center md:pt-0">
+        <div className="flex flex-col pt-4 max-md:min-h-[24.25rem] md:min-h-[320px] md:justify-center md:pt-0">
           <p className="mb-2 max-w-[22rem] text-[0.6875rem] uppercase tracking-[0.16em] text-primary sm:max-w-none sm:text-xs sm:tracking-widest max-md:max-w-none max-md:text-sm max-md:tracking-[0.12em]">
             <span className="md:hidden">
               {currentSlide.mobileEyebrow[language]}
@@ -284,7 +284,7 @@ export default function HeroSlider() {
           <p className="mb-8 max-w-[22rem] text-base leading-relaxed text-gray-300 sm:max-w-2xl sm:text-lg max-md:mb-6 max-md:max-w-none max-md:text-lg max-md:leading-[1.5]">
             {currentSlide.description[language]}
           </p>
-          <div className="w-fit">
+          <div className="w-fit max-md:mt-auto">
             {currentSlide.buttonLink === "#contacto" ? (
               <a
                 href={currentSlide.buttonLink}

@@ -268,6 +268,8 @@ describe("HeroSlider resilience", () => {
       "max-md:leading-[1.05]",
       "sm:text-5xl",
     );
+    expect(copyColumn).toHaveClass("max-md:min-h-[24.25rem]");
+    expect(copyColumn?.querySelector(".w-fit")).toHaveClass("max-md:mt-auto");
     expect(heading.className).not.toContain("drop-shadow");
     expect(copyColumn?.className).not.toMatch(/\b(bg-|backdrop-blur)/);
   });
