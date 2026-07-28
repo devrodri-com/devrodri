@@ -39,7 +39,7 @@ export default function ImpactSection() {
                 {t.transitionVisual.secondaryCta}
               </a>
             </div>
-            <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm leading-relaxed text-gray-300/90">
+            <ul className="mt-5 flex flex-wrap gap-x-6 gap-y-2 text-sm leading-relaxed text-gray-300/90 xl:gap-x-2">
               {supportingPoints.map((point) => (
                 <li key={point}>• {point}</li>
               ))}
