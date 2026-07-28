@@ -10,7 +10,6 @@ import {
 } from "lucide-react";
 import translations from "../i18n";
 import { useLanguage } from "../i18n/useLanguage";
-import { useRef, useEffect } from "react";
 
 type HighlightKey = keyof typeof translations.es.highlights.items;
 
@@ -23,64 +22,9 @@ const iconMap: Record<HighlightKey, LucideIcon> = {
   stages: Layers3,
 };
 
-function handlePlaybackRejection(
-  video: HTMLVideoElement,
-  error: unknown,
-): void {
-  if (
-    error instanceof DOMException &&
-    (error.name === "AbortError" || error.name === "NotAllowedError")
-  ) {
-    return;
-  }
-  video.pause();
-}
-
 export default function HighlightsSection() {
   const { language } = useLanguage();
   const t = translations[language];
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    // Respect reduced motion
-    const prefersReduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-    if (prefersReduced) {
-      video.pause();
-      return;
-    }
-
-    // Ensure attributes for iOS/Safari
-    video.muted = true;
-    video.defaultMuted = true;
-    video.playsInline = true;
-    video.setAttribute("muted", "");
-    video.setAttribute("playsinline", "");
-
-    // Observer to play/pause based on visibility
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            void video.play().catch((error: unknown) => {
-              handlePlaybackRejection(video, error);
-            });
-          } else {
-            video.pause();
-          }
-        });
-      },
-      { threshold: 0.25 }
-    );
-
-    io.observe(video);
-
-    return () => {
-      io.disconnect();
-    };
-  }, []);
 
   return (
     <>
@@ -92,27 +36,16 @@ export default function HighlightsSection() {
 
       <section
         id="porqueelegirnos"
-        className="relative bg-white py-28 px-4 sm:px-6 overflow-hidden"
+        className="relative bg-[#02050d] py-28 px-4 sm:px-6 overflow-hidden"
       >
-        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-          <video
-            ref={videoRef}
-            autoPlay
-            loop
-            playsInline
-            preload="metadata"
-            disableRemotePlayback
-            aria-hidden="true"
-            poster="/img/hero-visual.jpg"
-            className="absolute inset-0 w-full h-full object-cover opacity-100"
-            id="bgVideo"
-            muted
-          >
-            <source src="/videos/highlights-bg.mp4" type="video/mp4" />
-          </video>
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,.45),transparent_60%)] pointer-events-none z-0" />
-          <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/55 to-transparent pointer-events-none z-0" />
-          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/50 to-transparent pointer-events-none z-0" />
+        <div
+          aria-hidden="true"
+          data-highlights-background
+          className="absolute inset-0 z-0 pointer-events-none overflow-hidden bg-[linear-gradient(135deg,#02050d_0%,#071426_46%,#030814_100%)]"
+        >
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_18%_18%,rgba(10,132,255,0.18),transparent_42%),radial-gradient(ellipse_at_82%_78%,rgba(0,95,204,0.14),transparent_46%)]" />
+          <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/40 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/30 to-transparent" />
         </div>
 
         <div className="max-w-6xl mx-auto text-center relative z-10">
