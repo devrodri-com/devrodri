@@ -31,7 +31,7 @@ const integrationsEn = [
 export const campingsDemoCase = definePortfolioCase({
   key: "campings_demo",
   portfolioOrder: 7,
-  category: "services",
+  category: "systems",
   cover: "/img/campings-concept-cover.jpg",
   actions: [
     {

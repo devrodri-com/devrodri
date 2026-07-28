@@ -7,8 +7,10 @@ import { Link } from "react-router-dom";
 export default function PortfolioSection() {
   const { language } = useLanguage();
   const highlights = homePortfolioCases.map((portfolioCase) => ({
+    category: portfolioCase.content[language].tags[0],
     key: portfolioCase.key,
-    logo: portfolioCase.cover,
+    cover: portfolioCase.cover,
+    status: portfolioCase.content[language].status,
     title: portfolioCase.content[language].title,
     summary: portfolioCase.home.summary[language],
   }));
@@ -76,13 +78,13 @@ export default function PortfolioSection() {
           )}
         </motion.p>
 
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2">
           {highlights.map((p, index) => (
             <Link
               key={p.key}
               to="/portfolio"
               state={{ focusCase: p.key }}
-              className="block rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 min-h-[72px]"
+              className="block h-full rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 min-h-[72px]"
               aria-label={
                 language === "es"
                   ? `Ver este caso en el portfolio: ${p.title}`
@@ -90,28 +92,45 @@ export default function PortfolioSection() {
               }
             >
               <motion.div
-                className="group rounded-2xl bg-white/95 backdrop-blur border border-gray-200/80 p-5 sm:p-6 flex flex-col gap-3 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                className="group h-full overflow-hidden rounded-2xl bg-white/95 backdrop-blur border border-gray-200/80 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.45, delay: 0.05 * index }}
                 viewport={{ once: true }}
               >
-                <div className="flex items-center gap-3">
-                  <div className="h-11 w-11 rounded-xl overflow-hidden bg-white border border-gray-200">
-                    <img
-                      src={p.logo}
-                      alt={language === "es" ? `Logo de ${p.title}` : `Logo of ${p.title}`}
-                      className="h-full w-full object-cover"
-                      loading="lazy"
-                      decoding="async"
-                    />
+                <div className="aspect-[2/1] overflow-hidden bg-white">
+                  <img
+                    src={p.cover}
+                    alt={
+                      language === "es"
+                        ? `Portada de ${p.title}`
+                        : `${p.title} cover`
+                    }
+                    className="h-full w-full object-cover"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <div className="flex h-full flex-col gap-3 p-5 sm:p-6">
+                  <div className="flex flex-wrap items-center gap-2">
+                    {p.status !== undefined && (
+                      <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800">
+                        {p.status}
+                      </span>
+                    )}
+                    <p className="text-xs font-medium text-gray-600">
+                      {p.category}
+                    </p>
                   </div>
-                  <div>
-                    <h3 className="text-sm font-semibold text-gray-900 tracking-tight">
-                      {p.title}
-                    </h3>
-                    <p className="text-xs text-gray-600 mt-0.5 leading-snug">{p.summary}</p>
-                  </div>
+                  <h3 className="text-lg font-semibold text-gray-900 tracking-tight">
+                    {p.title}
+                  </h3>
+                  <p className="text-sm text-gray-700 leading-relaxed">
+                    {p.summary}
+                  </p>
+                  <span className="mt-auto inline-flex min-h-[44px] items-center text-sm font-semibold text-primary-on-light underline">
+                    {language === "es" ? "Ver caso" : "View case study"}
+                  </span>
                 </div>
               </motion.div>
             </Link>

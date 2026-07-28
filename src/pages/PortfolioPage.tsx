@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import translations from "../i18n";
 import { useLanguage } from "../i18n/useLanguage";
@@ -55,8 +55,8 @@ export default function PortfolioPage() {
           <h1 className="text-4xl font-bold tracking-tight text-white">{t.portfolio.title}</h1>
           <p className="text-white/70 mt-2 max-w-[44rem] mx-auto">
             {language === "es"
-              ? "Casos seleccionados de e‑commerce, marca personal y servicios."
-              : "Selected work across e‑commerce, personal brands and services."}
+              ? "Sistemas, sitios web, e-commerce y estrategia de marca."
+              : "Systems, websites, e-commerce, and brand strategy."}
           </p>
           <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
             {filters.map(f => (
@@ -97,9 +97,12 @@ export default function PortfolioPage() {
                   actions={
                     <>
                       {portfolioCase.actions.map((action, actionIndex) => (
-                        <Fragment key={action.href}>
+                        <span
+                          key={action.href}
+                          className="inline-flex items-center gap-2"
+                        >
                           {actionIndex > 0 && (
-                            <span className="text-gray-400">·</span>
+                            <span className="hidden text-gray-400 sm:inline">·</span>
                           )}
                           <a
                             href={action.href}
@@ -114,7 +117,7 @@ export default function PortfolioPage() {
                               {action.note[language]}
                             </span>
                           )}
-                        </Fragment>
+                        </span>
                       ))}
                       <button
                         type="button"
@@ -147,6 +150,9 @@ export default function PortfolioPage() {
                         details={content.details}
                         id={detailsId}
                         language={language}
+                        {...(content.role === undefined
+                          ? {}
+                          : { role: content.role })}
                       />
                     ) : null
                   }

@@ -18,8 +18,8 @@ const integrationsEn = integrationsEs;
 
 export const estebanCase = definePortfolioCase({
   key: "esteban",
-  portfolioOrder: 1,
-  category: "services",
+  portfolioOrder: 2,
+  category: "web",
   cover: "/img/esteban.png",
   actions: [
     {
@@ -91,7 +91,7 @@ export const estebanCase = definePortfolioCase({
     },
   },
   home: {
-    order: 1,
+    order: 2,
     summary: {
       "es": "Real estate · Landing, catálogo y SEO técnico para captar leads de preconstrucción.",
       "en": "Real estate · Landing, catalog and technical SEO to capture pre-construction leads."

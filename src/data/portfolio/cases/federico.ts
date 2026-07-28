@@ -24,7 +24,7 @@ const integrationsEn = integrationsEs;
 export const federicoCase = definePortfolioCase({
   key: "federico",
   portfolioOrder: 5,
-  category: "personal",
+  category: "web",
   cover: "/img/federico-cover.jpg",
   actions: [
     {
@@ -99,13 +99,6 @@ export const federicoCase = definePortfolioCase({
           "More WhatsApp inquiries on mobile"
         ],
       },
-    },
-  },
-  home: {
-    order: 5,
-    summary: {
-      "es": "Marca personal · Sitio profesional con contenido, cursos y presencia premium.",
-      "en": "Personal brand · Professional site with content, courses and premium presence."
     },
   },
 });

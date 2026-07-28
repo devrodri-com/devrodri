@@ -1,7 +1,7 @@
 import { magentaCase } from "./cases/magenta";
 import { estebanCase } from "./cases/esteban";
-import { lemWebCase } from "./cases/lemWeb";
-import { lemPortalCase } from "./cases/lemPortal";
+import { lemBoxCase } from "./cases/lemBox";
+import { zentraCase } from "./cases/zentra";
 import { mutterCase } from "./cases/mutter";
 import { federicoCase } from "./cases/federico";
 import { boatingCase } from "./cases/boating";
@@ -9,11 +9,11 @@ import { campingsDemoCase } from "./cases/campingsDemo";
 import type { Localized, ProjectCategory } from "./types";
 
 const registeredCases = [
-  magentaCase,
+  lemBoxCase,
+  zentraCase,
   estebanCase,
-  lemWebCase,
-  lemPortalCase,
   mutterCase,
+  magentaCase,
   federicoCase,
   boatingCase,
   campingsDemoCase,
@@ -41,9 +41,10 @@ export const homePortfolioCases = portfolioCases
 
 export const filters = [
   { key: "all", label: { es: "Todos", en: "All" } },
-  { key: "ecom", label: { es: "E‑commerce", en: "E‑commerce" } },
-  { key: "personal", label: { es: "Personal", en: "Personal" } },
-  { key: "services", label: { es: "Servicios", en: "Services" } },
+  { key: "systems", label: { es: "Sistemas", en: "Systems" } },
+  { key: "web", label: { es: "Sitios web", en: "Websites" } },
+  { key: "ecommerce", label: { es: "E-commerce", en: "E-commerce" } },
+  { key: "brand", label: { es: "Marca", en: "Brand" } },
 ] satisfies readonly { key: Category; label: Localized<string> }[];
 
 export const projectKeys = portfolioCases.map(({ key }) => key);

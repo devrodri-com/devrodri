@@ -36,8 +36,8 @@ const integrationsEn = [
 
 export const magentaCase = definePortfolioCase({
   key: "magenta",
-  portfolioOrder: 0,
-  category: "services",
+  portfolioOrder: 4,
+  category: "web",
   cover: "/img/magenta-cover.png",
   actions: [
     {
@@ -116,13 +116,6 @@ export const magentaCase = definePortfolioCase({
           "Ready for future expansions: e-commerce, admin panel, etc."
         ],
       },
-    },
-  },
-  home: {
-    order: 0,
-    summary: {
-      "es": "Imprenta · MVP con catálogo, presupuesto dinámico y SEO completo.",
-      "en": "Print shop · MVP with catalog, dynamic quote form and full SEO."
     },
   },
 });
