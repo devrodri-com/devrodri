@@ -25,7 +25,7 @@ describe("SobreMiSection", () => {
     const section = getAboutSection(container);
 
     expect(section).toHaveTextContent("Integrador de tecnología con mentalidad de producto");
-    expect(section).toHaveTextContent("Full-stack · Sistemas · Automatización · IA aplicada");
+    expect(section).toHaveTextContent("Full-stack · Sistemas · Automatización · Integraciones");
     expect(section).toHaveTextContent(
       "Soy Rodrigo Opalo. Trabajo bajo la marca devrodri y desarrollo productos digitales orientados al negocio. Creo sitios, aplicaciones y sistemas a medida combinando estrategia, experiencia de usuario y tecnología.",
     );
@@ -35,7 +35,9 @@ describe("SobreMiSection", () => {
     expect(section).toHaveTextContent(
       "Next.js · React · Node.js · Python · Firebase · Docker · CI/CD · Integraciones API · Pagos digitales · Automatización e IA",
     );
-    expect(section).toHaveTextContent("IBM Full Stack Software Developer Professional Certificate");
+    expect(section).toHaveTextContent("Certificación profesional verificada por IBM Skills Network y Credly");
+    expect(section).toHaveTextContent("Contame tu proyecto");
+    expect(section).not.toHaveTextContent(/IA aplicada/);
     expect(section).not.toHaveTextContent(/Stripe/);
     expect(section).not.toHaveTextContent(/OpenAI API/);
     expect(section).not.toHaveTextContent(/modernos, rápidos/);
@@ -48,7 +50,7 @@ describe("SobreMiSection", () => {
     const section = getAboutSection(container);
 
     expect(section).toHaveTextContent("Technology integrator with a product mindset");
-    expect(section).toHaveTextContent("Full-stack · Systems · Automation · Applied AI");
+    expect(section).toHaveTextContent("Full-stack · Systems · Automation · Integrations");
     expect(section).toHaveTextContent(
       "I'm Rodrigo Opalo. I work under the devrodri brand and develop business-oriented digital products. I create custom websites, applications, and systems by combining strategy, user experience, and technology.",
     );
@@ -58,7 +60,9 @@ describe("SobreMiSection", () => {
     expect(section).toHaveTextContent(
       "Next.js · React · Node.js · Python · Firebase · Docker · CI/CD · API integrations · Digital payments · Automation and AI",
     );
-    expect(section).toHaveTextContent("IBM Full Stack Software Developer Professional Certificate");
+    expect(section).toHaveTextContent("Professional certification verified by IBM Skills Network and Credly");
+    expect(section).toHaveTextContent("Tell me about your project");
+    expect(section).not.toHaveTextContent(/Applied AI/);
     expect(section).not.toHaveTextContent(/Stripe/);
     expect(section).not.toHaveTextContent(/OpenAI API/);
     expect(section).not.toHaveTextContent(/modern, fast/);

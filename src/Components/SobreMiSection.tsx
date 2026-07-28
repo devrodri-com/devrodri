@@ -39,14 +39,14 @@ export default function SobreMiSection() {
                 <>
                   Integrador de tecnología con mentalidad de producto
                   <br />
-                  Full-stack · Sistemas · Automatización · IA aplicada
+                  Full-stack · Sistemas · Automatización · Integraciones
                 </>
               )
             : (
                 <>
                   Technology integrator with a product mindset
                   <br />
-                  Full-stack · Systems · Automation · Applied AI
+                  Full-stack · Systems · Automation · Integrations
                 </>
               )}
         </p>
@@ -76,10 +76,10 @@ export default function SobreMiSection() {
           <a
             href="/#contacto"
             className="px-5 py-2 rounded-lg border border-gray-300 text-gray-800 hover:bg-gray-100 transition focus-visible:ring-2 ring-offset-2 ring-gray-300"
-            aria-label={language === "es" ? "Hablemos" : "Let’s talk"}
+            aria-label={language === "es" ? "Contame tu proyecto" : "Tell me about your project"}
             data-analytics="about-cta-secondary"
           >
-            {language === "es" ? "Hablemos" : "Let’s talk"}
+            {language === "es" ? "Contame tu proyecto" : "Tell me about your project"}
           </a>
         </div>
         <ul className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[12.5px] tracking-wide text-gray-500/90">
@@ -117,8 +117,8 @@ export default function SobreMiSection() {
           <p className="text-[11px] text-gray-400 mt-1">{language === "es" ? "Vista previa" : "Preview"}</p>
           <p className="text-xs text-gray-500 text-center">
             {language === "es"
-              ? "IBM Full Stack Software Developer Professional Certificate"
-              : "IBM Full Stack Software Developer Professional Certificate"}
+              ? "Certificación profesional verificada por IBM Skills Network y Credly"
+              : "Professional certification verified by IBM Skills Network and Credly"}
           </p>
           
         </div>
