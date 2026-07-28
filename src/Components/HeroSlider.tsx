@@ -3,98 +3,116 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useLanguage } from "../i18n/useLanguage";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
+
 const slides = [
   {
     id: 1,
     image: "/img/hero-visual.jpg",
     imageMobile: "/img/hero-visual-mobile.jpg",
     imageAlt: "Man working on web design project on laptop",
+    mobileObjectPosition: "58% center",
+    mobileOverlayClassName:
+      "bg-[linear-gradient(90deg,rgba(0,0,0,0.99)_0%,rgba(0,0,0,0.95)_72%,rgba(0,0,0,0.8)_100%)]",
     claim: {
-      es: "SEO · Impacto visual · Experiencia de usuario",
-      en: "SEO · Visual impact · User experience",
+      es: "RODRIGO OPALO · DESARROLLO FULL-STACK",
+      en: "RODRIGO OPALO · FULL-STACK DEVELOPMENT",
     },
     title: {
-      es: "Diseño web profesional.",
-      en: "Professional web design.",
+      es: "Sitios web que comunican y convierten.",
+      en: "Websites built to communicate and convert.",
     },
     description: {
-      es: "Desarrollamos sitios modernos, optimizados y con propósito. Experiencias digitales que comunican, convierten y hacen destacar tu marca.",
-      en: "We build modern, optimized, purpose-driven websites. Digital experiences that connect, convert, and elevate your brand.",
+      es: "Diseño y desarrollo experiencias digitales claras, rápidas y orientadas a objetivos reales de negocio.",
+      en: "I design and develop clear, fast digital experiences aligned with real business goals.",
     },
     button: {
       es: "Ver trabajos",
-      en: "See portfolio",
+      en: "View work",
     },
     buttonLink: "/portfolio",
+    focusCase: null,
   },
   {
     id: 2,
     image: "/img/software-slide.jpg",
     imageMobile: "/img/software-slide-mobile.jpg",
     imageAlt: "Dashboard of a custom software with charts and code",
+    mobileObjectPosition: "64% center",
+    mobileOverlayClassName:
+      "bg-[linear-gradient(90deg,rgba(0,0,0,0.95)_0%,rgba(0,0,0,0.84)_72%,rgba(0,0,0,0.5)_100%)]",
     claim: {
-      es: "SaaS · Apps Web · Desarrollo a medida",
-      en: "SaaS · Web apps · Custom development",
+      es: "SISTEMAS · PORTALES · HERRAMIENTAS INTERNAS",
+      en: "CUSTOM SYSTEMS · PORTALS · INTERNAL TOOLS",
     },
     title: {
-      es: "Software funcional y escalable.",
-      en: "Functional and scalable software.",
+      es: "Software a medida para operar mejor.",
+      en: "Custom software for better operations.",
     },
     description: {
-      es: "Creamos soluciones a medida con arquitectura moderna, integración de APIs y foco en la experiencia del usuario.",
-      en: "We build custom solutions with modern architecture, API integration, and a strong focus on user experience.",
+      es: "Construyo plataformas alineadas con los procesos reales de cada negocio y preparadas para crecer.",
+      en: "I build platforms around real business processes, designed to evolve and grow.",
     },
     button: {
-      es: "Solicitar desarrollo",
-      en: "Request development",
+      es: "Ver LEM-BOX",
+      en: "View LEM-BOX",
     },
-    buttonLink: "mailto:rodrigo@lem-box.com",
+    buttonLink: "/portfolio",
+    focusCase: "lem_box",
   },
   {
     id: 3,
     image: "/img/branding-slide.jpg",
     imageMobile: "/img/branding-slide-mobile.jpg",
     imageAlt: "Brand strategy and color palette design on tablet",
+    mobileObjectPosition: "68% center",
+    mobileOverlayClassName:
+      "bg-[linear-gradient(90deg,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.93)_72%,rgba(0,0,0,0.75)_100%)]",
     claim: {
-      es: "Identidad visual · Marca · Estrategia",
-      en: "Visual identity · Branding · Strategy",
+      es: "ESTRATEGIA DE MARCA · DIRECCIÓN CREATIVA · LANZAMIENTO DIGITAL",
+      en: "BRAND STRATEGY · CREATIVE DIRECTION · DIGITAL LAUNCH",
     },
     title: {
-      es: <>Partiendo de tu visión,<br />somos tu proyección.</>,
-      en: <>Starting from your vision,<br />we become your projection.</>,
+      es: "Marcas con dirección y presencia digital.",
+      en: "Brands with direction and a strong digital presence.",
     },
     description: {
-      es: "Diseño coherente, memorable y alineado a tu visión. Creamos marcas que conectan y perduran.",
-      en: "Consistent, memorable design aligned with your vision. We build brands that connect and endure.",
+      es: "Defino la estrategia y coordino la identidad, la infraestructura y la web para lanzar una marca con coherencia.",
+      en: "I shape the strategy and coordinate identity, infrastructure, and web development to launch a coherent brand.",
     },
     button: {
-      es: "Impulsar mi marca",
-      en: "Boost my brand",
+      es: "Ver ZENTRA",
+      en: "View ZENTRA",
     },
-    buttonLink: "mailto:r.opalo@icloud.com", // ✨ Cambio aquí
+    buttonLink: "/portfolio",
+    focusCase: "zentra",
   },
   {
     id: 4,
     image: "/img/automations-slide.jpg",
     imageMobile: "/img/automations-slide-mobile.jpg",
     imageAlt: "Automation workflows dashboard",
+    mobileObjectPosition: "72% center",
+    mobileOverlayClassName:
+      "bg-[linear-gradient(90deg,rgba(0,0,0,0.96)_0%,rgba(0,0,0,0.9)_72%,rgba(0,0,0,0.66)_100%)]",
     claim: {
-      es: "Automatizaciones · MCP · n8n",
-      en: "Automations · MCP · n8n",
+      es: "AUTOMATIZACIONES · INTEGRACIONES · IA APLICADA",
+      en: "AUTOMATION · INTEGRATIONS · APPLIED AI",
     },
     title: {
-      es: "Procesos que trabajan por vos.",
-      en: "Workflows that work for you.",
+      es: "Menos tareas manuales. Más tiempo para crecer.",
+      en: "Less manual work. More time to grow.",
     },
     description: {
-      es: "Bots, integraciones y flujos que ahorran tiempo y escalan tu negocio.",
-      en: "Bots, integrations and flows that save time and scale your business.",
+      es: "Conecto herramientas, APIs y flujos para reducir trabajo repetitivo y mejorar la operación.",
+      en: "I connect tools, APIs, and workflows to reduce repetitive tasks and improve operations.",
     },
     button: {
-      es: "Automatizar mi empresa",
-      en: "Automate my business",
+      es: "Contame tu proceso",
+      en: "Tell me about your process",
     },
     buttonLink: "#contacto",
+    focusCase: null,
   },
 ] as const;
 
@@ -221,10 +239,12 @@ export default function HeroSlider() {
               src={currentSlide.imageMobile}
               alt={currentSlide.imageAlt}
               className="h-full w-full object-cover object-center"
+              style={{ objectPosition: currentSlide.mobileObjectPosition }}
               draggable="false"
             />
-            {/* Softer overlay for mobile to avoid harsh cuts and keep text legible */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent pointer-events-none" />
+            <div
+              className={`absolute inset-0 pointer-events-none ${currentSlide.mobileOverlayClassName}`}
+            />
           </div>
 
           {/* Desktop image on the right half (unchanged) */}
@@ -243,23 +263,37 @@ export default function HeroSlider() {
 
       {/* Contenido */}
       <div className="relative z-10 max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center px-4 sm:px-6 py-28 min-h-[600px]">
-        <div className="min-h-[320px] flex flex-col justify-center">
-          <p className="text-xs uppercase tracking-widest text-primary mb-2 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] md:drop-shadow-none">
+        <div className="min-h-[320px] flex max-w-[34rem] flex-col justify-center md:max-w-none">
+          <p className="mb-2 max-w-[22rem] text-[0.6875rem] uppercase tracking-[0.16em] text-primary sm:max-w-none sm:text-xs sm:tracking-widest">
             {currentSlide.claim[language]}
           </p>
-          <h1 className="text-3xl sm:text-5xl font-bold text-primary mb-6 leading-tight break-words max-w-[90vw] sm:max-w-full drop-shadow-[0_4px_18px_rgba(0,0,0,0.95)] md:drop-shadow-none">
-  {currentSlide.title[language]}
-</h1>
-<p className="text-base sm:text-lg text-gray-300 mb-8 leading-relaxed max-w-[90vw] sm:max-w-2xl drop-shadow-[0_3px_14px_rgba(0,0,0,0.9)] md:drop-shadow-none">
-  {currentSlide.description[language]}
-</p>
+          <h1 className="mb-6 max-w-[22rem] break-words text-3xl font-bold leading-tight text-primary sm:max-w-full sm:text-5xl">
+            {currentSlide.title[language]}
+          </h1>
+          <p className="mb-8 max-w-[22rem] text-base leading-relaxed text-gray-300 sm:max-w-2xl sm:text-lg">
+            {currentSlide.description[language]}
+          </p>
           <div className="w-fit">
-            <a
-              href={currentSlide.buttonLink}
-              className="bg-primary-on-light text-white font-medium px-6 py-3 rounded-full shadow-md hover:bg-primary-on-light-hover transition-all whitespace-nowrap"
-            >
-              {currentSlide.button[language]}
-            </a>
+            {currentSlide.buttonLink === "#contacto" ? (
+              <a
+                href={currentSlide.buttonLink}
+                className="whitespace-nowrap rounded-full bg-primary-on-light px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-primary-on-light-hover"
+              >
+                {currentSlide.button[language]}
+              </a>
+            ) : (
+              <Link
+                to={currentSlide.buttonLink}
+                state={
+                  currentSlide.focusCase === null
+                    ? {}
+                    : { focusCase: currentSlide.focusCase }
+                }
+                className="whitespace-nowrap rounded-full bg-primary-on-light px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-primary-on-light-hover"
+              >
+                {currentSlide.button[language]}
+              </Link>
+            )}
           </div>
         </div>
         <div className="hidden md:block" />
