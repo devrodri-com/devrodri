@@ -39,30 +39,30 @@ export default function SobreMiSection() {
                 <>
                   Integrador de tecnología con mentalidad de producto
                   <br />
-                  Full-stack · React · Automatizaciones · IA aplicada
+                  Full-stack · Sistemas · Automatización · Integraciones
                 </>
               )
             : (
                 <>
-                  Product-minded technologist
+                  Technology integrator with a product mindset
                   <br />
-                  Full-stack · React · Automations · Applied AI
+                  Full-stack · Systems · Automation · Integrations
                 </>
               )}
         </p>
         <p className="text-gray-700 md:text-gray-600 text-base md:text-lg leading-relaxed md:leading-[1.8] max-w-[60ch] mx-auto mb-6">
           {language === "es"
             ? (
-                <>Soy Rodrigo Opalo. Trabajo bajo la marca <span className="font-semibold">devrodri</span> y desarrollo productos digitales modernos, rápidos y orientados al negocio. Diseño y construyo sitios, aplicaciones y sistemas a medida combinando diseño, experiencia de usuario y tecnología.</>
+                <>Soy Rodrigo Opalo. Trabajo bajo la marca <span className="font-semibold">devrodri</span> y desarrollo productos digitales orientados al negocio. Creo sitios, aplicaciones y sistemas a medida combinando estrategia, experiencia de usuario y tecnología.</>
               )
             : (
-                <>I'm Rodrigo Opalo. I work under the <span className="font-semibold">devrodri</span> brand and build modern, fast, business-driven digital products. I design and develop custom websites, applications and systems combining UX, design and engineering.</>
+                <>I'm Rodrigo Opalo. I work under the <span className="font-semibold">devrodri</span> brand and develop business-oriented digital products. I create custom websites, applications, and systems by combining strategy, user experience, and technology.</>
               )}
         </p>
         <p className="text-gray-700 md:text-gray-600 text-base md:text-lg leading-relaxed max-w-[60ch] mx-auto mb-6">
           {language === "es"
-            ? "También implemento automatizaciones y asistentes con n8n y MCP: CRMs, pagos, webhooks y dashboards; además de integraciones con APIs como OpenAI y Stripe para escalar procesos y reducir costos operativos."
-            : "I also implement automations and assistants using n8n and MCP: CRMs, payments, webhooks and dashboards — plus integrations with APIs like OpenAI and Stripe to scale operations and reduce costs."}
+            ? "También implemento automatizaciones, integraciones y asistentes con IA para conectar herramientas, optimizar procesos y reducir trabajo manual."
+            : "I also implement automations, integrations, and AI assistants to connect tools, optimize processes, and reduce manual work."}
         </p>
         <div className="flex items-center justify-center gap-4 mt-2 md:mt-3">
           <a
@@ -76,16 +76,16 @@ export default function SobreMiSection() {
           <a
             href="/#contacto"
             className="px-5 py-2 rounded-lg border border-gray-300 text-gray-800 hover:bg-gray-100 transition focus-visible:ring-2 ring-offset-2 ring-gray-300"
-            aria-label={language === "es" ? "Hablemos" : "Let’s talk"}
+            aria-label={language === "es" ? "Contame tu proyecto" : "Tell me about your project"}
             data-analytics="about-cta-secondary"
           >
-            {language === "es" ? "Hablemos" : "Let’s talk"}
+            {language === "es" ? "Contame tu proyecto" : "Tell me about your project"}
           </a>
         </div>
         <ul className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-[12.5px] tracking-wide text-gray-500/90">
           <li>{language === "es"
-            ? "Next.js · React · Node.js · Python · Firebase · Docker · CI/CD · Stripe · OpenAI API · Automatizaciones con n8n y MCP"
-            : "Next.js · React · Node.js · Python · Firebase · Docker · CI/CD · Stripe · OpenAI API · Automations with n8n & MCP"}</li>
+            ? "Next.js · React · Node.js · Python · Firebase · Docker · CI/CD · Integraciones API · Pagos digitales · Automatización e IA"
+            : "Next.js · React · Node.js · Python · Firebase · Docker · CI/CD · API integrations · Digital payments · Automation and AI"}</li>
         </ul>
         {/* Certifications */}
         <div className="mt-4 flex flex-col items-center gap-1">
@@ -117,8 +117,8 @@ export default function SobreMiSection() {
           <p className="text-[11px] text-gray-400 mt-1">{language === "es" ? "Vista previa" : "Preview"}</p>
           <p className="text-xs text-gray-500 text-center">
             {language === "es"
-              ? "Certificación profesional dictada por IBM Skills Network · Acreditada en Credly"
-              : "Professional certification issued by IBM Skills Network · Verified on Credly"}
+              ? "Certificación profesional verificada por IBM Skills Network y Credly"
+              : "Professional certification verified by IBM Skills Network and Credly"}
           </p>
           
         </div>
