@@ -3,98 +3,124 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useLanguage } from "../i18n/useLanguage";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
+
 const slides = [
   {
     id: 1,
     image: "/img/hero-visual.jpg",
     imageMobile: "/img/hero-visual-mobile.jpg",
     imageAlt: "Man working on web design project on laptop",
+    mobileObjectPosition: "center 46%",
     claim: {
-      es: "SEO · Impacto visual · Experiencia de usuario",
-      en: "SEO · Visual impact · User experience",
+      es: "RODRIGO OPALO · DESARROLLO FULL-STACK",
+      en: "RODRIGO OPALO · FULL-STACK DEVELOPMENT",
+    },
+    mobileEyebrow: {
+      es: "RODRIGO OPALO · FULL-STACK",
+      en: "RODRIGO OPALO · FULL-STACK",
     },
     title: {
-      es: "Diseño web profesional.",
-      en: "Professional web design.",
+      es: "Sitios web que comunican y convierten.",
+      en: "Websites built to communicate and convert.",
     },
     description: {
-      es: "Desarrollamos sitios modernos, optimizados y con propósito. Experiencias digitales que comunican, convierten y hacen destacar tu marca.",
-      en: "We build modern, optimized, purpose-driven websites. Digital experiences that connect, convert, and elevate your brand.",
+      es: "Diseño y desarrollo experiencias digitales claras, rápidas y orientadas a objetivos reales de negocio.",
+      en: "I design and develop clear, fast digital experiences aligned with real business goals.",
     },
     button: {
       es: "Ver trabajos",
-      en: "See portfolio",
+      en: "View work",
     },
     buttonLink: "/portfolio",
+    focusCase: null,
   },
   {
     id: 2,
     image: "/img/software-slide.jpg",
     imageMobile: "/img/software-slide-mobile.jpg",
     imageAlt: "Dashboard of a custom software with charts and code",
+    mobileObjectPosition: "center 44%",
     claim: {
-      es: "SaaS · Apps Web · Desarrollo a medida",
-      en: "SaaS · Web apps · Custom development",
+      es: "SISTEMAS · PORTALES · HERRAMIENTAS INTERNAS",
+      en: "CUSTOM SYSTEMS · PORTALS · INTERNAL TOOLS",
+    },
+    mobileEyebrow: {
+      es: "SISTEMAS · PORTALES",
+      en: "SYSTEMS · PORTALS",
     },
     title: {
-      es: "Software funcional y escalable.",
-      en: "Functional and scalable software.",
+      es: "Software a medida para operar mejor.",
+      en: "Custom software for better operations.",
     },
     description: {
-      es: "Creamos soluciones a medida con arquitectura moderna, integración de APIs y foco en la experiencia del usuario.",
-      en: "We build custom solutions with modern architecture, API integration, and a strong focus on user experience.",
+      es: "Construyo plataformas alineadas con los procesos reales de cada negocio y preparadas para crecer.",
+      en: "I build platforms around real business processes, designed to evolve and grow.",
     },
     button: {
-      es: "Solicitar desarrollo",
-      en: "Request development",
+      es: "Ver LEM-BOX",
+      en: "View LEM-BOX",
     },
-    buttonLink: "mailto:rodrigo@lem-box.com",
+    buttonLink: "/portfolio",
+    focusCase: "lem_box",
   },
   {
     id: 3,
     image: "/img/branding-slide.jpg",
     imageMobile: "/img/branding-slide-mobile.jpg",
     imageAlt: "Brand strategy and color palette design on tablet",
+    mobileObjectPosition: "center 50%",
     claim: {
-      es: "Identidad visual · Marca · Estrategia",
-      en: "Visual identity · Branding · Strategy",
+      es: "ESTRATEGIA DE MARCA · DIRECCIÓN CREATIVA · LANZAMIENTO DIGITAL",
+      en: "BRAND STRATEGY · CREATIVE DIRECTION · DIGITAL LAUNCH",
+    },
+    mobileEyebrow: {
+      es: "MARCA · DIRECCIÓN CREATIVA",
+      en: "BRAND · CREATIVE DIRECTION",
     },
     title: {
-      es: <>Partiendo de tu visión,<br />somos tu proyección.</>,
-      en: <>Starting from your vision,<br />we become your projection.</>,
+      es: "Marcas con dirección y presencia digital.",
+      en: "Brands with direction and a strong digital presence.",
     },
     description: {
-      es: "Diseño coherente, memorable y alineado a tu visión. Creamos marcas que conectan y perduran.",
-      en: "Consistent, memorable design aligned with your vision. We build brands that connect and endure.",
+      es: "Defino la estrategia y coordino la identidad, la infraestructura y la web para lanzar una marca con coherencia.",
+      en: "I shape the strategy and coordinate identity, infrastructure, and web development to launch a coherent brand.",
     },
     button: {
-      es: "Impulsar mi marca",
-      en: "Boost my brand",
+      es: "Ver ZENTRA",
+      en: "View ZENTRA",
     },
-    buttonLink: "mailto:r.opalo@icloud.com", // ✨ Cambio aquí
+    buttonLink: "/portfolio",
+    focusCase: "zentra",
   },
   {
     id: 4,
     image: "/img/automations-slide.jpg",
     imageMobile: "/img/automations-slide-mobile.jpg",
     imageAlt: "Automation workflows dashboard",
+    mobileObjectPosition: "center 48%",
     claim: {
-      es: "Automatizaciones · MCP · n8n",
-      en: "Automations · MCP · n8n",
+      es: "AUTOMATIZACIONES · INTEGRACIONES · IA APLICADA",
+      en: "AUTOMATION · INTEGRATIONS · APPLIED AI",
+    },
+    mobileEyebrow: {
+      es: "AUTOMATIZACIÓN · INTEGRACIONES",
+      en: "AUTOMATION · INTEGRATIONS",
     },
     title: {
-      es: "Procesos que trabajan por vos.",
-      en: "Workflows that work for you.",
+      es: "Menos tareas manuales. Más tiempo para crecer.",
+      en: "Less manual work. More time to grow.",
     },
     description: {
-      es: "Bots, integraciones y flujos que ahorran tiempo y escalan tu negocio.",
-      en: "Bots, integrations and flows that save time and scale your business.",
+      es: "Conecto herramientas, APIs y flujos para reducir trabajo repetitivo y mejorar la operación.",
+      en: "I connect tools, APIs, and workflows to reduce repetitive tasks and improve operations.",
     },
     button: {
-      es: "Automatizar mi empresa",
-      en: "Automate my business",
+      es: "Contame tu proceso",
+      en: "Tell me about your process",
     },
     buttonLink: "#contacto",
+    focusCase: null,
   },
 ] as const;
 
@@ -215,16 +241,16 @@ export default function HeroSlider() {
           exit={{ opacity: 0, x: -100 }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
         >
-          {/* Mobile background image (full-bleed) */}
-          <div className="absolute inset-0 md:hidden">
+          {/* Mobile image zone */}
+          <div className="absolute inset-x-0 top-[3.3125rem] h-[clamp(18rem,38svh,21rem)] md:hidden">
             <img
               src={currentSlide.imageMobile}
               alt={currentSlide.imageAlt}
-              className="h-full w-full object-cover object-center"
+              className="h-full w-full object-cover"
+              style={{ objectPosition: currentSlide.mobileObjectPosition }}
               draggable="false"
             />
-            {/* Softer overlay for mobile to avoid harsh cuts and keep text legible */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent pointer-events-none" />
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-gradient-to-b from-transparent to-black" />
           </div>
 
           {/* Desktop image on the right half (unchanged) */}
@@ -242,51 +268,75 @@ export default function HeroSlider() {
       </AnimatePresence>
 
       {/* Contenido */}
-      <div className="relative z-10 max-w-6xl mx-auto grid md:grid-cols-2 gap-10 items-center px-4 sm:px-6 py-28 min-h-[600px]">
-        <div className="min-h-[320px] flex flex-col justify-center">
-          <p className="text-xs uppercase tracking-widest text-primary mb-2 drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] md:drop-shadow-none">
-            {currentSlide.claim[language]}
+      <div className="relative z-10 mx-auto flex min-h-[100svh] max-w-6xl flex-col px-6 pb-20 pt-[calc(3.3125rem+clamp(18rem,38svh,21rem))] max-md:pb-[max(1.5rem,env(safe-area-inset-bottom))] md:grid md:min-h-[600px] md:grid-cols-2 md:items-center md:gap-10 md:px-6 md:py-28 xl:grid-cols-[minmax(0,40rem)_minmax(0,1fr)]">
+        <div className="flex flex-col pt-4 max-md:pt-[0.875rem] md:min-h-[320px] md:justify-center md:pt-0">
+          <p className="mb-2 max-w-[22rem] text-[0.6875rem] uppercase tracking-[0.16em] text-primary sm:max-w-none sm:text-xs sm:tracking-widest max-md:max-w-none max-md:text-sm max-md:tracking-[0.12em]">
+            <span className="md:hidden">
+              {currentSlide.mobileEyebrow[language]}
+            </span>
+            <span className="hidden md:inline">
+              {currentSlide.claim[language]}
+            </span>
           </p>
-          <h1 className="text-3xl sm:text-5xl font-bold text-primary mb-6 leading-tight break-words max-w-[90vw] sm:max-w-full drop-shadow-[0_4px_18px_rgba(0,0,0,0.95)] md:drop-shadow-none">
-  {currentSlide.title[language]}
-</h1>
-<p className="text-base sm:text-lg text-gray-300 mb-8 leading-relaxed max-w-[90vw] sm:max-w-2xl drop-shadow-[0_3px_14px_rgba(0,0,0,0.9)] md:drop-shadow-none">
-  {currentSlide.description[language]}
-</p>
+          <h1 className="mb-6 max-w-[22rem] break-words text-3xl font-bold leading-tight text-primary sm:max-w-full sm:text-5xl max-md:mb-5 max-md:flex max-md:min-h-[10.5rem] max-md:max-w-none max-md:items-center max-md:text-[2.5rem] max-md:leading-[1.05]">
+            {currentSlide.title[language]}
+          </h1>
+          <p className="mb-8 max-w-[22rem] text-base leading-relaxed text-gray-300 sm:max-w-2xl sm:text-lg max-md:mb-6 max-md:flex max-md:min-h-[6.75rem] max-md:max-w-none max-md:items-center max-md:text-lg max-md:leading-[1.5] min-[420px]:max-md:min-h-[5.0625rem]">
+            {currentSlide.description[language]}
+          </p>
           <div className="w-fit">
-            <a
-              href={currentSlide.buttonLink}
-              className="bg-primary-on-light text-white font-medium px-6 py-3 rounded-full shadow-md hover:bg-primary-on-light-hover transition-all whitespace-nowrap"
-            >
-              {currentSlide.button[language]}
-            </a>
+            {currentSlide.buttonLink === "#contacto" ? (
+              <a
+                href={currentSlide.buttonLink}
+                className="whitespace-nowrap rounded-full bg-primary-on-light px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-primary-on-light-hover"
+              >
+                {currentSlide.button[language]}
+              </a>
+            ) : (
+              <Link
+                to={currentSlide.buttonLink}
+                state={
+                  currentSlide.focusCase === null
+                    ? {}
+                    : { focusCase: currentSlide.focusCase }
+                }
+                className="whitespace-nowrap rounded-full bg-primary-on-light px-6 py-3 font-medium text-white shadow-md transition-all hover:bg-primary-on-light-hover"
+              >
+                {currentSlide.button[language]}
+              </Link>
+            )}
+          </div>
+          <div
+            className="z-20 mt-[2.625rem] flex self-center gap-3 md:absolute md:bottom-6 md:left-1/2 md:mt-0 md:-translate-x-1/2 md:self-auto"
+            role="tablist"
+            aria-label={
+              language === "es" ? "Navegación de slides" : "Slide navigation"
+            }
+          >
+            {slides.map((slide, i) => (
+              <button
+                key={i}
+                onClick={() => setIndex(i)}
+                className={`h-2 w-2 rounded-full transition-all duration-300 ${
+                  i === index ? "bg-white" : "border border-white"
+                }`}
+                role="tab"
+                aria-label={
+                  language === "es"
+                    ? `Ir al slide ${i + 1} de ${slides.length}: ${slide.title[language]}`
+                    : `Go to slide ${i + 1} of ${slides.length}: ${slide.title[language]}`
+                }
+                aria-selected={i === index}
+                aria-controls={`slide-${i}`}
+              ></button>
+            ))}
           </div>
         </div>
         <div className="hidden md:block" />
       </div>
 
       {/* Gradiente inferior */}
-      <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-b from-transparent to-black pointer-events-none" />
-
-      {/* Indicadores */}
-      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 flex gap-3 z-20" role="tablist" aria-label={language === "es" ? "Navegación de slides" : "Slide navigation"}>
-        {slides.map((slide, i) => (
-          <button
-            key={i}
-            onClick={() => setIndex(i)}
-            className={`h-2 w-2 rounded-full transition-all duration-300 ${
-              i === index ? "bg-white" : "border border-white"
-            }`}
-            role="tab"
-            aria-label={language === "es" 
-              ? `Ir al slide ${i + 1} de ${slides.length}: ${slide.title[language]}`
-              : `Go to slide ${i + 1} of ${slides.length}: ${slide.title[language]}`
-            }
-            aria-selected={i === index}
-            aria-controls={`slide-${i}`}
-          ></button>
-        ))}
-      </div>
+      <div className="pointer-events-none absolute bottom-0 left-0 hidden h-24 w-full bg-gradient-to-b from-transparent to-black md:block" />
 
       {/* Flechas navegación */}
       <div className="hidden md:flex justify-between items-center absolute top-1/2 left-0 right-0 px-6 z-20 pointer-events-none transform -translate-y-1/2">

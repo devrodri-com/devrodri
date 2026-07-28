@@ -44,7 +44,7 @@ describe("application routing", () => {
     expect(
       await screen.findByRole("heading", {
         level: 1,
-        name: "Diseño web profesional.",
+        name: "Sitios web que comunican y convierten.",
       }),
     ).toBeInTheDocument();
     await waitFor(() => {
@@ -81,7 +81,7 @@ describe("application routing", () => {
     renderApp("/");
     await screen.findByRole("heading", {
       level: 1,
-      name: "Diseño web profesional.",
+      name: "Sitios web que comunican y convierten.",
     });
 
     await user.click(screen.getByRole("link", { name: "Portfolio" }));
@@ -92,6 +92,44 @@ describe("application routing", () => {
         name: "Algunos trabajos",
       }),
     ).toBeInTheDocument();
+  });
+
+  it("opens Portfolio from the first Hero CTA", async () => {
+    const user = userEvent.setup();
+    renderApp("/");
+    await screen.findByRole("heading", {
+      level: 1,
+      name: "Sitios web que comunican y convierten.",
+    });
+
+    await user.click(screen.getByRole("link", { name: "Ver trabajos" }));
+
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Algunos trabajos",
+      }),
+    ).toBeInTheDocument();
+  });
+
+  it("keeps the fourth Hero CTA connected to Contacto", async () => {
+    const user = userEvent.setup();
+    renderApp("/");
+    await screen.findByRole("heading", {
+      level: 1,
+      name: "Sitios web que comunican y convierten.",
+    });
+
+    await user.click(
+      screen.getByRole("tab", {
+        name: "Ir al slide 4 de 4: Menos tareas manuales. Más tiempo para crecer.",
+      }),
+    );
+
+    expect(
+      screen.getByRole("link", { name: "Contame tu proceso" }),
+    ).toHaveAttribute("href", "#contacto");
+    expect(document.getElementById("contacto")).toBeInTheDocument();
   });
 
   it("shows the four approved home cases with case-study deep links", async () => {
@@ -199,6 +237,53 @@ describe("application routing", () => {
     });
   });
 
+  it.each([
+    {
+      slideName:
+        "Ir al slide 2 de 4: Software a medida para operar mejor.",
+      ctaName: "Ver LEM-BOX",
+      caseTitle: "LEM-BOX",
+      detailsId: "portfolio-details-lem_box",
+    },
+    {
+      slideName:
+        "Ir al slide 3 de 4: Marcas con dirección y presencia digital.",
+      ctaName: "Ver ZENTRA",
+      caseTitle: "ZENTRA",
+      detailsId: "portfolio-details-zentra",
+    },
+  ])(
+    "opens and expands $caseTitle from its Hero CTA",
+    async ({ slideName, ctaName, caseTitle, detailsId }) => {
+      const user = userEvent.setup();
+      renderApp("/");
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Sitios web que comunican y convierten.",
+      });
+
+      await user.click(screen.getByRole("tab", { name: slideName }));
+      await user.click(screen.getByRole("link", { name: ctaName }));
+
+      const title = await screen.findByRole("heading", {
+        level: 3,
+        name: caseTitle,
+      });
+      const cardContent = title.parentElement;
+      expect(cardContent).not.toBeNull();
+      if (cardContent === null) {
+        throw new Error(`Focused portfolio card content is missing: ${caseTitle}`);
+      }
+
+      await waitFor(() => {
+        expect(document.getElementById(detailsId)).toBeInTheDocument();
+        expect(
+          within(cardContent).getByRole("button", { name: "Ver menos" }),
+        ).toHaveAttribute("aria-expanded", "true");
+      });
+    },
+  );
+
   it("shows the Spanish not-found route with noindex metadata", async () => {
     renderApp("/ruta-inexistente");
 
@@ -239,7 +324,7 @@ describe("application routing", () => {
     expect(
       await screen.findByRole("heading", {
         level: 1,
-        name: "Diseño web profesional.",
+        name: "Sitios web que comunican y convierten.",
       }),
     ).toBeInTheDocument();
   });
