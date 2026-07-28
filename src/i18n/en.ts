@@ -42,43 +42,37 @@ export const en = {
       },
     },
     experience: {
-      title1: "More than design.",
-      title2: "I create experiences.",
+      title1: "Technology that connects product,",
+      title2: "systems, and business.",
       description:
-        "I focus on building websites that communicate before the user even clicks. Intuitive, clean and fast interfaces. Functional design that feels and looks right.",
+        "I work directly with each client to understand what the business needs and turn it into a clear solution: websites, applications, automations, and integrations that can evolve in stages.",
     },
     highlights: {
-      title: "Why choose me?",
+      title: "Why work with me?",
       items: {
-        fast: {
-          icon: "⚡️",
-          title: "Speed & performance",
-          desc: "Fast loading, smooth navigation and optimized UX.",
+        product: {
+          title: "Product vision",
+          desc: "I shape each solution around the problem, the user, and the business priority.",
         },
-        responsive: {
-          icon: "📱",
-          title: "Responsive design",
-          desc: "Your site will look perfect on every screen.",
+        purpose: {
+          title: "Purposeful technology",
+          desc: "I choose tools for their usefulness, maintainability, and fit for the project.",
         },
-        results: {
-          icon: "🎯",
-          title: "Results-driven",
-          desc: "Purposeful design that converts visitors into clients.",
+        direct: {
+          title: "Direct communication",
+          desc: "You work directly with me from start to finish, with clear decisions and no intermediaries.",
         },
-        seo: {
-          icon: "🚀",
-          title: "Built-in SEO",
-          desc: "Technical and strategic optimization to rank on Google.",
+        business: {
+          title: "Real business experience",
+          desc: "I bring a practical perspective on operations, customers, and product decisions.",
         },
         automation: {
-          icon: "🤖",
-          title: "Automations",
-          desc: "Integrations and workflows with n8n and MCP that save time and scale your business.",
+          title: "Automation and integrations",
+          desc: "I connect systems and tools to reduce manual work and improve processes.",
         },
-        payments: {
-          icon: "💳",
-          title: "Embedded payments",
-          desc: "Integrated checkout with Stripe/PayPal/Mercado Pago – secure and frictionless.",
+        stages: {
+          title: "Phased evolution",
+          desc: "We prioritize what matters and build a foundation that can grow without overcomplicating the MVP.",
         },
       },
       seo: {
