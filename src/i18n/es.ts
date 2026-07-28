@@ -17,11 +17,16 @@ export const es = {
         "Desarrollo sitios web elegantes, funcionales y optimizados. Ideal para marcas que buscan diferenciarse.",
     },
     transitionVisual: {
-      title: "Diseño con intención.",
-      subtitleLine1: "Funciona, conecta",
-      subtitleLine2: "y se ve bien.",
+      title: "Primero el problema. Después, la solución.",
       paragraph:
-        "Cada proyecto es único, como cada cliente. No se trata de decorar, sino de proyectar lo que tu marca quiere decir.",
+        "Trabajo directamente con cada cliente para entender su negocio, definir prioridades y construir una solución útil, clara y preparada para crecer.",
+      primaryCta: "Ver casos",
+      secondaryCta: "Contame tu proyecto",
+      points: {
+        discovery: "Diagnóstico y alcance",
+        development: "Desarrollo a medida",
+        stages: "Implementación por etapas",
+      },
     },
     about: {
       title: "Sobre mí",
