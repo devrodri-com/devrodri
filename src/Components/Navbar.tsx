@@ -62,18 +62,18 @@ export default function Navbar() {
 
         {/* Links en desktop */}
         <div className="hidden sm:flex items-center space-x-6 text-sm font-medium text-white">
-          <Link to="/#sobremi" className="hover:text-blue-300 transition">{t.nav.about}</Link>
-          <Link to="/#porqueelegirnos" className="hover:text-blue-300 transition">{t.nav.why}</Link>
-          <Link to="/portfolio" className="hover:text-blue-300 transition">{t.nav.portfolio}</Link>
-          <Link to="/#contacto" className="hover:text-blue-300 transition">{t.nav.contact}</Link>
-          <Link to="/#faq" className="hover:text-blue-300 transition">{t.nav.faq}</Link>
+          <Link to="/#sobremi" className="hover:text-primary transition">{t.nav.about}</Link>
+          <Link to="/#porqueelegirnos" className="hover:text-primary transition">{t.nav.why}</Link>
+          <Link to="/portfolio" className="hover:text-primary transition">{t.nav.portfolio}</Link>
+          <Link to="/#contacto" className="hover:text-primary transition">{t.nav.contact}</Link>
+          <Link to="/#faq" className="hover:text-primary transition">{t.nav.faq}</Link>
 
           {/* Selector de idioma */}
           <div className="flex items-center gap-2 ml-4">
             <FiGlobe className="text-white text-lg" aria-hidden="true" />
             <button
               onClick={() => setLanguage("es")}
-              className={`text-sm ${language === "es" ? "text-blue-300" : "text-white"} hover:text-blue-300 transition`}
+              className={`text-sm ${language === "es" ? "text-primary" : "text-white"} hover:text-primary transition`}
               aria-label={language === "es" ? "Idioma español seleccionado" : "Switch to Spanish"}
               aria-pressed={language === "es"}
             >
@@ -81,7 +81,7 @@ export default function Navbar() {
             </button>
             <button
               onClick={() => setLanguage("en")}
-              className={`text-sm ${language === "en" ? "text-blue-300" : "text-white"} hover:text-blue-300 transition`}
+              className={`text-sm ${language === "en" ? "text-primary" : "text-white"} hover:text-primary transition`}
               aria-label={language === "es" ? "Cambiar a inglés" : "Switch to English"}
               aria-pressed={language === "en"}
             >
