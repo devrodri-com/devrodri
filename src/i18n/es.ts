@@ -39,43 +39,37 @@ export const es = {
       },
     },
     experience: {
-      title1: "Más que diseño.",
-      title2: "Creo experiencias.",
+      title1: "Tecnología que conecta producto,",
+      title2: "sistemas y negocio.",
       description:
-        "Me enfoco en crear sitios que comuniquen antes de que el usuario haga clic. Interfaces intuitivas, limpias y veloces. Diseño funcional que se siente y se ve.",
+        "Trabajo directamente con cada cliente para entender qué necesita el negocio y convertirlo en una solución clara: sitios, aplicaciones, automatizaciones e integraciones que pueden evolucionar por etapas.",
     },
     highlights: {
-      title: "¿Por qué elegirme?",
+      title: "¿Por qué trabajar conmigo?",
       items: {
-        fast: {
-          icon: "⚡️",
-          title: "Velocidad y rendimiento",
-          desc: "Carga rápida, navegación fluida y experiencia optimizada.",
+        product: {
+          title: "Visión de producto",
+          desc: "Defino cada solución desde el problema, el usuario y la prioridad del negocio.",
         },
-        responsive: {
-          icon: "📱",
-          title: "Diseño responsive",
-          desc: "Tu sitio se verá perfecto en todos los dispositivos.",
+        purpose: {
+          title: "Tecnología con propósito",
+          desc: "Elijo herramientas por su utilidad, mantenibilidad y capacidad de acompañar el proyecto.",
         },
-        results: {
-          icon: "🎯",
-          title: "Enfocado en resultados",
-          desc: "Diseño con propósito que convierte visitantes en clientes.",
+        direct: {
+          title: "Comunicación directa",
+          desc: "Trabajás conmigo de principio a fin, con decisiones claras y sin intermediarios.",
         },
-        seo: {
-          icon: "🚀",
-          title: "SEO integrado",
-          desc: "Optimización técnica y estratégica para posicionar en Google.",
+        business: {
+          title: "Experiencia real de negocio",
+          desc: "Aplico una mirada práctica sobre operación, clientes y decisiones de producto.",
         },
         automation: {
-          icon: "🤖",
-          title: "Automatizaciones",
-          desc: "Integraciones y flujos con n8n y MCP que ahorran tiempo y escalan tu negocio.",
+          title: "Automatización e integraciones",
+          desc: "Conecto sistemas y herramientas para reducir tareas manuales y mejorar procesos.",
         },
-        payments: {
-          icon: "💳",
-          title: "Pagos online embebidos",
-          desc: "Checkout integrado con Stripe/PayPal/Mercado Pago, seguro y sin fricción.",
+        stages: {
+          title: "Evolución por etapas",
+          desc: "Priorizamos lo esencial y construimos una base que puede crecer sin complicar el MVP.",
         },
       },
       seo: {

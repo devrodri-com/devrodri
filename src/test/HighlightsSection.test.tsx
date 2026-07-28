@@ -50,6 +50,14 @@ function getBackgroundVideo(container: HTMLElement): HTMLVideoElement {
   return video;
 }
 
+function getHighlightsSection(container: HTMLElement): HTMLElement {
+  const section = container.querySelector("#porqueelegirnos");
+  if (!(section instanceof HTMLElement)) {
+    throw new Error("Expected the Highlights section");
+  }
+  return section;
+}
+
 function triggerVisibility(
   video: HTMLVideoElement,
   isIntersecting: boolean,
@@ -183,5 +191,91 @@ describe("HighlightsSection video resilience", () => {
     expect(video).toHaveAttribute("autoplay");
     expect(video).toHaveAttribute("loop");
     expect(video).toHaveAttribute("playsinline");
+  });
+});
+
+describe("HighlightsSection positioning", () => {
+  beforeEach(() => {
+    intersectionCallback = undefined;
+    vi.stubGlobal("IntersectionObserver", ControlledIntersectionObserver);
+    vi.stubGlobal(
+      "matchMedia",
+      vi.fn().mockReturnValue({ matches: true }),
+    );
+    vi.spyOn(HTMLMediaElement.prototype, "pause").mockImplementation(
+      () => undefined,
+    );
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+    vi.unstubAllGlobals();
+  });
+
+  it("renders the six approved concepts and icons in Spanish", () => {
+    localStorage.setItem("language", "es");
+    const rendered = renderHighlights();
+    const section = getHighlightsSection(rendered.container);
+
+    expect(section).toHaveTextContent("¿Por qué trabajar conmigo?");
+    for (const text of [
+      "Visión de producto",
+      "Defino cada solución desde el problema, el usuario y la prioridad del negocio.",
+      "Tecnología con propósito",
+      "Elijo herramientas por su utilidad, mantenibilidad y capacidad de acompañar el proyecto.",
+      "Comunicación directa",
+      "Trabajás conmigo de principio a fin, con decisiones claras y sin intermediarios.",
+      "Experiencia real de negocio",
+      "Aplico una mirada práctica sobre operación, clientes y decisiones de producto.",
+      "Automatización e integraciones",
+      "Conecto sistemas y herramientas para reducir tareas manuales y mejorar procesos.",
+      "Evolución por etapas",
+      "Priorizamos lo esencial y construimos una base que puede crecer sin complicar el MVP.",
+    ]) {
+      expect(section).toHaveTextContent(text);
+    }
+    expect(section.querySelectorAll("h3")).toHaveLength(6);
+    expect(
+      Array.from(
+        section.querySelectorAll<SVGElement>("[data-highlight-icon]"),
+        (icon) => icon.dataset.highlightIcon,
+      ),
+    ).toEqual([
+      "product",
+      "purpose",
+      "direct",
+      "business",
+      "automation",
+      "stages",
+    ]);
+    expect(section).not.toHaveTextContent("Velocidad y rendimiento");
+    expect(section).not.toHaveTextContent("Diseño responsive");
+    expect(section).not.toHaveTextContent("SEO integrado");
+    expect(section).not.toHaveTextContent("Pagos online embebidos");
+  });
+
+  it("renders the equivalent positioning in English", () => {
+    localStorage.setItem("language", "en");
+    const rendered = renderHighlights();
+    const section = getHighlightsSection(rendered.container);
+
+    expect(section).toHaveTextContent("Why work with me?");
+    for (const text of [
+      "Product vision",
+      "I shape each solution around the problem, the user, and the business priority.",
+      "Purposeful technology",
+      "I choose tools for their usefulness, maintainability, and fit for the project.",
+      "Direct communication",
+      "You work directly with me from start to finish, with clear decisions and no intermediaries.",
+      "Real business experience",
+      "I bring a practical perspective on operations, customers, and product decisions.",
+      "Automation and integrations",
+      "I connect systems and tools to reduce manual work and improve processes.",
+      "Phased evolution",
+      "We prioritize what matters and build a foundation that can grow without overcomplicating the MVP.",
+    ]) {
+      expect(section).toHaveTextContent(text);
+    }
+    expect(section.querySelectorAll("h3")).toHaveLength(6);
   });
 });

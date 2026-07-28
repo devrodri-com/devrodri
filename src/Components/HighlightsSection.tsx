@@ -1,40 +1,26 @@
 // src/Components/HighlightsSection.tsx
-import { Zap, Smartphone, Target, Rocket, Workflow, CreditCard } from "lucide-react";
+import {
+  BriefcaseBusiness,
+  Compass,
+  Cpu,
+  Layers3,
+  MessageCircle,
+  Workflow,
+  type LucideIcon,
+} from "lucide-react";
 import translations from "../i18n";
 import { useLanguage } from "../i18n/useLanguage";
 import { useRef, useEffect } from "react";
 
-const iconMap = {
-  fast: (
-    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/70 ring-1 ring-white/40 backdrop-blur-sm">
-      <Zap className="h-7 w-7 stroke-[1.8] text-[#3B82F6]" />
-    </div>
-  ),
-  responsive: (
-    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/70 ring-1 ring-white/40 backdrop-blur-sm">
-      <Smartphone className="h-7 w-7 stroke-[1.8] text-[#3B82F6]" />
-    </div>
-  ),
-  results: (
-    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/70 ring-1 ring-white/40 backdrop-blur-sm">
-      <Target className="h-7 w-7 stroke-[1.8] text-[#3B82F6]" />
-    </div>
-  ),
-  seo: (
-    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/70 ring-1 ring-white/40 backdrop-blur-sm">
-      <Rocket className="h-7 w-7 stroke-[1.8] text-[#3B82F6]" />
-    </div>
-  ),
-  automation: (
-    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/70 ring-1 ring-white/40 backdrop-blur-sm">
-      <Workflow className="h-7 w-7 stroke-[1.8] text-[#3B82F6]" />
-    </div>
-  ),
-  payments: (
-    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/70 ring-1 ring-white/40 backdrop-blur-sm">
-      <CreditCard className="h-7 w-7 stroke-[1.8] text-[#3B82F6]" />
-    </div>
-  ),
+type HighlightKey = keyof typeof translations.es.highlights.items;
+
+const iconMap: Record<HighlightKey, LucideIcon> = {
+  product: Compass,
+  purpose: Cpu,
+  direct: MessageCircle,
+  business: BriefcaseBusiness,
+  automation: Workflow,
+  stages: Layers3,
 };
 
 function handlePlaybackRejection(
@@ -135,23 +121,33 @@ export default function HighlightsSection() {
           </h2>
 
           <div className="relative grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 md:gap-10 gap-y-12">
-            <div className="pointer-events-none absolute inset-0 bg-black/10 md:bg-black/15 backdrop-blur-[1px] rounded-none z-0" />
-            {Object.entries(t.highlights.items).map(([key, item]) => (
-              <div
-                key={key}
-                className="p-6 md:p-6 lg:p-7 rounded-xl bg-white/65 border border-white/30 shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:ring-1 hover:ring-white/30 transition-transform duration-300 transform-gpu backdrop-blur-md z-10"
-              >
-                <div className="mb-4 flex justify-center">
-                  {iconMap[key as keyof typeof iconMap]}
+            {Object.entries(t.highlights.items).map(([key, item]) => {
+              const iconKey = key as HighlightKey;
+              const Icon = iconMap[iconKey];
+
+              return (
+                <div
+                  key={key}
+                  className="p-6 md:p-6 lg:p-7 rounded-xl bg-white/65 border border-white/30 shadow-lg hover:shadow-xl hover:-translate-y-0.5 hover:ring-1 hover:ring-white/30 transition-transform duration-300 transform-gpu backdrop-blur-md z-10"
+                >
+                  <div className="mb-4 flex justify-center">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/70 ring-1 ring-white/40 backdrop-blur-sm">
+                      <Icon
+                        aria-hidden="true"
+                        data-highlight-icon={iconKey}
+                        className="h-7 w-7 stroke-[1.8] text-primary-on-light"
+                      />
+                    </div>
+                  </div>
+                  <h3 className="text-[15px] font-semibold tracking-tight text-gray-900 mb-2">
+                    {item.title}
+                  </h3>
+                  <p className="text-[13px] leading-relaxed text-gray-700/95 max-w-[32ch] mx-auto">
+                    {item.desc}
+                  </p>
                 </div>
-                <h3 className="text-[15px] font-semibold tracking-tight text-gray-900 mb-2">
-                  {item.title}
-                </h3>
-                <p className="text-[13px] leading-relaxed text-gray-700/95 max-w-[32ch] mx-auto">
-                  {item.desc}
-                </p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
