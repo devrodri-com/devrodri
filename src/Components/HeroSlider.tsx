@@ -11,9 +11,6 @@ const slides = [
     image: "/img/hero-visual.jpg",
     imageMobile: "/img/hero-visual-mobile.jpg",
     imageAlt: "Man working on web design project on laptop",
-    mobileObjectPosition: "58% center",
-    mobileOverlayClassName:
-      "bg-[linear-gradient(90deg,rgba(0,0,0,0.99)_0%,rgba(0,0,0,0.95)_72%,rgba(0,0,0,0.7)_100%)]",
     claim: {
       es: "RODRIGO OPALO · DESARROLLO FULL-STACK",
       en: "RODRIGO OPALO · FULL-STACK DEVELOPMENT",
@@ -38,9 +35,6 @@ const slides = [
     image: "/img/software-slide.jpg",
     imageMobile: "/img/software-slide-mobile.jpg",
     imageAlt: "Dashboard of a custom software with charts and code",
-    mobileObjectPosition: "64% center",
-    mobileOverlayClassName:
-      "bg-[linear-gradient(90deg,rgba(0,0,0,0.95)_0%,rgba(0,0,0,0.84)_72%,rgba(0,0,0,0.4)_100%)]",
     claim: {
       es: "SISTEMAS · PORTALES · HERRAMIENTAS INTERNAS",
       en: "CUSTOM SYSTEMS · PORTALS · INTERNAL TOOLS",
@@ -65,9 +59,6 @@ const slides = [
     image: "/img/branding-slide.jpg",
     imageMobile: "/img/branding-slide-mobile.jpg",
     imageAlt: "Brand strategy and color palette design on tablet",
-    mobileObjectPosition: "68% center",
-    mobileOverlayClassName:
-      "bg-[linear-gradient(90deg,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.93)_72%,rgba(0,0,0,0.65)_100%)]",
     claim: {
       es: "ESTRATEGIA DE MARCA · DIRECCIÓN CREATIVA · LANZAMIENTO DIGITAL",
       en: "BRAND STRATEGY · CREATIVE DIRECTION · DIGITAL LAUNCH",
@@ -92,9 +83,6 @@ const slides = [
     image: "/img/automations-slide.jpg",
     imageMobile: "/img/automations-slide-mobile.jpg",
     imageAlt: "Automation workflows dashboard",
-    mobileObjectPosition: "72% center",
-    mobileOverlayClassName:
-      "bg-[linear-gradient(90deg,rgba(0,0,0,0.96)_0%,rgba(0,0,0,0.9)_72%,rgba(0,0,0,0.56)_100%)]",
     claim: {
       es: "AUTOMATIZACIONES · INTEGRACIONES · IA APLICADA",
       en: "AUTOMATION · INTEGRATIONS · APPLIED AI",
@@ -239,12 +227,9 @@ export default function HeroSlider() {
               src={currentSlide.imageMobile}
               alt={currentSlide.imageAlt}
               className="h-full w-full object-cover object-center"
-              style={{ objectPosition: currentSlide.mobileObjectPosition }}
               draggable="false"
             />
-            <div
-              className={`absolute inset-0 pointer-events-none ${currentSlide.mobileOverlayClassName}`}
-            />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent pointer-events-none" />
           </div>
 
           {/* Desktop image on the right half (unchanged) */}
@@ -263,14 +248,14 @@ export default function HeroSlider() {
 
       {/* Contenido */}
       <div className="relative z-10 max-w-6xl mx-auto grid md:grid-cols-2 xl:grid-cols-[minmax(0,40rem)_minmax(0,1fr)] gap-10 items-center px-4 sm:px-6 py-28 min-h-[600px]">
-        <div className="min-h-[320px] flex max-w-[34rem] flex-col justify-center md:max-w-none">
-          <p className="mb-2 max-w-[22rem] text-[0.6875rem] uppercase tracking-[0.16em] text-primary sm:max-w-none sm:text-xs sm:tracking-widest">
+        <div className="min-h-[320px] flex flex-col justify-center">
+          <p className="text-xs uppercase tracking-widest text-primary mb-2 max-md:drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)]">
             {currentSlide.claim[language]}
           </p>
-          <h1 className="mb-6 max-w-[22rem] break-words text-3xl font-bold leading-tight text-primary sm:max-w-full sm:text-5xl">
+          <h1 className="text-3xl sm:text-5xl font-bold text-primary mb-6 leading-tight break-words max-w-[90vw] sm:max-w-full max-md:drop-shadow-[0_4px_18px_rgba(0,0,0,0.95)]">
             {currentSlide.title[language]}
           </h1>
-          <p className="mb-8 max-w-[22rem] text-base leading-relaxed text-gray-300 sm:max-w-2xl sm:text-lg">
+          <p className="text-base sm:text-lg text-gray-300 mb-8 leading-relaxed max-w-[90vw] sm:max-w-2xl max-md:drop-shadow-[0_3px_14px_rgba(0,0,0,0.9)]">
             {currentSlide.description[language]}
           </p>
           <div className="w-fit">

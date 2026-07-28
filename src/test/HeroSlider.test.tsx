@@ -157,7 +157,7 @@ describe("HeroSlider resilience", () => {
     }
   });
 
-  it("keeps asset order and uses per-slide mobile positioning", async () => {
+  it("keeps asset order and restores the baseline mobile image treatment", async () => {
     const user = userEvent.setup();
     const { container } = renderHero();
     const tabs = screen.getAllByRole("tab");
@@ -166,33 +166,21 @@ describe("HeroSlider resilience", () => {
         alt: "Man working on web design project on laptop",
         desktop: "/img/hero-visual.jpg",
         mobile: "/img/hero-visual-mobile.jpg",
-        mobilePosition: "58% center",
-        mobileOverlay:
-          "bg-[linear-gradient(90deg,rgba(0,0,0,0.99)_0%,rgba(0,0,0,0.95)_72%,rgba(0,0,0,0.7)_100%)]",
       },
       {
         alt: "Dashboard of a custom software with charts and code",
         desktop: "/img/software-slide.jpg",
         mobile: "/img/software-slide-mobile.jpg",
-        mobilePosition: "64% center",
-        mobileOverlay:
-          "bg-[linear-gradient(90deg,rgba(0,0,0,0.95)_0%,rgba(0,0,0,0.84)_72%,rgba(0,0,0,0.4)_100%)]",
       },
       {
         alt: "Brand strategy and color palette design on tablet",
         desktop: "/img/branding-slide.jpg",
         mobile: "/img/branding-slide-mobile.jpg",
-        mobilePosition: "68% center",
-        mobileOverlay:
-          "bg-[linear-gradient(90deg,rgba(0,0,0,0.98)_0%,rgba(0,0,0,0.93)_72%,rgba(0,0,0,0.65)_100%)]",
       },
       {
         alt: "Automation workflows dashboard",
         desktop: "/img/automations-slide.jpg",
         mobile: "/img/automations-slide-mobile.jpg",
-        mobilePosition: "72% center",
-        mobileOverlay:
-          "bg-[linear-gradient(90deg,rgba(0,0,0,0.96)_0%,rgba(0,0,0,0.9)_72%,rgba(0,0,0,0.56)_100%)]",
       },
     ] as const;
 
@@ -207,16 +195,20 @@ describe("HeroSlider resilience", () => {
       const mobileImage = images.find(
         (image) => image.getAttribute("src") === asset.mobile,
       );
-      expect(mobileImage).toHaveStyle({
-        objectPosition: asset.mobilePosition,
-      });
-      expect(mobileImage?.nextElementSibling).toHaveClass(asset.mobileOverlay);
+      expect(mobileImage).toHaveClass("object-center");
+      expect(mobileImage).not.toHaveAttribute("style");
+      expect(mobileImage?.nextElementSibling).toHaveClass(
+        "bg-gradient-to-r",
+        "from-black/80",
+        "via-black/50",
+        "to-transparent",
+      );
     }
 
     const mobileLayer = container.querySelector(".md\\:hidden");
     const desktopLayer = container.querySelector(".md\\:block");
     expect(mobileLayer).toBeInTheDocument();
-    expect(mobileLayer?.lastElementChild?.className).toContain("linear-gradient");
+    expect(mobileLayer?.lastElementChild).toHaveClass("bg-gradient-to-r");
     expect(desktopLayer?.querySelector("img")).toHaveClass("object-center");
   });
 
@@ -239,18 +231,20 @@ describe("HeroSlider resilience", () => {
     },
   );
 
-  it("keeps mobile text constrained without an opaque card or text shadow", () => {
+  it("restores baseline mobile text shadows without an opaque card", () => {
     const { container } = renderHero();
     const hero = container.querySelector("#hero");
     const heading = screen.getByRole("heading", { level: 1 });
     const copyColumn = heading.parentElement;
 
     expect(hero).toHaveClass("overflow-hidden");
-    expect(copyColumn).toHaveClass("max-w-[34rem]");
     expect(copyColumn?.parentElement).toHaveClass(
       "xl:grid-cols-[minmax(0,40rem)_minmax(0,1fr)]",
     );
-    expect(heading.className).not.toContain("drop-shadow");
+    expect(heading).toHaveClass(
+      "max-w-[90vw]",
+      "max-md:drop-shadow-[0_4px_18px_rgba(0,0,0,0.95)]",
+    );
     expect(copyColumn?.className).not.toMatch(/\b(bg-|backdrop-blur)/);
   });
 
