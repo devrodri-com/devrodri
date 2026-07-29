@@ -20,6 +20,31 @@ function getAboutSection(container: HTMLElement) {
 }
 
 describe("SobreMiSection", () => {
+  it("stacks the IBM certificate content on mobile and restores the row at the small breakpoint", () => {
+    const { container } = renderAboutSection("es");
+    const section = getAboutSection(container);
+    const certificateLink = section.querySelector<HTMLAnchorElement>(
+      'a[href*="credly.com"]',
+    );
+
+    expect(certificateLink).toHaveClass(
+      "flex-col",
+      "items-center",
+      "gap-2",
+      "w-full",
+      "max-w-[21rem]",
+      "text-center",
+      "sm:flex-row",
+      "sm:w-auto",
+      "sm:max-w-none",
+    );
+    expect(certificateLink).not.toHaveClass("justify-between");
+    expect(certificateLink).toHaveTextContent(
+      "IBM Full Stack Software Developer Professional Certificate (V5)",
+    );
+    expect(certificateLink).toHaveTextContent("Verificar");
+  });
+
   it("presents the approved business-oriented positioning in Spanish", () => {
     const { container } = renderAboutSection("es");
     const section = getAboutSection(container);
