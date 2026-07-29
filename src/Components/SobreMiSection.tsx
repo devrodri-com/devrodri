@@ -93,7 +93,7 @@ export default function SobreMiSection() {
             href="https://www.credly.com/badges/26e359b2-526b-4f12-85b4-34a51759be15/linked_in_profile"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-lg ring-1 ring-gray-300 px-3 py-1.5 hover:bg-gray-100 text-sm text-gray-700"
+            className="inline-flex w-full max-w-[21rem] flex-col items-center gap-2 rounded-lg ring-1 ring-gray-300 px-3 py-2 text-center hover:bg-gray-100 text-sm text-gray-700 sm:w-auto sm:max-w-none sm:flex-row sm:py-1.5"
             aria-label={language === "es" ? "Verificar certificado IBM Full Stack en Credly" : "Verify IBM Full Stack certificate on Credly"}
           >
             <span className="font-medium">IBM Full Stack Software Developer Professional Certificate (V5)</span>
