@@ -202,45 +202,54 @@ export const en = {
       },
     },
     faq: {
-      title: "FAQ",
-      questions: [
-        {
-          question: "How long does it take to build a website?",
-          answer: "It depends on the type of site, but usually between 5 and 15 business days.",
+      title: "Frequently asked questions",
+      questions: {
+        projectTypes: {
+          question: "What kinds of projects do you build?",
+          answer:
+            "I build websites, custom systems, portals, automations, integrations, and digital brand launches. Scope is defined around the problem, users, and business goals.",
         },
-        {
-          question: "Can I request changes after the site is live?",
-          answer: "Absolutely! I include post-launch adjustments to ensure you're fully satisfied.",
+        projectStart: {
+          question: "How does a project start?",
+          answer:
+            "It starts with a conversation to understand the context, goal, users, and constraints. From there, I define priorities, scope, and a clear first stage.",
         },
-        {
-          question: "How is the payment handled?",
-          answer: "A deposit to get started and the balance upon delivery. Terms are flexible.",
+        websiteVsSystem: {
+          question: "When do I need a website versus a custom system?",
+          answer:
+            "A website helps communicate, attract inquiries, or sell. A custom system supports processes, users, data, and operations. Some projects need both.",
         },
-        {
-          question: "What technologies do you use to build websites?",
-          answer: "I use modern tech like React, Tailwind, TypeScript, Vite, and more.",
+        phasedWork: {
+          question: "Can the project be built in stages, and how are timelines defined?",
+          answer:
+            "Yes. I first prioritize a useful, clear foundation. Timelines are estimated after defining the scope, dependencies, and deliverables for each stage.",
         },
-        {
-          question: "Can I manage the site myself?",
-          answer: "Yes. I can provide a dashboard so you can easily update content, images, or products.",
+        websiteCapabilities: {
+          question: "What can a website include?",
+          answer:
+            "Depending on scope, it can include a catalog, forms, payments, a content management panel, multiple languages, and a technical SEO foundation. Responsive behavior is considered from the start. An SEO foundation does not guarantee specific search rankings.",
         },
-        {
-          question: "Can the site have more than one language?",
-          answer: "Absolutely. I can make it multilingual from the start or prepare it for future languages.",
+        automations: {
+          question: "Do you build automations and integrations?",
+          answer:
+            "Yes. I can connect APIs, payments, forms, CRMs, webhooks, and other services to reduce manual work and improve processes. I only add what creates real value for the project.",
         },
-        {
-          question: "Do you offer custom design?",
-          answer: "Yes. Every site is tailored to your brand, style, and business goals.",
+        brandDevelopment: {
+          question: "How do you approach brand development?",
+          answer:
+            "I can lead strategy, naming, creative direction, and digital launch. When specialized visual identity work is needed, I coordinate with a designer.",
         },
-        {
-          question: "Will my site be mobile-friendly?",
-          answer: "Of course. All sites I develop are fully responsive and look great on any device.",
+        budgetAndPayment: {
+          question: "How are budget and payment terms defined?",
+          answer:
+            "The budget is defined according to the project scope and stages. Before work begins, the proposal details deliverables, milestones, and payment terms.",
         },
-        {
-          question: "Is SEO included?",
-          answer: "Yes. I apply technical SEO basics and optimized structure so your site ranks better.",
-        }
-      ],
+        postLaunch: {
+          question: "What happens with access, handoff, and support after launch?",
+          answer:
+            "Access, deliverables, documentation, and support terms are defined in the project scope. If the product needs to keep evolving, I organize improvements into new stages.",
+        },
+      },
       seo: {
         title: "FAQ | Rodrigo Opalo",
         description: "Answers to common questions about web design, development, and hiring process.",

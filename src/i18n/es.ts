@@ -200,45 +200,54 @@ export const es = {
       },
     },
     faq: {
-      title: "Preguntas Frecuentes",
-      questions: [
-        {
-          question: "¿Cuánto tarda en estar listo un sitio web?",
-          answer: "Depende del tipo de sitio, pero generalmente entre 5 y 15 días hábiles.",
+      title: "Preguntas frecuentes",
+      questions: {
+        projectTypes: {
+          question: "¿Qué tipo de proyectos desarrollás?",
+          answer:
+            "Trabajo en sitios web, sistemas a medida, portales, automatizaciones, integraciones y lanzamientos digitales de marca. El alcance se define según el problema, los usuarios y los objetivos del negocio.",
         },
-        {
-          question: "¿Puedo pedir cambios luego de publicado?",
-          answer: "¡Sí! Incluyo ajustes posteriores para que quedes conforme.",
+        projectStart: {
+          question: "¿Cómo comienza un proyecto?",
+          answer:
+            "Empieza con una conversación para entender el contexto, el objetivo, los usuarios y las restricciones. A partir de eso defino prioridades, alcance y una primera etapa concreta.",
         },
-        {
-          question: "¿Cómo se realiza el pago?",
-          answer: "Seña al comenzar y saldo al entregar. A convenir.",
+        websiteVsSystem: {
+          question: "¿Cuándo conviene un sitio web y cuándo un sistema a medida?",
+          answer:
+            "Un sitio web sirve para comunicar, captar consultas o vender. Un sistema a medida organiza procesos, usuarios, datos y operaciones. Algunos proyectos necesitan ambas cosas.",
         },
-        {
-          question: "¿Qué tecnologías usás para desarrollar los sitios?",
-          answer: "Trabajo con tecnologías modernas como React, Tailwind, TypeScript, Vite y más.",
+        phasedWork: {
+          question: "¿Se puede trabajar por etapas y cómo se definen los tiempos?",
+          answer:
+            "Sí. Primero priorizo una base útil y clara. Los tiempos se estiman después de definir el alcance, las dependencias y los entregables de cada etapa.",
         },
-        {
-          question: "¿Hacés sitios autoadministrables?",
-          answer: "Sí. Puedo ofrecerte un panel para que edites textos, imágenes o productos fácilmente.",
+        websiteCapabilities: {
+          question: "¿Qué puede incluir un sitio web?",
+          answer:
+            "Según el alcance, puede incluir catálogo, formularios, pagos, panel autoadministrable, varios idiomas y una base técnica SEO. El diseño responsive se contempla desde el inicio. La base SEO no garantiza posiciones específicas en buscadores.",
         },
-        {
-          question: "¿Puedo tener más de un idioma en mi sitio?",
-          answer: "Claro, puedo hacerlo multilingüe desde el inicio o dejarlo listo para sumar idiomas luego.",
+        automations: {
+          question: "¿También desarrollás automatizaciones e integraciones?",
+          answer:
+            "Sí. Puedo conectar APIs, pagos, formularios, CRMs, webhooks y otros servicios para reducir tareas manuales y mejorar procesos. Solo incorporo lo que aporta valor real al proyecto.",
         },
-        {
-          question: "¿Ofrecés diseño personalizado?",
-          answer: "Sí. Cada sitio es único y se adapta a tu marca, estilo y necesidades.",
+        brandDevelopment: {
+          question: "¿Cómo trabajás el desarrollo de marca?",
+          answer:
+            "Puedo liderar estrategia, naming, dirección creativa y lanzamiento digital. Cuando el proyecto requiere identidad visual especializada, coordino el trabajo con un diseñador.",
         },
-        {
-          question: "¿Mi sitio estará optimizado para celulares?",
-          answer: "Por supuesto. Todos los sitios que desarrollo son 100% responsivos y se ven perfectos en cualquier dispositivo.",
+        budgetAndPayment: {
+          question: "¿Cómo se definen el presupuesto y la forma de pago?",
+          answer:
+            "El presupuesto se define según el alcance y las etapas del proyecto. Antes de comenzar, la propuesta detalla entregables, hitos y forma de pago.",
         },
-        {
-          question: "¿Incluye SEO?",
-          answer: "Sí, aplico prácticas básicas de SEO técnico y estructura optimizada para buscadores.",
-        }
-      ],
+        postLaunch: {
+          question: "¿Qué ocurre con los accesos, la entrega y el soporte después del lanzamiento?",
+          answer:
+            "Los accesos, entregables, documentación y condiciones de soporte quedan definidos en el alcance. Si el producto necesita continuar evolucionando, organizo las mejoras en nuevas etapas.",
+        },
+      },
       seo: {
         title: "Preguntas Frecuentes | Rodrigo Opalo",
         description: "Resolvé tus dudas sobre diseño, desarrollo y contratación de sitios web.",

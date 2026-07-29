@@ -1,99 +1,23 @@
 // src/Components/FaqSection.tsx
 import translations from "../i18n";
 import { useLanguage } from "../i18n/useLanguage";
+import { Link } from "react-router-dom";
 
-type FaqItem = {
-  id: string;
-  question: string;
-  answer: string;
-};
+const FAQ_KEYS = [
+  "projectTypes",
+  "projectStart",
+  "websiteVsSystem",
+  "phasedWork",
+  "websiteCapabilities",
+  "automations",
+  "brandDevelopment",
+  "budgetAndPayment",
+  "postLaunch",
+] as const;
 
 export default function FaqSection() {
   const { language } = useLanguage();
   const t = translations[language];
-
-  const extraFaq: FaqItem[] = language === "es"
-    ? [
-        {
-          id: "automations",
-          question: "¿Automatizaciones: qué puedo automatizar (n8n / MCP)?",
-          answer:
-            "Integraciones entre apps (CRM, pagos, Sheets), disparadores por webhooks, reportes automáticos, sincronización de catálogos/pedidos y bots de soporte. MCP permite que un agente de IA use herramientas seguras (leer/crear tickets, consultar CRM) con permisos controlados.",
-        },
-        {
-          id: "automation-cost",
-          question: "¿Tiempos y costo de una automatización?",
-          answer:
-            "Un flujo simple (ej. webhook → Google Sheets → aviso a WhatsApp) suele estar en 2–5 días. Flujos medianos con panel y validaciones: 1–3 semanas. Presupuesto según alcance y conexiones (APIs/pagos).",
-        },
-        {
-          id: "account-security",
-          question: "¿Seguridad y acceso a mis cuentas?",
-          answer:
-            "Trabajamos con credenciales por entorno y roles. En Firebase y n8n usamos variables de entorno; en MCP se definen herramientas con permisos mínimos. Acceso revocable y logs de actividad.",
-        },
-        {
-          id: "maintenance",
-          question: "¿Mantenimiento y monitoreo?",
-          answer:
-            "Opcional: monitoreo de flujos, alertas por error, backups y versiones. Ofrecemos soporte mensual para evolutivos y nuevos conectores.",
-        },
-      ]
-    : [
-        {
-          id: "automations",
-          question: "Automations: what can we automate (n8n / MCP)?",
-          answer:
-            "App integrations (CRM, payments, Sheets), webhook triggers, automated reports, catalog/order sync and support bots. MCP lets an AI agent use safe tools (read/create tickets, query CRM) with least‑privilege permissions.",
-        },
-        {
-          id: "automation-cost",
-          question: "Timeline & cost for an automation?",
-          answer:
-            "Simple flows (e.g., webhook → Google Sheets → WhatsApp alert) ship in 2–5 days. Mid‑size with validations/panel: 1–3 weeks. Budget depends on scope and APIs.",
-        },
-        {
-          id: "account-security",
-          question: "Security & access",
-          answer:
-            "We use env‑scoped credentials and roles. In Firebase/n8n we keep secrets in env; in MCP tools are permissioned. Access is revocable and activity is logged.",
-        },
-        {
-          id: "maintenance",
-          question: "Maintenance & monitoring",
-          answer:
-            "Optional monthly plan: flow monitoring, error alerts, backups/versioning and evolutive changes.",
-        },
-      ];
-
-  // Patch the "technologies" answer to include Next.js and stack items
-  const techAnswerEs =
-    "Next.js, React, Vite (según proyecto), TypeScript, Tailwind, Firebase (Firestore/Auth/Hosting/Storage), Stripe/PayPal, n8n y MCP (automatizaciones), ImageKit/Cloudinary (medios), Framer Motion y multilenguaje según proyecto (p. ej. React Context o next-intl).";
-  const techAnswerEn =
-    "Next.js, React, Vite (per project), TypeScript, Tailwind, Firebase (Firestore/Auth/Hosting/Storage), Stripe/PayPal, n8n & MCP (automations), ImageKit/Cloudinary (media), Framer Motion, and multilingual setups as needed (e.g. React Context or next-intl).";
-
-  const baseFaqs: FaqItem[] = [
-    { id: "delivery-time", ...t.faq.questions[0] },
-    { id: "post-launch-changes", ...t.faq.questions[1] },
-    { id: "payment", ...t.faq.questions[2] },
-    { id: "technologies", ...t.faq.questions[3] },
-    { id: "self-managed", ...t.faq.questions[4] },
-    { id: "multilingual", ...t.faq.questions[5] },
-    { id: "custom-design", ...t.faq.questions[6] },
-    { id: "responsive", ...t.faq.questions[7] },
-    { id: "seo", ...t.faq.questions[8] },
-  ];
-  const faqs = [
-    ...baseFaqs.map((faq) =>
-      faq.id === "technologies"
-        ? {
-            ...faq,
-            answer: language === "es" ? techAnswerEs : techAnswerEn,
-          }
-        : faq,
-    ),
-    ...extraFaq,
-  ];
 
   return (
     <section
@@ -128,16 +52,17 @@ export default function FaqSection() {
         </h2>
 
         <div className="space-y-8">
-          {faqs.map((q) => (
+          {FAQ_KEYS.map((key) => (
             <div
-              key={q.id}
+              key={key}
+              data-faq-key={key}
               className="bg-white p-6 sm:p-7 px-5 sm:px-6 rounded-2xl shadow-md border border-gray-100 cursor-default transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1)] hover:shadow-lg hover:scale-[1.01]"
             >
               <h3 className="font-semibold text-lg sm:text-xl text-primary-on-light mb-2">
-                {q.question}
+                {t.faq.questions[key].question}
               </h3>
               <p className="text-neutral-800 text-base leading-relaxed">
-                {q.answer}
+                {t.faq.questions[key].answer}
               </p>
             </div>
           ))}
@@ -145,10 +70,17 @@ export default function FaqSection() {
 
         {/* CTA final para contacto */}
         <div className="text-center mt-12 text-sm text-gray-500">
-          {language === "es" ? "¿Tenés otra duda? " : "Still have a question? "}
-          <a href="https://wa.me/17544653318" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-medium">{language === "es" ? "Escribime por WhatsApp" : "Message me on WhatsApp"}</a>
-          <span className="mx-2">·</span>
-          <a href="mailto:r.opalo@icloud.com?subject=Consulta%20FAQ%20devrodri.com" className="text-primary hover:underline font-medium">Email</a>
+          {language === "es"
+            ? "¿Tenés otra pregunta? "
+            : "Still have a question? "}
+          <Link
+            to="/#contacto"
+            className="text-primary hover:underline font-medium"
+          >
+            {language === "es"
+              ? "Contame tu proyecto"
+              : "Tell me about your project"}
+          </Link>
         </div>
       </div>
     </section>
