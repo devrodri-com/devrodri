@@ -185,13 +185,13 @@ export const en = {
       ],
     },
     contact: {
-      title: "Contact",
+      title: "Tell me about your project",
       subtitle:
-        "Ready to take your brand to the next level? Message me via the form, WhatsApp or email and we’ll align fit and next steps together.",
-      namePlaceholder: "Name",
-      emailPlaceholder: "Email",
-      messagePlaceholder: "How can I help you?",
-      submit: "Send message",
+        "Share the context, goal, and any important constraints. You can use the form or contact me by WhatsApp or email.",
+      nameLabel: "Name",
+      emailLabel: "Email",
+      messageLabel: "How can I help?",
+      submit: "Send inquiry",
       privacyDisclosure:
         "When you submit this form, your name, email and message are used only to reply to your inquiry. The submission is processed through FormSubmit. Google Analytics measures general site usage and does not receive the form contents.",
       seo: {

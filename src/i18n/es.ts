@@ -183,13 +183,13 @@ export const es = {
       ],
     },
     contact: {
-      title: "Contacto",
+      title: "Contame tu proyecto",
       subtitle:
-        "¿Listo para llevar tu marca al siguiente nivel? Escribime por el formulario, WhatsApp o correo y vemos juntos encaje y próximos pasos.",
-      namePlaceholder: "Nombre",
-      emailPlaceholder: "Correo electrónico",
-      messagePlaceholder: "¿En qué te puedo ayudar?",
-      submit: "Enviar mensaje",
+        "Compartime el contexto, el objetivo y cualquier restricción importante. Podés usar el formulario o escribirme por WhatsApp o email.",
+      nameLabel: "Nombre",
+      emailLabel: "Correo electrónico",
+      messageLabel: "¿En qué te puedo ayudar?",
+      submit: "Enviar consulta",
       privacyDisclosure:
         "Al enviar este formulario, tu nombre, email y mensaje se usarán únicamente para responder tu consulta. El envío se procesa mediante FormSubmit. Google Analytics mide el uso general del sitio, pero no recibe el contenido del formulario.",
       seo: {

@@ -144,42 +144,51 @@ export default function ContactSection() {
           <input type="hidden" name="_captcha" value="false" />
           <input type="hidden" name="_subject" value="Nuevo mensaje desde devrodri.com" />
           <input type="text" name="_honey" className="hidden" style={{ display: "none" }} />
-          <label htmlFor="name" className="sr-only">{language === "es" ? "Nombre" : "Name"}</label>
-          <input
-            id="name"
-            type="text"
-            name="name"
-            placeholder={t.contact.namePlaceholder}
-            autoComplete="name"
-            minLength={CONTACT_FORM_LIMITS.name.min}
-            maxLength={CONTACT_FORM_LIMITS.name.max}
-            required
-            className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-primary"
-          />
-          <label htmlFor="email" className="sr-only">{language === "es" ? "Correo electrónico" : "Email"}</label>
-          <input
-            id="email"
-            type="email"
-            inputMode="email"
-            name="email"
-            placeholder={t.contact.emailPlaceholder}
-            autoComplete="email"
-            maxLength={CONTACT_FORM_LIMITS.email.max}
-            required
-            className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-primary"
-          />
-          <label htmlFor="message" className="sr-only">{language === "es" ? "Mensaje" : "Message"}</label>
-          <textarea
-            id="message"
-            name="message"
-            placeholder={t.contact.messagePlaceholder}
-            autoComplete="off"
-            minLength={CONTACT_FORM_LIMITS.message.min}
-            maxLength={CONTACT_FORM_LIMITS.message.max}
-            required
-            rows={5}
-            className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-primary resize-none"
-          ></textarea>
+          <div className="space-y-2">
+            <label htmlFor="name" className="block text-left text-sm font-medium text-gray-700">
+              {t.contact.nameLabel}
+            </label>
+            <input
+              id="name"
+              type="text"
+              name="name"
+              autoComplete="name"
+              minLength={CONTACT_FORM_LIMITS.name.min}
+              maxLength={CONTACT_FORM_LIMITS.name.max}
+              required
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="email" className="block text-left text-sm font-medium text-gray-700">
+              {t.contact.emailLabel}
+            </label>
+            <input
+              id="email"
+              type="email"
+              inputMode="email"
+              name="email"
+              autoComplete="email"
+              maxLength={CONTACT_FORM_LIMITS.email.max}
+              required
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-primary"
+            />
+          </div>
+          <div className="space-y-2">
+            <label htmlFor="message" className="block text-left text-sm font-medium text-gray-700">
+              {t.contact.messageLabel}
+            </label>
+            <textarea
+              id="message"
+              name="message"
+              autoComplete="off"
+              minLength={CONTACT_FORM_LIMITS.message.min}
+              maxLength={CONTACT_FORM_LIMITS.message.max}
+              required
+              rows={5}
+              className="w-full border border-gray-300 rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+            ></textarea>
+          </div>
 
           <motion.button
             type="submit"
