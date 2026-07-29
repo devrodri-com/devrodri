@@ -30,8 +30,8 @@ function getBridgeSection(heading: HTMLElement): HTMLElement {
 }
 
 describe("TransitionServicesIntro portfolio bridge", () => {
-  it("renders the approved compact Spanish bridge without historical CTA content", () => {
-    const rendered = renderBridge("es");
+  it("renders the approved Spanish copy with the original visual layout", () => {
+    renderBridge("es");
     const heading = screen.getByRole("heading", {
       level: 2,
       name: "Del enfoque a la implementación.",
@@ -44,15 +44,16 @@ describe("TransitionServicesIntro portfolio bridge", () => {
     );
     expect(section).not.toHaveTextContent("PRÓXIMO PASO");
     expect(section).not.toHaveTextContent("Construyamos algo increíble");
-    expect(section.querySelector("img")).not.toBeInTheDocument();
+    expect(section).not.toHaveTextContent(
+      "Ahora que sabés cómo trabajo, veamos qué podemos construir juntos.",
+    );
     expect(section.querySelector("button")).not.toBeInTheDocument();
     expect(section.textContent).not.toMatch(/[\u2013\u2014]/);
-    expect(
-      rendered.container.querySelector('[src="/img/servicios.jpg"]'),
-    ).not.toBeInTheDocument();
+    expect(section).toHaveClass("py-10");
+    expect(section).not.toHaveClass("sm:py-12");
   });
 
-  it("renders the approved English bridge without historical CTA content", () => {
+  it("renders the approved English copy with the original visual layout", () => {
     renderBridge("en");
     const heading = screen.getByRole("heading", {
       level: 2,
@@ -66,12 +67,48 @@ describe("TransitionServicesIntro portfolio bridge", () => {
     );
     expect(section).not.toHaveTextContent("NEXT STEP");
     expect(section).not.toHaveTextContent("Let’s build something great");
-    expect(section.querySelector("img")).not.toBeInTheDocument();
+    expect(section).not.toHaveTextContent(
+      "Now that you know how I work, let’s see what we can build together.",
+    );
     expect(section.querySelector("button")).not.toBeInTheDocument();
     expect(section.textContent).not.toMatch(/[\u2013\u2014]/);
   });
 
-  it("keeps the panoramic asset and Portfolio immediately after the bridge", () => {
+  it("restores the original panoramic image, container, and responsive crop", () => {
+    renderBridge("es");
+    const bridge = getBridgeSection(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "Del enfoque a la implementación.",
+      }),
+    );
+    const image = bridge.querySelector('img[src="/img/servicios.jpg"]');
+    const imageContainer = image?.parentElement;
+
+    expect(image).toHaveAttribute("alt", "Servicios");
+    expect(image).toHaveClass(
+      "w-full",
+      "h-24",
+      "object-cover",
+      "object-center",
+      "sm:h-28",
+      "md:h-32",
+    );
+    expect(imageContainer).toHaveClass(
+      "mt-6",
+      "rounded-3xl",
+      "overflow-hidden",
+      "shadow-xl",
+      "transition",
+      "hover:shadow-2xl",
+      "w-full",
+      "max-w-[1600px]",
+      "mx-auto",
+    );
+    expect(fs.existsSync("public/img/servicios.jpg")).toBe(true);
+  });
+
+  it("keeps Portfolio immediately after the bridge with its anchor intact", () => {
     localStorage.setItem("language", "es");
     render(
       <MemoryRouter initialEntries={["/"]}>
@@ -92,6 +129,5 @@ describe("TransitionServicesIntro portfolio bridge", () => {
     expect(portfolio).toBeInstanceOf(HTMLElement);
     expect(portfolio).toHaveAttribute("id", "portfolio");
     expect(portfolio).toHaveTextContent("Algunos resultados recientes");
-    expect(fs.existsSync("public/img/servicios.jpg")).toBe(true);
   });
 });
