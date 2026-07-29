@@ -12,12 +12,17 @@ interface FileSystemApi {
 
 const fs = await vi.importActual<FileSystemApi>("node:fs");
 
-function renderBridge(language: Language) {
+function renderBridge(
+  language: Language,
+  variant: "default" | "afterPortfolio" = "default",
+) {
   localStorage.setItem("language", language);
   return render(
-    <LanguageProvider>
-      <TransitionServicesIntro />
-    </LanguageProvider>,
+    <MemoryRouter>
+      <LanguageProvider>
+        <TransitionServicesIntro variant={variant} />
+      </LanguageProvider>
+    </MemoryRouter>,
   );
 }
 
@@ -108,6 +113,57 @@ describe("TransitionServicesIntro portfolio bridge", () => {
       "mx-auto",
     );
     expect(fs.existsSync("public/img/servicios.jpg")).toBe(true);
+  });
+
+  it("renders the approved Spanish next-step flow without a secondary email link", () => {
+    renderBridge("es", "afterPortfolio");
+    const heading = screen.getByRole("heading", {
+      level: 2,
+      name: "De la idea a una solución clara",
+    });
+    const section = getBridgeSection(heading);
+    const cta = screen.getByRole("link", {
+      name: "Contame tu proyecto",
+    });
+
+    expect(section).toHaveTextContent("PRÓXIMO PASO");
+    expect(section).toHaveTextContent(
+      "Contame el contexto y definimos el alcance, las prioridades y el mejor camino para avanzar.",
+    );
+    expect(section).toHaveTextContent("Contacto directo");
+    expect(section).toHaveTextContent("Alcance claro");
+    expect(section).toHaveTextContent("Solución a medida");
+    expect(cta).toHaveTextContent("Contame tu proyecto");
+    expect(cta).toHaveAttribute("href", "/#contacto");
+    expect(cta).toHaveAttribute("data-analytics", "bridge-cta-afterPortfolio");
+    expect(section.querySelector('a[href^="mailto:"]')).not.toBeInTheDocument();
+    expect(section.querySelectorAll('[aria-hidden="true"]')).toHaveLength(3);
+    expect(section.querySelector(".sm\\:grid-cols-3")).toBeInTheDocument();
+  });
+
+  it("renders the approved English next-step flow with the same structure", () => {
+    renderBridge("en", "afterPortfolio");
+    const heading = screen.getByRole("heading", {
+      level: 2,
+      name: "From an idea to a clear solution",
+    });
+    const section = getBridgeSection(heading);
+    const cta = screen.getByRole("link", {
+      name: "Tell me about your project",
+    });
+
+    expect(section).toHaveTextContent("NEXT STEP");
+    expect(section).toHaveTextContent(
+      "Tell me the context and we'll define the scope, priorities, and best way forward.",
+    );
+    expect(section).toHaveTextContent("Direct communication");
+    expect(section).toHaveTextContent("Clear scope");
+    expect(section).toHaveTextContent("Tailored solution");
+    expect(cta).toHaveTextContent("Tell me about your project");
+    expect(cta).toHaveAttribute("href", "/#contacto");
+    expect(section.querySelector('a[href^="mailto:"]')).not.toBeInTheDocument();
+    expect(section.querySelectorAll('[aria-hidden="true"]')).toHaveLength(3);
+    expect(section.textContent).not.toMatch(/[\u2013\u2014]/);
   });
 
   it("keeps Portfolio immediately after the bridge with its anchor intact", () => {

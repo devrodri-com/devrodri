@@ -15,17 +15,23 @@ export default function TransitionServicesIntro({ variant = "default" }: BridgeP
   const V = (() => {
     if (variant === "afterPortfolio") {
       return {
-        kicker: language === "es" ? "Próximo paso" : "Next step",
-        title: language === "es" ? "De la idea a una solución clara" : "From idea to a clear solution",
+        kicker: language === "es" ? "PRÓXIMO PASO" : "NEXT STEP",
+        title:
+          language === "es"
+            ? "De la idea a una solución clara"
+            : "From an idea to a clear solution",
         subtitle:
           language === "es"
-            ? "Contame tu contexto y vemos alcance, prioridades y el mejor camino para avanzar."
-            : "Share your context and we’ll define scope, priorities and the best path forward.",
-        cta: language === "es" ? "Ir al contacto" : "Go to contact",
+            ? "Contame el contexto y definimos el alcance, las prioridades y el mejor camino para avanzar."
+            : "Tell me the context and we'll define the scope, priorities, and best way forward.",
+        cta:
+          language === "es"
+            ? "Contame tu proyecto"
+            : "Tell me about your project",
         badges: [
-          { icon: "message" as const, es: "Contacto directo", en: "Direct contact" },
-          { icon: "check" as const, es: "Alcance por etapas", en: "Phased scope" },
-          { icon: "layers" as const, es: "Stack a medida", en: "Tailored stack" },
+          { icon: "message" as const, es: "Contacto directo", en: "Direct communication" },
+          { icon: "check" as const, es: "Alcance claro", en: "Clear scope" },
+          { icon: "layers" as const, es: "Solución a medida", en: "Tailored solution" },
         ],
         href: "/#contacto",
       } as const;
@@ -97,19 +103,12 @@ export default function TransitionServicesIntro({ variant = "default" }: BridgeP
             <div className="mt-6">
               <Link
                 to={V.href}
-                aria-label={language === "es" ? "Ir al formulario de contacto" : "Go to contact form"}
+                aria-label={V.cta}
                 data-analytics={`bridge-cta-${variant}`}
                 className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg bg-primary-on-light text-white text-sm font-medium px-5 py-2.5 shadow-md hover:shadow-lg hover:bg-primary-on-light-hover transition w-full sm:w-auto focus-visible:ring-2 ring-offset-2 ring-[#3B82F6]"
               >
                 {V.cta}
               </Link>
-              <p className="mt-2 text-sm text-gray-600">
-                {language === "es" ? (
-                  <>O escribime por <a href="mailto:r.opalo@icloud.com" className="underline hover:opacity-80">email</a>.</>
-                ) : (
-                  <>Or email me at <a href="mailto:r.opalo@icloud.com" className="underline hover:opacity-80">email</a>.</>
-                )}
-              </p>
             </div>
           </>
         ) : (

@@ -7,6 +7,7 @@ import type { Language } from "../i18n/language";
 import {
   CONTACT_FORM_ENDPOINT,
   CONTACT_FORM_LIMITS,
+  CONTACT_FORM_TIMEOUT_MS,
 } from "../services/contactForm";
 import {
   trackContactAttempt,
@@ -35,7 +36,7 @@ async function fillContactForm() {
   await user.type(screen.getByLabelText("Nombre"), "Rodrigo");
   await user.type(screen.getByLabelText("Correo electrónico"), "rodrigo@example.com");
   await user.type(
-    screen.getByLabelText("Mensaje"),
+    screen.getByLabelText("¿En qué te puedo ayudar?"),
     "Este es un mensaje de prueba.",
   );
   return user;
@@ -51,7 +52,7 @@ describe("ContactSection", () => {
 
     const name = screen.getByLabelText("Nombre");
     const email = screen.getByLabelText("Correo electrónico");
-    const message = screen.getByLabelText("Mensaje");
+    const message = screen.getByLabelText("¿En qué te puedo ayudar?");
     const form = name.closest("form");
 
     expect(name).toBeRequired();
@@ -81,7 +82,83 @@ describe("ContactSection", () => {
     expect(
       form?.querySelector('input[name="_captcha"]'),
     ).toHaveAttribute("value", "false");
+    expect(
+      form?.querySelector('input[name="_subject"]'),
+    ).toHaveAttribute("value", "Nuevo mensaje desde devrodri.com");
     expect(form?.querySelector('input[name="_honey"]')).toBeInTheDocument();
+    expect(CONTACT_FORM_TIMEOUT_MS).toBe(15_000);
+  });
+
+  it("renders the approved Spanish copy and persistent labels", () => {
+    renderContactSection("es");
+
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Contame tu proyecto" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Compartime el contexto, el objetivo y cualquier restricción importante. Podés usar el formulario o escribirme por WhatsApp o email.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Enviar consulta" }),
+    ).toBeInTheDocument();
+
+    for (const labelText of [
+      "Nombre",
+      "Correo electrónico",
+      "¿En qué te puedo ayudar?",
+    ]) {
+      const field = screen.getByLabelText(labelText);
+      const label = document.querySelector(`label[for="${field.id}"]`);
+      expect(label).toHaveTextContent(labelText);
+      expect(label).not.toHaveClass("sr-only");
+      expect(field).not.toHaveAttribute("placeholder");
+    }
+  });
+
+  it("renders the approved English copy and persistent labels", () => {
+    renderContactSection("en");
+
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "Tell me about your project",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Share the context, goal, and any important constraints. You can use the form or contact me by WhatsApp or email.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: "Send inquiry" }),
+    ).toBeInTheDocument();
+
+    for (const labelText of ["Name", "Email", "How can I help?"]) {
+      const field = screen.getByLabelText(labelText);
+      const label = document.querySelector(`label[for="${field.id}"]`);
+      expect(label).toHaveTextContent(labelText);
+      expect(label).not.toHaveClass("sr-only");
+      expect(field).not.toHaveAttribute("placeholder");
+    }
+  });
+
+  it("preserves the approved email and WhatsApp alternatives", () => {
+    renderContactSection();
+
+    expect(screen.getByRole("link", { name: "Email" })).toHaveAttribute(
+      "href",
+      "mailto:r.opalo@icloud.com?subject=Consulta%20devrodri.com",
+    );
+    expect(screen.getByRole("link", { name: "WhatsApp" })).toHaveAttribute(
+      "href",
+      "https://wa.me/17544653318?text=Hola%20Rodrigo%2C%20vengo%20de%20devrodri.com%20y%20me%20gustar%C3%ADa%20hablar%20sobre%20un%20proyecto",
+    );
+    expect(screen.getByRole("link", { name: "WhatsApp" })).toHaveAttribute(
+      "data-analytics",
+      "contact-whatsapp",
+    );
   });
 
   it("shows success after a simulated successful response", async () => {
@@ -91,7 +168,7 @@ describe("ContactSection", () => {
     renderContactSection();
     const user = await fillContactForm();
 
-    await user.click(screen.getByRole("button", { name: "Enviar mensaje" }));
+    await user.click(screen.getByRole("button", { name: "Enviar consulta" }));
 
     expect(
       await screen.findByText("¡Gracias por tu mensaje! Te responderé pronto."),
@@ -116,7 +193,7 @@ describe("ContactSection", () => {
     renderContactSection();
     const user = await fillContactForm();
 
-    await user.click(screen.getByRole("button", { name: "Enviar mensaje" }));
+    await user.click(screen.getByRole("button", { name: "Enviar consulta" }));
 
     expect(
       await screen.findByText(
@@ -135,7 +212,7 @@ describe("ContactSection", () => {
     renderContactSection();
     const user = await fillContactForm();
 
-    await user.click(screen.getByRole("button", { name: "Enviar mensaje" }));
+    await user.click(screen.getByRole("button", { name: "Enviar consulta" }));
 
     expect(
       await screen.findByText(
@@ -154,7 +231,7 @@ describe("ContactSection", () => {
     vi.spyOn(globalThis, "fetch").mockReturnValue(pendingResponse);
     renderContactSection();
     const user = await fillContactForm();
-    const submit = screen.getByRole("button", { name: "Enviar mensaje" });
+    const submit = screen.getByRole("button", { name: "Enviar consulta" });
 
     await user.click(submit);
     expect(submit).toBeDisabled();
@@ -173,7 +250,7 @@ describe("ContactSection", () => {
     const rendered = renderContactSection();
     const user = await fillContactForm();
 
-    await user.click(screen.getByRole("button", { name: "Enviar mensaje" }));
+    await user.click(screen.getByRole("button", { name: "Enviar consulta" }));
     const [, requestInit] = fetchSpy.mock.calls[0] ?? [];
     const requestSignal = requestInit?.signal;
     expect(requestSignal).not.toBeNull();
