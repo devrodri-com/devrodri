@@ -79,7 +79,12 @@ describe("Footer", () => {
         expect(expected).toBeDefined();
         if (expected === undefined) return;
         expect(link).toHaveAttribute("href", expected.href);
-        expect(link).toHaveClass("min-h-[44px]", "min-w-[44px]");
+        expect(link).toHaveClass("text-[18px]", "after:h-10", "after:w-8");
+        expect(link).not.toHaveClass(
+          "inline-flex",
+          "min-h-[44px]",
+          "min-w-[44px]",
+        );
         expect(link.className).toContain("focus-visible:ring-2");
         expect(link.querySelector("svg")).not.toBeNull();
 
@@ -92,6 +97,41 @@ describe("Footer", () => {
       vi.useRealTimers();
     },
   );
+
+  it("restores the compact baseline layout without overlapping hit areas", () => {
+    renderFooter("es");
+
+    const footer = screen.getByRole("contentinfo");
+    const layout = footer.firstElementChild;
+    const iconRow = layout?.firstElementChild;
+    const links = within(footer).getAllByRole("link");
+
+    expect(footer).toHaveClass("py-3", "px-4", "sm:px-6");
+    expect(layout).toHaveClass(
+      "flex",
+      "flex-col",
+      "items-center",
+      "gap-2",
+      "sm:flex-row",
+      "sm:justify-center",
+      "sm:gap-3",
+    );
+    expect(iconRow).toHaveClass(
+      "flex",
+      "items-center",
+      "justify-center",
+      "gap-4",
+    );
+    expect(links).toHaveLength(4);
+    links.forEach((link) => {
+      expect(link).toHaveClass(
+        "relative",
+        "text-[18px]",
+        "after:h-10",
+        "after:w-8",
+      );
+    });
+  });
 
   it("keeps footer copy equivalent in Spanish and English without dash characters", () => {
     expect(translations.es.footer.rights).toBe("Rodrigo Opalo · devrodri");

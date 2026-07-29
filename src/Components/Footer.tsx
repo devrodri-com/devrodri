@@ -8,7 +8,7 @@ export default function Footer() {
   const { language } = useLanguage();
   const t = translations[language];
   const linkClassName =
-    "inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md text-[18px] transition-all duration-300 hover:text-primary-on-light-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-on-light focus-visible:ring-offset-2";
+    "relative hover:text-primary-on-light-hover transition-all duration-300 text-[18px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-on-light focus-visible:ring-offset-2 after:absolute after:left-1/2 after:top-1/2 after:h-10 after:w-8 after:-translate-x-1/2 after:-translate-y-1/2 after:content-['']";
   const labels =
     language === "es"
       ? {
