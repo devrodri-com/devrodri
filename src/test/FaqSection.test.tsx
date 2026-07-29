@@ -176,9 +176,9 @@ describe("FaqSection", () => {
 
     expectRenderedFaq("Preguntas frecuentes", expectedFaqEs);
     expect(
-      screen.getByRole("link", { name: "Contame tu proyecto" }),
-    ).toHaveAttribute("href", "/#contacto");
-    expect(screen.getByText("¿Tenés otra pregunta?")).toBeInTheDocument();
+      screen.queryByRole("link", { name: "Contame tu proyecto" }),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText("¿Tenés otra pregunta?")).not.toBeInTheDocument();
   });
 
   it("renders the exact English FAQ in the approved order", () => {
@@ -186,9 +186,9 @@ describe("FaqSection", () => {
 
     expectRenderedFaq("Frequently asked questions", expectedFaqEn);
     expect(
-      screen.getByRole("link", { name: "Tell me about your project" }),
-    ).toHaveAttribute("href", "/#contacto");
-    expect(screen.getByText("Still have a question?")).toBeInTheDocument();
+      screen.queryByRole("link", { name: "Tell me about your project" }),
+    ).not.toBeInTheDocument();
+    expect(screen.queryByText("Still have a question?")).not.toBeInTheDocument();
   });
 
   it("removes legacy promises, rigid timelines, and agency voice", () => {
@@ -242,5 +242,19 @@ describe("FaqSection", () => {
     expect(section?.querySelector("form")).toBeNull();
     expect(section?.querySelector('a[href^="mailto:"]')).toBeNull();
     expect(section?.querySelector('a[href^="https://wa.me/"]')).toBeNull();
+  });
+
+  it("ends directly after the ninth card without an empty CTA wrapper", () => {
+    renderFaq("es");
+
+    const content = document.querySelector<HTMLElement>(
+      "section#faq > div.relative.z-20",
+    );
+    const cards = content?.querySelector<HTMLElement>("div.space-y-8");
+
+    expect(content).not.toBeNull();
+    expect(cards).not.toBeNull();
+    expect(content?.lastElementChild).toBe(cards);
+    expect(cards?.children).toHaveLength(9);
   });
 });

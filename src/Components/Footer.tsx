@@ -1,8 +1,28 @@
 // src/Components/Footer.tsx
 import { motion } from "framer-motion";
 import { FaEnvelope, FaWhatsapp, FaGithub, FaLinkedin } from "react-icons/fa";
+import translations from "../i18n";
+import { useLanguage } from "../i18n/useLanguage";
 
 export default function Footer() {
+  const { language } = useLanguage();
+  const t = translations[language];
+  const linkClassName =
+    "relative hover:text-primary-on-light-hover transition-all duration-300 text-[18px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-on-light focus-visible:ring-offset-2 after:absolute after:left-1/2 after:top-1/2 after:h-10 after:w-8 after:-translate-x-1/2 after:-translate-y-1/2 after:content-['']";
+  const labels =
+    language === "es"
+      ? {
+          github: "GitHub de Rodrigo Opalo",
+          linkedin: "LinkedIn de Rodrigo Opalo",
+          email: "Enviar email a Rodrigo Opalo",
+          whatsapp: "Contactar a Rodrigo Opalo por WhatsApp",
+        }
+      : {
+          github: "Rodrigo Opalo on GitHub",
+          linkedin: "Rodrigo Opalo on LinkedIn",
+          email: "Email Rodrigo Opalo",
+          whatsapp: "Contact Rodrigo Opalo on WhatsApp",
+        };
 
   return (
     <motion.footer
@@ -19,9 +39,9 @@ export default function Footer() {
             href="https://github.com/devrodri-com"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="GitHub"
+            aria-label={labels.github}
             title="GitHub"
-            className="hover:text-primary-on-light-hover transition-all duration-300 text-[18px]"
+            className={linkClassName}
           >
             <FaGithub />
           </a>
@@ -29,9 +49,9 @@ export default function Footer() {
             href="https://www.linkedin.com/in/rodrigo-opalo-b56685390/"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="LinkedIn"
+            aria-label={labels.linkedin}
             title="LinkedIn"
-            className="hover:text-primary-on-light-hover transition-all duration-300 text-[18px]"
+            className={linkClassName}
           >
             <FaLinkedin />
           </a>
@@ -39,9 +59,9 @@ export default function Footer() {
             href="mailto:r.opalo@icloud.com"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="Email"
+            aria-label={labels.email}
             title="Email"
-            className="hover:text-primary-on-light-hover transition-all duration-300 text-[18px]"
+            className={linkClassName}
           >
             <FaEnvelope />
           </a>
@@ -49,16 +69,16 @@ export default function Footer() {
             href="https://wa.me/17544653318"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="WhatsApp"
+            aria-label={labels.whatsapp}
             title="WhatsApp"
-            className="hover:text-primary-on-light-hover transition-all duration-300 text-[18px]"
+            className={linkClassName}
           >
             <FaWhatsapp />
           </a>
         </div>
         {/* Copyright row */}
         <p className="leading-none text-center px-4">
-          © {new Date().getFullYear()} Rodrigo Opalo. Made with code by Rodrigo Opalo.
+          © {new Date().getFullYear()} {t.footer.rights}
         </p>
       </div>
     </motion.footer>

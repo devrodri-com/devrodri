@@ -264,10 +264,10 @@ export const en = {
       text: "Each project turns a specific need into a functional digital solution designed to evolve.",
     },
     call: {
-      title: "Ready to stand out online?",
+      title: "Have a project in mind?",
       subtitle:
-        "Tell me about your idea via the form and I’ll follow up to align scope and next steps.",
-      button: "Start project",
+        "Share the context and we'll figure out the best place to start.",
+      button: "Tell me about your project",
       seo: {
         title: "Final contact | Rodrigo Opalo",
         description: "Let’s build a modern, fast, and optimized site so your brand stands out.",
@@ -275,10 +275,10 @@ export const en = {
       },
     },
     footer: {
-      rights: "Made with 💻 by Rodrigo Opalo.",
+      rights: "Rodrigo Opalo · devrodri",
       seo: {
         title: "Footer | Rodrigo Opalo",
-        description: "Final credits and authorship of the site. Web made with 💻 by Rodrigo Opalo.",
+        description: "Footer with contact and profile links for Rodrigo Opalo.",
         keywords: "Rodrigo Opalo, footer, web developer, credits, author",
       },
     },
