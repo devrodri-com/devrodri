@@ -44,6 +44,24 @@ export default function HighlightsSection() {
           className="absolute inset-0 z-0 pointer-events-none overflow-hidden bg-[linear-gradient(135deg,#02050d_0%,#071426_46%,#030814_100%)]"
         >
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_18%_18%,rgba(10,132,255,0.18),transparent_42%),radial-gradient(ellipse_at_82%_78%,rgba(0,95,204,0.14),transparent_46%)]" />
+          <picture>
+            <source
+              media="(min-width: 1024px)"
+              srcSet="/img/highlights-systems-bg.jpg"
+            />
+            <img
+              src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              decoding="async"
+              width={1672}
+              height={941}
+              data-highlights-image
+              className="absolute inset-0 hidden h-full w-full object-cover object-center lg:block"
+            />
+          </picture>
+          <div className="absolute inset-0 hidden bg-[linear-gradient(to_bottom,rgba(2,5,13,0.12),rgba(2,5,13,0.28))] lg:block" />
           <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/40 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/30 to-transparent" />
         </div>

@@ -20,16 +20,29 @@ function getHighlightsSection(container: HTMLElement): HTMLElement {
 }
 
 describe("HighlightsSection static background", () => {
-  it("uses the approved CSS treatment without video or poster media", () => {
+  it("uses the approved responsive image over the CSS fallback without video media", () => {
     localStorage.setItem("language", "es");
     const rendered = renderHighlights();
     const section = getHighlightsSection(rendered.container);
     const background = section.querySelector("[data-highlights-background]");
+    const image = section.querySelector("[data-highlights-image]");
+    const source = section.querySelector("picture source");
 
     expect(background).toBeInTheDocument();
     expect(background).toHaveAttribute("aria-hidden", "true");
+    expect(source).toHaveAttribute("media", "(min-width: 1024px)");
+    expect(source).toHaveAttribute(
+      "srcset",
+      "/img/highlights-systems-bg.jpg",
+    );
+    expect(image).toHaveAttribute("alt", "");
+    expect(image).toHaveAttribute("aria-hidden", "true");
+    expect(image).toHaveAttribute("loading", "lazy");
+    expect(image).toHaveAttribute("decoding", "async");
+    expect(image).toHaveAttribute("width", "1672");
+    expect(image).toHaveAttribute("height", "941");
     expect(section.querySelector("video")).not.toBeInTheDocument();
-    expect(section.querySelector("source")).not.toBeInTheDocument();
+    expect(section.querySelector("video source")).not.toBeInTheDocument();
     expect(section).not.toHaveTextContent("WEBSITE");
   });
 });
