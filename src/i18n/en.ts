@@ -251,8 +251,8 @@ export const en = {
       text: "I turn ideas into meaningful digital experiences.",
     },
     transitionServicesIntro: {
-      smallTitle: "SELECTED WORK",
-      text: "Projects where strategy, product thinking, and technology come together to solve specific business needs.",
+      smallTitle: "IN PRACTICE",
+      text: "Each project turns a specific need into a functional digital solution designed to evolve.",
     },
     call: {
       title: "Ready to stand out online?",

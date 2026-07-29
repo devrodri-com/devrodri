@@ -249,8 +249,8 @@ export const es = {
       text: "Transformo ideas en experiencias digitales con propósito.",
     },
     transitionServicesIntro: {
-      smallTitle: "CASOS SELECCIONADOS",
-      text: "Proyectos donde estrategia, producto y tecnología se combinan para resolver necesidades concretas.",
+      smallTitle: "EN LA PRÁCTICA",
+      text: "Cada proyecto convierte una necesidad concreta en una solución digital funcional y preparada para evolucionar.",
     },
     call: {
       title: "¿Listo para destacar online?",

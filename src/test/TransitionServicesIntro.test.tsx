@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it, vi } from "vitest";
 import App from "../App";
@@ -38,10 +38,11 @@ describe("TransitionServicesIntro portfolio bridge", () => {
     });
     const section = getBridgeSection(heading);
 
-    expect(section).toHaveTextContent("CASOS SELECCIONADOS");
+    expect(section).toHaveTextContent("EN LA PRÁCTICA");
     expect(section).toHaveTextContent(
-      "Proyectos donde estrategia, producto y tecnología se combinan para resolver necesidades concretas.",
+      "Cada proyecto convierte una necesidad concreta en una solución digital funcional y preparada para evolucionar.",
     );
+    expect(section).not.toHaveTextContent("CASOS SELECCIONADOS");
     expect(section).not.toHaveTextContent("PRÓXIMO PASO");
     expect(section).not.toHaveTextContent("Construyamos algo increíble");
     expect(section).not.toHaveTextContent(
@@ -61,10 +62,11 @@ describe("TransitionServicesIntro portfolio bridge", () => {
     });
     const section = getBridgeSection(heading);
 
-    expect(section).toHaveTextContent("SELECTED WORK");
+    expect(section).toHaveTextContent("IN PRACTICE");
     expect(section).toHaveTextContent(
-      "Projects where strategy, product thinking, and technology come together to solve specific business needs.",
+      "Each project turns a specific need into a functional digital solution designed to evolve.",
     );
+    expect(section).not.toHaveTextContent("SELECTED WORK");
     expect(section).not.toHaveTextContent("NEXT STEP");
     expect(section).not.toHaveTextContent("Let’s build something great");
     expect(section).not.toHaveTextContent(
@@ -128,6 +130,50 @@ describe("TransitionServicesIntro portfolio bridge", () => {
 
     expect(portfolio).toBeInstanceOf(HTMLElement);
     expect(portfolio).toHaveAttribute("id", "portfolio");
-    expect(portfolio).toHaveTextContent("Algunos resultados recientes");
+    expect(portfolio).toHaveTextContent("PORTFOLIO");
+    expect(portfolio).toHaveTextContent("Proyectos seleccionados");
+    expect(portfolio).toHaveTextContent(
+      "Sitios, sistemas, automatizaciones y proyectos de marca desarrollados para resolver necesidades reales de negocio.",
+    );
+    expect(portfolio).not.toHaveTextContent("Algunos resultados recientes");
+    expect(portfolio).not.toHaveTextContent(
+      "Sitios a medida para servicios, e-commerce y marcas personales",
+    );
+    expect(portfolio).not.toHaveTextContent(
+      "Diseño limpio, SEO técnico y rendimiento listo para escalar",
+    );
+    expect(
+      within(portfolio as HTMLElement).getAllByRole("heading", { level: 2 }),
+    ).toHaveLength(1);
+  });
+
+  it("renders the single approved English Portfolio introduction", () => {
+    localStorage.setItem("language", "en");
+    render(
+      <MemoryRouter initialEntries={["/"]}>
+        <LanguageProvider>
+          <App />
+        </LanguageProvider>
+      </MemoryRouter>,
+    );
+
+    const portfolio = document.getElementById("portfolio");
+
+    expect(portfolio).toBeInstanceOf(HTMLElement);
+    expect(portfolio).toHaveTextContent("PORTFOLIO");
+    expect(portfolio).toHaveTextContent("Selected projects");
+    expect(portfolio).toHaveTextContent(
+      "Websites, systems, automations, and brand projects built to solve real business needs.",
+    );
+    expect(portfolio).not.toHaveTextContent("Recent work & results");
+    expect(portfolio).not.toHaveTextContent(
+      "Custom sites for services, e-commerce and personal brands",
+    );
+    expect(portfolio).not.toHaveTextContent(
+      "Clean design, technical SEO and performance ready to scale",
+    );
+    expect(
+      within(portfolio as HTMLElement).getAllByRole("heading", { level: 2 }),
+    ).toHaveLength(1);
   });
 });
