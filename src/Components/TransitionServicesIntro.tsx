@@ -31,8 +31,11 @@ export default function TransitionServicesIntro({ variant = "default" }: BridgeP
       } as const;
     }
     return {
-      kicker: language === "es" ? "Próximo paso" : "Next step",
-      title: language === "es" ? "Construyamos algo increíble" : "Let’s build something great",
+      kicker: t.transitionServicesIntro.smallTitle,
+      title:
+        language === "es"
+          ? "Del enfoque a la implementación."
+          : "From approach to implementation.",
       subtitle: t.transitionServicesIntro.text,
       cta: language === "es" ? "Hablemos" : "Let’s talk",
       badges: [] as { icon: JSX.Element; es: string; en: string }[],

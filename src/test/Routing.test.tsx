@@ -136,7 +136,7 @@ describe("application routing", () => {
     renderApp("/");
     await screen.findByRole("heading", {
       level: 2,
-      name: "Algunos resultados recientes",
+      name: "Proyectos seleccionados",
     });
 
     expect(
