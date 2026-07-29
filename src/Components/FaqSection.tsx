@@ -1,7 +1,6 @@
 // src/Components/FaqSection.tsx
 import translations from "../i18n";
 import { useLanguage } from "../i18n/useLanguage";
-import { Link } from "react-router-dom";
 
 const FAQ_KEYS = [
   "projectTypes",
@@ -66,21 +65,6 @@ export default function FaqSection() {
               </p>
             </div>
           ))}
-        </div>
-
-        {/* CTA final para contacto */}
-        <div className="text-center mt-12 text-sm text-gray-500">
-          {language === "es"
-            ? "¿Tenés otra pregunta? "
-            : "Still have a question? "}
-          <Link
-            to="/#contacto"
-            className="text-primary hover:underline font-medium"
-          >
-            {language === "es"
-              ? "Contame tu proyecto"
-              : "Tell me about your project"}
-          </Link>
         </div>
       </div>
     </section>

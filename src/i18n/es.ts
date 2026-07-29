@@ -262,10 +262,10 @@ export const es = {
       text: "Cada proyecto convierte una necesidad concreta en una solución digital funcional y preparada para evolucionar.",
     },
     call: {
-      title: "¿Listo para destacar online?",
+      title: "¿Tenés un proyecto en mente?",
       subtitle:
-        "Contame tu idea por el formulario y te respondo para alinear alcance y próximos pasos.",
-      button: "Empezar proyecto",
+        "Compartime el contexto y vemos cuál es el mejor punto de partida.",
+      button: "Contame tu proyecto",
       seo: {
         title: "Contacto final | Rodrigo Opalo",
         description: "Construyamos juntos un sitio moderno, rápido y optimizado para que tu marca se destaque.",
@@ -273,10 +273,10 @@ export const es = {
       },
     },
     footer: {
-      rights: "Made with 💻 by Rodrigo Opalo.",
+      rights: "Rodrigo Opalo · devrodri",
       seo: {
         title: "Footer | Rodrigo Opalo",
-        description: "Créditos finales y autoría del sitio. Web creada con 💻 por Rodrigo Opalo.",
+        description: "Pie de página con enlaces de contacto y perfiles de Rodrigo Opalo.",
         keywords: "Rodrigo Opalo, pie de página, desarrollador web, créditos, autor",
       },
     },
