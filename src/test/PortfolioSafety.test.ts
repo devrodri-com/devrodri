@@ -299,7 +299,7 @@ describe("portfolio architecture invariants", () => {
     ).not.toMatch(/[—–]/);
   });
 
-  it("uses explicit card slots and a stable FAQ id contract", () => {
+  it("uses explicit card slots and a stable FAQ key contract", () => {
     const portfolioCardSource = fs.readFileSync(
       path.join(
         projectRoot,
@@ -317,7 +317,22 @@ describe("portfolio architecture invariants", () => {
     expect(portfolioCardSource).not.toContain("Children.toArray");
     expect(portfolioCardSource).not.toContain("isValidElement");
     expect(portfolioCardSource).not.toContain("className?.includes");
-    expect(faqSource).toContain('faq.id === "technologies"');
-    expect(faqSource).not.toMatch(/tecnolog\|technolog/);
+    expect(faqSource).toContain("const FAQ_KEYS");
+    for (const key of [
+      "projectTypes",
+      "projectStart",
+      "websiteVsSystem",
+      "phasedWork",
+      "websiteCapabilities",
+      "automations",
+      "brandDevelopment",
+      "budgetAndPayment",
+      "postLaunch",
+    ]) {
+      expect(faqSource).toContain(`"${key}"`);
+    }
+    expect(faqSource).not.toContain("extraFaq");
+    expect(faqSource).not.toContain("techAnswer");
+    expect(faqSource).not.toMatch(/questions\[\d+\]/);
   });
 });
