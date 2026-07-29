@@ -249,9 +249,9 @@ export const es = {
       text: "Transformo ideas en experiencias digitales con propósito.",
     },
     transitionServicesIntro: {
-      smallTitle: "CONSTRUYAMOS ALGO INCREÍBLE",
-  text: "Ahora que sabés cómo trabajo, veamos qué podemos construir juntos.",
-},
+      smallTitle: "CASOS SELECCIONADOS",
+      text: "Proyectos donde estrategia, producto y tecnología se combinan para resolver necesidades concretas.",
+    },
     call: {
       title: "¿Listo para destacar online?",
       subtitle:

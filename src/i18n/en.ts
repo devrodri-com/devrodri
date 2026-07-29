@@ -251,9 +251,9 @@ export const en = {
       text: "I turn ideas into meaningful digital experiences.",
     },
     transitionServicesIntro: {
-      smallTitle: "LET’S BUILD SOMETHING GREAT",
-  text: "Now that you know how I work, let’s see what we can build together.",
-},
+      smallTitle: "SELECTED WORK",
+      text: "Projects where strategy, product thinking, and technology come together to solve specific business needs.",
+    },
     call: {
       title: "Ready to stand out online?",
       subtitle:

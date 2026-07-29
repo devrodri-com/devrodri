@@ -31,8 +31,11 @@ export default function TransitionServicesIntro({ variant = "default" }: BridgeP
       } as const;
     }
     return {
-      kicker: language === "es" ? "Próximo paso" : "Next step",
-      title: language === "es" ? "Construyamos algo increíble" : "Let’s build something great",
+      kicker: t.transitionServicesIntro.smallTitle,
+      title:
+        language === "es"
+          ? "Del enfoque a la implementación."
+          : "From approach to implementation.",
       subtitle: t.transitionServicesIntro.text,
       cta: language === "es" ? "Hablemos" : "Let’s talk",
       badges: [] as { icon: JSX.Element; es: string; en: string }[],
@@ -42,7 +45,9 @@ export default function TransitionServicesIntro({ variant = "default" }: BridgeP
 
   return (
     <motion.section
-      className="bg-white py-10 px-4 sm:px-6 text-center shadow-[0_-8px_24px_rgba(0,0,0,.18)]"
+      className={`bg-white px-4 text-center shadow-[0_-8px_24px_rgba(0,0,0,.18)] sm:px-6 ${
+        variant === "default" ? "py-10 sm:py-12" : "py-10"
+      }`}
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
       transition={{ duration: 0.55 }}
@@ -65,7 +70,7 @@ export default function TransitionServicesIntro({ variant = "default" }: BridgeP
           {V.subtitle}
         </p>
 
-        {variant === "afterPortfolio" ? (
+        {variant === "afterPortfolio" && (
           <>
             <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4 max-w-[42rem] mx-auto w-full">
               {V.badges.map((b, i) => (
@@ -109,15 +114,6 @@ export default function TransitionServicesIntro({ variant = "default" }: BridgeP
               </p>
             </div>
           </>
-        ) : (
-          // Default: conservar la pieza visual existente
-          <div className="mt-6 rounded-3xl overflow-hidden shadow-xl transition hover:shadow-2xl w-full max-w-[1600px] mx-auto">
-            <img
-              src="/img/servicios.jpg"
-              alt="Servicios"
-              className="w-full h-24 object-cover object-center sm:h-28 md:h-32"
-            />
-          </div>
         )}
       </motion.div>
     </motion.section>
