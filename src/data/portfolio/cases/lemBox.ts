@@ -21,7 +21,35 @@ const publicRole = {
   en: "Founder, owner, and Operations Manager. I lead product, processes, and full-stack development of the digital ecosystem.",
 } as const satisfies Localized<string>;
 
-const publicLinks = [
+type LemBoxPublicLink = PortfolioAction & {
+  directory: Localized<{
+    action: string;
+    description: string;
+    domain: string;
+    title: string;
+  }>;
+};
+
+export const lemBoxPublicLinksSection = {
+  es: {
+    eyebrow: "ENLACES PÚBLICOS",
+    title: "Conocer el ecosistema",
+    description:
+      "Accedé a la plataforma central y conocé la presencia comercial de LEM-BOX en Uruguay y Argentina.",
+  },
+  en: {
+    eyebrow: "PUBLIC LINKS",
+    title: "Explore the ecosystem",
+    description:
+      "Access the central platform and explore LEM-BOX's commercial presence in Uruguay and Argentina.",
+  },
+} as const satisfies Localized<{
+  description: string;
+  eyebrow: string;
+  title: string;
+}>;
+
+export const lemBoxPublicLinks = [
   {
     href: "https://lem-box.com",
     label: {
@@ -32,12 +60,40 @@ const publicLinks = [
       es: es.portfolio.lem_box.platformNote,
       en: en.portfolio.lem_box.platformNote,
     },
+    directory: {
+      es: {
+        title: "Plataforma central",
+        domain: "lem-box.com",
+        description: "Acceso con credenciales",
+        action: "Abrir plataforma",
+      },
+      en: {
+        title: "Central platform",
+        domain: "lem-box.com",
+        description: "Sign-in required",
+        action: "Open platform",
+      },
+    },
   },
   {
     href: "https://lem-box.com.uy",
     label: {
       es: es.portfolio.lem_box.uruguayLink,
       en: en.portfolio.lem_box.uruguayLink,
+    },
+    directory: {
+      es: {
+        title: "Uruguay",
+        domain: "lem-box.com.uy",
+        description: "Sitio comercial para Uruguay",
+        action: "Visitar sitio",
+      },
+      en: {
+        title: "Uruguay",
+        domain: "lem-box.com.uy",
+        description: "Commercial website for Uruguay",
+        action: "Visit website",
+      },
     },
   },
   {
@@ -46,15 +102,29 @@ const publicLinks = [
       es: es.portfolio.lem_box.argentinaLink,
       en: en.portfolio.lem_box.argentinaLink,
     },
+    directory: {
+      es: {
+        title: "Argentina",
+        domain: "lem-box.com.ar",
+        description: "Sitio comercial para Argentina",
+        action: "Visitar sitio",
+      },
+      en: {
+        title: "Argentina",
+        domain: "lem-box.com.ar",
+        description: "Commercial website for Argentina",
+        action: "Visit website",
+      },
+    },
   },
-] as const satisfies readonly PortfolioAction[];
+] as const satisfies readonly LemBoxPublicLink[];
 
 export const lemBoxCase = definePortfolioCase({
   key: "lem_box",
   portfolioOrder: 0,
   category: "systems",
   cover: "/img/lem-box-cover.png",
-  actions: publicLinks,
+  actions: lemBoxPublicLinks,
   content: {
     es: {
       title: es.portfolio.lem_box.title,
@@ -77,7 +147,7 @@ export const lemBoxCase = definePortfolioCase({
     coverWidth: 1200,
     coverHeight: 630,
     stack,
-    publicLinks,
+    publicLinks: lemBoxPublicLinks,
     finalCtaHref: "/#contacto",
     content: {
       es: {
@@ -184,7 +254,7 @@ export const lemBoxCase = definePortfolioCase({
           title: "ESTADO ACTUAL · PRODUCTO ACTIVO",
           text: "",
         },
-        publicLinksTitle: "Conocer el ecosistema",
+        publicLinksTitle: lemBoxPublicLinksSection.es.title,
         finalCta: {
           title: "¿Necesitás un sistema conectado a una operación real?",
           text:
@@ -296,7 +366,7 @@ export const lemBoxCase = definePortfolioCase({
           title: "CURRENT STATUS · ACTIVE PRODUCT",
           text: "",
         },
-        publicLinksTitle: "Explore the ecosystem",
+        publicLinksTitle: lemBoxPublicLinksSection.en.title,
         finalCta: {
           title: "Need a system connected to a real operation?",
           text:

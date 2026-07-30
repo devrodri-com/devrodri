@@ -1,5 +1,9 @@
 import { Link } from "react-router-dom";
-import { lemBoxCase } from "../data/portfolio/cases/lemBox";
+import {
+  lemBoxCase,
+  lemBoxPublicLinks,
+  lemBoxPublicLinksSection,
+} from "../data/portfolio/cases/lemBox";
 import { useLanguage } from "../i18n/useLanguage";
 
 type LemBoxEditorialColumnProps = {
@@ -36,6 +40,7 @@ export default function LemBoxCasePage() {
   const caseStudy = lemBoxCase.caseStudy;
   const page = caseStudy.content[language];
   const cardContent = lemBoxCase.content[language];
+  const publicLinksSection = lemBoxPublicLinksSection[language];
 
   return (
     <main className="bg-black text-white">
@@ -303,32 +308,66 @@ export default function LemBoxCasePage() {
         <div>
           <section
             aria-labelledby="lem-box-public-links"
-            className="border-b border-white/10 px-4 py-12 sm:px-6 sm:py-24"
+            className="bg-neutral px-4 py-12 text-gray-900 sm:px-6 sm:py-24"
           >
-            <div className="mx-auto max-w-6xl">
-              <h2
-                id="lem-box-public-links"
-                className="text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl"
-              >
-                {page.publicLinksTitle}
-              </h2>
-              <div className="mt-8 flex flex-wrap gap-3">
-                {caseStudy.publicLinks.map((link) => (
-                  <a
-                    key={link.href}
-                    href={link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex min-h-[44px] flex-col justify-center rounded-lg border border-white/30 px-4 py-2 text-sm text-white/90 transition hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
-                  >
-                    <span className="font-semibold">{link.label[language]}</span>
-                    {link.note !== undefined && (
-                      <span className="text-xs text-gray-400">
-                        {link.note[language]}
+            <div
+              data-public-links-directory
+              className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,0.39fr)_minmax(0,0.61fr)] lg:gap-16"
+            >
+              <div className="lg:pr-4">
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary-on-light">
+                  {publicLinksSection.eyebrow}
+                </p>
+                <h2
+                  id="lem-box-public-links"
+                  className="mt-4 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl"
+                >
+                  {publicLinksSection.title}
+                </h2>
+                <p className="mt-5 max-w-[32rem] text-base leading-relaxed text-gray-700 sm:text-lg">
+                  {publicLinksSection.description}
+                </p>
+              </div>
+
+              <div className="border-b border-gray-300">
+                {lemBoxPublicLinks.map((link) => {
+                  const directory = link.directory[language];
+
+                  return (
+                    <a
+                      key={link.href}
+                      href={link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      data-public-link-row
+                      className="group grid min-h-[44px] grid-cols-[minmax(0,1fr)_auto] gap-6 border-t border-gray-300 py-6 text-gray-900 no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-on-light sm:py-7"
+                    >
+                      <span>
+                        <span className="block text-lg font-semibold tracking-tight transition-colors group-hover:text-primary-on-light-hover group-focus-visible:text-primary-on-light-hover">
+                          {directory.title}
+                        </span>
+                        <span
+                          data-public-link-domain
+                          className="mt-1 block text-sm font-medium text-gray-600"
+                        >
+                          {directory.domain}
+                        </span>
+                        <span className="mt-4 block text-sm leading-relaxed text-gray-700">
+                          {directory.description}
+                        </span>
+                        <span className="mt-4 block text-xs font-semibold uppercase tracking-[0.12em] text-primary-on-light">
+                          {directory.action}
+                        </span>
                       </span>
-                    )}
-                  </a>
-                ))}
+                      <span
+                        aria-hidden="true"
+                        className="mt-1 text-xl leading-none text-gray-500 transition-[color,transform] duration-200 group-hover:translate-x-0.5 group-hover:text-primary-on-light group-focus-visible:text-primary-on-light"
+                      >
+                        ↗
+                      </span>
+                    </a>
+                  );
+                })}
               </div>
             </div>
           </section>

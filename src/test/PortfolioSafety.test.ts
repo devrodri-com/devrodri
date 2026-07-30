@@ -6,6 +6,10 @@ import {
   portfolioCases,
   projectKeys,
 } from "../data/portfolio";
+import {
+  lemBoxPublicLinks,
+  lemBoxPublicLinksSection,
+} from "../data/portfolio/cases/lemBox";
 import translations from "../i18n";
 
 interface FileSystemApi {
@@ -243,6 +247,75 @@ describe("portfolio architecture invariants", () => {
       "https://lem-box.com",
       "https://lem-box.com.uy",
       "https://lem-box.com.ar",
+    ]);
+    expect(lemBoxPublicLinksSection).toEqual({
+      es: {
+        eyebrow: "ENLACES PÚBLICOS",
+        title: "Conocer el ecosistema",
+        description:
+          "Accedé a la plataforma central y conocé la presencia comercial de LEM-BOX en Uruguay y Argentina.",
+      },
+      en: {
+        eyebrow: "PUBLIC LINKS",
+        title: "Explore the ecosystem",
+        description:
+          "Access the central platform and explore LEM-BOX's commercial presence in Uruguay and Argentina.",
+      },
+    });
+    expect(
+      lemBoxPublicLinks.map(({ href, directory }) => ({ href, directory })),
+    ).toEqual([
+      {
+        href: "https://lem-box.com",
+        directory: {
+          es: {
+            title: "Plataforma central",
+            domain: "lem-box.com",
+            description: "Acceso con credenciales",
+            action: "Abrir plataforma",
+          },
+          en: {
+            title: "Central platform",
+            domain: "lem-box.com",
+            description: "Sign-in required",
+            action: "Open platform",
+          },
+        },
+      },
+      {
+        href: "https://lem-box.com.uy",
+        directory: {
+          es: {
+            title: "Uruguay",
+            domain: "lem-box.com.uy",
+            description: "Sitio comercial para Uruguay",
+            action: "Visitar sitio",
+          },
+          en: {
+            title: "Uruguay",
+            domain: "lem-box.com.uy",
+            description: "Commercial website for Uruguay",
+            action: "Visit website",
+          },
+        },
+      },
+      {
+        href: "https://lem-box.com.ar",
+        directory: {
+          es: {
+            title: "Argentina",
+            domain: "lem-box.com.ar",
+            description: "Sitio comercial para Argentina",
+            action: "Visitar sitio",
+          },
+          en: {
+            title: "Argentina",
+            domain: "lem-box.com.ar",
+            description: "Commercial website for Argentina",
+            action: "Visit website",
+          },
+        },
+      },
     ]);
     expect(serialized).not.toMatch(/\/mi|\/partner|\/admin/);
     expect(serialized).not.toMatch(/Stripe|PayPal|Resend|hardening/i);

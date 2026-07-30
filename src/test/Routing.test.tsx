@@ -835,18 +835,6 @@ describe("application routing", () => {
     expect(
       screen.getByRole("link", { name: "Contame tu proyecto" }),
     ).toHaveAttribute("href", "/#contacto");
-    expect(screen.getByRole("link", { name: /Ver plataforma/ })).toHaveAttribute(
-      "href",
-      "https://lem-box.com",
-    );
-    expect(screen.getByRole("link", { name: "Uruguay" })).toHaveAttribute(
-      "href",
-      "https://lem-box.com.uy",
-    );
-    expect(screen.getByRole("link", { name: "Argentina" })).toHaveAttribute(
-      "href",
-      "https://lem-box.com.ar",
-    );
     const publicLinkHrefs = new Set([
       "https://lem-box.com",
       "https://lem-box.com.uy",
@@ -873,6 +861,155 @@ describe("application routing", () => {
       "height",
       "630",
     );
+  });
+
+  it("renders the LEM-BOX public links as a light editorial directory", async () => {
+    const user = userEvent.setup();
+    renderApp("/portfolio/lem-box");
+
+    const heading = await screen.findByRole("heading", {
+      level: 2,
+      name: "Conocer el ecosistema",
+    });
+    const section = heading.closest("section");
+    expect(section).not.toBeNull();
+    if (section === null) {
+      throw new Error("Missing LEM-BOX public links section");
+    }
+
+    expect(section).toHaveClass(
+      "bg-neutral",
+      "px-4",
+      "py-12",
+      "text-gray-900",
+      "sm:px-6",
+      "sm:py-24",
+    );
+    expect(within(section).getByText("ENLACES PÚBLICOS")).toHaveClass(
+      "uppercase",
+      "tracking-[0.14em]",
+      "text-primary-on-light",
+    );
+    expect(
+      within(section).getByText(
+        "Accedé a la plataforma central y conocé la presencia comercial de LEM-BOX en Uruguay y Argentina.",
+      ),
+    ).toBeInTheDocument();
+
+    const directory = section.querySelector("[data-public-links-directory]");
+    expect(directory).toHaveClass(
+      "grid",
+      "lg:grid-cols-[minmax(0,0.39fr)_minmax(0,0.61fr)]",
+      "lg:gap-16",
+    );
+    const rows = section.querySelectorAll("[data-public-link-row]");
+    expect(rows).toHaveLength(3);
+    expect(section.querySelectorAll("[data-public-link-domain]")).toHaveLength(
+      3,
+    );
+    expect(section.querySelector("img")).toBeNull();
+    expect(section.querySelector('[class*="rounded"]')).toBeNull();
+    expect(section.querySelector('[class*="shadow"]')).toBeNull();
+
+    const spanishLinks = [
+      {
+        name: "Plataforma central lem-box.com Acceso con credenciales Abrir plataforma",
+        href: "https://lem-box.com",
+      },
+      {
+        name: "Uruguay lem-box.com.uy Sitio comercial para Uruguay Visitar sitio",
+        href: "https://lem-box.com.uy",
+      },
+      {
+        name: "Argentina lem-box.com.ar Sitio comercial para Argentina Visitar sitio",
+        href: "https://lem-box.com.ar",
+      },
+    ];
+    for (const expectedLink of spanishLinks) {
+      const link = within(section).getByRole("link", {
+        name: expectedLink.name,
+      });
+      expect(link).toHaveAttribute("href", expectedLink.href);
+      expect(link).toHaveAttribute("target", "_blank");
+      expect(link).toHaveAttribute("rel", "noopener noreferrer");
+      expect(link).toHaveClass(
+        "min-h-[44px]",
+        "border-t",
+        "focus-visible:ring-2",
+        "focus-visible:ring-inset",
+      );
+      expect(link.querySelector("a")).toBeNull();
+    }
+
+    const finalCtaHeading = screen.getByRole("heading", {
+      level: 2,
+      name: "¿Necesitás un sistema conectado a una operación real?",
+    });
+    const finalCta = finalCtaHeading.closest("section");
+    expect(finalCta).not.toBeNull();
+    if (finalCta === null) {
+      throw new Error("Missing LEM-BOX final CTA section");
+    }
+    expect(finalCta).toHaveClass(
+      "px-4",
+      "py-16",
+      "text-center",
+      "sm:px-6",
+      "sm:py-20",
+    );
+    expect(
+      within(finalCta).getByText(
+        "Contame el contexto y vemos cuál puede ser el mejor punto de partida.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      within(finalCta).getByRole("link", {
+        name: "Contame tu proyecto",
+      }),
+    ).toHaveAttribute("href", "/#contacto");
+    expect(screen.getByRole("contentinfo")).toHaveClass(
+      "border-t",
+      "border-gray-200",
+      "bg-white",
+      "py-3",
+      "px-4",
+      "sm:px-6",
+    );
+
+    await user.click(screen.getByRole("button", { name: "Cambiar a inglés" }));
+
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "Explore the ecosystem",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("PUBLIC LINKS")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Access the central platform and explore LEM-BOX's commercial presence in Uruguay and Argentina.",
+      ),
+    ).toBeInTheDocument();
+    for (const expectedName of [
+      "Central platform lem-box.com Sign-in required Open platform",
+      "Uruguay lem-box.com.uy Commercial website for Uruguay Visit website",
+      "Argentina lem-box.com.ar Commercial website for Argentina Visit website",
+    ]) {
+      expect(
+        screen.getByRole("link", { name: expectedName }),
+      ).toBeInTheDocument();
+    }
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "Need a system connected to a real operation?",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Share the context and we'll identify the best place to start.",
+      ),
+    ).toBeInTheDocument();
   });
 
   it("keeps an invalid portfolio slug on NotFound with noindex", async () => {
