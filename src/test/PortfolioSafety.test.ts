@@ -293,6 +293,26 @@ describe("portfolio architecture invariants", () => {
       title: "My role",
       text: "My work starts with day-to-day operations: I turn real needs into product priorities, workflows, and features, and carry those decisions through implementation and the ecosystem's technical evolution.",
     });
+    expect(caseStudy.content.es.architecture).toEqual({
+      title: "Base técnica",
+      text: "La arquitectura combina interfaces web, autenticación, datos, archivos y despliegues en una base preparada para evolucionar junto con el producto.",
+      stackLabel: "Tecnologías principales",
+    });
+    expect(caseStudy.content.en.architecture).toEqual({
+      title: "Technical foundation",
+      text: "The architecture combines web interfaces, authentication, data, files, and deployments on a foundation designed to evolve with the product.",
+      stackLabel: "Core technologies",
+    });
+    expect(caseStudy.stack).toEqual([
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Firebase Authentication",
+      "Cloud Firestore",
+      "Firebase Storage",
+      "Vercel",
+    ]);
     expect(serialized).not.toContain(
       "Los más de 10 años corresponden a la trayectoria del negocio",
     );

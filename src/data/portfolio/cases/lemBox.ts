@@ -159,8 +159,8 @@ export const lemBoxCase = definePortfolioCase({
         architecture: {
           title: "Base técnica",
           text:
-            "La arquitectura combina interfaces web, autenticación, datos, archivos y despliegues dentro de una base preparada para evolucionar junto con el producto.",
-          stackLabel: "Stack estructural",
+            "La arquitectura combina interfaces web, autenticación, datos, archivos y despliegues en una base preparada para evolucionar junto con el producto.",
+          stackLabel: "Tecnologías principales",
         },
         markets: {
           title: "Estados Unidos, Uruguay y Argentina",
@@ -271,8 +271,8 @@ export const lemBoxCase = definePortfolioCase({
         architecture: {
           title: "Technical foundation",
           text:
-            "The architecture combines web interfaces, authentication, data, files, and deployments within a foundation designed to evolve with the product.",
-          stackLabel: "Structural stack",
+            "The architecture combines web interfaces, authentication, data, files, and deployments on a foundation designed to evolve with the product.",
+          stackLabel: "Core technologies",
         },
         markets: {
           title: "The United States, Uruguay, and Argentina",

@@ -555,6 +555,81 @@ describe("application routing", () => {
     ).toHaveLength(3);
   });
 
+  it("keeps the LEM-BOX technical layout and stack with refined copy", async () => {
+    renderApp("/portfolio/lem-box");
+
+    const solutionHeading = await screen.findByRole("heading", {
+      level: 2,
+      name: "De procesos dispersos a un producto conectado",
+    });
+    const architectureHeading = screen.getByRole("heading", {
+      level: 2,
+      name: "Base técnica",
+    });
+    const solutionSection = solutionHeading.closest("section");
+    const architectureSection = architectureHeading.closest("section");
+    expect(solutionSection).not.toBeNull();
+    expect(architectureSection).not.toBeNull();
+    if (solutionSection === null || architectureSection === null) {
+      throw new Error("Missing LEM-BOX solution or architecture section");
+    }
+
+    const columns = architectureSection.parentElement;
+    expect(columns).toBe(solutionSection.parentElement);
+    expect(columns).toHaveClass(
+      "grid",
+      "lg:grid-cols-2",
+      "lg:gap-12",
+    );
+    expect(architectureSection).toHaveClass(
+      "border-t",
+      "border-white/15",
+      "pt-7",
+    );
+    expect(
+      within(solutionSection).getByText(
+        "Diseñé y desarrollé una plataforma central conectada con las superficies comerciales de cada mercado. El resultado es un ecosistema donde la información acompaña el recorrido desde la captación hasta la operación y el seguimiento.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      within(architectureSection).getByText(
+        "La arquitectura combina interfaces web, autenticación, datos, archivos y despliegues en una base preparada para evolucionar junto con el producto.",
+      ),
+    ).toBeInTheDocument();
+
+    const stackLabel = within(architectureSection).getByRole("heading", {
+      level: 3,
+      name: "Tecnologías principales",
+    });
+    expect(stackLabel).toHaveClass(
+      "uppercase",
+      "tracking-[0.14em]",
+      "text-primary",
+    );
+    const stackList = within(architectureSection).getByRole("list");
+    expect(stackList).toHaveClass(
+      "grid",
+      "sm:grid-flow-col",
+      "sm:grid-rows-4",
+      "sm:gap-x-8",
+    );
+    expect(
+      within(stackList)
+        .getAllByRole("listitem")
+        .map((item) => item.textContent),
+    ).toEqual([
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Firebase Authentication",
+      "Cloud Firestore",
+      "Firebase Storage",
+      "Vercel",
+    ]);
+    expect(architectureSection.querySelector("img")).toBeNull();
+  });
+
   it("renders the English LEM-BOX case study and exact metadata", async () => {
     localStorage.setItem("language", "en");
     renderApp("/portfolio/lem-box");
@@ -599,6 +674,23 @@ describe("application routing", () => {
       screen.getByText(
         "The platform supports intake, photo evidence, weight, assignment, boxes, shipments, tracking, payments, and receipts.",
       ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "Technical foundation",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "The architecture combines web interfaces, authentication, data, files, and deployments on a foundation designed to evolve with the product.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        level: 3,
+        name: "Core technologies",
+      }),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
