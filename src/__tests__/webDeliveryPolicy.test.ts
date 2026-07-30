@@ -325,5 +325,10 @@ describe("web delivery policy", () => {
     ]);
     expect(new RegExp(`^${configuration.rewrites[0]?.source}$`).test("/portfolio"))
       .toBe(true);
+    expect(
+      new RegExp(`^${configuration.rewrites[0]?.source}$`).test(
+        "/portfolio/lem-box",
+      ),
+    ).toBe(true);
   });
 });

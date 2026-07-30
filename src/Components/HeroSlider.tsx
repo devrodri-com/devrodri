@@ -61,8 +61,8 @@ const slides = [
       es: "Ver LEM-BOX",
       en: "View LEM-BOX",
     },
-    buttonLink: "/portfolio",
-    focusCase: "lem_box",
+    buttonLink: "/portfolio/lem-box",
+    focusCase: null,
   },
   {
     id: 3,

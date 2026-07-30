@@ -12,8 +12,7 @@ type TestRouteEntry =
       state: Record<string, unknown>;
     };
 
-const portfolioCases = [
-  { key: "lem_box", title: "LEM-BOX" },
+const expandablePortfolioCases = [
   { key: "zentra", title: "ZENTRA" },
   { key: "esteban", title: "Esteban Firpo · Miami Real Estate" },
   { key: "mutter", title: "Mutter Games" },
@@ -22,6 +21,19 @@ const portfolioCases = [
   { key: "boating", title: "Boating Adventures Miami" },
   { key: "campings_demo", title: "Plataforma de reservas de campings" },
 ] as const;
+
+const lemBoxSeo = {
+  es: {
+    title: "LEM-BOX: plataforma logística y producto propio | Rodrigo Opalo",
+    description:
+      "Caso de producto propio: un ecosistema digital conectado con la operación logística de LEM-BOX en Estados Unidos, Uruguay y Argentina.",
+  },
+  en: {
+    title: "LEM-BOX: logistics platform and own product | Rodrigo Opalo",
+    description:
+      "Own-product case study: a digital ecosystem connected to LEM-BOX's logistics operation across the United States, Uruguay, and Argentina.",
+  },
+} as const;
 
 function renderApp(entry: TestRouteEntry) {
   return render(
@@ -140,13 +152,13 @@ describe("application routing", () => {
     });
 
     expect(
+      screen.getByRole("link", { name: "Ver caso LEM-BOX" }),
+    ).toHaveAttribute("href", "/portfolio/lem-box");
+    expect(
       screen
-        .getAllByRole("link", {
-          name: /Ver este caso en el portfolio:/,
-        })
+        .getAllByRole("link", { name: /Ver este caso en el portfolio:/ })
         .map((link) => link.getAttribute("aria-label")),
     ).toEqual([
-      "Ver este caso en el portfolio: LEM-BOX",
       "Ver este caso en el portfolio: ZENTRA",
       "Ver este caso en el portfolio: Esteban Firpo · Miami Real Estate",
       "Ver este caso en el portfolio: Mutter Games",
@@ -174,12 +186,39 @@ describe("application routing", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("expands and contracts all eight cases with the same ARIA contract", async () => {
+  it("shows the LEM-BOX summary card with one internal case-study CTA", async () => {
+    renderApp("/portfolio");
+
+    const title = await screen.findByRole("heading", {
+      level: 3,
+      name: "LEM-BOX",
+    });
+    const cardContent = title.parentElement;
+    expect(cardContent).not.toBeNull();
+    if (cardContent === null) {
+      throw new Error("LEM-BOX portfolio card content is missing");
+    }
+
+    expect(
+      within(cardContent).getByRole("link", { name: "Ver caso completo" }),
+    ).toHaveAttribute("href", "/portfolio/lem-box");
+    expect(
+      within(cardContent).queryByRole("button", { name: "Ver más" }),
+    ).not.toBeInTheDocument();
+    expect(within(cardContent).queryByText("Ver plataforma")).not.toBeInTheDocument();
+    expect(within(cardContent).queryByText("Uruguay")).not.toBeInTheDocument();
+    expect(within(cardContent).queryByText("Argentina")).not.toBeInTheDocument();
+    expect(
+      document.getElementById("portfolio-details-lem_box"),
+    ).not.toBeInTheDocument();
+  });
+
+  it("expands and contracts the other seven cases with the same ARIA contract", async () => {
     const user = userEvent.setup();
     renderApp("/portfolio");
     await screen.findByRole("heading", { level: 3, name: "LEM-BOX" });
 
-    for (const portfolioCase of portfolioCases) {
+    for (const portfolioCase of expandablePortfolioCases) {
       const title = screen.getByRole("heading", {
         level: 3,
         name: portfolioCase.title,
@@ -210,15 +249,15 @@ describe("application routing", () => {
     }
   });
 
-  it("opens a valid home deep link from route state", async () => {
+  it("keeps a valid ZENTRA deep link from route state", async () => {
     renderApp({
       pathname: "/portfolio",
-      state: { focusCase: "lem_box" },
+      state: { focusCase: "zentra" },
     });
 
     const title = await screen.findByRole("heading", {
       level: 3,
-      name: "LEM-BOX",
+      name: "ZENTRA",
     });
     const cardContent = title.parentElement;
     expect(cardContent).not.toBeNull();
@@ -231,20 +270,39 @@ describe("application routing", () => {
         within(cardContent).getByRole("button", { name: "Ver menos" }),
       ).toHaveAttribute("aria-expanded", "true");
       expect(
-        document.getElementById("portfolio-details-lem_box"),
+        document.getElementById("portfolio-details-zentra"),
       ).toBeInTheDocument();
       expect(within(cardContent).getByText("Mi rol")).toBeInTheDocument();
     });
   });
 
+  it("opens the LEM-BOX case study from its Hero CTA", async () => {
+    const user = userEvent.setup();
+    renderApp("/");
+    await screen.findByRole("heading", {
+      level: 1,
+      name: "Sitios web que comunican y convierten.",
+    });
+
+    await user.click(
+      screen.getByRole("tab", {
+        name: "Ir al slide 2 de 4: Software a medida para operar mejor.",
+      }),
+    );
+    await user.click(screen.getByRole("link", { name: "Ver LEM-BOX" }));
+
+    expect(
+      await screen.findByRole("heading", { level: 1, name: "LEM-BOX" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "Un producto conectado a una operación real",
+      }),
+    ).toBeInTheDocument();
+  });
+
   it.each([
-    {
-      slideName:
-        "Ir al slide 2 de 4: Software a medida para operar mejor.",
-      ctaName: "Ver LEM-BOX",
-      caseTitle: "LEM-BOX",
-      detailsId: "portfolio-details-lem_box",
-    },
     {
       slideName:
         "Ir al slide 3 de 4: Marcas con dirección y presencia digital.",
@@ -253,7 +311,7 @@ describe("application routing", () => {
       detailsId: "portfolio-details-zentra",
     },
   ])(
-    "opens and expands $caseTitle from its Hero CTA",
+    "keeps opening and expanding $caseTitle from its Hero CTA",
     async ({ slideName, ctaName, caseTitle, detailsId }) => {
       const user = userEvent.setup();
       renderApp("/");
@@ -283,6 +341,693 @@ describe("application routing", () => {
       });
     },
   );
+
+  it.each(["/portfolio/lem-box", "/portfolio/lem-box/"])(
+    "loads the LEM-BOX case study and canonical metadata for %s",
+    async (path) => {
+      renderApp(path);
+
+      expect(
+        await screen.findByRole("heading", { level: 1, name: "LEM-BOX" }),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText(
+          "Fundador, propietario y Operations Manager. Lidero producto, procesos y desarrollo full-stack del ecosistema digital.",
+        ),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText("Producto propio · En operación"),
+      ).toBeInTheDocument();
+      await waitFor(() => {
+        expect(document.title).toBe(lemBoxSeo.es.title);
+        expect(
+          document.head.querySelector('meta[name="description"]'),
+        ).toHaveAttribute("content", lemBoxSeo.es.description);
+        expect(
+          document.head.querySelector('link[rel="canonical"]'),
+        ).toHaveAttribute(
+          "href",
+          "https://www.devrodri.com/portfolio/lem-box",
+        );
+        expect(
+          document.head.querySelector('meta[property="og:type"]'),
+        ).toHaveAttribute("content", "article");
+        expect(
+          document.head.querySelector('meta[property="og:url"]'),
+        ).toHaveAttribute(
+          "content",
+          "https://www.devrodri.com/portfolio/lem-box",
+        );
+        expect(
+          document.head.querySelector('meta[property="og:image"]'),
+        ).toHaveAttribute(
+          "content",
+          "https://www.devrodri.com/img/lem-box-cover.png",
+        );
+        expect(
+          document.head.querySelector('meta[name="robots"]'),
+        ).not.toBeInTheDocument();
+      });
+    },
+  );
+
+  it("renders the refined Spanish LEM-BOX summary without a secondary note", async () => {
+    renderApp("/portfolio/lem-box");
+
+    const summaryHeading = await screen.findByRole("heading", {
+      level: 2,
+      name: "Un producto conectado a una operación real",
+    });
+    const summarySection = summaryHeading.closest("section");
+    expect(summarySection).not.toBeNull();
+    if (summarySection === null) {
+      throw new Error("Missing LEM-BOX summary section");
+    }
+
+    expect(
+      within(summarySection).getByText(
+        "LEM-BOX es un negocio logístico con más de 10 años de trayectoria. Su ecosistema digital actual forma parte de una evolución más reciente y conecta los sitios comerciales de Uruguay y Argentina con una plataforma central utilizada por clientes, partners y el equipo operativo.",
+      ),
+    ).toBeInTheDocument();
+    expect(summarySection.querySelectorAll("p")).toHaveLength(1);
+    expect(summarySection.querySelector('[class*="border-l"]')).toBeNull();
+    expect(
+      screen.queryByText(
+        "Los más de 10 años corresponden a la trayectoria del negocio, no a la antigüedad de la plataforma actual.",
+      ),
+    ).not.toBeInTheDocument();
+
+    for (const sectionTitle of [
+      "El desafío",
+      "Mi rol",
+      "Un ecosistema, distintas experiencias",
+      "Experiencias según cada necesidad",
+      "De procesos dispersos a un producto conectado",
+      "Base técnica",
+      "Una operación, tres mercados",
+      "Un producto que evoluciona con la operación",
+      "Conocer el ecosistema",
+      "¿Necesitás un sistema conectado a una operación real?",
+    ]) {
+      expect(
+        screen.getByRole("heading", { name: sectionTitle }),
+      ).toBeInTheDocument();
+    }
+  });
+
+  it("renders the refined challenge and role without a center divider", async () => {
+    renderApp("/portfolio/lem-box");
+
+    const challengeHeading = await screen.findByRole("heading", {
+      level: 2,
+      name: "El desafío",
+    });
+    const roleHeading = screen.getByRole("heading", {
+      level: 2,
+      name: "Mi rol",
+    });
+    const challengeSection = challengeHeading.closest("section");
+    const roleSection = roleHeading.closest("section");
+    expect(challengeSection).not.toBeNull();
+    expect(roleSection).not.toBeNull();
+    if (challengeSection === null || roleSection === null) {
+      throw new Error("Missing LEM-BOX challenge or role section");
+    }
+
+    const columns = challengeSection.parentElement;
+    expect(columns).toBe(roleSection.parentElement);
+    expect(columns).toHaveClass("lg:grid-cols-2", "lg:gap-20");
+    expect(columns).not.toHaveClass("lg:divide-x", "lg:divide-white/10");
+    expect(challengeSection).toHaveClass(
+      "border-t",
+      "border-white/15",
+      "pt-7",
+    );
+    expect(roleSection).toHaveClass("border-t", "border-white/15", "pt-7");
+    expect(
+      within(challengeSection).getByText(
+        "La operación necesitaba continuidad entre la captación comercial, la recepción y consolidación de paquetes, los embarques, el tracking, los pagos y la atención. El desafío no era crear una web aislada, sino conectar mercados, usuarios y procesos en un producto alineado con la operación real.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      within(roleSection).getByText(
+        "Mi trabajo parte de la operación diaria: traduzco necesidades reales en prioridades de producto, flujos y funcionalidades, y llevo esas decisiones hasta la implementación y evolución técnica del ecosistema.",
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it("renders the LEM-BOX ecosystem as a minimal editorial flow", async () => {
+    renderApp("/portfolio/lem-box");
+
+    const ecosystemHeading = await screen.findByRole("heading", {
+      level: 2,
+      name: "Un ecosistema, distintas experiencias",
+    });
+    const ecosystemSection = ecosystemHeading.closest("section");
+    expect(ecosystemSection).not.toBeNull();
+    if (ecosystemSection === null) {
+      throw new Error("Missing LEM-BOX ecosystem section");
+    }
+
+    const flow = ecosystemSection.querySelector("[data-ecosystem-flow]");
+    expect(flow).not.toBeNull();
+    expect(
+      ecosystemSection.querySelectorAll("[data-ecosystem-flow-stage]"),
+    ).toHaveLength(3);
+    expect(
+      ecosystemSection.querySelectorAll("[data-ecosystem-flow-line]"),
+    ).toHaveLength(3);
+    expect(
+      ecosystemSection.querySelectorAll("[data-ecosystem-flow-node]"),
+    ).toHaveLength(3);
+    for (const decorativeElement of ecosystemSection.querySelectorAll(
+      "[data-ecosystem-flow-line], [data-ecosystem-flow-node]",
+    )) {
+      expect(decorativeElement).toHaveAttribute("aria-hidden", "true");
+    }
+
+    const stages = ecosystemSection.querySelectorAll(
+      "[data-ecosystem-flow-stage]",
+    );
+    expect(stages[0]).not.toHaveClass("border-t-2", "border-primary");
+    expect(stages[1]?.querySelector("[data-ecosystem-flow-node]")).toHaveClass(
+      "bg-primary/90",
+    );
+    expect(stages[0]?.querySelector("[data-ecosystem-flow-node]")).toHaveClass(
+      "bg-primary/60",
+    );
+    expect(stages[2]?.querySelector("[data-ecosystem-flow-node]")).toHaveClass(
+      "bg-primary/60",
+    );
+    expect(
+      within(ecosystemSection).getByText(
+        "Los sitios de Uruguay y Argentina comunican el servicio y acompañan la captación comercial de cada mercado.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      within(ecosystemSection).getByText(
+        "Un único punto de acceso ofrece experiencias diferenciadas según el rol y el contexto operativo de cada usuario.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      within(ecosystemSection).getByText(
+        "La plataforma acompaña procesos de recepción, evidencia fotográfica, peso, asignación, cajas, embarques, tracking, pagos y comprobantes.",
+      ),
+    ).toBeInTheDocument();
+
+    const audiencesHeading = screen.getByRole("heading", {
+      level: 2,
+      name: "Experiencias según cada necesidad",
+    });
+    const audiencesSection = audiencesHeading.closest("section");
+    expect(audiencesSection).toHaveClass(
+      "bg-neutral",
+      "px-4",
+      "py-12",
+      "text-gray-900",
+      "sm:px-6",
+      "sm:py-24",
+    );
+    expect(
+      audiencesSection?.querySelectorAll(
+        ".border-t-2.border-primary-on-light.pt-5",
+      ),
+    ).toHaveLength(3);
+  });
+
+  it("keeps the LEM-BOX technical layout and stack with refined copy", async () => {
+    renderApp("/portfolio/lem-box");
+
+    const solutionHeading = await screen.findByRole("heading", {
+      level: 2,
+      name: "De procesos dispersos a un producto conectado",
+    });
+    const architectureHeading = screen.getByRole("heading", {
+      level: 2,
+      name: "Base técnica",
+    });
+    const solutionSection = solutionHeading.closest("section");
+    const architectureSection = architectureHeading.closest("section");
+    expect(solutionSection).not.toBeNull();
+    expect(architectureSection).not.toBeNull();
+    if (solutionSection === null || architectureSection === null) {
+      throw new Error("Missing LEM-BOX solution or architecture section");
+    }
+
+    const columns = architectureSection.parentElement;
+    expect(columns).toBe(solutionSection.parentElement);
+    expect(columns).toHaveClass(
+      "grid",
+      "lg:grid-cols-2",
+      "lg:gap-12",
+    );
+    expect(architectureSection).toHaveClass(
+      "border-t",
+      "border-white/15",
+      "pt-7",
+    );
+    expect(
+      within(solutionSection).getByText(
+        "Diseñé y desarrollé una plataforma central conectada con las superficies comerciales de cada mercado. El resultado es un ecosistema donde la información acompaña el recorrido desde la captación hasta la operación y el seguimiento.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      within(architectureSection).getByText(
+        "La arquitectura combina interfaces web, autenticación, datos, archivos y despliegues en una base preparada para evolucionar junto con el producto.",
+      ),
+    ).toBeInTheDocument();
+
+    const stackLabel = within(architectureSection).getByRole("heading", {
+      level: 3,
+      name: "Tecnologías principales",
+    });
+    expect(stackLabel).toHaveClass(
+      "uppercase",
+      "tracking-[0.14em]",
+      "text-primary",
+    );
+    const stackList = within(architectureSection).getByRole("list");
+    expect(stackList).toHaveClass(
+      "grid",
+      "sm:grid-flow-col",
+      "sm:grid-rows-4",
+      "sm:gap-x-8",
+    );
+    expect(
+      within(stackList)
+        .getAllByRole("listitem")
+        .map((item) => item.textContent),
+    ).toEqual([
+      "Next.js",
+      "React",
+      "TypeScript",
+      "Tailwind CSS",
+      "Firebase Authentication",
+      "Cloud Firestore",
+      "Firebase Storage",
+      "Vercel",
+    ]);
+    expect(architectureSection.querySelector("img")).toBeNull();
+  });
+
+  it("integrates the LEM-BOX status into the refined markets and evolution flow", async () => {
+    const user = userEvent.setup();
+    renderApp("/portfolio/lem-box");
+
+    const marketsHeading = await screen.findByRole("heading", {
+      level: 2,
+      name: "Una operación, tres mercados",
+    });
+    const marketsSection = marketsHeading.closest("section");
+    const evolutionHeading = screen.getByRole("heading", {
+      level: 2,
+      name: "Un producto que evoluciona con la operación",
+    });
+    const evolutionSection = evolutionHeading.closest("section");
+    expect(marketsSection).not.toBeNull();
+    expect(evolutionSection).not.toBeNull();
+    if (marketsSection === null || evolutionSection === null) {
+      throw new Error("Missing LEM-BOX markets or evolution section");
+    }
+
+    expect(
+      within(marketsSection).getByText(
+        "La operación logística se desarrolla en Estados Unidos, mientras Uruguay y Argentina cuentan con experiencias comerciales adaptadas a cada mercado y conectadas al mismo ecosistema operativo.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      within(evolutionSection).getByText(
+        "ESTADO ACTUAL · PRODUCTO ACTIVO",
+      ),
+    ).toHaveAttribute("data-evolution-status-metadata");
+    expect(
+      within(evolutionSection).getByText(
+        "LEM-BOX continúa adaptándose a los procesos, necesidades y prioridades reales del negocio.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      within(evolutionSection).getByText(
+        "Su desarrollo se apoya en pruebas automatizadas, autorización por roles, revisión de arquitectura, documentación técnica y despliegues controlados. Cada cambio forma parte de un proceso continuo de mejora y reducción de riesgo.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 3, name: "Siguiente etapa" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "El ecosistema atraviesa una etapa de documentación, pruebas y preparación técnica para una futura extensión a Android e iOS. Estas aplicaciones forman parte de la evolución prevista y todavía no se presentan como productos disponibles.",
+      ),
+    ).toBeInTheDocument();
+    expect(document.querySelector("#lem-box-current-state")).toBeNull();
+    expect(screen.queryByRole("heading", { name: "Estado actual" })).toBeNull();
+
+    await user.click(screen.getByRole("button", { name: "Cambiar a inglés" }));
+
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "One operation, three markets",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "The logistics operation is based in the United States, while Uruguay and Argentina have commercial experiences tailored to each market and connected to the same operational ecosystem.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("CURRENT STATUS · ACTIVE PRODUCT"),
+    ).toHaveAttribute("data-evolution-status-metadata");
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "A product that evolves with the operation",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Its development is supported by automated testing, role-based authorization, architecture reviews, technical documentation, and controlled deployments. Each change is part of an ongoing process of improvement and risk reduction.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 3, name: "Next stage" }),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Current status" })).toBeNull();
+  });
+
+  it("renders the English LEM-BOX case study and exact metadata", async () => {
+    localStorage.setItem("language", "en");
+    renderApp("/portfolio/lem-box");
+
+    expect(
+      await screen.findByRole("heading", {
+        level: 2,
+        name: "A product connected to a real operation",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "LEM-BOX is a logistics business with more than 10 years of experience. Its current digital ecosystem is part of a more recent evolution and connects the commercial websites for Uruguay and Argentina with a central platform used by customers, partners, and the operations team.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(
+        "The more than 10 years refer to the business's trajectory, not the age of the current platform.",
+      ),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "The operation needed continuity across customer acquisition, package intake and consolidation, shipments, tracking, payments, and support. The challenge was not to build an isolated website, but to connect markets, users, and processes through a product aligned with the real operation.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "My work starts with day-to-day operations: I turn real needs into product priorities, workflows, and features, and carry those decisions through implementation and the ecosystem's technical evolution.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "The Uruguay and Argentina websites communicate the service and support customer acquisition in each market.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "A single access point provides different experiences based on each user's role and operational context.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "The platform supports intake, photo evidence, weight, assignment, boxes, shipments, tracking, payments, and receipts.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "Technical foundation",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "The architecture combines web interfaces, authentication, data, files, and deployments on a foundation designed to evolve with the product.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        level: 3,
+        name: "Core technologies",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Founder, owner, and Operations Manager. I lead product, processes, and full-stack development of the digital ecosystem.",
+      ),
+    ).toBeInTheDocument();
+    expect(screen.getByText("Own product · In operation")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Back to portfolio" }),
+    ).toHaveTextContent("←Back to portfolio");
+    await waitFor(() => {
+      expect(document.title).toBe(lemBoxSeo.en.title);
+      expect(
+        document.head.querySelector('meta[name="description"]'),
+      ).toHaveAttribute("content", lemBoxSeo.en.description);
+    });
+  });
+
+  it("removes static fallback metadata after the LEM-BOX metadata mounts", async () => {
+    const fallbackDescription = document.createElement("meta");
+    fallbackDescription.name = "description";
+    fallbackDescription.content = "Static fallback description";
+    document.head.append(fallbackDescription);
+
+    const fallbackOgType = document.createElement("meta");
+    fallbackOgType.setAttribute("property", "og:type");
+    fallbackOgType.content = "website";
+    document.head.append(fallbackOgType);
+
+    renderApp("/portfolio/lem-box");
+    await screen.findByRole("heading", { level: 1, name: "LEM-BOX" });
+
+    await waitFor(() => {
+      expect(
+        document.head.querySelectorAll('meta[name="description"]'),
+      ).toHaveLength(1);
+      expect(
+        document.head.querySelector('meta[name="description"]'),
+      ).toHaveAttribute("content", lemBoxSeo.es.description);
+      expect(
+        document.head.querySelectorAll('meta[property="og:type"]'),
+      ).toHaveLength(1);
+      expect(
+        document.head.querySelector('meta[property="og:type"]'),
+      ).toHaveAttribute("content", "article");
+    });
+  });
+
+  it("provides portfolio return, DevRodri CTA, public links, and one cover", async () => {
+    renderApp("/portfolio/lem-box");
+    await screen.findByRole("heading", { level: 1, name: "LEM-BOX" });
+
+    const portfolioReturn = screen.getByRole("link", {
+      name: "Volver al portfolio",
+    });
+    expect(portfolioReturn).toHaveAttribute("href", "/portfolio");
+    expect(portfolioReturn).toHaveTextContent("←Volver al portfolio");
+    expect(
+      screen.getByRole("link", { name: "Contame tu proyecto" }),
+    ).toHaveAttribute("href", "/#contacto");
+    const publicLinkHrefs = new Set([
+      "https://lem-box.com",
+      "https://lem-box.com.uy",
+      "https://lem-box.com.ar",
+    ]);
+    const publicLinks = screen
+      .getAllByRole("link")
+      .filter((candidate) =>
+        publicLinkHrefs.has(candidate.getAttribute("href") ?? ""),
+      );
+    expect(publicLinks).toHaveLength(3);
+    for (const link of publicLinks) {
+      expect(link).toHaveAttribute("target", "_blank");
+      expect(link).toHaveAttribute("rel", "noopener noreferrer");
+    }
+    expect(screen.getAllByRole("img", { name: "Portada de LEM-BOX" })).toHaveLength(
+      1,
+    );
+    expect(screen.getByRole("img", { name: "Portada de LEM-BOX" })).toHaveAttribute(
+      "width",
+      "1200",
+    );
+    expect(screen.getByRole("img", { name: "Portada de LEM-BOX" })).toHaveAttribute(
+      "height",
+      "630",
+    );
+  });
+
+  it("renders the LEM-BOX public links as a light editorial directory", async () => {
+    const user = userEvent.setup();
+    renderApp("/portfolio/lem-box");
+
+    const heading = await screen.findByRole("heading", {
+      level: 2,
+      name: "Conocer el ecosistema",
+    });
+    const section = heading.closest("section");
+    expect(section).not.toBeNull();
+    if (section === null) {
+      throw new Error("Missing LEM-BOX public links section");
+    }
+
+    expect(section).toHaveClass(
+      "bg-neutral",
+      "px-4",
+      "py-12",
+      "text-gray-900",
+      "sm:px-6",
+      "sm:py-24",
+    );
+    expect(within(section).getByText("ENLACES PÚBLICOS")).toHaveClass(
+      "uppercase",
+      "tracking-[0.14em]",
+      "text-primary-on-light",
+    );
+    expect(
+      within(section).getByText(
+        "Accedé a la plataforma central y conocé la presencia comercial de LEM-BOX en Uruguay y Argentina.",
+      ),
+    ).toBeInTheDocument();
+
+    const directory = section.querySelector("[data-public-links-directory]");
+    expect(directory).toHaveClass(
+      "grid",
+      "lg:grid-cols-[minmax(0,0.39fr)_minmax(0,0.61fr)]",
+      "lg:gap-16",
+    );
+    const rows = section.querySelectorAll("[data-public-link-row]");
+    expect(rows).toHaveLength(3);
+    expect(section.querySelectorAll("[data-public-link-domain]")).toHaveLength(
+      3,
+    );
+    expect(section.querySelector("img")).toBeNull();
+    expect(section.querySelector('[class*="rounded"]')).toBeNull();
+    expect(section.querySelector('[class*="shadow"]')).toBeNull();
+
+    const spanishLinks = [
+      {
+        name: "Plataforma central lem-box.com Acceso con credenciales Abrir plataforma",
+        href: "https://lem-box.com",
+      },
+      {
+        name: "Uruguay lem-box.com.uy Sitio comercial para Uruguay Visitar sitio",
+        href: "https://lem-box.com.uy",
+      },
+      {
+        name: "Argentina lem-box.com.ar Sitio comercial para Argentina Visitar sitio",
+        href: "https://lem-box.com.ar",
+      },
+    ];
+    for (const expectedLink of spanishLinks) {
+      const link = within(section).getByRole("link", {
+        name: expectedLink.name,
+      });
+      expect(link).toHaveAttribute("href", expectedLink.href);
+      expect(link).toHaveAttribute("target", "_blank");
+      expect(link).toHaveAttribute("rel", "noopener noreferrer");
+      expect(link).toHaveClass(
+        "min-h-[44px]",
+        "border-t",
+        "focus-visible:ring-2",
+        "focus-visible:ring-inset",
+      );
+      expect(link.querySelector("a")).toBeNull();
+    }
+
+    const finalCtaHeading = screen.getByRole("heading", {
+      level: 2,
+      name: "¿Necesitás un sistema conectado a una operación real?",
+    });
+    const finalCta = finalCtaHeading.closest("section");
+    expect(finalCta).not.toBeNull();
+    if (finalCta === null) {
+      throw new Error("Missing LEM-BOX final CTA section");
+    }
+    expect(finalCta).toHaveClass(
+      "px-4",
+      "py-16",
+      "text-center",
+      "sm:px-6",
+      "sm:py-20",
+    );
+    expect(
+      within(finalCta).getByText(
+        "Contame el contexto y vemos cuál puede ser el mejor punto de partida.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      within(finalCta).getByRole("link", {
+        name: "Contame tu proyecto",
+      }),
+    ).toHaveAttribute("href", "/#contacto");
+    expect(screen.getByRole("contentinfo")).toHaveClass(
+      "border-t",
+      "border-gray-200",
+      "bg-white",
+      "py-3",
+      "px-4",
+      "sm:px-6",
+    );
+
+    await user.click(screen.getByRole("button", { name: "Cambiar a inglés" }));
+
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "Explore the ecosystem",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByText("PUBLIC LINKS")).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Access the central platform and explore LEM-BOX's commercial presence in Uruguay and Argentina.",
+      ),
+    ).toBeInTheDocument();
+    for (const expectedName of [
+      "Central platform lem-box.com Sign-in required Open platform",
+      "Uruguay lem-box.com.uy Commercial website for Uruguay Visit website",
+      "Argentina lem-box.com.ar Commercial website for Argentina Visit website",
+    ]) {
+      expect(
+        screen.getByRole("link", { name: expectedName }),
+      ).toBeInTheDocument();
+    }
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "Need a system connected to a real operation?",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Share the context and we'll identify the best place to start.",
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it("keeps an invalid portfolio slug on NotFound with noindex", async () => {
+    renderApp("/portfolio/not-a-case");
+
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Página no encontrada",
+      }),
+    ).toBeInTheDocument();
+    await waitFor(() => {
+      expect(document.head.querySelector('meta[name="robots"]')).toHaveAttribute(
+        "content",
+        "noindex, nofollow",
+      );
+    });
+  });
 
   it("shows the Spanish not-found route with noindex metadata", async () => {
     renderApp("/ruta-inexistente");

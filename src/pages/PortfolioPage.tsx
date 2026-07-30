@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import translations from "../i18n";
 import { useLanguage } from "../i18n/useLanguage";
 import PortfolioCard from "../Components/portfolio/PortfolioCard";
@@ -86,6 +86,7 @@ export default function PortfolioPage() {
           {list.map((portfolioCase) => {
             const content = portfolioCase.content[language];
             const detailsId = `portfolio-details-${portfolioCase.key}`;
+            const caseStudy = portfolioCase.caseStudy;
 
             return (
               <div
@@ -95,57 +96,68 @@ export default function PortfolioPage() {
               >
                 <PortfolioCard
                   actions={
-                    <>
-                      {portfolioCase.actions.map((action, actionIndex) => (
-                        <span
-                          key={action.href}
-                          className="inline-flex items-center gap-2"
-                        >
-                          {actionIndex > 0 && (
-                            <span className="hidden text-gray-400 sm:inline">·</span>
-                          )}
-                          <a
-                            href={action.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-primary-on-light font-medium hover:text-primary-on-light-hover underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm"
-                          >
-                            {action.label[language]}
-                          </a>
-                          {action.note !== undefined && (
-                            <span className="text-xs text-gray-500">
-                              {action.note[language]}
-                            </span>
-                          )}
-                        </span>
-                      ))}
-                      <button
-                        type="button"
-                        aria-expanded={expanded[portfolioCase.key]}
-                        aria-controls={detailsId}
-                        onClick={() =>
-                          setExpanded((current) => ({
-                            ...current,
-                            [portfolioCase.key]:
-                              !current[portfolioCase.key],
-                          }))
-                        }
-                        className="text-sm text-gray-700 hover:text-black underline focus-visible:ring-2 ring-offset-2 ring-gray-300 rounded-sm min-h-[44px] min-w-[44px] inline-flex items-center"
+                    caseStudy !== undefined ? (
+                      <Link
+                        to={caseStudy.path}
+                        className="inline-flex min-h-[44px] items-center rounded-lg bg-primary-on-light px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary-on-light-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                       >
-                        {expanded[portfolioCase.key]
-                          ? language === "es"
-                            ? "Ver menos"
-                            : "View less"
-                          : language === "es"
-                            ? "Ver más"
-                            : "View details"}
-                      </button>
-                    </>
+                        {caseStudy.content[language].header.portfolioCta}
+                      </Link>
+                    ) : (
+                      <>
+                        {portfolioCase.actions.map((action, actionIndex) => (
+                          <span
+                            key={action.href}
+                            className="inline-flex items-center gap-2"
+                          >
+                            {actionIndex > 0 && (
+                              <span className="hidden text-gray-400 sm:inline">·</span>
+                            )}
+                            <a
+                              href={action.href}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-primary-on-light font-medium hover:text-primary-on-light-hover underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm"
+                            >
+                              {action.label[language]}
+                            </a>
+                            {action.note !== undefined && (
+                              <span className="text-xs text-gray-500">
+                                {action.note[language]}
+                              </span>
+                            )}
+                          </span>
+                        ))}
+                        <button
+                          type="button"
+                          aria-expanded={expanded[portfolioCase.key]}
+                          aria-controls={detailsId}
+                          onClick={() =>
+                            setExpanded((current) => ({
+                              ...current,
+                              [portfolioCase.key]:
+                                !current[portfolioCase.key],
+                            }))
+                          }
+                          className="text-sm text-gray-700 hover:text-black underline focus-visible:ring-2 ring-offset-2 ring-gray-300 rounded-sm min-h-[44px] min-w-[44px] inline-flex items-center"
+                        >
+                          {expanded[portfolioCase.key]
+                            ? language === "es"
+                              ? "Ver menos"
+                              : "View less"
+                            : language === "es"
+                              ? "Ver más"
+                              : "View details"}
+                        </button>
+                      </>
+                    )
                   }
                   cover={portfolioCase.cover}
                   desc={content.description}
                   details={
-                    expanded[portfolioCase.key] ? (
+                    caseStudy === undefined &&
+                    expanded[portfolioCase.key] &&
+                    content.details !== undefined ? (
                       <PortfolioCaseDetails
                         details={content.details}
                         id={detailsId}
@@ -156,7 +168,9 @@ export default function PortfolioPage() {
                       />
                     ) : null
                   }
-                  expanded={expanded[portfolioCase.key]}
+                  expanded={
+                    caseStudy === undefined && expanded[portfolioCase.key]
+                  }
                   tags={content.tags.join(" · ")}
                   title={content.title}
                   {...(content.status === undefined

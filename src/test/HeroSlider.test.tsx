@@ -153,7 +153,7 @@ describe("HeroSlider resilience", () => {
     const tabs = screen.getAllByRole("tab");
     const destinations = [
       { button: "Ver trabajos", href: "/portfolio" },
-      { button: "Ver LEM-BOX", href: "/portfolio" },
+      { button: "Ver LEM-BOX", href: "/portfolio/lem-box" },
       { button: "Ver ZENTRA", href: "/portfolio" },
       { button: "Contame tu proceso", href: "#contacto" },
     ] as const;

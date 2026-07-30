@@ -13,6 +13,9 @@ export default function PortfolioSection() {
     status: portfolioCase.content[language].status,
     title: portfolioCase.content[language].title,
     summary: portfolioCase.home.summary[language],
+    caseStudyPath: portfolioCase.caseStudy?.path,
+    caseStudyCta:
+      portfolioCase.caseStudy?.content[language].header.homeCta,
   }));
 
   return (
@@ -72,13 +75,16 @@ export default function PortfolioSection() {
           {highlights.map((p, index) => (
             <Link
               key={p.key}
-              to="/portfolio"
-              state={{ focusCase: p.key }}
+              to={p.caseStudyPath ?? "/portfolio"}
+              {...(p.caseStudyPath === undefined
+                ? { state: { focusCase: p.key } }
+                : {})}
               className="block h-full rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70 min-h-[72px]"
               aria-label={
-                language === "es"
+                p.caseStudyCta ??
+                (language === "es"
                   ? `Ver este caso en el portfolio: ${p.title}`
-                  : `View this case in the portfolio: ${p.title}`
+                  : `View this case in the portfolio: ${p.title}`)
               }
             >
               <motion.div
@@ -119,7 +125,8 @@ export default function PortfolioSection() {
                     {p.summary}
                   </p>
                   <span className="mt-auto inline-flex min-h-[44px] items-center text-sm font-semibold text-primary-on-light underline">
-                    {language === "es" ? "Ver caso" : "View case study"}
+                    {p.caseStudyCta ??
+                      (language === "es" ? "Ver caso" : "View case study")}
                   </span>
                 </div>
               </motion.div>
