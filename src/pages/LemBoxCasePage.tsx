@@ -256,9 +256,15 @@ export default function LemBoxCasePage() {
 
             <div className="mt-10 max-w-[48rem] border-t border-white/15 pt-10 sm:mt-16 sm:pt-12">
               <section aria-labelledby="lem-box-evolution">
+                <p
+                  data-evolution-status-metadata
+                  className="text-xs font-semibold uppercase tracking-[0.14em] text-primary"
+                >
+                  {page.currentState.title}
+                </p>
                 <h2
                   id="lem-box-evolution"
-                  className="text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl"
+                  className="mt-4 text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl"
                 >
                   {page.evolution.title}
                 </h2>
@@ -288,21 +294,6 @@ export default function LemBoxCasePage() {
                 </h3>
                 <p className="mt-4 text-base leading-relaxed text-gray-300/90">
                   {page.mobileFuture.text}
-                </p>
-              </section>
-
-              <section
-                aria-labelledby="lem-box-current-state"
-                className="mt-7 border-l-2 border-primary pl-4 sm:mt-10"
-              >
-                <h3
-                  id="lem-box-current-state"
-                  className="text-xs font-semibold uppercase tracking-[0.14em] text-primary"
-                >
-                  {page.currentState.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-gray-300">
-                  {page.currentState.text}
                 </p>
               </section>
             </div>

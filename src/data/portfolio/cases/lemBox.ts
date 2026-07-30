@@ -163,26 +163,26 @@ export const lemBoxCase = definePortfolioCase({
           stackLabel: "Tecnologías principales",
         },
         markets: {
-          title: "Estados Unidos, Uruguay y Argentina",
+          title: "Una operación, tres mercados",
           text:
-            "La operación logística se desarrolla en Estados Unidos. Uruguay y Argentina cuentan con experiencias comerciales adaptadas a cada mercado y conectadas con el mismo ecosistema operativo.",
+            "La operación logística se desarrolla en Estados Unidos, mientras Uruguay y Argentina cuentan con experiencias comerciales adaptadas a cada mercado y conectadas al mismo ecosistema operativo.",
         },
         evolution: {
-          title: "Un producto en evolución continua",
+          title: "Un producto que evoluciona con la operación",
           text:
-            "LEM-BOX es un producto activo que continúa adaptándose a los procesos reales del negocio.",
+            "LEM-BOX continúa adaptándose a los procesos, necesidades y prioridades reales del negocio.",
           qualityTitle: "Calidad y reducción de riesgo",
           qualityText:
-            "La evolución del producto incluye pruebas automatizadas, autorización por roles, revisión de arquitectura, documentación técnica y despliegues controlados. Estos mecanismos forman parte de un proceso continuo de calidad y reducción de riesgo.",
+            "Su desarrollo se apoya en pruebas automatizadas, autorización por roles, revisión de arquitectura, documentación técnica y despliegues controlados. Cada cambio forma parte de un proceso continuo de mejora y reducción de riesgo.",
         },
         mobileFuture: {
-          title: "Próxima evolución",
+          title: "Siguiente etapa",
           text:
-            "El ecosistema se encuentra en una etapa continua de documentación, pruebas y preparación técnica para una futura extensión a Android e iOS. Estas aplicaciones forman parte de la evolución prevista y aún no se presentan como productos disponibles.",
+            "El ecosistema atraviesa una etapa de documentación, pruebas y preparación técnica para una futura extensión a Android e iOS. Estas aplicaciones forman parte de la evolución prevista y todavía no se presentan como productos disponibles.",
         },
         currentState: {
-          title: "Estado actual",
-          text: "Producto activo en documentación, pruebas y evolución continua.",
+          title: "ESTADO ACTUAL · PRODUCTO ACTIVO",
+          text: "",
         },
         publicLinksTitle: "Conocer el ecosistema",
         finalCta: {
@@ -275,27 +275,26 @@ export const lemBoxCase = definePortfolioCase({
           stackLabel: "Core technologies",
         },
         markets: {
-          title: "The United States, Uruguay, and Argentina",
+          title: "One operation, three markets",
           text:
-            "The logistics operation is based in the United States. Uruguay and Argentina have market-specific commercial experiences connected to the same operational ecosystem.",
+            "The logistics operation is based in the United States, while Uruguay and Argentina have commercial experiences tailored to each market and connected to the same operational ecosystem.",
         },
         evolution: {
-          title: "A product in continuous evolution",
+          title: "A product that evolves with the operation",
           text:
-            "LEM-BOX is an active product that continues adapting to the real processes of the business.",
+            "LEM-BOX continues adapting to the real processes, needs, and priorities of the business.",
           qualityTitle: "Quality and risk reduction",
           qualityText:
-            "The product's evolution includes automated testing, role-based authorization, architecture reviews, technical documentation, and controlled deployments. These mechanisms are part of a continuous process of quality and risk reduction.",
+            "Its development is supported by automated testing, role-based authorization, architecture reviews, technical documentation, and controlled deployments. Each change is part of an ongoing process of improvement and risk reduction.",
         },
         mobileFuture: {
-          title: "Next evolution",
+          title: "Next stage",
           text:
-            "The ecosystem is in an ongoing stage of documentation, testing, and technical preparation for a future extension to Android and iOS. These applications are part of the planned evolution and are not yet presented as available products.",
+            "The ecosystem is currently in a stage of documentation, testing, and technical preparation for a future extension to Android and iOS. These applications are part of the planned evolution and are not yet presented as available products.",
         },
         currentState: {
-          title: "Current status",
-          text:
-            "Active product in continuous documentation, testing, and evolution.",
+          title: "CURRENT STATUS · ACTIVE PRODUCT",
+          text: "",
         },
         publicLinksTitle: "Explore the ecosystem",
         finalCta: {

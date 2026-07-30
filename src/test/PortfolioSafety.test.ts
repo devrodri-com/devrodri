@@ -303,6 +303,42 @@ describe("portfolio architecture invariants", () => {
       text: "The architecture combines web interfaces, authentication, data, files, and deployments on a foundation designed to evolve with the product.",
       stackLabel: "Core technologies",
     });
+    expect(caseStudy.content.es.markets).toEqual({
+      title: "Una operación, tres mercados",
+      text: "La operación logística se desarrolla en Estados Unidos, mientras Uruguay y Argentina cuentan con experiencias comerciales adaptadas a cada mercado y conectadas al mismo ecosistema operativo.",
+    });
+    expect(caseStudy.content.en.markets).toEqual({
+      title: "One operation, three markets",
+      text: "The logistics operation is based in the United States, while Uruguay and Argentina have commercial experiences tailored to each market and connected to the same operational ecosystem.",
+    });
+    expect(caseStudy.content.es.evolution).toEqual({
+      title: "Un producto que evoluciona con la operación",
+      text: "LEM-BOX continúa adaptándose a los procesos, necesidades y prioridades reales del negocio.",
+      qualityTitle: "Calidad y reducción de riesgo",
+      qualityText: "Su desarrollo se apoya en pruebas automatizadas, autorización por roles, revisión de arquitectura, documentación técnica y despliegues controlados. Cada cambio forma parte de un proceso continuo de mejora y reducción de riesgo.",
+    });
+    expect(caseStudy.content.en.evolution).toEqual({
+      title: "A product that evolves with the operation",
+      text: "LEM-BOX continues adapting to the real processes, needs, and priorities of the business.",
+      qualityTitle: "Quality and risk reduction",
+      qualityText: "Its development is supported by automated testing, role-based authorization, architecture reviews, technical documentation, and controlled deployments. Each change is part of an ongoing process of improvement and risk reduction.",
+    });
+    expect(caseStudy.content.es.mobileFuture).toEqual({
+      title: "Siguiente etapa",
+      text: "El ecosistema atraviesa una etapa de documentación, pruebas y preparación técnica para una futura extensión a Android e iOS. Estas aplicaciones forman parte de la evolución prevista y todavía no se presentan como productos disponibles.",
+    });
+    expect(caseStudy.content.en.mobileFuture).toEqual({
+      title: "Next stage",
+      text: "The ecosystem is currently in a stage of documentation, testing, and technical preparation for a future extension to Android and iOS. These applications are part of the planned evolution and are not yet presented as available products.",
+    });
+    expect(caseStudy.content.es.currentState).toEqual({
+      title: "ESTADO ACTUAL · PRODUCTO ACTIVO",
+      text: "",
+    });
+    expect(caseStudy.content.en.currentState).toEqual({
+      title: "CURRENT STATUS · ACTIVE PRODUCT",
+      text: "",
+    });
     expect(caseStudy.stack).toEqual([
       "Next.js",
       "React",
@@ -319,6 +355,29 @@ describe("portfolio architecture invariants", () => {
     expect(serialized).not.toContain(
       "The more than 10 years refer to the business's trajectory",
     );
+    for (const supersededCopy of [
+      "Estados Unidos, Uruguay y Argentina",
+      "The United States, Uruguay, and Argentina",
+      "Un producto en evolución continua",
+      "A product in continuous evolution",
+      "Próxima evolución",
+      "Next evolution",
+      "Producto activo en documentación, pruebas y evolución continua.",
+      "Active product in continuous documentation, testing, and evolution.",
+    ]) {
+      expect(
+        JSON.stringify({
+          markets: caseStudy.content.es.markets,
+          marketsEn: caseStudy.content.en.markets,
+          evolution: caseStudy.content.es.evolution,
+          evolutionEn: caseStudy.content.en.evolution,
+          mobileFuture: caseStudy.content.es.mobileFuture,
+          mobileFutureEn: caseStudy.content.en.mobileFuture,
+          currentState: caseStudy.content.es.currentState,
+          currentStateEn: caseStudy.content.en.currentState,
+        }),
+      ).not.toContain(supersededCopy);
+    }
     expect(Object.keys(caseStudy.content.es).sort()).toEqual(
       Object.keys(caseStudy.content.en).sort(),
     );

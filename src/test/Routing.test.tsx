@@ -424,8 +424,8 @@ describe("application routing", () => {
       "Experiencias según cada necesidad",
       "De procesos dispersos a un producto conectado",
       "Base técnica",
-      "Estados Unidos, Uruguay y Argentina",
-      "Un producto en evolución continua",
+      "Una operación, tres mercados",
+      "Un producto que evoluciona con la operación",
       "Conocer el ecosistema",
       "¿Necesitás un sistema conectado a una operación real?",
     ]) {
@@ -628,6 +628,90 @@ describe("application routing", () => {
       "Vercel",
     ]);
     expect(architectureSection.querySelector("img")).toBeNull();
+  });
+
+  it("integrates the LEM-BOX status into the refined markets and evolution flow", async () => {
+    const user = userEvent.setup();
+    renderApp("/portfolio/lem-box");
+
+    const marketsHeading = await screen.findByRole("heading", {
+      level: 2,
+      name: "Una operación, tres mercados",
+    });
+    const marketsSection = marketsHeading.closest("section");
+    const evolutionHeading = screen.getByRole("heading", {
+      level: 2,
+      name: "Un producto que evoluciona con la operación",
+    });
+    const evolutionSection = evolutionHeading.closest("section");
+    expect(marketsSection).not.toBeNull();
+    expect(evolutionSection).not.toBeNull();
+    if (marketsSection === null || evolutionSection === null) {
+      throw new Error("Missing LEM-BOX markets or evolution section");
+    }
+
+    expect(
+      within(marketsSection).getByText(
+        "La operación logística se desarrolla en Estados Unidos, mientras Uruguay y Argentina cuentan con experiencias comerciales adaptadas a cada mercado y conectadas al mismo ecosistema operativo.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      within(evolutionSection).getByText(
+        "ESTADO ACTUAL · PRODUCTO ACTIVO",
+      ),
+    ).toHaveAttribute("data-evolution-status-metadata");
+    expect(
+      within(evolutionSection).getByText(
+        "LEM-BOX continúa adaptándose a los procesos, necesidades y prioridades reales del negocio.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      within(evolutionSection).getByText(
+        "Su desarrollo se apoya en pruebas automatizadas, autorización por roles, revisión de arquitectura, documentación técnica y despliegues controlados. Cada cambio forma parte de un proceso continuo de mejora y reducción de riesgo.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 3, name: "Siguiente etapa" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "El ecosistema atraviesa una etapa de documentación, pruebas y preparación técnica para una futura extensión a Android e iOS. Estas aplicaciones forman parte de la evolución prevista y todavía no se presentan como productos disponibles.",
+      ),
+    ).toBeInTheDocument();
+    expect(document.querySelector("#lem-box-current-state")).toBeNull();
+    expect(screen.queryByRole("heading", { name: "Estado actual" })).toBeNull();
+
+    await user.click(screen.getByRole("button", { name: "Cambiar a inglés" }));
+
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "One operation, three markets",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "The logistics operation is based in the United States, while Uruguay and Argentina have commercial experiences tailored to each market and connected to the same operational ecosystem.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText("CURRENT STATUS · ACTIVE PRODUCT"),
+    ).toHaveAttribute("data-evolution-status-metadata");
+    expect(
+      screen.getByRole("heading", {
+        level: 2,
+        name: "A product that evolves with the operation",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Its development is supported by automated testing, role-based authorization, architecture reviews, technical documentation, and controlled deployments. Each change is part of an ongoing process of improvement and risk reduction.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 3, name: "Next stage" }),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "Current status" })).toBeNull();
   });
 
   it("renders the English LEM-BOX case study and exact metadata", async () => {
