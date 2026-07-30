@@ -435,6 +435,47 @@ describe("application routing", () => {
     }
   });
 
+  it("renders the refined challenge and role without a center divider", async () => {
+    renderApp("/portfolio/lem-box");
+
+    const challengeHeading = await screen.findByRole("heading", {
+      level: 2,
+      name: "El desafío",
+    });
+    const roleHeading = screen.getByRole("heading", {
+      level: 2,
+      name: "Mi rol",
+    });
+    const challengeSection = challengeHeading.closest("section");
+    const roleSection = roleHeading.closest("section");
+    expect(challengeSection).not.toBeNull();
+    expect(roleSection).not.toBeNull();
+    if (challengeSection === null || roleSection === null) {
+      throw new Error("Missing LEM-BOX challenge or role section");
+    }
+
+    const columns = challengeSection.parentElement;
+    expect(columns).toBe(roleSection.parentElement);
+    expect(columns).toHaveClass("lg:grid-cols-2", "lg:gap-20");
+    expect(columns).not.toHaveClass("lg:divide-x", "lg:divide-white/10");
+    expect(challengeSection).toHaveClass(
+      "border-t",
+      "border-white/15",
+      "pt-7",
+    );
+    expect(roleSection).toHaveClass("border-t", "border-white/15", "pt-7");
+    expect(
+      within(challengeSection).getByText(
+        "La operación necesitaba continuidad entre la captación comercial, la recepción y consolidación de paquetes, los embarques, el tracking, los pagos y la atención. El desafío no era crear una web aislada, sino conectar mercados, usuarios y procesos en un producto alineado con la operación real.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      within(roleSection).getByText(
+        "Mi trabajo parte de la operación diaria: traduzco necesidades reales en prioridades de producto, flujos y funcionalidades, y llevo esas decisiones hasta la implementación y evolución técnica del ecosistema.",
+      ),
+    ).toBeInTheDocument();
+  });
+
   it("renders the English LEM-BOX case study and exact metadata", async () => {
     localStorage.setItem("language", "en");
     renderApp("/portfolio/lem-box");
@@ -455,6 +496,16 @@ describe("application routing", () => {
         "The more than 10 years refer to the business's trajectory, not the age of the current platform.",
       ),
     ).not.toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "The operation needed continuity across customer acquisition, package intake and consolidation, shipments, tracking, payments, and support. The challenge was not to build an isolated website, but to connect markets, users, and processes through a product aligned with the real operation.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "My work starts with day-to-day operations: I turn real needs into product priorities, workflows, and features, and carry those decisions through implementation and the ecosystem's technical evolution.",
+      ),
+    ).toBeInTheDocument();
     expect(
       screen.getByText(
         "Founder, owner, and Operations Manager. I lead product, processes, and full-stack development of the digital ecosystem.",

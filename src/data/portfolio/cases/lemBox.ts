@@ -104,12 +104,12 @@ export const lemBoxCase = definePortfolioCase({
         challenge: {
           title: "El desafío",
           text:
-            "La operación necesitaba continuidad entre la captación comercial, la recepción de paquetes, la consolidación, los embarques, el tracking, los pagos y la atención. El desafío no era crear una web aislada, sino conectar mercados, usuarios y procesos dentro de un producto coherente con la operación real.",
+            "La operación necesitaba continuidad entre la captación comercial, la recepción y consolidación de paquetes, los embarques, el tracking, los pagos y la atención. El desafío no era crear una web aislada, sino conectar mercados, usuarios y procesos en un producto alineado con la operación real.",
         },
         role: {
           title: "Mi rol",
           text:
-            "Como fundador, propietario y Operations Manager, defino prioridades desde la operación diaria. También lidero producto, diseño de procesos y desarrollo full-stack del ecosistema digital.",
+            "Mi trabajo parte de la operación diaria: traduzco necesidades reales en prioridades de producto, flujos y funcionalidades, y llevo esas decisiones hasta la implementación y evolución técnica del ecosistema.",
         },
         ecosystem: {
           title: "Un ecosistema, distintas experiencias",
@@ -216,12 +216,12 @@ export const lemBoxCase = definePortfolioCase({
         challenge: {
           title: "The challenge",
           text:
-            "The operation needed continuity across customer acquisition, package intake, consolidation, shipments, tracking, payments, and support. The challenge was not to build an isolated website, but to connect markets, users, and processes through a product aligned with the real operation.",
+            "The operation needed continuity across customer acquisition, package intake and consolidation, shipments, tracking, payments, and support. The challenge was not to build an isolated website, but to connect markets, users, and processes through a product aligned with the real operation.",
         },
         role: {
           title: "My role",
           text:
-            "As founder, owner, and Operations Manager, I define priorities from daily operations. I also lead product, process design, and full-stack development of the digital ecosystem.",
+            "My work starts with day-to-day operations: I turn real needs into product priorities, workflows, and features, and carry those decisions through implementation and the ecosystem's technical evolution.",
         },
         ecosystem: {
           title: "One ecosystem, different experiences",

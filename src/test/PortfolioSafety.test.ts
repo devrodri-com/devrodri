@@ -277,6 +277,22 @@ describe("portfolio architecture invariants", () => {
       text: "LEM-BOX is a logistics business with more than 10 years of experience. Its current digital ecosystem is part of a more recent evolution and connects the commercial websites for Uruguay and Argentina with a central platform used by customers, partners, and the operations team.",
       clarification: "",
     });
+    expect(caseStudy.content.es.challenge).toEqual({
+      title: "El desafío",
+      text: "La operación necesitaba continuidad entre la captación comercial, la recepción y consolidación de paquetes, los embarques, el tracking, los pagos y la atención. El desafío no era crear una web aislada, sino conectar mercados, usuarios y procesos en un producto alineado con la operación real.",
+    });
+    expect(caseStudy.content.en.challenge).toEqual({
+      title: "The challenge",
+      text: "The operation needed continuity across customer acquisition, package intake and consolidation, shipments, tracking, payments, and support. The challenge was not to build an isolated website, but to connect markets, users, and processes through a product aligned with the real operation.",
+    });
+    expect(caseStudy.content.es.role).toEqual({
+      title: "Mi rol",
+      text: "Mi trabajo parte de la operación diaria: traduzco necesidades reales en prioridades de producto, flujos y funcionalidades, y llevo esas decisiones hasta la implementación y evolución técnica del ecosistema.",
+    });
+    expect(caseStudy.content.en.role).toEqual({
+      title: "My role",
+      text: "My work starts with day-to-day operations: I turn real needs into product priorities, workflows, and features, and carry those decisions through implementation and the ecosystem's technical evolution.",
+    });
     expect(serialized).not.toContain(
       "Los más de 10 años corresponden a la trayectoria del negocio",
     );

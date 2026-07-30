@@ -101,22 +101,18 @@ export default function LemBoxCasePage() {
           </div>
         </section>
 
-        <div className="border-b border-white/10 px-4 py-12 sm:px-6 sm:py-24 lg:py-28">
-          <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-2 lg:gap-0 lg:divide-x lg:divide-white/10">
-            <div className="lg:pr-12">
-              <LemBoxEditorialColumn
-                id="lem-box-challenge"
-                title={page.challenge.title}
-                text={page.challenge.text}
-              />
-            </div>
-            <div className="lg:pl-12">
-              <LemBoxEditorialColumn
-                id="lem-box-role"
-                title={page.role.title}
-                text={page.role.text}
-              />
-            </div>
+        <div className="border-b border-white/10 px-4 py-12 sm:px-6 sm:pb-24 sm:pt-20 lg:pb-28 lg:pt-24">
+          <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-2 lg:gap-20">
+            <LemBoxEditorialColumn
+              id="lem-box-challenge"
+              title={page.challenge.title}
+              text={page.challenge.text}
+            />
+            <LemBoxEditorialColumn
+              id="lem-box-role"
+              title={page.role.title}
+              text={page.role.text}
+            />
           </div>
         </div>
 
