@@ -1,5 +1,9 @@
 type AnalyticsFormMethod = "formsubmit";
-type AnalyticsPagePath = "/" | "/portfolio" | "/unknown";
+type AnalyticsPagePath =
+  | "/"
+  | "/portfolio"
+  | "/portfolio/lem-box"
+  | "/unknown";
 type ContactFormErrorType =
   | "validation_error"
   | "network_error"

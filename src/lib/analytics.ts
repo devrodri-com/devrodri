@@ -69,10 +69,16 @@ function createGoogleTagScript(measurementId: string): HTMLScriptElement {
 
 function getAnalyticsPath(pathname: string): AnalyticsPagePath {
   const [withoutQueryOrHash = ""] = pathname.split(/[?#]/, 1);
-  if (withoutQueryOrHash === "" || withoutQueryOrHash === "/") return "/";
+  const normalizedPath =
+    withoutQueryOrHash.length > 1
+      ? withoutQueryOrHash.replace(/\/+$/, "")
+      : withoutQueryOrHash;
+  if (normalizedPath === "" || normalizedPath === "/") return "/";
+  if (normalizedPath === "/portfolio/lem-box") {
+    return "/portfolio/lem-box";
+  }
   if (
-    withoutQueryOrHash === "/portfolio" ||
-    withoutQueryOrHash === "/portfolio/"
+    normalizedPath === "/portfolio"
   ) {
     return "/portfolio";
   }

@@ -1,13 +1,23 @@
 // src/Components/SeoHead.tsx
 import { Helmet } from "react-helmet-async";
+import { useEffect } from "react";
 import translations from "../i18n";
 import { useLanguage } from "../i18n/useLanguage";
 import { useLocation } from "react-router-dom";
 import { metaReactCredential, ibmFullStackCredential } from "../seo/homeCredentialsJsonLd";
+import { lemBoxCase } from "../data/portfolio/cases/lemBox";
 
 const SITE_ORIGIN = "https://www.devrodri.com";
 /** Imagen OG/poster referenciada también en el hero; evita rutas rotas tipo meta-cover.jpg */
 const DEFAULT_OG_IMAGE_PATH = "/img/hero-visual.jpg";
+const STATIC_FALLBACK_META_SELECTORS = [
+  'meta[name="description"]',
+  'meta[property="og:title"]',
+  'meta[property="og:description"]',
+  'meta[property="og:type"]',
+  'meta[property="og:url"]',
+  'meta[property="og:image"]',
+] as const;
 
 function normalizeRoutedPathname(pathname: string): string {
   const pathnameWithoutTrailingSlash =
@@ -22,7 +32,11 @@ export default function SeoHead() {
 
   const normalizedPathname = normalizeRoutedPathname(pathname);
   const isPortfolio = normalizedPathname === "/portfolio";
-  const isNotFound = normalizedPathname !== "/" && !isPortfolio;
+  const isLemBoxCase =
+    normalizedPathname === lemBoxCase.caseStudy.path;
+  const isNotFound =
+    normalizedPathname !== "/" && !isPortfolio && !isLemBoxCase;
+  const lemBoxSeo = lemBoxCase.caseStudy.content[language].seo;
   const notFoundSeo = {
     title:
       language === "es"
@@ -36,20 +50,38 @@ export default function SeoHead() {
   };
   const seo = isNotFound
     ? notFoundSeo
+    : isLemBoxCase
+      ? { ...lemBoxSeo, keywords: "" }
     : isPortfolio
       ? t.portfolio.seo
       : t.seo;
-  const canonicalPath = isPortfolio
+  const canonicalPath = isLemBoxCase
+    ? lemBoxCase.caseStudy.path
+    : isPortfolio
     ? "/portfolio"
     : pathname === "/"
       ? ""
       : pathname;
   const canonicalUrl = `${SITE_ORIGIN}${canonicalPath}`;
-  const ogImageUrl = `${SITE_ORIGIN}${DEFAULT_OG_IMAGE_PATH}`;
+  const ogImageUrl = `${SITE_ORIGIN}${
+    isLemBoxCase ? lemBoxCase.cover : DEFAULT_OG_IMAGE_PATH
+  }`;
   const ogTitle =
-    isPortfolio || isNotFound ? seo.title : t.seo.ogTitle;
+    isPortfolio || isLemBoxCase || isNotFound ? seo.title : t.seo.ogTitle;
   const ogDescription =
-    isPortfolio || isNotFound ? seo.description : t.seo.ogDescription;
+    isPortfolio || isLemBoxCase || isNotFound
+      ? seo.description
+      : t.seo.ogDescription;
+
+  useEffect(() => {
+    if (!isLemBoxCase) return;
+
+    STATIC_FALLBACK_META_SELECTORS.forEach((selector) => {
+      document.head.querySelectorAll(selector).forEach((element) => {
+        if (!element.hasAttribute("data-rh")) element.remove();
+      });
+    });
+  }, [isLemBoxCase]);
 
   return (
     <Helmet>
@@ -62,7 +94,7 @@ export default function SeoHead() {
       <meta name="author" content="Rodrigo Opalo" />
       <meta property="og:title" content={ogTitle} />
       <meta property="og:description" content={ogDescription} />
-      <meta property="og:type" content="website" />
+      <meta property="og:type" content={isLemBoxCase ? "article" : "website"} />
       <meta
         property="og:locale"
         content={language === "es" ? "es_ES" : "en_US"}

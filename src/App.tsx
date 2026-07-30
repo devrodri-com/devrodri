@@ -24,6 +24,7 @@ import {
 } from "./lib/analytics";
 
 const PortfolioPage = lazy(() => import("./pages/PortfolioPage"));
+const LemBoxCasePage = lazy(() => import("./pages/LemBoxCasePage"));
 
 const HomePage = () => (
   <>
@@ -121,6 +122,22 @@ function App() {
                 }
               >
                 <PortfolioPage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="/portfolio/lem-box"
+            element={
+              <Suspense
+                fallback={
+                  <div className="min-h-[45vh] flex items-center justify-center bg-black text-white/70 text-sm px-4 text-center">
+                    {language === "es"
+                      ? "Cargando caso LEM-BOX…"
+                      : "Loading LEM-BOX case study…"}
+                  </div>
+                }
+              >
+                <LemBoxCasePage />
               </Suspense>
             }
           />

@@ -54,4 +54,18 @@ describe("App analytics integration", () => {
     expect(isAnalyticsClickLabel).not.toHaveBeenCalled();
     expect(trackAnalyticsClick).not.toHaveBeenCalled();
   });
+
+  it("tracks the exact LEM-BOX case pathname", async () => {
+    render(
+      <LanguageProvider>
+        <MemoryRouter initialEntries={["/portfolio/lem-box/"]}>
+          <App />
+        </MemoryRouter>
+      </LanguageProvider>,
+    );
+
+    await waitFor(() =>
+      expect(trackPageView).toHaveBeenCalledWith("/portfolio/lem-box/"),
+    );
+  });
 });

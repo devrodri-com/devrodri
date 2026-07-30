@@ -218,6 +218,63 @@ describe("analytics", () => {
     });
   });
 
+  it.each([
+    "/portfolio/lem-box",
+    "/portfolio/lem-box/",
+    "/portfolio/lem-box///",
+    "/portfolio/lem-box#private",
+    "/portfolio/lem-box/?token=private#message",
+  ])("normalizes the LEM-BOX case path without private suffixes: %s", async (path) => {
+    vi.stubEnv("VITE_GA_ID", VALID_TEST_MEASUREMENT_ID);
+    window.history.replaceState(null, "", path);
+    const { trackPageView } = await import("../lib/analytics");
+
+    trackPageView(path);
+
+    expect(pageViewCommands()[0]?.[2]).toMatchObject({
+      page_location: `${window.location.origin}/portfolio/lem-box`,
+      page_path: "/portfolio/lem-box",
+    });
+    expect(JSON.stringify(dataLayerCommands())).not.toContain("private");
+    expect(JSON.stringify(dataLayerCommands())).not.toContain("token");
+  });
+
+  it("keeps allowlisted campaign attribution on a LEM-BOX landing page", async () => {
+    vi.stubEnv("VITE_GA_ID", VALID_TEST_MEASUREMENT_ID);
+    window.history.replaceState(
+      null,
+      "",
+      "/portfolio/lem-box?utm_source=google&utm_medium=cpc&email=private%40example.com#message",
+    );
+    const { trackPageView } = await import("../lib/analytics");
+
+    trackPageView(window.location.pathname);
+
+    expect(pageViewCommands()[0]?.[2]).toEqual({
+      page_title: document.title,
+      page_location: `${window.location.origin}/portfolio/lem-box?utm_source=google&utm_medium=cpc`,
+      page_path: "/portfolio/lem-box",
+    });
+    expect(JSON.stringify(dataLayerCommands())).not.toContain(
+      "private@example.com",
+    );
+    expect(JSON.stringify(dataLayerCommands())).not.toContain("message");
+  });
+
+  it("does not classify a nested LEM-BOX path as the approved case route", async () => {
+    vi.stubEnv("VITE_GA_ID", VALID_TEST_MEASUREMENT_ID);
+    const nestedPath = "/portfolio/lem-box/private";
+    window.history.replaceState(null, "", nestedPath);
+    const { trackPageView } = await import("../lib/analytics");
+
+    trackPageView(nestedPath);
+
+    expect(pageViewCommands()[0]?.[2]).toMatchObject({
+      page_location: `${window.location.origin}/unknown`,
+      page_path: "/unknown",
+    });
+  });
+
   it("uses closed, PII-free contact events", async () => {
     vi.stubEnv("VITE_GA_ID", VALID_TEST_MEASUREMENT_ID);
     window.history.replaceState(null, "", "/portfolio?lead=private#contact");

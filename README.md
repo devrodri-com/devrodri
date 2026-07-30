@@ -15,7 +15,12 @@ Production: [www.devrodri.com](https://www.devrodri.com)
 - Vitest 4
 - Node.js 22 and npm 9.9.4
 
-The public routes are `/` and `/portfolio`. Unknown routes render the application’s not-found view.
+The public routes are `/`, `/portfolio`, and the LEM-BOX flagship case at
+`/portfolio/lem-box`. The typed portfolio catalog supports an optional case
+study, currently used only by LEM-BOX; the other seven projects keep their
+expandable cards. Case metadata is client-side, while server-visible metadata
+remains deferred to a dedicated visibility audit. Unknown routes render the
+application’s not-found view.
 
 ## Local development
 

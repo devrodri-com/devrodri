@@ -71,6 +71,7 @@ const expectedFilters = [
   { key: "brand", label: { es: "Marca", en: "Brand" } },
 ];
 const expectedPreservedCaseHashes = {
+  zentra: "50082406905123ed80a6eac63745d3a4a27448825990fdc82b7057d41b4d411a",
   esteban: "643b388f7f34ce4b90e2ba1890b007fef0f2c485694647bf56cc0c04a4c421e4",
   mutter: "aa118ae6042f19d18ec824d988519e28a8a36aef2b94be6a80ec3634dac1ec25",
   magenta: "e705f225be4bb4ea1f0158d65198f206657f7ead2d892e4169902c9df5935c89",
@@ -261,7 +262,8 @@ describe("portfolio architecture invariants", () => {
     expect(lemBox.content.en.tags).toEqual([
       "Own product · Operations platform",
     ]);
-    expect(lemBox.home.summary).toEqual({
+    expect(lemBox.home).toBeDefined();
+    expect(lemBox.home?.summary).toEqual({
       es: "Producto propio que conecta la presencia comercial de LEM-BOX en Uruguay y Argentina con una plataforma central utilizada en su operación logística entre Estados Unidos y ambos mercados.",
       en: "A product built for LEM-BOX's real operation, connecting its commercial presence in Uruguay and Argentina with a central platform used across its logistics workflows between the United States and both markets.",
     });

@@ -11,7 +11,12 @@ Producción: [www.devrodri.com](https://www.devrodri.com)
 - Vitest 4
 - Node.js 22 y npm 9.9.4
 
-Las rutas públicas son `/` y `/portfolio`. Las rutas desconocidas muestran la vista de página no encontrada.
+Las rutas públicas son `/`, `/portfolio` y el caso flagship de LEM-BOX en
+`/portfolio/lem-box`. El catálogo tipado admite un caso completo opcional,
+utilizado actualmente solo por LEM-BOX; los otros siete proyectos conservan
+sus tarjetas expandibles. La metadata del caso se actualiza en cliente y la
+metadata visible desde servidor queda diferida a una auditoría específica de
+visibilidad. Las rutas desconocidas muestran la vista de página no encontrada.
 
 ## Desarrollo
 

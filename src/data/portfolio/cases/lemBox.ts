@@ -90,6 +90,7 @@ export const lemBoxCase = definePortfolioCase({
         header: {
           badges: ["Producto propio", "Producto activo"],
           subtitle: "Ecosistema digital para una operación logística internacional",
+          coverAlt: "Portada de LEM-BOX",
           backLabel: "Volver al portfolio",
           homeCta: "Ver caso LEM-BOX",
           portfolioCta: "Ver caso completo",
@@ -202,6 +203,7 @@ export const lemBoxCase = definePortfolioCase({
         header: {
           badges: ["Own product", "Active product"],
           subtitle: "Digital ecosystem for an international logistics operation",
+          coverAlt: "LEM-BOX cover",
           backLabel: "Back to portfolio",
           homeCta: "View LEM-BOX case study",
           portfolioCta: "View full case study",
