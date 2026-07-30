@@ -98,9 +98,8 @@ export const lemBoxCase = definePortfolioCase({
         summary: {
           title: "Un producto conectado a una operación real",
           text:
-            "LEM-BOX es un negocio logístico con más de 10 años de trayectoria. Su ecosistema digital conecta los sitios comerciales de Uruguay y Argentina con una plataforma central utilizada por clientes, partners y el equipo operativo.",
-          clarification:
-            "Los más de 10 años corresponden a la trayectoria del negocio, no a la antigüedad de la plataforma actual.",
+            "LEM-BOX es un negocio logístico con más de 10 años de trayectoria. Su ecosistema digital actual forma parte de una evolución más reciente y conecta los sitios comerciales de Uruguay y Argentina con una plataforma central utilizada por clientes, partners y el equipo operativo.",
+          clarification: "",
         },
         challenge: {
           title: "El desafío",
@@ -211,9 +210,8 @@ export const lemBoxCase = definePortfolioCase({
         summary: {
           title: "A product connected to a real operation",
           text:
-            "LEM-BOX is a logistics business with more than 10 years of experience. Its digital ecosystem connects the commercial websites for Uruguay and Argentina with a central platform used by customers, partners, and the operations team.",
-          clarification:
-            "The more than 10 years refer to the business's trajectory, not the age of the current platform.",
+            "LEM-BOX is a logistics business with more than 10 years of experience. Its current digital ecosystem is part of a more recent evolution and connects the commercial websites for Uruguay and Argentina with a central platform used by customers, partners, and the operations team.",
+          clarification: "",
         },
         challenge: {
           title: "The challenge",

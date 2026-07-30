@@ -391,6 +391,50 @@ describe("application routing", () => {
     },
   );
 
+  it("renders the refined Spanish LEM-BOX summary without a secondary note", async () => {
+    renderApp("/portfolio/lem-box");
+
+    const summaryHeading = await screen.findByRole("heading", {
+      level: 2,
+      name: "Un producto conectado a una operación real",
+    });
+    const summarySection = summaryHeading.closest("section");
+    expect(summarySection).not.toBeNull();
+    if (summarySection === null) {
+      throw new Error("Missing LEM-BOX summary section");
+    }
+
+    expect(
+      within(summarySection).getByText(
+        "LEM-BOX es un negocio logístico con más de 10 años de trayectoria. Su ecosistema digital actual forma parte de una evolución más reciente y conecta los sitios comerciales de Uruguay y Argentina con una plataforma central utilizada por clientes, partners y el equipo operativo.",
+      ),
+    ).toBeInTheDocument();
+    expect(summarySection.querySelectorAll("p")).toHaveLength(1);
+    expect(summarySection.querySelector('[class*="border-l"]')).toBeNull();
+    expect(
+      screen.queryByText(
+        "Los más de 10 años corresponden a la trayectoria del negocio, no a la antigüedad de la plataforma actual.",
+      ),
+    ).not.toBeInTheDocument();
+
+    for (const sectionTitle of [
+      "El desafío",
+      "Mi rol",
+      "Un ecosistema, distintas experiencias",
+      "Experiencias según cada necesidad",
+      "De procesos dispersos a un producto conectado",
+      "Base técnica",
+      "Estados Unidos, Uruguay y Argentina",
+      "Un producto en evolución continua",
+      "Conocer el ecosistema",
+      "¿Necesitás un sistema conectado a una operación real?",
+    ]) {
+      expect(
+        screen.getByRole("heading", { name: sectionTitle }),
+      ).toBeInTheDocument();
+    }
+  });
+
   it("renders the English LEM-BOX case study and exact metadata", async () => {
     localStorage.setItem("language", "en");
     renderApp("/portfolio/lem-box");
@@ -401,6 +445,16 @@ describe("application routing", () => {
         name: "A product connected to a real operation",
       }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "LEM-BOX is a logistics business with more than 10 years of experience. Its current digital ecosystem is part of a more recent evolution and connects the commercial websites for Uruguay and Argentina with a central platform used by customers, partners, and the operations team.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText(
+        "The more than 10 years refer to the business's trajectory, not the age of the current platform.",
+      ),
+    ).not.toBeInTheDocument();
     expect(
       screen.getByText(
         "Founder, owner, and Operations Manager. I lead product, processes, and full-stack development of the digital ecosystem.",

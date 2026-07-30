@@ -86,7 +86,7 @@ export default function LemBoxCasePage() {
       <article>
         <section
           aria-labelledby="lem-box-summary"
-          className="border-b border-white/10 px-4 py-12 sm:px-6 sm:py-24 lg:py-28"
+          className="border-b border-white/10 px-4 py-12 sm:px-6 sm:pb-20 sm:pt-24 lg:pb-24 lg:pt-28"
         >
           <div className="mx-auto max-w-6xl">
             <h2
@@ -95,11 +95,8 @@ export default function LemBoxCasePage() {
             >
               {page.summary.title}
             </h2>
-            <p className="mt-7 max-w-[46rem] text-lg leading-relaxed text-gray-300/90">
+            <p className="mt-7 max-w-[48rem] text-lg leading-relaxed text-gray-300/90">
               {page.summary.text}
-            </p>
-            <p className="mt-8 max-w-[60ch] border-l-2 border-primary pl-4 text-sm leading-relaxed text-gray-400">
-              {page.summary.clarification}
             </p>
           </div>
         </section>

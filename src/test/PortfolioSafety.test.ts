@@ -267,17 +267,21 @@ describe("portfolio architecture invariants", () => {
       es: "Producto propio que conecta la presencia comercial de LEM-BOX en Uruguay y Argentina con una plataforma central utilizada en su operación logística entre Estados Unidos y ambos mercados.",
       en: "A product built for LEM-BOX's real operation, connecting its commercial presence in Uruguay and Argentina with a central platform used across its logistics workflows between the United States and both markets.",
     });
-    expect(caseStudy.content.es.summary.text).toContain(
-      "LEM-BOX es un negocio logístico con más de 10 años de trayectoria.",
+    expect(caseStudy.content.es.summary).toEqual({
+      title: "Un producto conectado a una operación real",
+      text: "LEM-BOX es un negocio logístico con más de 10 años de trayectoria. Su ecosistema digital actual forma parte de una evolución más reciente y conecta los sitios comerciales de Uruguay y Argentina con una plataforma central utilizada por clientes, partners y el equipo operativo.",
+      clarification: "",
+    });
+    expect(caseStudy.content.en.summary).toEqual({
+      title: "A product connected to a real operation",
+      text: "LEM-BOX is a logistics business with more than 10 years of experience. Its current digital ecosystem is part of a more recent evolution and connects the commercial websites for Uruguay and Argentina with a central platform used by customers, partners, and the operations team.",
+      clarification: "",
+    });
+    expect(serialized).not.toContain(
+      "Los más de 10 años corresponden a la trayectoria del negocio",
     );
-    expect(caseStudy.content.es.summary.clarification).toBe(
-      "Los más de 10 años corresponden a la trayectoria del negocio, no a la antigüedad de la plataforma actual.",
-    );
-    expect(caseStudy.content.en.summary.text).toContain(
-      "LEM-BOX is a logistics business with more than 10 years of experience.",
-    );
-    expect(caseStudy.content.en.summary.clarification).toBe(
-      "The more than 10 years refer to the business's trajectory, not the age of the current platform.",
+    expect(serialized).not.toContain(
+      "The more than 10 years refer to the business's trajectory",
     );
     expect(Object.keys(caseStudy.content.es).sort()).toEqual(
       Object.keys(caseStudy.content.en).sort(),
