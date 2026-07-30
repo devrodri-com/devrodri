@@ -17,8 +17,8 @@ const stack = [
 ] as const;
 
 const publicRole = {
-  es: "Fundador, propietario y Operations Manager. Responsable de producto, diseño de procesos y desarrollo full-stack del ecosistema digital.",
-  en: "Founder, owner, and Operations Manager. Product lead, process designer, and full-stack developer of the digital ecosystem.",
+  es: "Fundador, propietario y Operations Manager. Lidero producto, procesos y desarrollo full-stack del ecosistema digital.",
+  en: "Founder, owner, and Operations Manager. I lead product, processes, and full-stack development of the digital ecosystem.",
 } as const satisfies Localized<string>;
 
 const publicLinks = [
@@ -88,7 +88,7 @@ export const lemBoxCase = definePortfolioCase({
             "Caso de producto propio: un ecosistema digital conectado con la operación logística de LEM-BOX en Estados Unidos, Uruguay y Argentina.",
         },
         header: {
-          badges: ["Producto propio", "Producto activo"],
+          badges: ["Producto propio", "En operación"],
           subtitle: "Ecosistema digital para una operación logística internacional",
           coverAlt: "Portada de LEM-BOX",
           backLabel: "Volver al portfolio",
@@ -201,7 +201,7 @@ export const lemBoxCase = definePortfolioCase({
             "Own-product case study: a digital ecosystem connected to LEM-BOX's logistics operation across the United States, Uruguay, and Argentina.",
         },
         header: {
-          badges: ["Own product", "Active product"],
+          badges: ["Own product", "In operation"],
           subtitle: "Digital ecosystem for an international logistics operation",
           coverAlt: "LEM-BOX cover",
           backLabel: "Back to portfolio",

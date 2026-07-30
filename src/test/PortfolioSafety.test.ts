@@ -251,10 +251,10 @@ describe("portfolio architecture invariants", () => {
     );
     expect(lemBox.category).toBe("systems");
     expect(lemBox.content.es.role).toBe(
-      "Fundador, propietario y Operations Manager. Responsable de producto, diseño de procesos y desarrollo full-stack del ecosistema digital.",
+      "Fundador, propietario y Operations Manager. Lidero producto, procesos y desarrollo full-stack del ecosistema digital.",
     );
     expect(lemBox.content.en.role).toBe(
-      "Founder, owner, and Operations Manager. Product lead, process designer, and full-stack developer of the digital ecosystem.",
+      "Founder, owner, and Operations Manager. I lead product, processes, and full-stack development of the digital ecosystem.",
     );
     expect(lemBox.content.es.tags).toEqual([
       "Producto propio · Plataforma operativa",

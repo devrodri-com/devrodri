@@ -352,8 +352,11 @@ describe("application routing", () => {
       ).toBeInTheDocument();
       expect(
         screen.getByText(
-          "Fundador, propietario y Operations Manager. Responsable de producto, diseño de procesos y desarrollo full-stack del ecosistema digital.",
+          "Fundador, propietario y Operations Manager. Lidero producto, procesos y desarrollo full-stack del ecosistema digital.",
         ),
+      ).toBeInTheDocument();
+      expect(
+        screen.getByText("Producto propio · En operación"),
       ).toBeInTheDocument();
       await waitFor(() => {
         expect(document.title).toBe(lemBoxSeo.es.title);
@@ -400,9 +403,13 @@ describe("application routing", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "Founder, owner, and Operations Manager. Product lead, process designer, and full-stack developer of the digital ecosystem.",
+        "Founder, owner, and Operations Manager. I lead product, processes, and full-stack development of the digital ecosystem.",
       ),
     ).toBeInTheDocument();
+    expect(screen.getByText("Own product · In operation")).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Back to portfolio" }),
+    ).toHaveTextContent("←Back to portfolio");
     await waitFor(() => {
       expect(document.title).toBe(lemBoxSeo.en.title);
       expect(
@@ -445,9 +452,11 @@ describe("application routing", () => {
     renderApp("/portfolio/lem-box");
     await screen.findByRole("heading", { level: 1, name: "LEM-BOX" });
 
-    expect(
-      screen.getByRole("link", { name: "Volver al portfolio" }),
-    ).toHaveAttribute("href", "/portfolio");
+    const portfolioReturn = screen.getByRole("link", {
+      name: "Volver al portfolio",
+    });
+    expect(portfolioReturn).toHaveAttribute("href", "/portfolio");
+    expect(portfolioReturn).toHaveTextContent("←Volver al portfolio");
     expect(
       screen.getByRole("link", { name: "Contame tu proyecto" }),
     ).toHaveAttribute("href", "/#contacto");

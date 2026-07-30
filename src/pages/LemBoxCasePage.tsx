@@ -43,14 +43,17 @@ export default function LemBoxCasePage() {
         <div className="mx-auto max-w-6xl">
           <Link
             to="/portfolio"
-            className="inline-flex min-h-[44px] items-center text-sm font-semibold text-gray-300 underline decoration-white/30 underline-offset-4 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="inline-flex min-h-[44px] items-center gap-2 text-sm font-medium text-gray-400 no-underline transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-black"
           >
-            {page.header.backLabel}
+            <span aria-hidden="true" className="text-base leading-none">
+              ←
+            </span>
+            <span>{page.header.backLabel}</span>
           </Link>
 
           <div className="mt-10 grid items-center gap-12 md:grid-cols-12">
             <div className="md:col-span-6">
-              <p className="whitespace-nowrap text-xs font-semibold uppercase tracking-[0.14em] text-primary sm:text-sm">
+              <p className="text-xs font-semibold uppercase leading-snug tracking-[0.14em] text-primary sm:text-sm">
                 {page.header.badges.join(" · ")}
               </p>
               <h1 className="mt-6 text-4xl font-semibold leading-tight tracking-tight text-white sm:text-5xl">
@@ -60,7 +63,7 @@ export default function LemBoxCasePage() {
                 {page.header.subtitle}
               </p>
               {cardContent.role !== undefined && (
-                <p className="mt-7 max-w-[36rem] border-l-2 border-primary pl-4 text-base leading-relaxed text-gray-300/90">
+                <p className="mt-7 max-w-[36rem] border-l border-primary/60 pl-5 text-base leading-relaxed text-gray-300/90">
                   {cardContent.role}
                 </p>
               )}
