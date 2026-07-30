@@ -16,7 +16,7 @@ interface FileSystemApi {
 }
 
 interface HashApi {
-  update(value: string): HashApi;
+  update(value: string | Uint8Array): HashApi;
   digest(encoding: "hex"): string;
 }
 
@@ -85,6 +85,8 @@ const removedLiveDemo = [
   "https://reservas-campings-nacionales",
   "vercel.app",
 ].join(".");
+const lemBoxCoverHash =
+  "a920605fc287def43c752f2f0fd58f197e2b11440d59c339d7a9084741ed42f5";
 
 function getCase(key: (typeof expectedProjectKeys)[number]) {
   const portfolioCase = portfolioCases.find((item) => item.key === key);
@@ -162,6 +164,24 @@ function readJpegDimensions(data: Uint8Array) {
   throw new Error("JPEG dimensions were not found");
 }
 
+function readPngDimensions(data: Uint8Array) {
+  const pngSignature = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
+  expect(Array.from(data.slice(0, pngSignature.length))).toEqual(pngSignature);
+
+  return {
+    width:
+      (byteAt(data, 16) << 24) |
+      (byteAt(data, 17) << 16) |
+      (byteAt(data, 18) << 8) |
+      byteAt(data, 19),
+    height:
+      (byteAt(data, 20) << 24) |
+      (byteAt(data, 21) << 16) |
+      (byteAt(data, 22) << 8) |
+      byteAt(data, 23),
+  };
+}
+
 describe("portfolio architecture invariants", () => {
   it("derives eight unique keys in the exact approved order", () => {
     expect(projectKeys).toEqual(expectedProjectKeys);
@@ -203,20 +223,97 @@ describe("portfolio architecture invariants", () => {
 
   it("publishes only the approved LEM-BOX links and claims", () => {
     const lemBox = getCase("lem_box");
+    const caseStudy = lemBox.caseStudy;
     const serialized = JSON.stringify(lemBox);
 
+    expect(caseStudy).toBeDefined();
+    if (caseStudy === undefined) {
+      throw new Error("Missing LEM-BOX case study");
+    }
+    expect(
+      portfolioCases
+        .filter((portfolioCase) => portfolioCase.caseStudy !== undefined)
+        .map(({ key }) => key),
+    ).toEqual(["lem_box"]);
+    expect(caseStudy.slug).toBe("lem-box");
+    expect(caseStudy.path).toBe("/portfolio/lem-box");
+    expect(caseStudy.publicLinks).toBe(lemBox.actions);
     expect(lemBox.actions.map(({ href }) => href)).toEqual([
       "https://lem-box.com",
       "https://lem-box.com.uy",
       "https://lem-box.com.ar",
     ]);
     expect(serialized).not.toMatch(/\/mi|\/partner|\/admin/);
-    expect(serialized).not.toContain("Stripe");
+    expect(serialized).not.toMatch(/Stripe|PayPal|Resend|hardening/i);
     expect(serialized).not.toMatch(
-      /selector multipaís|mobile ready|app móvil en desarrollo|SEO completamente optimizado|canonical perfecto|100 % segura|sin vulnerabilidades|grandes volúmenes sin degradación/i,
+      /selector multipaís|mobile ready|app móvil en desarrollo|SEO completamente optimizado|canonical perfecto|100 % segura|sin vulnerabilidades|grandes volúmenes sin degradación|coming soon|launch date/i,
     );
-    expect(lemBox.content.es.role).toBeDefined();
-    expect(lemBox.content.en.role).toBeDefined();
+    expect(lemBox.category).toBe("systems");
+    expect(lemBox.content.es.role).toBe(
+      "Fundador, propietario y Operations Manager. Responsable de producto, diseño de procesos y desarrollo full-stack del ecosistema digital.",
+    );
+    expect(lemBox.content.en.role).toBe(
+      "Founder, owner, and Operations Manager. Product lead, process designer, and full-stack developer of the digital ecosystem.",
+    );
+    expect(lemBox.content.es.tags).toEqual([
+      "Producto propio · Plataforma operativa",
+    ]);
+    expect(lemBox.content.en.tags).toEqual([
+      "Own product · Operations platform",
+    ]);
+    expect(lemBox.home.summary).toEqual({
+      es: "Producto propio que conecta la presencia comercial de LEM-BOX en Uruguay y Argentina con una plataforma central utilizada en su operación logística entre Estados Unidos y ambos mercados.",
+      en: "A product built for LEM-BOX's real operation, connecting its commercial presence in Uruguay and Argentina with a central platform used across its logistics workflows between the United States and both markets.",
+    });
+    expect(caseStudy.content.es.summary.text).toContain(
+      "LEM-BOX es un negocio logístico con más de 10 años de trayectoria.",
+    );
+    expect(caseStudy.content.es.summary.clarification).toBe(
+      "Los más de 10 años corresponden a la trayectoria del negocio, no a la antigüedad de la plataforma actual.",
+    );
+    expect(caseStudy.content.en.summary.text).toContain(
+      "LEM-BOX is a logistics business with more than 10 years of experience.",
+    );
+    expect(caseStudy.content.en.summary.clarification).toBe(
+      "The more than 10 years refer to the business's trajectory, not the age of the current platform.",
+    );
+    expect(Object.keys(caseStudy.content.es).sort()).toEqual(
+      Object.keys(caseStudy.content.en).sort(),
+    );
+    for (const sectionKey of [
+      "header",
+      "summary",
+      "challenge",
+      "role",
+      "ecosystem",
+      "audiences",
+      "solution",
+      "architecture",
+      "markets",
+      "evolution",
+      "mobileFuture",
+      "currentState",
+      "finalCta",
+    ] as const) {
+      expect(Object.keys(caseStudy.content.es[sectionKey]).sort()).toEqual(
+        Object.keys(caseStudy.content.en[sectionKey]).sort(),
+      );
+    }
+  });
+
+  it("keeps the exact LEM-BOX cover unchanged", () => {
+    const coverPath = path.join(projectRoot, "public/img/lem-box-cover.png");
+    const coverData = fs.readFileSync(coverPath);
+
+    expect(fs.existsSync(coverPath)).toBe(true);
+    expect(readPngDimensions(coverData)).toEqual({
+      width: 1200,
+      height: 630,
+    });
+    expect(fs.statSync(coverPath).size).toBe(1_256_806);
+    expect(
+      crypto.createHash("sha256").update(coverData).digest("hex"),
+    ).toBe(lemBoxCoverHash);
   });
 
   it("publishes ZENTRA without private documents or restricted names", () => {
@@ -289,9 +386,14 @@ describe("portfolio architecture invariants", () => {
       expect(Object.keys(portfolioCase.content.es).sort()).toEqual(
         Object.keys(portfolioCase.content.en).sort(),
       );
-      expect(Object.keys(portfolioCase.content.es.details).sort()).toEqual(
-        Object.keys(portfolioCase.content.en.details).sort(),
-      );
+      const esDetails = portfolioCase.content.es.details;
+      const enDetails = portfolioCase.content.en.details;
+      expect(esDetails === undefined).toBe(enDetails === undefined);
+      if (esDetails !== undefined && enDetails !== undefined) {
+        expect(Object.keys(esDetails).sort()).toEqual(
+          Object.keys(enDetails).sort(),
+        );
+      }
     }
 
     expect(
