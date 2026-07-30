@@ -128,17 +128,45 @@ export default function LemBoxCasePage() {
               >
                 {page.ecosystem.title}
               </h2>
-              <div className="mt-8 grid gap-8 sm:mt-12 md:grid-cols-3 md:gap-10">
-                {page.ecosystem.items.map((item) => (
-                  <div key={item.title} className="border-t-2 border-primary pt-5">
-                    <h3 className="text-lg font-semibold text-white">
-                      {item.title}
-                    </h3>
-                    <p className="mt-3 text-base leading-relaxed text-gray-300/90">
-                      {item.text}
-                    </p>
-                  </div>
-                ))}
+              <div
+                data-ecosystem-flow
+                className="relative mt-8 sm:mt-12"
+              >
+                <span
+                  aria-hidden="true"
+                  data-ecosystem-flow-line
+                  className="absolute left-0 right-0 top-[3px] hidden h-px bg-primary/35 md:block"
+                />
+                <div className="relative grid gap-7 md:grid-cols-3 md:gap-10">
+                  {page.ecosystem.items.map((item, index) => (
+                    <div
+                      key={item.title}
+                      data-ecosystem-flow-stage
+                      className="relative pl-6 md:pl-0 md:pt-7"
+                    >
+                      {index < page.ecosystem.items.length - 1 && (
+                        <span
+                          aria-hidden="true"
+                          data-ecosystem-flow-line
+                          className="absolute bottom-[-1.75rem] left-[3px] top-2 w-px bg-primary/30 md:hidden"
+                        />
+                      )}
+                      <span
+                        aria-hidden="true"
+                        data-ecosystem-flow-node
+                        className={`absolute left-0 top-1 h-2 w-2 rounded-full md:top-0 ${
+                          index === 1 ? "bg-primary/90" : "bg-primary/60"
+                        }`}
+                      />
+                      <h3 className="text-lg font-semibold text-white">
+                        {item.title}
+                      </h3>
+                      <p className="mt-3 text-base leading-relaxed text-gray-300/90">
+                        {item.text}
+                      </p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </section>

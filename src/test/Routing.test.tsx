@@ -476,6 +476,85 @@ describe("application routing", () => {
     ).toBeInTheDocument();
   });
 
+  it("renders the LEM-BOX ecosystem as a minimal editorial flow", async () => {
+    renderApp("/portfolio/lem-box");
+
+    const ecosystemHeading = await screen.findByRole("heading", {
+      level: 2,
+      name: "Un ecosistema, distintas experiencias",
+    });
+    const ecosystemSection = ecosystemHeading.closest("section");
+    expect(ecosystemSection).not.toBeNull();
+    if (ecosystemSection === null) {
+      throw new Error("Missing LEM-BOX ecosystem section");
+    }
+
+    const flow = ecosystemSection.querySelector("[data-ecosystem-flow]");
+    expect(flow).not.toBeNull();
+    expect(
+      ecosystemSection.querySelectorAll("[data-ecosystem-flow-stage]"),
+    ).toHaveLength(3);
+    expect(
+      ecosystemSection.querySelectorAll("[data-ecosystem-flow-line]"),
+    ).toHaveLength(3);
+    expect(
+      ecosystemSection.querySelectorAll("[data-ecosystem-flow-node]"),
+    ).toHaveLength(3);
+    for (const decorativeElement of ecosystemSection.querySelectorAll(
+      "[data-ecosystem-flow-line], [data-ecosystem-flow-node]",
+    )) {
+      expect(decorativeElement).toHaveAttribute("aria-hidden", "true");
+    }
+
+    const stages = ecosystemSection.querySelectorAll(
+      "[data-ecosystem-flow-stage]",
+    );
+    expect(stages[0]).not.toHaveClass("border-t-2", "border-primary");
+    expect(stages[1]?.querySelector("[data-ecosystem-flow-node]")).toHaveClass(
+      "bg-primary/90",
+    );
+    expect(stages[0]?.querySelector("[data-ecosystem-flow-node]")).toHaveClass(
+      "bg-primary/60",
+    );
+    expect(stages[2]?.querySelector("[data-ecosystem-flow-node]")).toHaveClass(
+      "bg-primary/60",
+    );
+    expect(
+      within(ecosystemSection).getByText(
+        "Los sitios de Uruguay y Argentina comunican el servicio y acompañan la captación comercial de cada mercado.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      within(ecosystemSection).getByText(
+        "Un único punto de acceso ofrece experiencias diferenciadas según el rol y el contexto operativo de cada usuario.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      within(ecosystemSection).getByText(
+        "La plataforma acompaña procesos de recepción, evidencia fotográfica, peso, asignación, cajas, embarques, tracking, pagos y comprobantes.",
+      ),
+    ).toBeInTheDocument();
+
+    const audiencesHeading = screen.getByRole("heading", {
+      level: 2,
+      name: "Experiencias según cada necesidad",
+    });
+    const audiencesSection = audiencesHeading.closest("section");
+    expect(audiencesSection).toHaveClass(
+      "bg-neutral",
+      "px-4",
+      "py-12",
+      "text-gray-900",
+      "sm:px-6",
+      "sm:py-24",
+    );
+    expect(
+      audiencesSection?.querySelectorAll(
+        ".border-t-2.border-primary-on-light.pt-5",
+      ),
+    ).toHaveLength(3);
+  });
+
   it("renders the English LEM-BOX case study and exact metadata", async () => {
     localStorage.setItem("language", "en");
     renderApp("/portfolio/lem-box");
@@ -504,6 +583,21 @@ describe("application routing", () => {
     expect(
       screen.getByText(
         "My work starts with day-to-day operations: I turn real needs into product priorities, workflows, and features, and carry those decisions through implementation and the ecosystem's technical evolution.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "The Uruguay and Argentina websites communicate the service and support customer acquisition in each market.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "A single access point provides different experiences based on each user's role and operational context.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "The platform supports intake, photo evidence, weight, assignment, boxes, shipments, tracking, payments, and receipts.",
       ),
     ).toBeInTheDocument();
     expect(
