@@ -18,18 +18,18 @@ export default function PortfolioCaseDetails({
     <div id={id} className="mt-5 border-t border-gray-100 pt-6">
       {role !== undefined && (
         <div className="mb-4">
-          <h4 className="text-sm font-semibold text-gray-900 mb-1">
+          <h3 className="text-sm font-semibold text-gray-900 mb-1">
             {language === "es" ? "Mi rol" : "My role"}
-          </h4>
+          </h3>
           <p className="text-sm text-gray-700">{role}</p>
         </div>
       )}
       <p className="text-gray-800 font-medium">{details.summary}</p>
       <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div>
-          <h4 className="text-sm font-semibold text-gray-900 mb-2">
+          <h3 className="text-sm font-semibold text-gray-900 mb-2">
             {details.stackLabel ?? "Stack"}
-          </h4>
+          </h3>
           <ul className="text-sm text-gray-700 list-disc ml-5">
             {details.stack.map((item, index) => (
               <li key={index}>{item}</li>
@@ -37,10 +37,10 @@ export default function PortfolioCaseDetails({
           </ul>
         </div>
         <div>
-          <h4 className="text-sm font-semibold text-gray-900 mb-2">
+          <h3 className="text-sm font-semibold text-gray-900 mb-2">
             {details.integrationsLabel ??
               (language === "es" ? "Integraciones" : "Integrations")}
-          </h4>
+          </h3>
           <ul className="text-sm text-gray-700 list-disc ml-5">
             {details.integrations.map((item, index) => (
               <li key={index}>{item}</li>
@@ -48,9 +48,9 @@ export default function PortfolioCaseDetails({
           </ul>
         </div>
         <div>
-          <h4 className="text-sm font-semibold text-gray-900 mb-2">
+          <h3 className="text-sm font-semibold text-gray-900 mb-2">
             {language === "es" ? "Retos" : "Challenges"}
-          </h4>
+          </h3>
           <ul className="text-sm text-gray-700 list-disc ml-5">
             {details.challenges.map((item, index) => (
               <li key={index}>{item}</li>
@@ -58,9 +58,9 @@ export default function PortfolioCaseDetails({
           </ul>
         </div>
         <div>
-          <h4 className="text-sm font-semibold text-gray-900 mb-2">
+          <h3 className="text-sm font-semibold text-gray-900 mb-2">
             {language === "es" ? "Solución" : "Solution"}
-          </h4>
+          </h3>
           <ul className="text-sm text-gray-700 list-disc ml-5">
             {details.solution.map((item, index) => (
               <li key={index}>{item}</li>
@@ -69,9 +69,9 @@ export default function PortfolioCaseDetails({
         </div>
       </div>
       <div className="mt-4">
-        <h4 className="text-sm font-semibold text-gray-900 mb-2">
+        <h3 className="text-sm font-semibold text-gray-900 mb-2">
           {language === "es" ? "Impacto" : "Impact"}
-        </h4>
+        </h3>
         <ul className="text-sm text-gray-700 list-disc ml-5">
           {details.impact.map((item, index) => (
             <li key={index}>{item}</li>

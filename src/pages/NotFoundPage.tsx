@@ -1,22 +1,12 @@
-import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../i18n/useLanguage";
 import { getLocalizedPath } from "../routes/siteRoutes";
 
 export default function NotFoundPage() {
   const { language } = useLanguage();
-  const contentRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    contentRef.current?.focus();
-  }, []);
 
   return (
-    <main
-      ref={contentRef}
-      tabIndex={-1}
-      className="flex-1 bg-black px-6 py-28 text-white flex items-center justify-center focus:outline-none"
-    >
+    <div className="flex flex-1 items-center justify-center bg-black px-6 py-28 text-white">
       <div className="max-w-xl text-center">
         <p className="text-sm uppercase tracking-widest text-primary mb-3">
           devrodri
@@ -36,6 +26,6 @@ export default function NotFoundPage() {
           {language === "es" ? "Volver al inicio" : "Return home"}
         </Link>
       </div>
-    </main>
+    </div>
   );
 }

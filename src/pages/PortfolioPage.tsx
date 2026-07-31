@@ -37,16 +37,9 @@ export default function PortfolioPage() {
     const raw = (st as { focusCase: unknown }).focusCase;
     if (!isProjectKey(raw)) return;
     const key = raw;
-    const id = `portfolio-case-${key}`;
     setFilter("all");
     setExpanded((e) => ({ ...e, [key]: true }));
     navigate(".", { replace: true, state: {} });
-    const scrollToCase = () => {
-      document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-    };
-    requestAnimationFrame(() => requestAnimationFrame(scrollToCase));
-    const timeoutId = window.setTimeout(scrollToCase, 220);
-    return () => window.clearTimeout(timeoutId);
   }, [location.state, navigate]);
 
   return (
@@ -100,6 +93,7 @@ export default function PortfolioPage() {
                     caseStudy !== undefined ? (
                       <Link
                         to={getLocalizedPath("lem-box", language)}
+                        aria-label={`${caseStudy.content[language].header.portfolioCta}: ${content.title}`}
                         className="inline-flex min-h-[44px] items-center rounded-lg bg-primary-on-light px-4 py-2 text-sm font-semibold text-white transition hover:bg-primary-on-light-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
                       >
                         {caseStudy.content[language].header.portfolioCta}
@@ -118,6 +112,7 @@ export default function PortfolioPage() {
                               href={action.href}
                               target="_blank"
                               rel="noopener noreferrer"
+                              aria-label={`${action.label[language]}: ${content.title}`}
                               className="text-primary-on-light font-medium hover:text-primary-on-light-hover underline focus-visible:ring-2 ring-offset-2 ring-[#3B82F6] rounded-sm"
                             >
                               {action.label[language]}
@@ -133,6 +128,15 @@ export default function PortfolioPage() {
                           type="button"
                           aria-expanded={expanded[portfolioCase.key]}
                           aria-controls={detailsId}
+                          aria-label={`${
+                            expanded[portfolioCase.key]
+                              ? language === "es"
+                                ? "Ver menos"
+                                : "View less"
+                              : language === "es"
+                                ? "Ver más"
+                                : "View more"
+                          }: ${content.title}`}
                           onClick={() =>
                             setExpanded((current) => ({
                               ...current,
@@ -172,6 +176,7 @@ export default function PortfolioPage() {
                   expanded={
                     caseStudy === undefined && expanded[portfolioCase.key]
                   }
+                  headingLevel="h2"
                   tags={content.tags.join(" · ")}
                   title={content.title}
                   {...(content.status === undefined

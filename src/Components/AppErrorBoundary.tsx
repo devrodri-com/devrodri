@@ -74,7 +74,7 @@ export default class AppErrorBoundary extends Component<
           : recoveryCopy[this.props.language];
 
       return (
-        <main
+        <div
           className="min-h-screen bg-black px-6 py-24 text-white flex items-center justify-center"
           role="alert"
         >
@@ -109,7 +109,7 @@ export default class AppErrorBoundary extends Component<
               </a>
             </div>
           </div>
-        </main>
+        </div>
       );
     }
 

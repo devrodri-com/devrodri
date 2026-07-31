@@ -6,6 +6,7 @@ import {
 } from "react-helmet-async";
 import SeoHead from "./Components/SeoHead";
 import { lazy, Suspense, useEffect, useRef } from "react";
+import { MotionConfig } from "framer-motion";
 import HeroSlider from "./Components/HeroSlider";
 import SobreMiSection from "./Components/SobreMiSection";
 import HighlightsSection from "./Components/HighlightsSection";
@@ -95,17 +96,136 @@ function PublicPage({ page }: { page: PageKey }) {
 }
 
 
-function ScrollToHash() {
-  const location = useLocation();
-  useEffect(() => {
-    if (location.hash) {
-      const id = location.hash.replace('#', '');
-      const el = document.getElementById(id);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      window.scrollTo({ top: 0 });
+const PROGRAMMATICALLY_FOCUSABLE_SELECTOR = [
+  "a[href]",
+  "button:not([disabled])",
+  "input:not([disabled])",
+  "select:not([disabled])",
+  "textarea:not([disabled])",
+  "[tabindex]",
+  '[contenteditable="true"]',
+].join(",");
+
+function prefersReducedMotion(): boolean {
+  return (
+    typeof window.matchMedia === "function" &&
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+  );
+}
+
+function focusElement(element: HTMLElement): () => void {
+  const needsTemporaryTabIndex = !element.matches(
+    PROGRAMMATICALLY_FOCUSABLE_SELECTOR,
+  );
+
+  if (needsTemporaryTabIndex) element.setAttribute("tabindex", "-1");
+  element.focus({ preventScroll: true });
+
+  if (!needsTemporaryTabIndex) return () => undefined;
+
+  const removeTemporaryTabIndex = () => {
+    if (element.getAttribute("tabindex") === "-1") {
+      element.removeAttribute("tabindex");
     }
-  }, [location.pathname, location.hash]);
+  };
+  element.addEventListener("blur", removeTemporaryTabIndex, { once: true });
+
+  return () => {
+    element.removeEventListener("blur", removeTemporaryTabIndex);
+    removeTemporaryTabIndex();
+  };
+}
+
+function getHashTarget(hash: string): HTMLElement | null {
+  const rawId = hash.slice(1);
+  let id = rawId;
+  try {
+    id = decodeURIComponent(rawId);
+  } catch {
+    // An invalid encoded fragment cannot match a document ID.
+  }
+  return document.getElementById(id);
+}
+
+function focusMainContent(): void {
+  const main = document.getElementById("main-content");
+  if (main !== null) focusElement(main);
+}
+
+function NavigationFocusManager({ isNotFound }: { isNotFound: boolean }) {
+  const location = useLocation();
+  const hasMounted = useRef(false);
+  const previousLocation = useRef({
+    hash: location.hash,
+    pathname: location.pathname,
+  });
+
+  useEffect(() => {
+    const main = document.getElementById("main-content");
+    if (main === null) return;
+
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      if (isNotFound) focusElement(main);
+      return;
+    }
+
+    const previous = previousLocation.current;
+    if (
+      previous.pathname === location.pathname &&
+      previous.hash === location.hash
+    ) {
+      return;
+    }
+    previousLocation.current = {
+      hash: location.hash,
+      pathname: location.pathname,
+    };
+
+    if (location.hash === "") {
+      const removeFocusCleanup = focusElement(main);
+      window.scrollTo({ top: 0, behavior: "auto" });
+      return removeFocusCleanup;
+    }
+
+    const scrollBehavior = prefersReducedMotion() ? "auto" : "smooth";
+    let removeFocusCleanup: (() => void) | undefined;
+    let settled = false;
+    let fallbackTimer = 0;
+
+    const focusHashTarget = () => {
+      if (settled) return;
+      const target = getHashTarget(location.hash);
+      if (target === null) return;
+
+      settled = true;
+      observer.disconnect();
+      window.clearTimeout(fallbackTimer);
+      removeFocusCleanup = focusElement(target);
+      target.scrollIntoView({ behavior: scrollBehavior, block: "start" });
+    };
+
+    const observer = new MutationObserver(focusHashTarget);
+    observer.observe(main, { childList: true, subtree: true });
+    focusHashTarget();
+    if (!settled) {
+      fallbackTimer = window.setTimeout(() => {
+        if (settled) return;
+        settled = true;
+        observer.disconnect();
+        removeFocusCleanup = focusElement(main);
+        window.scrollTo({ top: 0, behavior: "auto" });
+      }, 400);
+    }
+
+    return () => {
+      settled = true;
+      observer.disconnect();
+      window.clearTimeout(fallbackTimer);
+      removeFocusCleanup?.();
+    };
+  }, [isNotFound, location.hash, location.pathname]);
+
   return null;
 }
 
@@ -141,6 +261,7 @@ function App({
 } = {}) {
   const location = useLocation();
   const isNotFound = getPublicRoute(location.pathname) === null;
+  const { language } = useLanguage();
 
   usePageview();
   useAnalyticsEvents();
@@ -149,32 +270,54 @@ function App({
     <HelmetProvider
       {...(helmetContext === undefined ? {} : { context: helmetContext })}
     >
-      <div
-        className={`font-sans bg-neutral text-gray-900 min-h-screen${
-          isNotFound ? " flex flex-col" : ""
-        }`}
-        style={isNotFound ? { minHeight: "100dvh" } : undefined}
-      >
-        <SeoHead />
+      <MotionConfig reducedMotion="user">
+        <div
+          className={`font-sans bg-neutral text-gray-900 min-h-screen${
+            isNotFound ? " flex flex-col" : ""
+          }`}
+          style={isNotFound ? { minHeight: "100dvh" } : undefined}
+        >
+          <SeoHead />
 
-        {/* ✅ Navbar */}
-        <Navbar />
+          <a
+            className="skip-link"
+            href="#main-content"
+            onClick={focusMainContent}
+          >
+            {language === "es"
+              ? "Saltar al contenido principal"
+              : "Skip to main content"}
+          </a>
 
-        <ScrollToHash />
+          {/* ✅ Navbar */}
+          <Navbar />
 
-        <Routes>
-          {PUBLIC_ROUTES.map((route) => (
-            <Route
-              key={route.routeKey}
-              path={route.pathname}
-              element={<PublicPage page={route.page} />}
-            />
-          ))}
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+          <main
+            id="main-content"
+            tabIndex={-1}
+            className={
+              isNotFound
+                ? "flex flex-1 focus:outline-none"
+                : "focus:outline-none"
+            }
+          >
+            <Routes>
+              {PUBLIC_ROUTES.map((route) => (
+                <Route
+                  key={route.routeKey}
+                  path={route.pathname}
+                  element={<PublicPage page={route.page} />}
+                />
+              ))}
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </main>
 
-        <Footer />
-      </div>
+          <NavigationFocusManager isNotFound={isNotFound} />
+
+          <Footer />
+        </div>
+      </MotionConfig>
     </HelmetProvider>
   );
 }
