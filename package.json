@@ -8,7 +8,11 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "npm run build:client && npm run build:server && npm run prerender",
+    "build:client": "vite build",
+    "build:server": "vite build --ssr src/entry-server.tsx --outDir dist-ssr",
+    "prerender": "node scripts/prerender.mjs",
+    "verify:prerender": "node scripts/verify-prerender.mjs",
     "preview": "vite preview",
     "typecheck": "tsc -b --pretty false",
     "lint": "eslint \"src/**/*.{ts,tsx}\" vite.config.ts vitest.config.ts",
