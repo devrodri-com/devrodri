@@ -92,7 +92,7 @@ describe("TransitionServicesIntro portfolio bridge", () => {
     const image = bridge.querySelector('img[src="/img/servicios.jpg"]');
     const imageContainer = image?.parentElement;
 
-    expect(image).toHaveAttribute("alt", "Servicios");
+    expect(image).toHaveAttribute("alt", "");
     expect(image).toHaveClass(
       "w-full",
       "h-24",

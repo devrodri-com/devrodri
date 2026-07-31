@@ -4,6 +4,7 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -104,6 +105,14 @@ function renderHero(language: Language = "es") {
   );
 }
 
+function getSlideButtons(language: Language = "es") {
+  return within(
+    screen.getByRole("group", {
+      name: language === "es" ? "Navegación de slides" : "Slide navigation",
+    }),
+  ).getAllByRole("button");
+}
+
 describe("HeroSlider resilience", () => {
   beforeEach(() => {
     localStorage.setItem("language", "es");
@@ -119,7 +128,7 @@ describe("HeroSlider resilience", () => {
     async (language) => {
       const user = userEvent.setup();
       renderHero(language);
-      const tabs = screen.getAllByRole("tab");
+      const tabs = getSlideButtons(language);
 
       expect(tabs).toHaveLength(4);
       for (const [index, copy] of expectedCopy[language].entries()) {
@@ -150,7 +159,7 @@ describe("HeroSlider resilience", () => {
   it("keeps the approved CTA destinations", async () => {
     const user = userEvent.setup();
     renderHero();
-    const tabs = screen.getAllByRole("tab");
+    const tabs = getSlideButtons();
     const destinations = [
       { button: "Ver trabajos", href: "/portfolio" },
       { button: "Ver LEM-BOX", href: "/portfolio/lem-box" },
@@ -170,28 +179,24 @@ describe("HeroSlider resilience", () => {
   it("keeps asset order and uses the approved split mobile image treatment", async () => {
     const user = userEvent.setup();
     const { container } = renderHero();
-    const tabs = screen.getAllByRole("tab");
+    const tabs = getSlideButtons();
     const expectedAssets = [
       {
-        alt: "Man working on web design project on laptop",
         desktop: "/img/hero-visual.jpg",
         mobile: "/img/hero-visual-mobile.jpg",
         mobilePosition: "center 46%",
       },
       {
-        alt: "Dashboard of a custom software with charts and code",
         desktop: "/img/software-slide.jpg",
         mobile: "/img/software-slide-mobile.jpg",
         mobilePosition: "center 44%",
       },
       {
-        alt: "Brand strategy and color palette design on tablet",
         desktop: "/img/branding-slide.jpg",
         mobile: "/img/branding-slide-mobile.jpg",
         mobilePosition: "center 50%",
       },
       {
-        alt: "Automation workflows dashboard",
         desktop: "/img/automations-slide.jpg",
         mobile: "/img/automations-slide-mobile.jpg",
         mobilePosition: "center 48%",
@@ -200,7 +205,16 @@ describe("HeroSlider resilience", () => {
 
     for (const [index, asset] of expectedAssets.entries()) {
       await user.click(tabs[index] as HTMLElement);
-      const images = await waitFor(() => screen.getAllByAltText(asset.alt));
+      const images = await waitFor(() => {
+        const currentImages = Array.from(
+          container.querySelectorAll<HTMLImageElement>('img[alt=""]'),
+        ).filter((image) => {
+          const source = image.getAttribute("src");
+          return source === asset.desktop || source === asset.mobile;
+        });
+        expect(currentImages).toHaveLength(2);
+        return currentImages;
+      });
       expect(images).toHaveLength(2);
       expect(images.map((image) => image.getAttribute("src")).sort()).toEqual(
         [asset.desktop, asset.mobile].sort(),
@@ -238,9 +252,9 @@ describe("HeroSlider resilience", () => {
       renderHero(language);
 
       expect(
-        screen
-          .getAllByRole("tab")
-          .map((tab) => tab.getAttribute("aria-label")),
+        getSlideButtons(language).map((tab) =>
+          tab.getAttribute("aria-label"),
+        ),
       ).toEqual(
         expectedCopy[language].map(({ title }, index) =>
           language === "es"
@@ -280,7 +294,12 @@ describe("HeroSlider resilience", () => {
     );
     expect(copyColumn).not.toHaveClass("max-md:min-h-[24.25rem]");
     expect(copyColumn?.querySelector(".w-fit")).not.toHaveClass("max-md:mt-auto");
-    expect(screen.getByRole("tablist")).toHaveClass(
+    expect(
+      screen.getByRole("group", { name: "Navegación de slides" }),
+    ).toHaveClass(
+      "relative",
+      "h-2",
+      "w-24",
       "mt-[2.625rem]",
       "self-center",
       "md:absolute",
@@ -322,7 +341,7 @@ describe("HeroSlider resilience", () => {
     renderHero();
 
     await user.click(
-      screen.getByRole("tab", {
+      screen.getByRole("button", {
         name: "Ir al slide 3 de 4: Marcas con dirección y presencia digital.",
       }),
     );

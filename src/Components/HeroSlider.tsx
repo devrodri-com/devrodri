@@ -252,7 +252,7 @@ export default function HeroSlider() {
           <div className="absolute inset-x-0 top-[3.3125rem] h-[clamp(18rem,38svh,21rem)] md:hidden">
             <img
               src={currentSlide.imageMobile}
-              alt={currentSlide.imageAlt}
+              alt=""
               className="h-full w-full object-cover"
               style={{ objectPosition: currentSlide.mobileObjectPosition }}
               draggable="false"
@@ -264,7 +264,7 @@ export default function HeroSlider() {
           <div className="absolute inset-y-0 right-0 w-1/2 hidden md:block">
             <img
               src={currentSlide.image}
-              alt={currentSlide.imageAlt}
+              alt=""
               className="h-full w-full object-cover object-center"
               draggable="false"
             />
@@ -314,8 +314,8 @@ export default function HeroSlider() {
             )}
           </div>
           <div
-            className="z-20 mt-[2.625rem] flex self-center gap-3 md:absolute md:bottom-6 md:left-1/2 md:mt-0 md:-translate-x-1/2 md:self-auto"
-            role="tablist"
+            className="relative z-20 mt-[2.625rem] h-2 w-24 self-center md:absolute md:bottom-6 md:left-1/2 md:mt-0 md:-translate-x-1/2 md:self-auto"
+            role="group"
             aria-label={
               language === "es" ? "Navegación de slides" : "Slide navigation"
             }
@@ -323,19 +323,24 @@ export default function HeroSlider() {
             {slides.map((slide, i) => (
               <button
                 key={i}
+                type="button"
                 onClick={() => setIndex(i)}
-                className={`h-2 w-2 rounded-full transition-all duration-300 ${
-                  i === index ? "bg-white" : "border border-white"
-                }`}
-                role="tab"
+                className="absolute top-1/2 inline-flex h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
+                style={{ left: `${i * 24}px` }}
                 aria-label={
                   language === "es"
                     ? `Ir al slide ${i + 1} de ${slides.length}: ${slide.title[language]}`
                     : `Go to slide ${i + 1} of ${slides.length}: ${slide.title[language]}`
                 }
-                aria-selected={i === index}
-                aria-controls={`slide-${i}`}
-              ></button>
+                aria-pressed={i === index}
+              >
+                <span
+                  aria-hidden="true"
+                  className={`h-2 w-2 rounded-full transition-all duration-300 ${
+                    i === index ? "bg-white" : "border border-white"
+                  }`}
+                />
+              </button>
             ))}
           </div>
         </div>

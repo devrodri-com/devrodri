@@ -173,7 +173,7 @@ describe("application routing", () => {
     });
 
     await user.click(
-      screen.getByRole("tab", {
+      screen.getByRole("button", {
         name: "Ir al slide 4 de 4: Menos tareas manuales. Más tiempo para crecer.",
       }),
     );
@@ -216,11 +216,11 @@ describe("application routing", () => {
     await user.click(screen.getByRole("button", { name: "Marca" }));
 
     expect(
-      screen.getByRole("heading", { level: 3, name: "ZENTRA" }),
+      screen.getByRole("heading", { level: 2, name: "ZENTRA" }),
     ).toBeInTheDocument();
     expect(
       screen.queryByRole("heading", {
-        level: 3,
+        level: 2,
         name: "Imprenta Magenta · Paysandú, Uruguay",
       }),
     ).not.toBeInTheDocument();
@@ -230,7 +230,7 @@ describe("application routing", () => {
     renderApp("/portfolio");
 
     const title = await screen.findByRole("heading", {
-      level: 3,
+      level: 2,
       name: "LEM-BOX",
     });
     const cardContent = title.parentElement;
@@ -240,10 +240,12 @@ describe("application routing", () => {
     }
 
     expect(
-      within(cardContent).getByRole("link", { name: "Ver caso completo" }),
+      within(cardContent).getByRole("link", {
+        name: "Ver caso completo: LEM-BOX",
+      }),
     ).toHaveAttribute("href", "/portfolio/lem-box");
     expect(
-      within(cardContent).queryByRole("button", { name: "Ver más" }),
+      within(cardContent).queryByRole("button", { name: "Ver más: LEM-BOX" }),
     ).not.toBeInTheDocument();
     expect(within(cardContent).queryByText("Ver plataforma")).not.toBeInTheDocument();
     expect(within(cardContent).queryByText("Uruguay")).not.toBeInTheDocument();
@@ -256,11 +258,11 @@ describe("application routing", () => {
   it("expands and contracts the other seven cases with the same ARIA contract", async () => {
     const user = userEvent.setup();
     renderApp("/portfolio");
-    await screen.findByRole("heading", { level: 3, name: "LEM-BOX" });
+    await screen.findByRole("heading", { level: 2, name: "LEM-BOX" });
 
     for (const portfolioCase of expandablePortfolioCases) {
       const title = screen.getByRole("heading", {
-        level: 3,
+        level: 2,
         name: portfolioCase.title,
       });
       const cardContent = title.parentElement;
@@ -271,7 +273,7 @@ describe("application routing", () => {
 
       const detailsId = `portfolio-details-${portfolioCase.key}`;
       const expandButton = within(cardContent).getByRole("button", {
-        name: "Ver más",
+        name: `Ver más: ${portfolioCase.title}`,
       });
       expect(expandButton).toHaveAttribute("aria-expanded", "false");
       expect(expandButton).toHaveAttribute("aria-controls", detailsId);
@@ -279,11 +281,15 @@ describe("application routing", () => {
       await user.click(expandButton);
       expect(document.getElementById(detailsId)).toBeInTheDocument();
       expect(
-        within(cardContent).getByRole("button", { name: "Ver menos" }),
+        within(cardContent).getByRole("button", {
+          name: `Ver menos: ${portfolioCase.title}`,
+        }),
       ).toHaveAttribute("aria-expanded", "true");
 
       await user.click(
-        within(cardContent).getByRole("button", { name: "Ver menos" }),
+        within(cardContent).getByRole("button", {
+          name: `Ver menos: ${portfolioCase.title}`,
+        }),
       );
       expect(document.getElementById(detailsId)).not.toBeInTheDocument();
     }
@@ -296,7 +302,7 @@ describe("application routing", () => {
     });
 
     const title = await screen.findByRole("heading", {
-      level: 3,
+      level: 2,
       name: "ZENTRA",
     });
     const cardContent = title.parentElement;
@@ -307,7 +313,7 @@ describe("application routing", () => {
 
     await waitFor(() => {
       expect(
-        within(cardContent).getByRole("button", { name: "Ver menos" }),
+        within(cardContent).getByRole("button", { name: "Ver menos: ZENTRA" }),
       ).toHaveAttribute("aria-expanded", "true");
       expect(
         document.getElementById("portfolio-details-zentra"),
@@ -325,7 +331,7 @@ describe("application routing", () => {
     });
 
     await user.click(
-      screen.getByRole("tab", {
+      screen.getByRole("button", {
         name: "Ir al slide 2 de 4: Software a medida para operar mejor.",
       }),
     );
@@ -360,11 +366,11 @@ describe("application routing", () => {
         name: "Sitios web que comunican y convierten.",
       });
 
-      await user.click(screen.getByRole("tab", { name: slideName }));
+      await user.click(screen.getByRole("button", { name: slideName }));
       await user.click(screen.getByRole("link", { name: ctaName }));
 
       const title = await screen.findByRole("heading", {
-        level: 3,
+        level: 2,
         name: caseTitle,
       });
       const cardContent = title.parentElement;
@@ -376,7 +382,9 @@ describe("application routing", () => {
       await waitFor(() => {
         expect(document.getElementById(detailsId)).toBeInTheDocument();
         expect(
-          within(cardContent).getByRole("button", { name: "Ver menos" }),
+          within(cardContent).getByRole("button", {
+            name: `Ver menos: ${caseTitle}`,
+          }),
         ).toHaveAttribute("aria-expanded", "true");
       });
     },
@@ -737,7 +745,7 @@ describe("application routing", () => {
       ),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { level: 3, name: "Siguiente etapa" }),
+      screen.getByRole("heading", { level: 2, name: "Siguiente etapa" }),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
@@ -775,7 +783,7 @@ describe("application routing", () => {
       ),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", { level: 3, name: "Next stage" }),
+      screen.getByRole("heading", { level: 2, name: "Next stage" }),
     ).toBeInTheDocument();
     expect(screen.queryByRole("heading", { name: "Current status" })).toBeNull();
   });
@@ -925,14 +933,14 @@ describe("application routing", () => {
       expect(link).toHaveAttribute("target", "_blank");
       expect(link).toHaveAttribute("rel", "noopener noreferrer");
     }
-    expect(screen.getAllByRole("img", { name: "Portada de LEM-BOX" })).toHaveLength(
-      1,
-    );
-    expect(screen.getByRole("img", { name: "Portada de LEM-BOX" })).toHaveAttribute(
+    const lemBoxImage = screen.getByRole("img", {
+      name: "Logo de LEM-BOX con el lema «Logística en Miami»",
+    });
+    expect(lemBoxImage).toHaveAttribute(
       "width",
       "1200",
     );
-    expect(screen.getByRole("img", { name: "Portada de LEM-BOX" })).toHaveAttribute(
+    expect(lemBoxImage).toHaveAttribute(
       "height",
       "630",
     );

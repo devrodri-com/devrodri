@@ -6,6 +6,7 @@ import {
 } from "react-helmet-async";
 import SeoHead from "./Components/SeoHead";
 import { lazy, Suspense, useEffect, useRef } from "react";
+import { MotionConfig } from "framer-motion";
 import HeroSlider from "./Components/HeroSlider";
 import SobreMiSection from "./Components/SobreMiSection";
 import HighlightsSection from "./Components/HighlightsSection";
@@ -19,7 +20,12 @@ import ExperienceSection from "./Components/ExperienceSection";
 import TransitionServicesIntro from "./Components/TransitionServicesIntro";
 import NotFoundPage from "./pages/NotFoundPage";
 import CTASection from "./Components/CTASection";
-import { Routes, Route, useLocation } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  useLocation,
+  useNavigationType,
+} from "react-router-dom";
 import {
   isAnalyticsClickLabel,
   trackAnalyticsClick,
@@ -30,6 +36,11 @@ import {
   PUBLIC_ROUTES,
   type PageKey,
 } from "./routes/siteRoutes";
+import {
+  focusElement,
+  getHashTarget,
+  userPrefersReducedMotion,
+} from "./lib/navigationFocus";
 
 const PortfolioPage = lazy(() => import("./pages/PortfolioPage"));
 const LemBoxCasePage = lazy(() => import("./pages/LemBoxCasePage"));
@@ -95,17 +106,96 @@ function PublicPage({ page }: { page: PageKey }) {
 }
 
 
-function ScrollToHash() {
+const HASH_TARGET_WAIT_MS = 750;
+
+function focusMainContent(): void {
+  const main = document.getElementById("main-content");
+  if (main instanceof HTMLElement) focusElement(main);
+}
+
+function NavigationFocusManager({ isNotFound }: { isNotFound: boolean }) {
   const location = useLocation();
+  const navigationType = useNavigationType();
+  const mounted = useRef(false);
+  const previousLocation = useRef({
+    hash: location.hash,
+    pathname: location.pathname,
+  });
+
   useEffect(() => {
-    if (location.hash) {
-      const id = location.hash.replace('#', '');
-      const el = document.getElementById(id);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    } else {
-      window.scrollTo({ top: 0 });
+    const main = document.getElementById("main-content");
+    if (!(main instanceof HTMLElement)) return;
+
+    if (!mounted.current) {
+      mounted.current = true;
+      if (isNotFound) focusElement(main);
+      return;
     }
-  }, [location.pathname, location.hash]);
+
+    const previous = previousLocation.current;
+    const pathnameChanged = previous.pathname !== location.pathname;
+    const hashChanged = previous.hash !== location.hash;
+    previousLocation.current = {
+      hash: location.hash,
+      pathname: location.pathname,
+    };
+
+    if (!pathnameChanged && !hashChanged) return;
+
+    const scrollBehavior = userPrefersReducedMotion() ? "auto" : "smooth";
+    const scrollMainToTop = () => {
+      if (navigationType !== "POP") {
+        window.scrollTo({ behavior: scrollBehavior, left: 0, top: 0 });
+      }
+    };
+
+    if (location.hash === "") {
+      focusElement(main);
+      scrollMainToTop();
+      return;
+    }
+
+    let settled = false;
+    let timeoutId = 0;
+
+    const observer = new MutationObserver(() => {
+      const target = getHashTarget(location.hash);
+      if (target === null || settled) return;
+
+      settled = true;
+      observer.disconnect();
+      window.clearTimeout(timeoutId);
+      focusElement(target);
+      target.scrollIntoView({ behavior: scrollBehavior, block: "start" });
+    });
+
+    const immediateTarget = getHashTarget(location.hash);
+    if (immediateTarget !== null) {
+      settled = true;
+      focusElement(immediateTarget);
+      immediateTarget.scrollIntoView({
+        behavior: scrollBehavior,
+        block: "start",
+      });
+      return;
+    }
+
+    observer.observe(main, { childList: true, subtree: true });
+    timeoutId = window.setTimeout(() => {
+      if (settled) return;
+      settled = true;
+      observer.disconnect();
+      focusElement(main);
+      scrollMainToTop();
+    }, HASH_TARGET_WAIT_MS);
+
+    return () => {
+      settled = true;
+      observer.disconnect();
+      window.clearTimeout(timeoutId);
+    };
+  }, [isNotFound, location.hash, location.pathname, navigationType]);
+
   return null;
 }
 
@@ -141,6 +231,7 @@ function App({
 } = {}) {
   const location = useLocation();
   const isNotFound = getPublicRoute(location.pathname) === null;
+  const { language } = useLanguage();
 
   usePageview();
   useAnalyticsEvents();
@@ -149,32 +240,50 @@ function App({
     <HelmetProvider
       {...(helmetContext === undefined ? {} : { context: helmetContext })}
     >
-      <div
-        className={`font-sans bg-neutral text-gray-900 min-h-screen${
-          isNotFound ? " flex flex-col" : ""
-        }`}
-        style={isNotFound ? { minHeight: "100dvh" } : undefined}
-      >
-        <SeoHead />
+      <MotionConfig reducedMotion="user">
+        <div
+          className={`font-sans bg-neutral text-gray-900 min-h-screen${
+            isNotFound ? " flex flex-col" : ""
+          }`}
+          style={isNotFound ? { minHeight: "100dvh" } : undefined}
+        >
+          <SeoHead />
 
-        {/* ✅ Navbar */}
-        <Navbar />
+          <a
+            className="skip-link"
+            href="#main-content"
+            onClick={focusMainContent}
+          >
+            {language === "es"
+              ? "Saltar al contenido principal"
+              : "Skip to main content"}
+          </a>
 
-        <ScrollToHash />
+          {/* ✅ Navbar */}
+          <Navbar />
 
-        <Routes>
-          {PUBLIC_ROUTES.map((route) => (
-            <Route
-              key={route.routeKey}
-              path={route.pathname}
-              element={<PublicPage page={route.page} />}
-            />
-          ))}
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+          <main
+            id="main-content"
+            tabIndex={-1}
+            className={isNotFound ? "flex flex-1 focus:outline-none" : "focus:outline-none"}
+          >
+            <Routes>
+              {PUBLIC_ROUTES.map((route) => (
+                <Route
+                  key={route.routeKey}
+                  path={route.pathname}
+                  element={<PublicPage page={route.page} />}
+                />
+              ))}
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </main>
 
-        <Footer />
-      </div>
+          <NavigationFocusManager isNotFound={isNotFound} />
+
+          <Footer />
+        </div>
+      </MotionConfig>
     </HelmetProvider>
   );
 }

@@ -46,7 +46,7 @@ export default function LemBoxCasePage() {
   const publicLinksSection = lemBoxPublicLinksSection[language];
 
   return (
-    <main className="bg-black text-white">
+    <div className="bg-black text-white">
       <header className="border-b border-white/10 px-4 pb-14 pt-28 sm:px-6 sm:pb-24">
         <div className="mx-auto max-w-6xl">
           <Link
@@ -80,7 +80,11 @@ export default function LemBoxCasePage() {
             <div className="overflow-hidden rounded-xl md:col-span-6">
               <img
                 src={lemBoxCase.cover}
-                alt={page.header.coverAlt}
+                alt={
+                  language === "es"
+                    ? "Logo de LEM-BOX con el lema «Logística en Miami»"
+                    : "LEM-BOX logo with the tagline “Logística en Miami”"
+                }
                 width={caseStudy.coverWidth}
                 height={caseStudy.coverHeight}
                 className="h-auto w-full object-cover"
@@ -300,12 +304,12 @@ export default function LemBoxCasePage() {
                 aria-labelledby="lem-box-mobile-future"
                 className="mt-7 border-t border-white/10 pt-7 sm:mt-10 sm:pt-10"
               >
-                <h3
+                <h2
                   id="lem-box-mobile-future"
                   className="text-xl font-semibold tracking-tight text-white"
                 >
                   {page.mobileFuture.title}
-                </h3>
+                </h2>
                 <p className="mt-4 text-base leading-relaxed text-gray-300/90">
                   {page.mobileFuture.text}
                 </p>
@@ -405,6 +409,6 @@ export default function LemBoxCasePage() {
           </section>
         </div>
       </article>
-    </main>
+    </div>
   );
 }
