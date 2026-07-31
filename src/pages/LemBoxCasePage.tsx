@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import {
+  lemBoxAudienceIntro,
   lemBoxCase,
   lemBoxPublicLinks,
   lemBoxPublicLinksSection,
@@ -40,6 +41,7 @@ export default function LemBoxCasePage() {
   const caseStudy = lemBoxCase.caseStudy;
   const page = caseStudy.content[language];
   const cardContent = lemBoxCase.content[language];
+  const audienceIntro = lemBoxAudienceIntro[language];
   const publicLinksSection = lemBoxPublicLinksSection[language];
 
   return (
@@ -187,6 +189,12 @@ export default function LemBoxCasePage() {
               >
                 {page.audiences.title}
               </h2>
+              <p
+                data-audiences-intro
+                className="mt-5 max-w-[48rem] text-base leading-relaxed text-gray-700 sm:text-lg"
+              >
+                {audienceIntro}
+              </p>
               <div className="mt-8 grid gap-8 sm:mt-12 md:grid-cols-3 md:gap-10">
                 {page.audiences.items.map((item) => (
                   <div

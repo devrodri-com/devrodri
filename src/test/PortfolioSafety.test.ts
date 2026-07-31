@@ -7,6 +7,7 @@ import {
   projectKeys,
 } from "../data/portfolio";
 import {
+  lemBoxAudienceIntro,
   lemBoxPublicLinks,
   lemBoxPublicLinksSection,
 } from "../data/portfolio/cases/lemBox";
@@ -248,6 +249,10 @@ describe("portfolio architecture invariants", () => {
       "https://lem-box.com.uy",
       "https://lem-box.com.ar",
     ]);
+    expect(lemBox.actions[0]?.note).toEqual({
+      es: "Plataforma operativa privada. Acceso reservado a clientes, Partners y equipo autorizado de LEM-BOX.",
+      en: "Private operations platform. Access restricted to LEM-BOX customers, Partners, and authorized team members.",
+    });
     expect(lemBoxPublicLinksSection).toEqual({
       es: {
         eyebrow: "ENLACES PÚBLICOS",
@@ -271,13 +276,15 @@ describe("portfolio architecture invariants", () => {
           es: {
             title: "Plataforma central",
             domain: "lem-box.com",
-            description: "Acceso con credenciales",
+            description:
+              "Plataforma operativa privada. Acceso reservado a clientes, Partners y equipo autorizado de LEM-BOX.",
             action: "Abrir plataforma",
           },
           en: {
             title: "Central platform",
             domain: "lem-box.com",
-            description: "Sign-in required",
+            description:
+              "Private operations platform. Access restricted to LEM-BOX customers, Partners, and authorized team members.",
             action: "Open platform",
           },
         },
@@ -318,7 +325,15 @@ describe("portfolio architecture invariants", () => {
       },
     ]);
     expect(serialized).not.toMatch(/\/mi|\/partner|\/admin/);
-    expect(serialized).not.toMatch(/Stripe|PayPal|Resend|hardening/i);
+    expect(serialized).not.toMatch(
+      /Stripe|PayPal|Resend|hardening|pagos|comprobantes|facturación|transferencias|payments?|receipts?|billing|invoices?|transfers?/i,
+    );
+    expect(serialized).not.toMatch(
+      /acceso con credenciales|sign-in required|demo credentials?|credenciales? demo|solicitar demo|request (?:a )?demo/i,
+    );
+    expect(serialized).not.toMatch(
+      /crear cuentas|crear usuarios|crear accesos|create accounts|create users|create access|automatic identity creation|global client base|global operations|client deletion|portfolio reassignment/i,
+    );
     expect(serialized).not.toMatch(
       /selector multipaís|mobile ready|app móvil en desarrollo|SEO completamente optimizado|canonical perfecto|100 % segura|sin vulnerabilidades|grandes volúmenes sin degradación|coming soon|launch date/i,
     );
@@ -352,12 +367,52 @@ describe("portfolio architecture invariants", () => {
     });
     expect(caseStudy.content.es.challenge).toEqual({
       title: "El desafío",
-      text: "La operación necesitaba continuidad entre la captación comercial, la recepción y consolidación de paquetes, los embarques, el tracking, los pagos y la atención. El desafío no era crear una web aislada, sino conectar mercados, usuarios y procesos en un producto alineado con la operación real.",
+      text: "La operación necesitaba continuidad entre la captación comercial, la recepción y consolidación de paquetes, los embarques, el tracking y la atención. El desafío no era crear una web aislada, sino conectar mercados, usuarios y procesos en un producto alineado con la operación real.",
     });
     expect(caseStudy.content.en.challenge).toEqual({
       title: "The challenge",
-      text: "The operation needed continuity across customer acquisition, package intake and consolidation, shipments, tracking, payments, and support. The challenge was not to build an isolated website, but to connect markets, users, and processes through a product aligned with the real operation.",
+      text: "The operation needed continuity across customer acquisition, package intake and consolidation, shipments, tracking, and support. The challenge was not to build an isolated website, but to connect markets, users, and processes through a product aligned with the real operation.",
     });
+    expect(lemBoxAudienceIntro).toEqual({
+      es: "Cada persona accede a la información y las acciones necesarias para su parte de la operación.",
+      en: "Each person accesses the information and actions needed for their part of the operation.",
+    });
+    expect(caseStudy.content.es.ecosystem.items[2]).toEqual({
+      title: "Operación conectada",
+      text: "La plataforma acompaña procesos de recepción de paquetes, evidencia fotográfica, peso, asignación, consolidación en cajas, embarques, tracking y actualización de estados.",
+    });
+    expect(caseStudy.content.en.ecosystem.items[2]).toEqual({
+      title: "Connected operations",
+      text: "The platform supports package intake, photo evidence, weight, assignment, box consolidation, shipments, tracking, and status updates.",
+    });
+    expect(caseStudy.content.es.audiences.items).toEqual([
+      {
+        title: "Clientes",
+        text: "Consultan sus paquetes, tracking, fotografías, peso, cajas, embarques y estados operativos. También pueden informar un tracking esperado antes de que el paquete sea recibido.",
+      },
+      {
+        title: "Partner LEM-BOX",
+        text: "Administra una cartera asignada de clientes desde una sola cuenta. Puede crear y mantener registros asociados y consultar sus trackings, cajas y embarques dentro de una experiencia multi-cliente.",
+      },
+      {
+        title: "Equipo operativo",
+        text: "Registra paquetes, peso y evidencia fotográfica, asigna paquetes a clientes, consolida cajas, organiza embarques y actualiza estados para acompañar cada etapa del recorrido.",
+      },
+    ]);
+    expect(caseStudy.content.en.audiences.items).toEqual([
+      {
+        title: "Customers",
+        text: "They can view their packages, tracking, photos, weight, boxes, shipments, and operational statuses. They can also report an expected tracking number before the package is received.",
+      },
+      {
+        title: "LEM-BOX Partner",
+        text: "They manage an assigned customer portfolio from a single account. They can create and maintain associated records and view their tracking, boxes, and shipments through a multi-customer experience.",
+      },
+      {
+        title: "Operations team",
+        text: "They register packages, weight, and photo evidence, assign packages to customers, consolidate boxes, organize shipments, and update statuses throughout the journey.",
+      },
+    ]);
     expect(caseStudy.content.es.role).toEqual({
       title: "Mi rol",
       text: "Mi trabajo parte de la operación diaria: traduzco necesidades reales en prioridades de producto, flujos y funcionalidades, y llevo esas decisiones hasta la implementación y evolución técnica del ecosistema.",
@@ -388,21 +443,21 @@ describe("portfolio architecture invariants", () => {
       title: "Un producto que evoluciona con la operación",
       text: "LEM-BOX continúa adaptándose a los procesos, necesidades y prioridades reales del negocio.",
       qualityTitle: "Calidad y reducción de riesgo",
-      qualityText: "Su desarrollo se apoya en pruebas automatizadas, autorización por roles, revisión de arquitectura, documentación técnica y despliegues controlados. Cada cambio forma parte de un proceso continuo de mejora y reducción de riesgo.",
+      qualityText: "LEM-BOX cuenta con autenticación, controles de autorización según el perfil y pruebas automatizadas. Su documentación, sus validaciones y la calidad técnica continúan evolucionando.",
     });
     expect(caseStudy.content.en.evolution).toEqual({
       title: "A product that evolves with the operation",
       text: "LEM-BOX continues adapting to the real processes, needs, and priorities of the business.",
       qualityTitle: "Quality and risk reduction",
-      qualityText: "Its development is supported by automated testing, role-based authorization, architecture reviews, technical documentation, and controlled deployments. Each change is part of an ongoing process of improvement and risk reduction.",
+      qualityText: "LEM-BOX includes authentication, profile-based authorization controls, and automated tests. Its documentation, validation practices, and technical quality continue to evolve.",
     });
     expect(caseStudy.content.es.mobileFuture).toEqual({
       title: "Siguiente etapa",
-      text: "El ecosistema atraviesa una etapa de documentación, pruebas y preparación técnica para una futura extensión a Android e iOS. Estas aplicaciones forman parte de la evolución prevista y todavía no se presentan como productos disponibles.",
+      text: "La plataforma web continúa activa y sigue evolucionando con documentación, pruebas y mejoras técnicas. Se evalúa una futura experiencia móvil para clientes. No hay una aplicación para Android o iOS disponible actualmente.",
     });
     expect(caseStudy.content.en.mobileFuture).toEqual({
       title: "Next stage",
-      text: "The ecosystem is currently in a stage of documentation, testing, and technical preparation for a future extension to Android and iOS. These applications are part of the planned evolution and are not yet presented as available products.",
+      text: "The web platform remains active and continues to evolve through documentation, testing, and technical improvements. A future mobile experience for customers is being evaluated. No Android or iOS app is currently available.",
     });
     expect(caseStudy.content.es.currentState).toEqual({
       title: "ESTADO ACTUAL · PRODUCTO ACTIVO",
