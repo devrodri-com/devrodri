@@ -3,6 +3,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import translations from "../i18n";
 import { useLanguage } from "../i18n/useLanguage";
 import { Link } from "react-router-dom";
+import { getLocalizedPath } from "../routes/siteRoutes";
 
 export default function CTASection() {
   const { language } = useLanguage();
@@ -37,7 +38,7 @@ export default function CTASection() {
         className="inline-block w-full sm:w-auto"
       >
         <Link
-          to="/#contacto"
+          to={`${getLocalizedPath("home", language)}#contacto`}
           aria-label={language === "es" ? "Ir al formulario de contacto" : "Go to contact form"}
           data-analytics="cta-start-project"
           className="inline-flex items-center justify-center min-h-[44px] bg-white text-black font-semibold px-6 py-3 rounded-xl shadow-md hover:bg-gray-200 transition-all duration-300 focus-visible:ring-2 ring-offset-2 ring-white w-full sm:w-auto text-center"

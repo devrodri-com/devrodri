@@ -1,9 +1,7 @@
 type AnalyticsFormMethod = "formsubmit";
 type AnalyticsPagePath =
-  | "/"
-  | "/portfolio"
-  | "/portfolio/lem-box"
-  | "/unknown";
+  | import("./routes/siteRoutes").PublicPathname
+  | "/404";
 type ContactFormErrorType =
   | "validation_error"
   | "network_error"

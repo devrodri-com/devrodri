@@ -6,6 +6,7 @@ import {
   lemBoxPublicLinksSection,
 } from "../data/portfolio/cases/lemBox";
 import { useLanguage } from "../i18n/useLanguage";
+import { getLocalizedPath } from "../routes/siteRoutes";
 
 type LemBoxEditorialColumnProps = {
   id: string;
@@ -49,7 +50,7 @@ export default function LemBoxCasePage() {
       <header className="border-b border-white/10 px-4 pb-14 pt-28 sm:px-6 sm:pb-24">
         <div className="mx-auto max-w-6xl">
           <Link
-            to="/portfolio"
+            to={getLocalizedPath("portfolio", language)}
             className="inline-flex min-h-[44px] items-center gap-2 text-sm font-medium text-gray-400 no-underline transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-black"
           >
             <span aria-hidden="true" className="text-base leading-none">
@@ -395,7 +396,7 @@ export default function LemBoxCasePage() {
                 {page.finalCta.text}
               </p>
               <Link
-                to={caseStudy.finalCtaHref}
+                to={`${getLocalizedPath("home", language)}#contacto`}
                 className="mt-8 inline-flex min-h-[44px] w-full items-center justify-center rounded-xl bg-white px-6 py-3 text-center font-semibold text-black transition hover:bg-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black sm:w-auto"
               >
                 {page.finalCta.buttonLabel}

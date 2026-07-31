@@ -1,6 +1,7 @@
 // src/Components/ImpactSection.tsx
 import translations from "../i18n";
 import { useLanguage } from "../i18n/useLanguage";
+import { getLocalizedPath } from "../routes/siteRoutes";
 export default function ImpactSection() {
   const { language } = useLanguage();
   const t = translations[language];
@@ -23,7 +24,7 @@ export default function ImpactSection() {
             </p>
             <div className="flex flex-wrap gap-3">
               <a
-                href="/portfolio"
+                href={getLocalizedPath("portfolio", language)}
                 aria-label={t.transitionVisual.primaryCta}
                 data-analytics="impact-cta-primary"
                 className="px-5 py-2 rounded-lg bg-primary-on-light text-white font-medium hover:opacity-90 transition"

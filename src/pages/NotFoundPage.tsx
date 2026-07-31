@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useLanguage } from "../i18n/useLanguage";
+import { getLocalizedPath } from "../routes/siteRoutes";
 
 export default function NotFoundPage() {
   const { language } = useLanguage();
@@ -29,7 +30,7 @@ export default function NotFoundPage() {
             : "The page you're looking for isn't available."}
         </p>
         <Link
-          to="/"
+          to={getLocalizedPath("home", language)}
           className="mt-8 inline-flex min-h-[44px] items-center rounded-full bg-primary-on-light px-6 py-3 font-medium text-white hover:bg-primary-on-light-hover transition"
         >
           {language === "es" ? "Volver al inicio" : "Return home"}

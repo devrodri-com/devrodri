@@ -6,12 +6,15 @@ import { useLanguage } from "../i18n/useLanguage";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { FiGlobe } from "react-icons/fi";
 import { Link } from "react-router-dom";
+import { getLocalizedPath } from "../routes/siteRoutes";
 
 const MOBILE_NAVIGATION_ID = "mobile-navigation-panel";
 
 export default function Navbar() {
   const { language, setLanguage } = useLanguage();
   const t = translations[language];
+  const homePath = getLocalizedPath("home", language);
+  const portfolioPath = getLocalizedPath("portfolio", language);
   const [menuOpen, setMenuOpen] = useState(false);
   const menuTriggerRef = useRef<HTMLButtonElement>(null);
 
@@ -39,7 +42,7 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-4 py-1 flex justify-between items-center">
         {/* Nombre (link to Home) */}
         <Link
-          to="/"
+          to={homePath}
           className="text-lg font-medium text-white tracking-normal leading-snug hover:opacity-80 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded"
           aria-label={language === "es" ? "DEVRODRI - Inicio" : "DEVRODRI - Home"}
         >
@@ -62,11 +65,11 @@ export default function Navbar() {
 
         {/* Links en desktop */}
         <div className="hidden sm:flex items-center space-x-6 text-sm font-medium text-white">
-          <Link to="/#sobremi" className="hover:text-primary transition">{t.nav.about}</Link>
-          <Link to="/#porqueelegirnos" className="hover:text-primary transition">{t.nav.why}</Link>
-          <Link to="/portfolio" className="hover:text-primary transition">{t.nav.portfolio}</Link>
-          <Link to="/#contacto" className="hover:text-primary transition">{t.nav.contact}</Link>
-          <Link to="/#faq" className="hover:text-primary transition">{t.nav.faq}</Link>
+          <Link to={`${homePath}#sobremi`} className="hover:text-primary transition">{t.nav.about}</Link>
+          <Link to={`${homePath}#porqueelegirnos`} className="hover:text-primary transition">{t.nav.why}</Link>
+          <Link to={portfolioPath} className="hover:text-primary transition">{t.nav.portfolio}</Link>
+          <Link to={`${homePath}#contacto`} className="hover:text-primary transition">{t.nav.contact}</Link>
+          <Link to={`${homePath}#faq`} className="hover:text-primary transition">{t.nav.faq}</Link>
 
           {/* Selector de idioma */}
           <div className="flex items-center gap-2 ml-4">
@@ -97,11 +100,11 @@ export default function Navbar() {
           id={MOBILE_NAVIGATION_ID}
           className="sm:hidden px-4 pb-4 flex flex-col items-center space-y-4 text-sm font-medium bg-black/90 backdrop-blur-sm text-white"
         >
-          <Link to="/#sobremi" onClick={closeMenu} className="hover:text-primary transition">{t.nav.about}</Link>
-          <Link to="/#porqueelegirnos" onClick={closeMenu} className="hover:text-primary transition">{t.nav.why}</Link>
-          <Link to="/portfolio" onClick={closeMenu} className="hover:text-primary transition">{t.nav.portfolio}</Link>
-          <Link to="/#contacto" onClick={closeMenu} className="hover:text-primary transition">{t.nav.contact}</Link>
-          <Link to="/#faq" onClick={closeMenu} className="hover:text-primary transition">{t.nav.faq}</Link>
+          <Link to={`${homePath}#sobremi`} onClick={closeMenu} className="hover:text-primary transition">{t.nav.about}</Link>
+          <Link to={`${homePath}#porqueelegirnos`} onClick={closeMenu} className="hover:text-primary transition">{t.nav.why}</Link>
+          <Link to={portfolioPath} onClick={closeMenu} className="hover:text-primary transition">{t.nav.portfolio}</Link>
+          <Link to={`${homePath}#contacto`} onClick={closeMenu} className="hover:text-primary transition">{t.nav.contact}</Link>
+          <Link to={`${homePath}#faq`} onClick={closeMenu} className="hover:text-primary transition">{t.nav.faq}</Link>
           <div className="flex items-center gap-2 mt-2">
             <FiGlobe className="text-white text-lg" aria-hidden="true" />
             <button

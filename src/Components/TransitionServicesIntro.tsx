@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { FiCheckCircle, FiLayers, FiMessageCircle } from "react-icons/fi";
 import translations from "../i18n";
 import { useLanguage } from "../i18n/useLanguage";
+import { getLocalizedPath } from "../routes/siteRoutes";
 
 type BridgeProps = { variant?: "default" | "afterPortfolio" };
 
@@ -102,7 +103,7 @@ export default function TransitionServicesIntro({ variant = "default" }: BridgeP
             </div>
             <div className="mt-6">
               <Link
-                to={V.href}
+                to={`${getLocalizedPath("home", language)}#contacto`}
                 aria-label={V.cta}
                 data-analytics={`bridge-cta-${variant}`}
                 className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg bg-primary-on-light text-white text-sm font-medium px-5 py-2.5 shadow-md hover:shadow-lg hover:bg-primary-on-light-hover transition w-full sm:w-auto focus-visible:ring-2 ring-offset-2 ring-[#3B82F6]"

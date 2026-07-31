@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import translations from "../i18n";
 import { useLanguage } from "../i18n/useLanguage";
+import { getLocalizedPath } from "../routes/siteRoutes";
 export default function SobreMiSection() {
   const { language } = useLanguage();
   const t = translations[language];
@@ -66,7 +67,7 @@ export default function SobreMiSection() {
         </p>
         <div className="flex items-center justify-center gap-4 mt-2 md:mt-3">
           <a
-            href="/portfolio"
+            href={getLocalizedPath("portfolio", language)}
             className="px-5 py-2 rounded-lg bg-primary-on-light text-white font-medium hover:bg-primary-on-light-hover transition"
             aria-label={language === "es" ? "Ver casos del porfolio" : "View portfolio work"}
             data-analytics="about-cta-primary"
@@ -74,7 +75,7 @@ export default function SobreMiSection() {
             {language === "es" ? "Ver casos" : "View work"}
           </a>
           <a
-            href="/#contacto"
+            href={`${getLocalizedPath("home", language)}#contacto`}
             className="px-5 py-2 rounded-lg border border-gray-300 text-gray-800 hover:bg-gray-100 transition focus-visible:ring-2 ring-offset-2 ring-gray-300"
             aria-label={language === "es" ? "Contame tu proyecto" : "Tell me about your project"}
             data-analytics="about-cta-secondary"
