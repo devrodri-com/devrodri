@@ -104,7 +104,12 @@ const server = http.createServer(async (request, response) => {
 });
 
 server.listen(port, "127.0.0.1", () => {
-  console.log(`Static verification server listening on http://127.0.0.1:${port}`);
+  const address = server.address();
+  const listeningPort =
+    typeof address === "object" && address !== null ? address.port : port;
+  console.log(
+    `Static verification server listening on http://127.0.0.1:${listeningPort}`,
+  );
 });
 
 for (const signal of ["SIGINT", "SIGTERM"]) {

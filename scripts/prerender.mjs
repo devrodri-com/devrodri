@@ -19,6 +19,8 @@ function render(url) {
     const chunks = [];
     const errors = [];
     let timeoutId;
+    let stream;
+    let settled = false;
 
     const output = new Writable({
       write(chunk, _encoding, callback) {
@@ -27,7 +29,18 @@ function render(url) {
       },
     });
 
+    const fail = (error) => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timeoutId);
+      stream?.abort();
+      output.destroy();
+      reject(error);
+    };
+
     output.on("finish", () => {
+      if (settled) return;
+      settled = true;
       clearTimeout(timeoutId);
       if (errors.length > 0) {
         reject(new AggregateError(errors, `Prerender failed for ${url}`));
@@ -38,16 +51,17 @@ function render(url) {
         helmet: helmetContext.helmet,
       });
     });
-    output.on("error", reject);
+    output.on("error", fail);
 
-    const stream = renderToPipeableStream(
+    stream = renderToPipeableStream(
       createServerApplication(url, helmetContext),
       {
         onAllReady() {
+          if (settled) return;
           stream.pipe(output);
         },
         onShellError(error) {
-          reject(error);
+          fail(error);
         },
         onError(error) {
           errors.push(error);
@@ -55,10 +69,13 @@ function render(url) {
       },
     );
 
-    timeoutId = setTimeout(() => {
+    if (settled) {
       stream.abort();
-      reject(new Error(`Prerender timed out for ${url}`));
-    }, 15_000);
+    } else {
+      timeoutId = setTimeout(() => {
+        fail(new Error(`Prerender timed out for ${url}`));
+      }, 15_000);
+    }
   });
 }
 

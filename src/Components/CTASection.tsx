@@ -1,4 +1,5 @@
 // src/Components/CTASection.tsx
+import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import translations from "../i18n";
 import { useLanguage } from "../i18n/useLanguage";
@@ -9,14 +10,28 @@ export default function CTASection() {
   const { language } = useLanguage();
   const t = translations[language];
   const prefersReduced = useReducedMotion();
+  const [hasHydrated, setHasHydrated] = useState(false);
+  const shouldReduceMotion = hasHydrated && prefersReduced === true;
+
+  useEffect(() => {
+    setHasHydrated(true);
+  }, []);
 
   return (
     <motion.section
       id="cta"
       className="relative bg-black text-white py-16 sm:py-20 px-4 sm:px-6 text-center"
-      initial={prefersReduced ? {} : { opacity: 0 }}
-      whileInView={prefersReduced ? {} : { opacity: 1 }}
-      transition={{ duration: 0.55 }}
+      {...(shouldReduceMotion
+        ? {
+            initial: false as const,
+            animate: { opacity: 1 },
+            transition: { duration: 0 },
+          }
+        : {
+            initial: { opacity: 0 },
+            whileInView: { opacity: 1 },
+            transition: { duration: 0.55 },
+          })}
       viewport={{ once: true }}
     >
       {/* Curva blanca arriba */}
