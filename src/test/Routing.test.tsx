@@ -1121,6 +1121,26 @@ describe("application routing", () => {
     });
   });
 
+  it("keeps the 404 footer at the viewport bottom through normal flow", async () => {
+    renderApp("/ruta-inexistente");
+
+    const heading = await screen.findByRole("heading", {
+      level: 1,
+      name: "Página no encontrada",
+    });
+    const main = heading.closest("main");
+    const shell = main?.parentElement;
+    const footer = screen.getByRole("contentinfo");
+
+    expect(main).toHaveClass("flex-1");
+    expect(shell).toHaveClass("min-h-screen", "flex", "flex-col");
+    expect(shell).toHaveStyle({ minHeight: "100dvh" });
+    expect(footer.parentElement).toBe(shell);
+    expect(shell).not.toHaveClass("fixed", "sticky", "absolute");
+    expect(main).not.toHaveClass("fixed", "sticky", "absolute");
+    expect(footer).not.toHaveClass("fixed", "sticky", "absolute");
+  });
+
   it("uses the default Spanish 404 for unregistered paths", async () => {
     renderApp("/en/missing-page");
 

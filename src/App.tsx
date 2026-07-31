@@ -26,6 +26,7 @@ import {
   trackPageView,
 } from "./lib/analytics";
 import {
+  getPublicRoute,
   PUBLIC_ROUTES,
   type PageKey,
 } from "./routes/siteRoutes";
@@ -138,6 +139,9 @@ function App({
 }: {
   helmetContext?: Partial<FilledContext>;
 } = {}) {
+  const location = useLocation();
+  const isNotFound = getPublicRoute(location.pathname) === null;
+
   usePageview();
   useAnalyticsEvents();
 
@@ -145,7 +149,12 @@ function App({
     <HelmetProvider
       {...(helmetContext === undefined ? {} : { context: helmetContext })}
     >
-      <div className="font-sans bg-neutral text-gray-900 min-h-screen">
+      <div
+        className={`font-sans bg-neutral text-gray-900 min-h-screen${
+          isNotFound ? " flex flex-col" : ""
+        }`}
+        style={isNotFound ? { minHeight: "100dvh" } : undefined}
+      >
         <SeoHead />
 
         {/* ✅ Navbar */}

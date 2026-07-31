@@ -15,7 +15,7 @@ export default function NotFoundPage() {
     <main
       ref={contentRef}
       tabIndex={-1}
-      className="min-h-[70vh] bg-black px-6 py-28 text-white flex items-center justify-center focus:outline-none"
+      className="flex-1 bg-black px-6 py-28 text-white flex items-center justify-center focus:outline-none"
     >
       <div className="max-w-xl text-center">
         <p className="text-sm uppercase tracking-widest text-primary mb-3">
