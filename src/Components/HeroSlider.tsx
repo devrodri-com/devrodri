@@ -316,11 +316,29 @@ export default function HeroSlider() {
             )}
           </div>
           <div
-            className="relative z-20 mt-[2.625rem] h-2 w-44 self-center md:absolute md:bottom-6 md:left-1/2 md:mt-0 md:-translate-x-1/2 md:self-auto"
+            className="relative z-20 mt-[2.625rem] h-2 w-[4.25rem] self-center md:absolute md:bottom-6 md:left-1/2 md:mt-0 md:-translate-x-1/2 md:self-auto"
             role="group"
             aria-label={
               language === "es" ? "Navegación de slides" : "Slide navigation"
             }
+            onClickCapture={(event) => {
+              if (event.detail === 0) return;
+
+              const bounds = event.currentTarget.getBoundingClientRect();
+              if (bounds.width === 0) return;
+
+              const nearestDot = Math.round(
+                (event.clientX - bounds.left - 4) / 20,
+              );
+              const targetIndex = Math.min(
+                slides.length - 1,
+                Math.max(0, nearestDot),
+              );
+
+              event.preventDefault();
+              event.stopPropagation();
+              setIndex(targetIndex);
+            }}
           >
             {slides.map((slide, i) => (
               <button
@@ -328,7 +346,7 @@ export default function HeroSlider() {
                 type="button"
                 onClick={() => setIndex(i)}
                 className="absolute top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black"
-                style={{ left: `${i * 44}px` }}
+                style={{ left: `${i * 20 - 18}px` }}
                 aria-label={
                   language === "es"
                     ? `Ir al slide ${i + 1} de ${slides.length}: ${slide.title[language]}`

@@ -9,6 +9,7 @@ const serverDirectory = path.join(projectRoot, "dist-ssr");
 const expectedRoutes = [
   {
     pathname: "/",
+    page: "home",
     file: "index.html",
     lang: "es",
     title: "Rodrigo Opalo | Diseñador y Desarrollador Web",
@@ -16,6 +17,7 @@ const expectedRoutes = [
   },
   {
     pathname: "/portfolio",
+    page: "portfolio",
     file: "portfolio/index.html",
     lang: "es",
     title: "Portfolio | Rodrigo Opalo",
@@ -23,6 +25,7 @@ const expectedRoutes = [
   },
   {
     pathname: "/portfolio/lem-box",
+    page: "lem-box",
     file: "portfolio/lem-box/index.html",
     lang: "es",
     title: "LEM-BOX: plataforma logística y producto propio | Rodrigo Opalo",
@@ -30,6 +33,7 @@ const expectedRoutes = [
   },
   {
     pathname: "/en",
+    page: "home",
     file: "en/index.html",
     lang: "en",
     title: "Rodrigo Opalo | Web Designer and Developer",
@@ -37,6 +41,7 @@ const expectedRoutes = [
   },
   {
     pathname: "/en/portfolio",
+    page: "portfolio",
     file: "en/portfolio/index.html",
     lang: "en",
     title: "Portfolio | Rodrigo Opalo",
@@ -44,6 +49,7 @@ const expectedRoutes = [
   },
   {
     pathname: "/en/portfolio/lem-box",
+    page: "lem-box",
     file: "en/portfolio/lem-box/index.html",
     lang: "en",
     title: "LEM-BOX: logistics platform and own product | Rodrigo Opalo",
@@ -81,6 +87,87 @@ function inlineScripts(html) {
       /<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g,
     ),
   ];
+}
+
+function openingTags(html, tagName) {
+  return [...html.matchAll(new RegExp(`<${tagName}\\b[^>]*>`, "g"))].map(
+    ([tag]) => tag,
+  );
+}
+
+function openingTagWith(html, tagName, marker, pathname) {
+  const tag = openingTags(html, tagName).find((candidate) =>
+    candidate.includes(marker),
+  );
+  assert.ok(tag, `${pathname}: missing ${tagName} containing ${marker}`);
+  return tag;
+}
+
+function assertVisibleOpeningTag(html, tagName, marker, pathname) {
+  const tag = openingTagWith(html, tagName, marker, pathname);
+  assert.doesNotMatch(
+    tag,
+    /style="[^"]*opacity:\s*0(?:[;\"])/,
+    `${pathname}: ${marker} is hidden in prerendered HTML`,
+  );
+}
+
+function assertSemanticDocument(html, { lang, pathname }) {
+  const mainTags = openingTags(html, "main");
+  assert.equal(mainTags.length, 1, `${pathname}: expected one main`);
+  assert.match(mainTags[0], /\bid="main-content"/);
+  assert.match(mainTags[0], /\btabindex="-1"/);
+
+  const skipLabel =
+    lang === "es" ? "Saltar al contenido principal" : "Skip to main content";
+  const skipTag = openingTagWith(
+    html,
+    "a",
+    'href="#main-content"',
+    pathname,
+  );
+  assert.match(skipTag, /\bclass="skip-link"/);
+  assert.ok(html.includes(`>${skipLabel}</a>`), `${pathname}: skip label`);
+
+  const firstFocusable = html.search(
+    /<a\b[^>]*href=|<button\b|<input\b(?![^>]*type="hidden")|<select\b|<textarea\b|\btabindex="0"/,
+  );
+  assert.equal(firstFocusable, html.indexOf(skipTag), `${pathname}: skip order`);
+
+  const headingLevels = [...html.matchAll(/<h([1-6])\b/g)].map((match) =>
+    Number(match[1]),
+  );
+  assert.equal(
+    headingLevels.filter((level) => level === 1).length,
+    1,
+    `${pathname}: expected one h1`,
+  );
+  for (let index = 1; index < headingLevels.length; index += 1) {
+    const previous = headingLevels[index - 1];
+    const current = headingLevels[index];
+    assert.ok(
+      current <= previous + 1,
+      `${pathname}: heading level jumps from h${previous} to h${current}`,
+    );
+  }
+
+  const mainStart = html.indexOf(mainTags[0]);
+  const mainEnd = html.indexOf("</main>", mainStart);
+  assert.ok(mainEnd > mainStart, `${pathname}: main closing tag`);
+  const mainHtml = html.slice(mainStart, mainEnd);
+  assert.ok(!mainHtml.includes("<nav"), `${pathname}: Navbar inside main`);
+  assert.ok(!mainHtml.includes("<footer"), `${pathname}: Footer inside main`);
+  assert.ok(html.indexOf("<nav") < mainStart, `${pathname}: Navbar order`);
+  assert.ok(html.indexOf("<footer") > mainEnd, `${pathname}: Footer order`);
+}
+
+function assertImage(html, source, expectedAlt, pathname) {
+  const image = openingTagWith(html, "img", `src="${source}"`, pathname);
+  assert.ok(
+    image.includes(`alt="${expectedAlt}"`),
+    `${pathname}: unexpected alt for ${source}`,
+  );
+  return image;
 }
 
 const vercelConfiguration = JSON.parse(
@@ -170,6 +257,83 @@ for (const route of expectedRoutes) {
     assert.ok(!html.includes(fallback), `${route.pathname}: ${fallback}`);
   }
 
+  assertSemanticDocument(html, route);
+  assertVisibleOpeningTag(html, "h1", "class=", route.pathname);
+  assertVisibleOpeningTag(html, "footer", "class=", route.pathname);
+
+  if (route.page === "home") {
+    for (const [tagName, marker] of [
+      ["section", 'id="sobremi"'],
+      ["section", 'id="portfolio"'],
+      ["section", 'id="contacto"'],
+      ["section", 'id="cta"'],
+      ["div", 'class="absolute inset-0"'],
+      ["div", "group h-full overflow-hidden"],
+      ["div", "relative z-30 bg-white"],
+    ]) {
+      assertVisibleOpeningTag(html, tagName, marker, route.pathname);
+    }
+    const bridgeTags = openingTags(html, "section").filter((tag) =>
+      tag.includes("bg-white py-10 px-4 sm:px-6 text-center"),
+    );
+    assert.equal(bridgeTags.length, 2, `${route.pathname}: content bridges`);
+    const homeCardTags = openingTags(html, "div").filter((tag) =>
+      tag.includes("group h-full overflow-hidden rounded-2xl"),
+    );
+    assert.equal(homeCardTags.length, 4, `${route.pathname}: home cards`);
+    for (const tag of [...bridgeTags, ...homeCardTags]) {
+      assert.doesNotMatch(tag, /style="[^"]*opacity:\s*0(?:[;\"])/);
+    }
+    assert.ok(html.includes("<form"), `${route.pathname}: contact form`);
+    assert.ok(
+      html.includes('src="/img/hero-visual.jpg"'),
+      `${route.pathname}: first Hero image`,
+    );
+    assert.ok(
+      html.includes(
+        route.lang === "es" ? "Proyectos seleccionados" : "Selected projects",
+      ),
+      `${route.pathname}: home portfolio`,
+    );
+    for (const source of [
+      "/img/hero-visual.jpg",
+      "/img/hero-visual-mobile.jpg",
+      "/img/impact.jpg",
+      "/img/experience.jpg",
+      "/img/servicios.jpg",
+      "/img/certs/ibm-fullstack.png",
+    ]) {
+      assertImage(html, source, "", route.pathname);
+    }
+    assertImage(html, "/img/sobremi.jpg", "Rodrigo Opalo", route.pathname);
+  }
+
+  if (route.page === "portfolio") {
+    assert.ok(
+      html.includes('id="portfolio-case-lem_box"'),
+      `${route.pathname}: Portfolio catalog`,
+    );
+    const cardTags = openingTags(html, "div").filter((tag) =>
+      tag.includes("border border-gray-200 rounded-2xl"),
+    );
+    assert.equal(cardTags.length, 8, `${route.pathname}: Portfolio cards`);
+    for (const tag of cardTags) {
+      assert.doesNotMatch(tag, /style="[^"]*opacity:\s*0(?:[;\"])/);
+    }
+    for (const match of html.matchAll(/<img\b[^>]*class="w-full h-full object-cover object-center rounded-xl"[^>]*>/g)) {
+      assert.match(match[0], /alt=""/);
+    }
+  }
+
+  if (route.page === "lem-box") {
+    const expectedAlt =
+      route.lang === "es"
+        ? "Logo de LEM-BOX con el lema «Logística en Miami»"
+        : "LEM-BOX logo with the tagline “Logística en Miami”";
+    assertImage(html, "/img/lem-box-cover.png", expectedAlt, route.pathname);
+    assert.ok(html.includes("<article"), `${route.pathname}: case content`);
+  }
+
   const scripts = inlineScripts(html);
   const expectedJsonLdCount =
     route.pathname === "/" || route.pathname === "/en" ? 2 : 0;
@@ -228,6 +392,12 @@ assert.ok(!notFoundHtml.includes("Sitios web que comunican y convierten."));
 assert.ok(!notFoundHtml.includes("Websites built to communicate and convert."));
 assert.ok(!notFoundHtml.includes("<!--app-head-->"));
 assert.ok(!notFoundHtml.includes("<!--app-html-->"));
+assertSemanticDocument(notFoundHtml, {
+  lang: "es",
+  pathname: "/no-existe",
+});
+assertVisibleOpeningTag(notFoundHtml, "h1", "class=", "/no-existe");
+assertVisibleOpeningTag(notFoundHtml, "footer", "class=", "/no-existe");
 
 const robots = await readFile(path.join(distDirectory, "robots.txt"), "utf8");
 assert.equal(

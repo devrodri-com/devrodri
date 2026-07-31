@@ -129,10 +129,10 @@ describe("CTASection", () => {
     expect(publicCopy).not.toMatch(/[\u2013\u2014]/);
   });
 
-  it("hydrates without a mismatch and reveals the CTA for reduced motion", async () => {
+  it("hydrates without a mismatch and keeps the CTA visible for reduced motion", async () => {
     const serverMarkup = renderToString(renderControlledCta());
     expect(serverMarkup).toContain('id="cta"');
-    expect(serverMarkup).toContain("opacity:0");
+    expect(serverMarkup).not.toContain("opacity:0");
 
     const container = document.createElement("div");
     container.innerHTML = serverMarkup;
@@ -146,7 +146,7 @@ describe("CTASection", () => {
       });
 
       await waitFor(() => {
-        expect(container.querySelector("#cta")).toHaveStyle({ opacity: "1" });
+        expect(container.querySelector("#cta")).toBeVisible();
       });
       expect(consoleError.mock.calls.flat().join(" ")).not.toMatch(
         /hydration|did not match|server html/i,
