@@ -117,7 +117,7 @@ export default function TransitionServicesIntro({ variant = "default" }: BridgeP
           <div className="mt-6 rounded-3xl overflow-hidden shadow-xl transition hover:shadow-2xl w-full max-w-[1600px] mx-auto">
             <img
               src="/img/servicios.jpg"
-              alt="Servicios"
+              alt=""
               className="w-full h-24 object-cover object-center sm:h-28 md:h-32"
             />
           </div>

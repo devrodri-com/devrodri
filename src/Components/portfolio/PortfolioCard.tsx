@@ -9,6 +9,7 @@ interface PortfolioCardProps {
   desc: string;
   details: ReactNode;
   expanded: boolean;
+  headingLevel?: "h2" | "h3";
   disclaimer?: string;
   status?: string;
   tags: string;
@@ -21,11 +22,14 @@ export default function PortfolioCard({
   desc,
   details,
   expanded,
+  headingLevel = "h3",
   disclaimer,
   status,
   tags,
   title,
 }: PortfolioCardProps) {
+  const Heading = headingLevel;
+
   return (
     <motion.div
       className={`border border-gray-200 rounded-2xl shadow-sm bg-white ${expanded || status ? "" : "md:h-[280px] md:overflow-hidden"}`}
@@ -39,7 +43,7 @@ export default function PortfolioCard({
           <div className="w-full aspect-[16/9] p-5 md:p-7 rounded-2xl bg-white overflow-hidden flex items-center justify-center">
             <img
               src={cover}
-              alt={title}
+              alt=""
               className="w-full h-full object-cover object-center rounded-xl"
               loading="lazy"
               decoding="async"
@@ -52,7 +56,9 @@ export default function PortfolioCard({
               {status}
             </p>
           )}
-          <h3 className="text-xl font-semibold tracking-tight text-gray-900">{title}</h3>
+          <Heading className="text-xl font-semibold tracking-tight text-gray-900">
+            {title}
+          </Heading>
           <p className="text-gray-700 mt-2 max-w-[62ch]">{desc}</p>
           {disclaimer && (
             <p className="mt-3 max-w-[62ch] border-l-2 border-blue-200 pl-3 text-sm text-gray-700">

@@ -102,11 +102,7 @@ export default function PortfolioSection() {
                 <div className="aspect-[2/1] overflow-hidden bg-white">
                   <img
                     src={p.cover}
-                    alt={
-                      language === "es"
-                        ? `Portada de ${p.title}`
-                        : `${p.title} cover`
-                    }
+                    alt=""
                     className="h-full w-full object-cover"
                     loading="lazy"
                     decoding="async"

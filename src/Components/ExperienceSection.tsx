@@ -16,7 +16,7 @@ export default function ExperienceSection() {
         <div className="relative rounded-xl overflow-hidden shadow-xl md:col-span-6 order-1 md:order-none min-h-[360px]">
           <img
             src="/img/experience.jpg"
-            alt="Detalle visual que representa experiencias digitales"
+            alt=""
             width={1200}
             height={900}
             loading="lazy"

@@ -109,7 +109,7 @@ export default function SobreMiSection() {
           >
             <img
               src="/img/certs/ibm-fullstack.png"
-              alt="IBM Full Stack Certificate"
+              alt=""
               className="h-16 w-auto rounded ring-1 ring-gray-300 hover:ring-gray-400 shadow-sm hover:scale-105 transition-transform duration-300"
               loading="lazy"
               decoding="async"
