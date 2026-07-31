@@ -4,6 +4,7 @@ import { useLanguage } from "../i18n/useLanguage";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { getLocalizedPath } from "../routes/siteRoutes";
 
 const slides = [
   {
@@ -223,6 +224,12 @@ export default function HeroSlider() {
   }, []);
 
   const currentSlide = slides[index] ?? slides[0];
+  const buttonLink =
+    currentSlide.buttonLink === "/portfolio/lem-box"
+      ? getLocalizedPath("lem-box", language)
+      : currentSlide.buttonLink === "/portfolio"
+        ? getLocalizedPath("portfolio", language)
+        : currentSlide.buttonLink;
 
   return (
     <section
@@ -294,7 +301,7 @@ export default function HeroSlider() {
               </a>
             ) : (
               <Link
-                to={currentSlide.buttonLink}
+                to={buttonLink}
                 state={
                   currentSlide.focusCase === null
                     ? {}

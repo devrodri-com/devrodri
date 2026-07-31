@@ -110,6 +110,27 @@ describe("analytics", () => {
     ]);
   });
 
+  it.each([
+    "/",
+    "/portfolio",
+    "/portfolio/lem-box",
+    "/en",
+    "/en/portfolio",
+    "/en/portfolio/lem-box",
+  ])("classifies the public ES/EN route without an unknown bucket: %s", async (path) => {
+    vi.stubEnv("VITE_GA_ID", VALID_TEST_MEASUREMENT_ID);
+    const { trackPageView } = await import("../lib/analytics");
+
+    trackPageView(path);
+
+    expect(pageViewCommands()).toHaveLength(1);
+    expect(pageViewCommands()[0]?.[2]).toMatchObject({
+      page_location: `${window.location.origin}${path}`,
+      page_path: path,
+    });
+    expect(JSON.stringify(dataLayerCommands())).not.toContain("/unknown");
+  });
+
   it("keeps allowlisted campaign attribution only on the first pageview", async () => {
     vi.stubEnv("VITE_GA_ID", VALID_TEST_MEASUREMENT_ID);
     window.history.replaceState(
@@ -193,7 +214,7 @@ describe("analytics", () => {
     expect(pageLocation).not.toContain("#");
   });
 
-  it("maps unrecognized paths to a non-sensitive analytics bucket", async () => {
+  it("maps unrecognized paths to a non-sensitive 404 analytics bucket", async () => {
     vi.stubEnv("VITE_GA_ID", VALID_TEST_MEASUREMENT_ID);
     const sensitivePath = "/client/alice@example.com?token=private#message";
     window.history.replaceState(null, "", sensitivePath);
@@ -209,12 +230,12 @@ describe("analytics", () => {
     expect(serializedCommands).not.toContain("token");
     expect(serializedCommands).not.toContain("private");
     expect(pageViewCommands()[0]?.[2]).toMatchObject({
-      page_location: `${window.location.origin}/unknown`,
-      page_path: "/unknown",
+      page_location: `${window.location.origin}/404`,
+      page_path: "/404",
     });
     const events = analyticsEventCommands();
     expect(events[events.length - 1]?.[2]).toMatchObject({
-      page_path: "/unknown",
+      page_path: "/404",
     });
   });
 
@@ -270,8 +291,8 @@ describe("analytics", () => {
     trackPageView(nestedPath);
 
     expect(pageViewCommands()[0]?.[2]).toMatchObject({
-      page_location: `${window.location.origin}/unknown`,
-      page_path: "/unknown",
+      page_location: `${window.location.origin}/404`,
+      page_path: "/404",
     });
   });
 

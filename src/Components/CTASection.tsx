@@ -1,21 +1,37 @@
 // src/Components/CTASection.tsx
+import { useEffect, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import translations from "../i18n";
 import { useLanguage } from "../i18n/useLanguage";
 import { Link } from "react-router-dom";
+import { getLocalizedPath } from "../routes/siteRoutes";
 
 export default function CTASection() {
   const { language } = useLanguage();
   const t = translations[language];
   const prefersReduced = useReducedMotion();
+  const [hasHydrated, setHasHydrated] = useState(false);
+  const shouldReduceMotion = hasHydrated && prefersReduced === true;
+
+  useEffect(() => {
+    setHasHydrated(true);
+  }, []);
 
   return (
     <motion.section
       id="cta"
       className="relative bg-black text-white py-16 sm:py-20 px-4 sm:px-6 text-center"
-      initial={prefersReduced ? {} : { opacity: 0 }}
-      whileInView={prefersReduced ? {} : { opacity: 1 }}
-      transition={{ duration: 0.55 }}
+      {...(shouldReduceMotion
+        ? {
+            initial: false as const,
+            animate: { opacity: 1 },
+            transition: { duration: 0 },
+          }
+        : {
+            initial: { opacity: 0 },
+            whileInView: { opacity: 1 },
+            transition: { duration: 0.55 },
+          })}
       viewport={{ once: true }}
     >
       {/* Curva blanca arriba */}
@@ -37,7 +53,7 @@ export default function CTASection() {
         className="inline-block w-full sm:w-auto"
       >
         <Link
-          to="/#contacto"
+          to={`${getLocalizedPath("home", language)}#contacto`}
           aria-label={language === "es" ? "Ir al formulario de contacto" : "Go to contact form"}
           data-analytics="cta-start-project"
           className="inline-flex items-center justify-center min-h-[44px] bg-white text-black font-semibold px-6 py-3 rounded-xl shadow-md hover:bg-gray-200 transition-all duration-300 focus-visible:ring-2 ring-offset-2 ring-white w-full sm:w-auto text-center"

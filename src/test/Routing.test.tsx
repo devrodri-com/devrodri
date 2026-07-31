@@ -1,9 +1,9 @@
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it } from "vitest";
-import { MemoryRouter } from "react-router-dom";
+import { MemoryRouter, useLocation } from "react-router-dom";
 import App from "../App";
-import { LanguageProvider } from "../i18n/LanguageProvider";
+import { RoutedLanguageProvider } from "../i18n/LanguageProvider";
 
 type TestRouteEntry =
   | string
@@ -35,13 +35,25 @@ const lemBoxSeo = {
   },
 } as const;
 
+function LocationProbe() {
+  const location = useLocation();
+  return (
+    <output data-testid="current-test-location">
+      {location.pathname}
+      {location.search}
+      {location.hash}
+    </output>
+  );
+}
+
 function renderApp(entry: TestRouteEntry) {
   return render(
-    <LanguageProvider>
-      <MemoryRouter initialEntries={[entry]}>
+    <MemoryRouter initialEntries={[entry]}>
+      <RoutedLanguageProvider>
         <App />
-      </MemoryRouter>
-    </LanguageProvider>,
+        <LocationProbe />
+      </RoutedLanguageProvider>
+    </MemoryRouter>,
   );
 }
 
@@ -62,11 +74,11 @@ describe("application routing", () => {
     await waitFor(() => {
       expect(
         document.head.querySelector('link[rel="canonical"]'),
-      ).toHaveAttribute("href", "https://www.devrodri.com");
+      ).toHaveAttribute("href", "https://www.devrodri.com/");
     });
   });
 
-  it.each(["/portfolio", "/portfolio/", "/Portfolio"])(
+  it.each(["/portfolio", "/portfolio/", "/portfolio?utm_source=test"])(
     "loads the lazy portfolio route and canonical metadata for %s",
     async (path) => {
       renderApp(path);
@@ -83,7 +95,7 @@ describe("application routing", () => {
         ).toHaveAttribute("href", "https://www.devrodri.com/portfolio");
         expect(
           document.head.querySelector('meta[name="robots"]'),
-        ).not.toBeInTheDocument();
+        ).toHaveAttribute("content", "index, follow");
       });
     },
   );
@@ -104,6 +116,34 @@ describe("application routing", () => {
         name: "Algunos trabajos",
       }),
     ).toBeInTheDocument();
+  });
+
+  it("preserves the equivalent page, query and hash when changing language", async () => {
+    const user = userEvent.setup();
+    renderApp("/portfolio?source=vis01#portfolio-grid");
+
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Algunos trabajos",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByTestId("current-test-location")).toHaveTextContent(
+      "/portfolio?source=vis01#portfolio-grid",
+    );
+
+    await user.click(screen.getByRole("button", { name: "Cambiar a inglés" }));
+
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Some Work",
+      }),
+    ).toBeInTheDocument();
+    expect(screen.getByTestId("current-test-location")).toHaveTextContent(
+      "/en/portfolio?source=vis01#portfolio-grid",
+    );
+    expect(localStorage.getItem("language")).toBe("en");
   });
 
   it("opens Portfolio from the first Hero CTA", async () => {
@@ -386,7 +426,7 @@ describe("application routing", () => {
         );
         expect(
           document.head.querySelector('meta[name="robots"]'),
-        ).not.toBeInTheDocument();
+        ).toHaveAttribute("content", "index, follow");
       });
     },
   );
@@ -741,8 +781,7 @@ describe("application routing", () => {
   });
 
   it("renders the English LEM-BOX case study and exact metadata", async () => {
-    localStorage.setItem("language", "en");
-    renderApp("/portfolio/lem-box");
+    renderApp("/en/portfolio/lem-box");
 
     expect(
       await screen.findByRole("heading", {
@@ -839,17 +878,7 @@ describe("application routing", () => {
     });
   });
 
-  it("removes static fallback metadata after the LEM-BOX metadata mounts", async () => {
-    const fallbackDescription = document.createElement("meta");
-    fallbackDescription.name = "description";
-    fallbackDescription.content = "Static fallback description";
-    document.head.append(fallbackDescription);
-
-    const fallbackOgType = document.createElement("meta");
-    fallbackOgType.setAttribute("property", "og:type");
-    fallbackOgType.content = "website";
-    document.head.append(fallbackOgType);
-
+  it("keeps one route-owned metadata set for the LEM-BOX page", async () => {
     renderApp("/portfolio/lem-box");
     await screen.findByRole("heading", { level: 1, name: "LEM-BOX" });
 
@@ -1092,14 +1121,33 @@ describe("application routing", () => {
     });
   });
 
-  it("shows the English not-found route", async () => {
-    localStorage.setItem("language", "en");
-    renderApp("/missing-page");
+  it("keeps the 404 footer at the viewport bottom through normal flow", async () => {
+    renderApp("/ruta-inexistente");
+
+    const heading = await screen.findByRole("heading", {
+      level: 1,
+      name: "Página no encontrada",
+    });
+    const main = heading.closest("main");
+    const shell = main?.parentElement;
+    const footer = screen.getByRole("contentinfo");
+
+    expect(main).toHaveClass("flex-1");
+    expect(shell).toHaveClass("min-h-screen", "flex", "flex-col");
+    expect(shell).toHaveStyle({ minHeight: "100dvh" });
+    expect(footer.parentElement).toBe(shell);
+    expect(shell).not.toHaveClass("fixed", "sticky", "absolute");
+    expect(main).not.toHaveClass("fixed", "sticky", "absolute");
+    expect(footer).not.toHaveClass("fixed", "sticky", "absolute");
+  });
+
+  it("uses the default Spanish 404 for unregistered paths", async () => {
+    renderApp("/en/missing-page");
 
     expect(
       await screen.findByRole("heading", {
         level: 1,
-        name: "Page not found",
+        name: "Página no encontrada",
       }),
     ).toBeInTheDocument();
   });

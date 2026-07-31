@@ -1,10 +1,11 @@
 import type { Language } from "../i18n/language";
+import { getPublicRoute } from "../routes/siteRoutes";
 
 const GOOGLE_TAG_SCRIPT_ID = "devrodri-google-tag";
 const GOOGLE_TAG_CONFIGURED_ATTRIBUTE = "data-devrodri-ga-configured";
 const GOOGLE_TAG_ORIGIN = "https://www.googletagmanager.com";
 const GA_MEASUREMENT_ID_PATTERN = /^G-[A-Z0-9]{10}$/;
-const UNKNOWN_ANALYTICS_PATH: AnalyticsPagePath = "/unknown";
+const NOT_FOUND_ANALYTICS_PATH: AnalyticsPagePath = "/404";
 const CAMPAIGN_QUERY_KEYS = [
   "utm_id",
   "utm_source",
@@ -68,21 +69,7 @@ function createGoogleTagScript(measurementId: string): HTMLScriptElement {
 }
 
 function getAnalyticsPath(pathname: string): AnalyticsPagePath {
-  const [withoutQueryOrHash = ""] = pathname.split(/[?#]/, 1);
-  const normalizedPath =
-    withoutQueryOrHash.length > 1
-      ? withoutQueryOrHash.replace(/\/+$/, "")
-      : withoutQueryOrHash;
-  if (normalizedPath === "" || normalizedPath === "/") return "/";
-  if (normalizedPath === "/portfolio/lem-box") {
-    return "/portfolio/lem-box";
-  }
-  if (
-    normalizedPath === "/portfolio"
-  ) {
-    return "/portfolio";
-  }
-  return UNKNOWN_ANALYTICS_PATH;
+  return getPublicRoute(pathname)?.pathname ?? NOT_FOUND_ANALYTICS_PATH;
 }
 
 function getCleanPageLocation(pathname: string): string {

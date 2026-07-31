@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { homePortfolioCases } from "../data/portfolio";
 import { useLanguage } from "../i18n/useLanguage";
 import { Link } from "react-router-dom";
+import { getLocalizedPath } from "../routes/siteRoutes";
 
 export default function PortfolioSection() {
   const { language } = useLanguage();
@@ -75,7 +76,11 @@ export default function PortfolioSection() {
           {highlights.map((p, index) => (
             <Link
               key={p.key}
-              to={p.caseStudyPath ?? "/portfolio"}
+              to={
+                p.caseStudyPath === undefined
+                  ? getLocalizedPath("portfolio", language)
+                  : getLocalizedPath("lem-box", language)
+              }
               {...(p.caseStudyPath === undefined
                 ? { state: { focusCase: p.key } }
                 : {})}
@@ -142,13 +147,13 @@ export default function PortfolioSection() {
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
-              to="/#contacto"
+              to={`${getLocalizedPath("home", language)}#contacto`}
               className="inline-flex items-center justify-center min-h-[44px] rounded-lg px-4 py-2 text-sm font-semibold bg-primary-on-light text-white hover:opacity-90 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
             >
               {language === "es" ? "Escribime por el formulario" : "Message me via the form"}
             </Link>
             <Link
-              to="/portfolio"
+              to={getLocalizedPath("portfolio", language)}
               className="inline-flex items-center justify-center min-h-[44px] rounded-lg px-4 py-2 text-sm font-semibold border border-white/30 bg-white/5 text-white/90 hover:bg-white/15 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
             >
               {language === "es" ? "Ver portfolio completo" : "View full portfolio"}

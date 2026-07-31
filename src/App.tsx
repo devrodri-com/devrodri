@@ -1,6 +1,9 @@
 // src/App.tsx
 import { useLanguage } from "./i18n/useLanguage";
-import { HelmetProvider } from "react-helmet-async";
+import {
+  HelmetProvider,
+  type FilledContext,
+} from "react-helmet-async";
 import SeoHead from "./Components/SeoHead";
 import { lazy, Suspense, useEffect, useRef } from "react";
 import HeroSlider from "./Components/HeroSlider";
@@ -22,6 +25,11 @@ import {
   trackAnalyticsClick,
   trackPageView,
 } from "./lib/analytics";
+import {
+  getPublicRoute,
+  PUBLIC_ROUTES,
+  type PageKey,
+} from "./routes/siteRoutes";
 
 const PortfolioPage = lazy(() => import("./pages/PortfolioPage"));
 const LemBoxCasePage = lazy(() => import("./pages/LemBoxCasePage"));
@@ -52,6 +60,39 @@ const HomePage = () => (
     <CTASection />
   </>
 );
+
+function PublicPage({ page }: { page: PageKey }) {
+  const { language } = useLanguage();
+
+  if (page === "home") return <HomePage />;
+  if (page === "portfolio") {
+    return (
+      <Suspense
+        fallback={
+          <div className="min-h-[45vh] flex items-center justify-center bg-black text-white/70 text-sm px-4 text-center">
+            {language === "es" ? "Cargando portfolio…" : "Loading portfolio…"}
+          </div>
+        }
+      >
+        <PortfolioPage />
+      </Suspense>
+    );
+  }
+
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-[45vh] flex items-center justify-center bg-black text-white/70 text-sm px-4 text-center">
+          {language === "es"
+            ? "Cargando caso LEM-BOX…"
+            : "Loading LEM-BOX case study…"}
+        </div>
+      }
+    >
+      <LemBoxCasePage />
+    </Suspense>
+  );
+}
 
 
 function ScrollToHash() {
@@ -93,15 +134,27 @@ function useAnalyticsEvents() {
   }, []);
 }
 
-function App() {
-  const { language } = useLanguage();
+function App({
+  helmetContext,
+}: {
+  helmetContext?: Partial<FilledContext>;
+} = {}) {
+  const location = useLocation();
+  const isNotFound = getPublicRoute(location.pathname) === null;
 
   usePageview();
   useAnalyticsEvents();
 
   return (
-    <HelmetProvider>
-      <div className="font-sans bg-neutral text-gray-900 min-h-screen">
+    <HelmetProvider
+      {...(helmetContext === undefined ? {} : { context: helmetContext })}
+    >
+      <div
+        className={`font-sans bg-neutral text-gray-900 min-h-screen${
+          isNotFound ? " flex flex-col" : ""
+        }`}
+        style={isNotFound ? { minHeight: "100dvh" } : undefined}
+      >
         <SeoHead />
 
         {/* ✅ Navbar */}
@@ -110,37 +163,13 @@ function App() {
         <ScrollToHash />
 
         <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route
-            path="/portfolio"
-            element={
-              <Suspense
-                fallback={
-                  <div className="min-h-[45vh] flex items-center justify-center bg-black text-white/70 text-sm px-4 text-center">
-                    {language === "es" ? "Cargando portfolio…" : "Loading portfolio…"}
-                  </div>
-                }
-              >
-                <PortfolioPage />
-              </Suspense>
-            }
-          />
-          <Route
-            path="/portfolio/lem-box"
-            element={
-              <Suspense
-                fallback={
-                  <div className="min-h-[45vh] flex items-center justify-center bg-black text-white/70 text-sm px-4 text-center">
-                    {language === "es"
-                      ? "Cargando caso LEM-BOX…"
-                      : "Loading LEM-BOX case study…"}
-                  </div>
-                }
-              >
-                <LemBoxCasePage />
-              </Suspense>
-            }
-          />
+          {PUBLIC_ROUTES.map((route) => (
+            <Route
+              key={route.routeKey}
+              path={route.pathname}
+              element={<PublicPage page={route.page} />}
+            />
+          ))}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
 

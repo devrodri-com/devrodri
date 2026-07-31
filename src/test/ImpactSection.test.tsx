@@ -59,7 +59,7 @@ describe("ImpactSection", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: "View case studies" }),
-    ).toHaveAttribute("href", "/portfolio");
+    ).toHaveAttribute("href", "/en/portfolio");
     expect(
       screen.getByRole("link", { name: "Tell me about your project" }),
     ).toHaveAttribute("href", "#contacto");

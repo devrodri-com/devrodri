@@ -1,10 +1,23 @@
-import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { act, render, screen, waitFor } from "@testing-library/react";
+import { hydrateRoot, type Root } from "react-dom/client";
+import { renderToString } from "react-dom/server";
+import { describe, expect, it, vi } from "vitest";
 import { MemoryRouter } from "react-router-dom";
 import CTASection from "../Components/CTASection";
 import translations from "../i18n";
 import { LanguageProvider } from "../i18n/LanguageProvider";
 import type { Language } from "../i18n/language";
+
+vi.mock("framer-motion", async () => {
+  const actual = await vi.importActual<typeof import("framer-motion")>(
+    "framer-motion",
+  );
+
+  return {
+    ...actual,
+    useReducedMotion: () => true,
+  };
+});
 
 const approvedDestinations = {
   whatsapp:
@@ -22,6 +35,16 @@ function renderCta(language: Language) {
         <CTASection />
       </LanguageProvider>
     </MemoryRouter>,
+  );
+}
+
+function renderControlledCta() {
+  return (
+    <MemoryRouter>
+      <LanguageProvider language="es">
+        <CTASection />
+      </LanguageProvider>
+    </MemoryRouter>
   );
 }
 
@@ -75,7 +98,7 @@ describe("CTASection", () => {
       name: "Go to contact form",
     });
     expect(primaryCta).toHaveTextContent("Tell me about your project");
-    expect(primaryCta).toHaveAttribute("href", "/#contacto");
+    expect(primaryCta).toHaveAttribute("href", "/en#contacto");
     expect(screen.getByRole("link", { name: "WhatsApp" })).toHaveAttribute(
       "href",
       approvedDestinations.whatsapp,
@@ -104,5 +127,36 @@ describe("CTASection", () => {
     }
 
     expect(publicCopy).not.toMatch(/[\u2013\u2014]/);
+  });
+
+  it("hydrates without a mismatch and reveals the CTA for reduced motion", async () => {
+    const serverMarkup = renderToString(renderControlledCta());
+    expect(serverMarkup).toContain('id="cta"');
+    expect(serverMarkup).toContain("opacity:0");
+
+    const container = document.createElement("div");
+    container.innerHTML = serverMarkup;
+    document.body.append(container);
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+    let root: Root | undefined;
+
+    try {
+      await act(async () => {
+        root = hydrateRoot(container, renderControlledCta());
+      });
+
+      await waitFor(() => {
+        expect(container.querySelector("#cta")).toHaveStyle({ opacity: "1" });
+      });
+      expect(consoleError.mock.calls.flat().join(" ")).not.toMatch(
+        /hydration|did not match|server html/i,
+      );
+    } finally {
+      consoleError.mockRestore();
+      await act(async () => {
+        root?.unmount();
+      });
+      container.remove();
+    }
   });
 });

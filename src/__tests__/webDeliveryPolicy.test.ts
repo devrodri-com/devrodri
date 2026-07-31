@@ -43,7 +43,9 @@ interface RewriteRule {
 
 interface VercelConfiguration {
   headers: HeaderRule[];
+  outputDirectory: string;
   rewrites: RewriteRule[];
+  trailingSlash: boolean;
 }
 
 const fs = await vi.importActual<FileSystemApi>("node:fs");
@@ -117,6 +119,12 @@ function parseRewriteRule(value: unknown): RewriteRule | null {
 
 function parseVercelConfiguration(value: unknown): VercelConfiguration | null {
   if (!isRecord(value)) return null;
+  if (
+    typeof value.outputDirectory !== "string" ||
+    typeof value.trailingSlash !== "boolean"
+  ) {
+    return null;
+  }
   if (!Array.isArray(value.headers) || !Array.isArray(value.rewrites)) {
     return null;
   }
@@ -135,9 +143,11 @@ function parseVercelConfiguration(value: unknown): VercelConfiguration | null {
     headers: parsedHeaders.filter(
       (rule): rule is HeaderRule => rule !== null,
     ),
+    outputDirectory: value.outputDirectory,
     rewrites: parsedRewrites.filter(
       (rule): rule is RewriteRule => rule !== null,
     ),
+    trailingSlash: value.trailingSlash,
   };
 }
 
@@ -158,7 +168,7 @@ function sha256Source(value: string): string {
 }
 
 describe("web delivery policy", () => {
-  it("keeps the approved security, cache, and SPA delivery rules", () => {
+  it("keeps the approved security, cache, and static delivery rules", () => {
     const source = fs.readFileSync(vercelConfigurationPath, "utf8");
     const parsedJson: unknown = JSON.parse(source);
     const configuration = parseVercelConfiguration(parsedJson);
@@ -317,18 +327,25 @@ describe("web delivery policy", () => {
       ),
     ).toBe(false);
 
-    expect(configuration.rewrites).toEqual([
+    const contentTypeRules = configuration.headers.flatMap((rule) =>
+      rule.headers
+        .filter((header) => header.key.toLowerCase() === "content-type")
+        .map((header) => ({ source: rule.source, value: header.value })),
+    );
+    expect(contentTypeRules).toEqual([
       {
-        source: "/(.*)",
-        destination: "/index.html",
+        source: "/robots.txt",
+        value: "text/plain; charset=utf-8",
+      },
+      {
+        source: "/sitemap.xml",
+        value: "application/xml; charset=utf-8",
       },
     ]);
-    expect(new RegExp(`^${configuration.rewrites[0]?.source}$`).test("/portfolio"))
-      .toBe(true);
-    expect(
-      new RegExp(`^${configuration.rewrites[0]?.source}$`).test(
-        "/portfolio/lem-box",
-      ),
-    ).toBe(true);
+
+    expect(configuration.outputDirectory).toBe("dist");
+    expect(configuration.trailingSlash).toBe(false);
+    expect(configuration.rewrites).toEqual([]);
+    expect(source).not.toContain('"destination": "/index.html"');
   });
 });

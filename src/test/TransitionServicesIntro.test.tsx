@@ -160,7 +160,7 @@ describe("TransitionServicesIntro portfolio bridge", () => {
     expect(section).toHaveTextContent("Clear scope");
     expect(section).toHaveTextContent("Tailored solution");
     expect(cta).toHaveTextContent("Tell me about your project");
-    expect(cta).toHaveAttribute("href", "/#contacto");
+    expect(cta).toHaveAttribute("href", "/en#contacto");
     expect(section.querySelector('a[href^="mailto:"]')).not.toBeInTheDocument();
     expect(section.querySelectorAll('[aria-hidden="true"]')).toHaveLength(3);
     expect(section.textContent).not.toMatch(/[\u2013\u2014]/);
