@@ -466,7 +466,7 @@ describe("application routing", () => {
     expect(roleSection).toHaveClass("border-t", "border-white/15", "pt-7");
     expect(
       within(challengeSection).getByText(
-        "La operación necesitaba continuidad entre la captación comercial, la recepción y consolidación de paquetes, los embarques, el tracking, los pagos y la atención. El desafío no era crear una web aislada, sino conectar mercados, usuarios y procesos en un producto alineado con la operación real.",
+        "La operación necesitaba continuidad entre la captación comercial, la recepción y consolidación de paquetes, los embarques, el tracking y la atención. El desafío no era crear una web aislada, sino conectar mercados, usuarios y procesos en un producto alineado con la operación real.",
       ),
     ).toBeInTheDocument();
     expect(
@@ -531,7 +531,7 @@ describe("application routing", () => {
     ).toBeInTheDocument();
     expect(
       within(ecosystemSection).getByText(
-        "La plataforma acompaña procesos de recepción, evidencia fotográfica, peso, asignación, cajas, embarques, tracking, pagos y comprobantes.",
+        "La plataforma acompaña procesos de recepción de paquetes, evidencia fotográfica, peso, asignación, consolidación en cajas, embarques, tracking y actualización de estados.",
       ),
     ).toBeInTheDocument();
 
@@ -553,6 +553,32 @@ describe("application routing", () => {
         ".border-t-2.border-primary-on-light.pt-5",
       ),
     ).toHaveLength(3);
+    expect(
+      within(audiencesSection as HTMLElement).getByText(
+        "Cada persona accede a la información y las acciones necesarias para su parte de la operación.",
+      ),
+    ).toHaveAttribute("data-audiences-intro");
+    expect(
+      within(audiencesSection as HTMLElement).getByText(
+        "Consultan sus paquetes, tracking, fotografías, peso, cajas, embarques y estados operativos. También pueden informar un tracking esperado antes de que el paquete sea recibido.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      within(audiencesSection as HTMLElement).getByRole("heading", {
+        level: 3,
+        name: "Partner LEM-BOX",
+      }),
+    ).toBeInTheDocument();
+    expect(
+      within(audiencesSection as HTMLElement).getByText(
+        "Administra una cartera asignada de clientes desde una sola cuenta. Puede crear y mantener registros asociados y consultar sus trackings, cajas y embarques dentro de una experiencia multi-cliente.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      within(audiencesSection as HTMLElement).getByText(
+        "Registra paquetes, peso y evidencia fotográfica, asigna paquetes a clientes, consolida cajas, organiza embarques y actualiza estados para acompañar cada etapa del recorrido.",
+      ),
+    ).toBeInTheDocument();
   });
 
   it("keeps the LEM-BOX technical layout and stack with refined copy", async () => {
@@ -667,7 +693,7 @@ describe("application routing", () => {
     ).toBeInTheDocument();
     expect(
       within(evolutionSection).getByText(
-        "Su desarrollo se apoya en pruebas automatizadas, autorización por roles, revisión de arquitectura, documentación técnica y despliegues controlados. Cada cambio forma parte de un proceso continuo de mejora y reducción de riesgo.",
+        "LEM-BOX cuenta con autenticación, controles de autorización según el perfil y pruebas automatizadas. Su documentación, sus validaciones y la calidad técnica continúan evolucionando.",
       ),
     ).toBeInTheDocument();
     expect(
@@ -675,7 +701,7 @@ describe("application routing", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "El ecosistema atraviesa una etapa de documentación, pruebas y preparación técnica para una futura extensión a Android e iOS. Estas aplicaciones forman parte de la evolución prevista y todavía no se presentan como productos disponibles.",
+        "La plataforma web continúa activa y sigue evolucionando con documentación, pruebas y mejoras técnicas. Se evalúa una futura experiencia móvil para clientes. No hay una aplicación para Android o iOS disponible actualmente.",
       ),
     ).toBeInTheDocument();
     expect(document.querySelector("#lem-box-current-state")).toBeNull();
@@ -705,7 +731,7 @@ describe("application routing", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "Its development is supported by automated testing, role-based authorization, architecture reviews, technical documentation, and controlled deployments. Each change is part of an ongoing process of improvement and risk reduction.",
+        "LEM-BOX includes authentication, profile-based authorization controls, and automated tests. Its documentation, validation practices, and technical quality continue to evolve.",
       ),
     ).toBeInTheDocument();
     expect(
@@ -736,7 +762,7 @@ describe("application routing", () => {
     ).not.toBeInTheDocument();
     expect(
       screen.getByText(
-        "The operation needed continuity across customer acquisition, package intake and consolidation, shipments, tracking, payments, and support. The challenge was not to build an isolated website, but to connect markets, users, and processes through a product aligned with the real operation.",
+        "The operation needed continuity across customer acquisition, package intake and consolidation, shipments, tracking, and support. The challenge was not to build an isolated website, but to connect markets, users, and processes through a product aligned with the real operation.",
       ),
     ).toBeInTheDocument();
     expect(
@@ -756,7 +782,27 @@ describe("application routing", () => {
     ).toBeInTheDocument();
     expect(
       screen.getByText(
-        "The platform supports intake, photo evidence, weight, assignment, boxes, shipments, tracking, payments, and receipts.",
+        "The platform supports package intake, photo evidence, weight, assignment, box consolidation, shipments, tracking, and status updates.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "Each person accesses the information and actions needed for their part of the operation.",
+      ),
+    ).toHaveAttribute("data-audiences-intro");
+    expect(
+      screen.getByText(
+        "They can view their packages, tracking, photos, weight, boxes, shipments, and operational statuses. They can also report an expected tracking number before the package is received.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "They manage an assigned customer portfolio from a single account. They can create and maintain associated records and view their tracking, boxes, and shipments through a multi-customer experience.",
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        "They register packages, weight, and photo evidence, assign packages to customers, consolidate boxes, organize shipments, and update statuses throughout the journey.",
       ),
     ).toBeInTheDocument();
     expect(
@@ -913,7 +959,7 @@ describe("application routing", () => {
 
     const spanishLinks = [
       {
-        name: "Plataforma central lem-box.com Acceso con credenciales Abrir plataforma",
+        name: "Plataforma central lem-box.com Plataforma operativa privada. Acceso reservado a clientes, Partners y equipo autorizado de LEM-BOX. Abrir plataforma",
         href: "https://lem-box.com",
       },
       {
@@ -991,7 +1037,7 @@ describe("application routing", () => {
       ),
     ).toBeInTheDocument();
     for (const expectedName of [
-      "Central platform lem-box.com Sign-in required Open platform",
+      "Central platform lem-box.com Private operations platform. Access restricted to LEM-BOX customers, Partners, and authorized team members. Open platform",
       "Uruguay lem-box.com.uy Commercial website for Uruguay Visit website",
       "Argentina lem-box.com.ar Commercial website for Argentina Visit website",
     ]) {

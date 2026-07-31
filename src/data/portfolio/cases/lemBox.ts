@@ -49,6 +49,11 @@ export const lemBoxPublicLinksSection = {
   title: string;
 }>;
 
+export const lemBoxAudienceIntro = {
+  es: "Cada persona accede a la información y las acciones necesarias para su parte de la operación.",
+  en: "Each person accesses the information and actions needed for their part of the operation.",
+} as const satisfies Localized<string>;
+
 export const lemBoxPublicLinks = [
   {
     href: "https://lem-box.com",
@@ -57,20 +62,22 @@ export const lemBoxPublicLinks = [
       en: en.portfolio.lem_box.platformLink,
     },
     note: {
-      es: es.portfolio.lem_box.platformNote,
-      en: en.portfolio.lem_box.platformNote,
+      es: "Plataforma operativa privada. Acceso reservado a clientes, Partners y equipo autorizado de LEM-BOX.",
+      en: "Private operations platform. Access restricted to LEM-BOX customers, Partners, and authorized team members.",
     },
     directory: {
       es: {
         title: "Plataforma central",
         domain: "lem-box.com",
-        description: "Acceso con credenciales",
+        description:
+          "Plataforma operativa privada. Acceso reservado a clientes, Partners y equipo autorizado de LEM-BOX.",
         action: "Abrir plataforma",
       },
       en: {
         title: "Central platform",
         domain: "lem-box.com",
-        description: "Sign-in required",
+        description:
+          "Private operations platform. Access restricted to LEM-BOX customers, Partners, and authorized team members.",
         action: "Open platform",
       },
     },
@@ -174,7 +181,7 @@ export const lemBoxCase = definePortfolioCase({
         challenge: {
           title: "El desafío",
           text:
-            "La operación necesitaba continuidad entre la captación comercial, la recepción y consolidación de paquetes, los embarques, el tracking, los pagos y la atención. El desafío no era crear una web aislada, sino conectar mercados, usuarios y procesos en un producto alineado con la operación real.",
+            "La operación necesitaba continuidad entre la captación comercial, la recepción y consolidación de paquetes, los embarques, el tracking y la atención. El desafío no era crear una web aislada, sino conectar mercados, usuarios y procesos en un producto alineado con la operación real.",
         },
         role: {
           title: "Mi rol",
@@ -197,7 +204,7 @@ export const lemBoxCase = definePortfolioCase({
             {
               title: "Operación conectada",
               text:
-                "La plataforma acompaña procesos de recepción, evidencia fotográfica, peso, asignación, cajas, embarques, tracking, pagos y comprobantes.",
+                "La plataforma acompaña procesos de recepción de paquetes, evidencia fotográfica, peso, asignación, consolidación en cajas, embarques, tracking y actualización de estados.",
             },
           ],
         },
@@ -207,17 +214,17 @@ export const lemBoxCase = definePortfolioCase({
             {
               title: "Clientes",
               text:
-                "Acceden a la información y a las funciones habilitadas para su relación con la operación.",
+                "Consultan sus paquetes, tracking, fotografías, peso, cajas, embarques y estados operativos. También pueden informar un tracking esperado antes de que el paquete sea recibido.",
             },
             {
-              title: "Partners",
+              title: "Partner LEM-BOX",
               text:
-                "Trabajan con el contexto operativo y las responsabilidades asignadas a su rol.",
+                "Administra una cartera asignada de clientes desde una sola cuenta. Puede crear y mantener registros asociados y consultar sus trackings, cajas y embarques dentro de una experiencia multi-cliente.",
             },
             {
               title: "Equipo operativo",
               text:
-                "Coordina recepción, consolidación, embarques, estados y atención dentro de la plataforma.",
+                "Registra paquetes, peso y evidencia fotográfica, asigna paquetes a clientes, consolida cajas, organiza embarques y actualiza estados para acompañar cada etapa del recorrido.",
             },
           ],
         },
@@ -243,12 +250,12 @@ export const lemBoxCase = definePortfolioCase({
             "LEM-BOX continúa adaptándose a los procesos, necesidades y prioridades reales del negocio.",
           qualityTitle: "Calidad y reducción de riesgo",
           qualityText:
-            "Su desarrollo se apoya en pruebas automatizadas, autorización por roles, revisión de arquitectura, documentación técnica y despliegues controlados. Cada cambio forma parte de un proceso continuo de mejora y reducción de riesgo.",
+            "LEM-BOX cuenta con autenticación, controles de autorización según el perfil y pruebas automatizadas. Su documentación, sus validaciones y la calidad técnica continúan evolucionando.",
         },
         mobileFuture: {
           title: "Siguiente etapa",
           text:
-            "El ecosistema atraviesa una etapa de documentación, pruebas y preparación técnica para una futura extensión a Android e iOS. Estas aplicaciones forman parte de la evolución prevista y todavía no se presentan como productos disponibles.",
+            "La plataforma web continúa activa y sigue evolucionando con documentación, pruebas y mejoras técnicas. Se evalúa una futura experiencia móvil para clientes. No hay una aplicación para Android o iOS disponible actualmente.",
         },
         currentState: {
           title: "ESTADO ACTUAL · PRODUCTO ACTIVO",
@@ -286,7 +293,7 @@ export const lemBoxCase = definePortfolioCase({
         challenge: {
           title: "The challenge",
           text:
-            "The operation needed continuity across customer acquisition, package intake and consolidation, shipments, tracking, payments, and support. The challenge was not to build an isolated website, but to connect markets, users, and processes through a product aligned with the real operation.",
+            "The operation needed continuity across customer acquisition, package intake and consolidation, shipments, tracking, and support. The challenge was not to build an isolated website, but to connect markets, users, and processes through a product aligned with the real operation.",
         },
         role: {
           title: "My role",
@@ -309,7 +316,7 @@ export const lemBoxCase = definePortfolioCase({
             {
               title: "Connected operations",
               text:
-                "The platform supports intake, photo evidence, weight, assignment, boxes, shipments, tracking, payments, and receipts.",
+                "The platform supports package intake, photo evidence, weight, assignment, box consolidation, shipments, tracking, and status updates.",
             },
           ],
         },
@@ -319,17 +326,17 @@ export const lemBoxCase = definePortfolioCase({
             {
               title: "Customers",
               text:
-                "They access the information and features available for their relationship with the operation.",
+                "They can view their packages, tracking, photos, weight, boxes, shipments, and operational statuses. They can also report an expected tracking number before the package is received.",
             },
             {
-              title: "Partners",
+              title: "LEM-BOX Partner",
               text:
-                "They work with the operational context and responsibilities assigned to their role.",
+                "They manage an assigned customer portfolio from a single account. They can create and maintain associated records and view their tracking, boxes, and shipments through a multi-customer experience.",
             },
             {
               title: "Operations team",
               text:
-                "They coordinate intake, consolidation, shipments, statuses, and support within the platform.",
+                "They register packages, weight, and photo evidence, assign packages to customers, consolidate boxes, organize shipments, and update statuses throughout the journey.",
             },
           ],
         },
@@ -355,12 +362,12 @@ export const lemBoxCase = definePortfolioCase({
             "LEM-BOX continues adapting to the real processes, needs, and priorities of the business.",
           qualityTitle: "Quality and risk reduction",
           qualityText:
-            "Its development is supported by automated testing, role-based authorization, architecture reviews, technical documentation, and controlled deployments. Each change is part of an ongoing process of improvement and risk reduction.",
+            "LEM-BOX includes authentication, profile-based authorization controls, and automated tests. Its documentation, validation practices, and technical quality continue to evolve.",
         },
         mobileFuture: {
           title: "Next stage",
           text:
-            "The ecosystem is currently in a stage of documentation, testing, and technical preparation for a future extension to Android and iOS. These applications are part of the planned evolution and are not yet presented as available products.",
+            "The web platform remains active and continues to evolve through documentation, testing, and technical improvements. A future mobile experience for customers is being evaluated. No Android or iOS app is currently available.",
         },
         currentState: {
           title: "CURRENT STATUS · ACTIVE PRODUCT",
