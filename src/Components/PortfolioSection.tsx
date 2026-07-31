@@ -23,7 +23,7 @@ export default function PortfolioSection() {
     <motion.section
       id="portfolio"
       className="relative py-28 px-4 sm:px-6 text-white overflow-hidden"
-      initial={{ opacity: 0 }}
+      initial={false}
       whileInView={{ opacity: 1 }}
       transition={{ duration: 0.7 }}
       viewport={{ once: true }}
@@ -44,7 +44,7 @@ export default function PortfolioSection() {
       <div className="relative z-20 max-w-6xl mx-auto">
         <motion.p
           className="text-xs sm:text-sm uppercase tracking-widest text-white/80 drop-shadow-md mb-3 text-center"
-          initial={{ opacity: 0 }}
+          initial={false}
           whileInView={{ opacity: 1 }}
           transition={{ duration: 0.5 }}
           viewport={{ once: true }}
@@ -54,7 +54,7 @@ export default function PortfolioSection() {
 
         <motion.h2
           className="text-3xl sm:text-4xl font-bold text-center text-white leading-tight mb-4 max-w-3xl mx-auto"
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
@@ -63,7 +63,7 @@ export default function PortfolioSection() {
 
         <motion.p
           className="text-sm sm:text-base text-center text-white/80 max-w-2xl mx-auto mb-12"
-          initial={{ opacity: 0, y: 10 }}
+          initial={false}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
@@ -94,7 +94,7 @@ export default function PortfolioSection() {
             >
               <motion.div
                 className="group h-full overflow-hidden rounded-2xl bg-white/95 backdrop-blur border border-gray-200/80 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
-                initial={{ opacity: 0, y: 20 }}
+                initial={false}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.45, delay: 0.05 * index }}
                 viewport={{ once: true }}
@@ -102,11 +102,8 @@ export default function PortfolioSection() {
                 <div className="aspect-[2/1] overflow-hidden bg-white">
                   <img
                     src={p.cover}
-                    alt={
-                      language === "es"
-                        ? `Portada de ${p.title}`
-                        : `${p.title} cover`
-                    }
+                    alt=""
+                    aria-hidden="true"
                     className="h-full w-full object-cover"
                     loading="lazy"
                     decoding="async"

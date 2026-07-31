@@ -1,6 +1,5 @@
 // src/Components/CTASection.tsx
-import { useEffect, useState } from "react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
 import translations from "../i18n";
 import { useLanguage } from "../i18n/useLanguage";
 import { Link } from "react-router-dom";
@@ -9,29 +8,13 @@ import { getLocalizedPath } from "../routes/siteRoutes";
 export default function CTASection() {
   const { language } = useLanguage();
   const t = translations[language];
-  const prefersReduced = useReducedMotion();
-  const [hasHydrated, setHasHydrated] = useState(false);
-  const shouldReduceMotion = hasHydrated && prefersReduced === true;
-
-  useEffect(() => {
-    setHasHydrated(true);
-  }, []);
-
   return (
     <motion.section
       id="cta"
       className="relative bg-black text-white py-16 sm:py-20 px-4 sm:px-6 text-center"
-      {...(shouldReduceMotion
-        ? {
-            initial: false as const,
-            animate: { opacity: 1 },
-            transition: { duration: 0 },
-          }
-        : {
-            initial: { opacity: 0 },
-            whileInView: { opacity: 1 },
-            transition: { duration: 0.55 },
-          })}
+      initial={false}
+      whileInView={{ opacity: 1 }}
+      transition={{ duration: 0.55 }}
       viewport={{ once: true }}
     >
       {/* Curva blanca arriba */}

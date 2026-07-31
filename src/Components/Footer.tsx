@@ -27,7 +27,7 @@ export default function Footer() {
   return (
     <motion.footer
       className="border-t border-gray-200 bg-white py-3 px-4 sm:px-6"
-      initial={{ opacity: 0 }}
+      initial={false}
       whileInView={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
       viewport={{ once: true }}

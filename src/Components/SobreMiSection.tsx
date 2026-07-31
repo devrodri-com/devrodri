@@ -11,7 +11,7 @@ export default function SobreMiSection() {
     <motion.section
       id="sobremi"
       className="bg-neutral py-24 px-4 sm:px-6 relative"
-      initial={{ opacity: 0 }}
+      initial={false}
       whileInView={{ opacity: 1 }}
       viewport={{ once: true, amount: 0.25 }}
       transition={{ duration: 0.55 }}
@@ -28,7 +28,7 @@ export default function SobreMiSection() {
       <div className="max-w-5xl mx-auto text-center">
         <motion.h2
           className="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 mb-4 md:mb-6"
-          initial={{ opacity: 0, y: 20 }}
+          initial={false}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.45 }}
         >
@@ -109,7 +109,8 @@ export default function SobreMiSection() {
           >
             <img
               src="/img/certs/ibm-fullstack.png"
-              alt="IBM Full Stack Certificate"
+              alt=""
+              aria-hidden="true"
               className="h-16 w-auto rounded ring-1 ring-gray-300 hover:ring-gray-400 shadow-sm hover:scale-105 transition-transform duration-300"
               loading="lazy"
               decoding="async"

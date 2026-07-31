@@ -50,7 +50,8 @@ export default function ImpactSection() {
           <div className="relative rounded-xl overflow-hidden shadow-xl md:col-span-6">
             <img
               src="/img/impact.jpg"
-              alt="Detalle visual en blanco y negro con patrón de malla y luz difusa"
+              alt=""
+              aria-hidden="true"
               width={1200}
               height={900}
               loading="lazy"

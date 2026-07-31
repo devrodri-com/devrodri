@@ -121,7 +121,7 @@ export default function ContactSection() {
 
       <motion.div
         className="relative z-30 bg-white border border-white/70 max-w-xl mx-auto rounded-3xl shadow-xl p-10 sm:p-12 text-center"
-        initial={{ opacity: 0, scale: 0.95 }}
+        initial={false}
         whileInView={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.7 }}
         viewport={{ once: true }}

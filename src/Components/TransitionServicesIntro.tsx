@@ -53,13 +53,13 @@ export default function TransitionServicesIntro({ variant = "default" }: BridgeP
   return (
     <motion.section
       className="bg-white py-10 px-4 sm:px-6 text-center shadow-[0_-8px_24px_rgba(0,0,0,.18)]"
-      initial={{ opacity: 0 }}
+      initial={false}
       whileInView={{ opacity: 1 }}
       transition={{ duration: 0.55 }}
       viewport={{ once: true, amount: 0.25 }}
     >
       <motion.div
-        initial={{ opacity: 0, y: 18 }}
+        initial={false}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.45 }}
@@ -117,7 +117,8 @@ export default function TransitionServicesIntro({ variant = "default" }: BridgeP
           <div className="mt-6 rounded-3xl overflow-hidden shadow-xl transition hover:shadow-2xl w-full max-w-[1600px] mx-auto">
             <img
               src="/img/servicios.jpg"
-              alt="Servicios"
+              alt=""
+              aria-hidden="true"
               className="w-full h-24 object-cover object-center sm:h-28 md:h-32"
             />
           </div>
