@@ -11,14 +11,18 @@ const expectedRoutes = [
     pathname: "/",
     file: "index.html",
     lang: "es",
-    title: "Rodrigo Opalo | Diseñador y Desarrollador Web",
+    title: "Rodrigo Opalo | Sitios, sistemas y automatización",
+    description:
+      "Desarrollo sitios, aplicaciones y sistemas a medida, además de automatizaciones e integraciones orientadas a objetivos reales de negocio.",
     content: "Sitios web que comunican y convierten.",
   },
   {
     pathname: "/portfolio",
     file: "portfolio/index.html",
     lang: "es",
-    title: "Portfolio | Rodrigo Opalo",
+    title: "Portfolio: sitios, sistemas y productos | Rodrigo Opalo",
+    description:
+      "Explorá proyectos de sistemas, sitios web, e-commerce y estrategia de marca, con detalles de alcance, rol y tecnología.",
     content: "Algunos trabajos",
   },
   {
@@ -26,20 +30,26 @@ const expectedRoutes = [
     file: "portfolio/lem-box/index.html",
     lang: "es",
     title: "LEM-BOX: plataforma logística y producto propio | Rodrigo Opalo",
+    description:
+      "Caso de producto propio: un ecosistema digital conectado con la operación logística de LEM-BOX en Estados Unidos, Uruguay y Argentina.",
     content: "Un producto conectado a una operación real",
   },
   {
     pathname: "/en",
     file: "en/index.html",
     lang: "en",
-    title: "Rodrigo Opalo | Web Designer and Developer",
+    title: "Rodrigo Opalo | Websites, systems and automation",
+    description:
+      "I build custom websites, applications, and systems, plus automations and integrations aligned with real business goals.",
     content: "Websites built to communicate and convert.",
   },
   {
     pathname: "/en/portfolio",
     file: "en/portfolio/index.html",
     lang: "en",
-    title: "Portfolio | Rodrigo Opalo",
+    title: "Portfolio: websites, systems and products | Rodrigo Opalo",
+    description:
+      "Explore systems, websites, e-commerce, and brand strategy projects with details on scope, role, and technology.",
     content: "Some Work",
   },
   {
@@ -47,6 +57,8 @@ const expectedRoutes = [
     file: "en/portfolio/lem-box/index.html",
     lang: "en",
     title: "LEM-BOX: logistics platform and own product | Rodrigo Opalo",
+    description:
+      "Own-product case study: a digital ecosystem connected to LEM-BOX's logistics operation across the United States, Uruguay, and Argentina.",
     content: "A product connected to a real operation",
   },
 ];
@@ -61,6 +73,50 @@ const suspenseFallbacks = [
   "Cargando caso LEM-BOX…",
   "Loading LEM-BOX case study…",
 ];
+const expectedStructuredData = new Map([
+  [
+    "/",
+    {
+      types: ["WebSite", "Person", "EducationalOccupationalCredential"],
+      ids: [
+        "https://www.devrodri.com/#website",
+        "https://www.devrodri.com/#person",
+        "https://www.devrodri.com/#ibm-full-stack-credential",
+      ],
+    },
+  ],
+  [
+    "/en",
+    {
+      types: ["WebSite", "Person", "EducationalOccupationalCredential"],
+      ids: [
+        "https://www.devrodri.com/#website",
+        "https://www.devrodri.com/#person",
+        "https://www.devrodri.com/#ibm-full-stack-credential",
+      ],
+    },
+  ],
+  [
+    "/portfolio/lem-box",
+    {
+      types: ["CreativeWork", "WebApplication"],
+      ids: [
+        "https://www.devrodri.com/portfolio/lem-box#case-study",
+        "https://www.devrodri.com/#lem-box-web-application",
+      ],
+    },
+  ],
+  [
+    "/en/portfolio/lem-box",
+    {
+      types: ["CreativeWork", "WebApplication"],
+      ids: [
+        "https://www.devrodri.com/en/portfolio/lem-box#case-study",
+        "https://www.devrodri.com/#lem-box-web-application",
+      ],
+    },
+  ],
+]);
 
 function count(haystack, needle) {
   return haystack.split(needle).length - 1;
@@ -68,6 +124,15 @@ function count(haystack, needle) {
 
 function canonical(pathname) {
   return `https://www.devrodri.com${pathname}`;
+}
+
+function escapeHtmlAttribute(value) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#x27;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
 }
 
 function sha256Source(value) {
@@ -98,6 +163,7 @@ assert.notEqual(contentSecurityPolicy, "", "Missing Content-Security-Policy");
 
 const routeDocuments = [];
 const routeDocumentHashes = [];
+const liveInlineScriptHashes = new Set();
 for (const route of expectedRoutes) {
   const html = await readFile(path.join(distDirectory, route.file), "utf8");
   routeDocuments.push(html);
@@ -107,10 +173,26 @@ for (const route of expectedRoutes) {
 
   assert.match(html, new RegExp(`<html lang="${route.lang}"`));
   assert.ok(html.includes(`<title data-rh="true">${route.title}</title>`));
+  assert.ok(
+    html.includes(
+      `name="description" content="${escapeHtmlAttribute(route.description)}"`,
+    ),
+    `${route.pathname}: description`,
+  );
   assert.ok(html.includes(`rel="canonical" href="${canonical(route.pathname)}"`));
   assert.ok(html.includes('name="description" content="'));
   assert.ok(html.includes('name="robots" content="index, follow"'));
   assert.ok(html.includes('property="og:title"'));
+  assert.ok(
+    html.includes(`property="og:title" content="${route.title}"`),
+    `${route.pathname}: og:title`,
+  );
+  assert.ok(
+    html.includes(
+      `property="og:description" content="${escapeHtmlAttribute(route.description)}"`,
+    ),
+    `${route.pathname}: og:description`,
+  );
   assert.ok(html.includes(`property="og:url" content="${canonical(route.pathname)}"`));
   assert.ok(html.includes('property="og:image"'));
   assert.ok(html.includes('property="og:image:width" content="1200"'));
@@ -118,6 +200,16 @@ for (const route of expectedRoutes) {
   assert.ok(html.includes('property="og:image:alt"'));
   assert.ok(html.includes('name="twitter:card" content="summary_large_image"'));
   assert.ok(html.includes('name="twitter:title"'));
+  assert.ok(
+    html.includes(`name="twitter:title" content="${route.title}"`),
+    `${route.pathname}: twitter:title`,
+  );
+  assert.ok(
+    html.includes(
+      `name="twitter:description" content="${escapeHtmlAttribute(route.description)}"`,
+    ),
+    `${route.pathname}: twitter:description`,
+  );
   assert.ok(html.includes('name="twitter:description"'));
   assert.ok(html.includes('name="twitter:image"'));
   assert.ok(html.includes('name="twitter:image:alt"'));
@@ -171,15 +263,43 @@ for (const route of expectedRoutes) {
   }
 
   const scripts = inlineScripts(html);
-  const expectedJsonLdCount =
-    route.pathname === "/" || route.pathname === "/en" ? 2 : 0;
+  const expectedGraph = expectedStructuredData.get(route.pathname);
+  const expectedJsonLdCount = expectedGraph === undefined ? 0 : 1;
   assert.equal(scripts.length, expectedJsonLdCount, route.pathname);
   for (const [, jsonLd] of scripts) {
-    assert.doesNotThrow(() => JSON.parse(jsonLd), route.pathname);
+    const parsed = JSON.parse(jsonLd);
+    assert.equal(parsed["@context"], "https://schema.org", route.pathname);
+    assert.deepEqual(
+      parsed["@graph"].map((node) => node["@type"]),
+      expectedGraph.types,
+      `${route.pathname}: graph types`,
+    );
+    assert.deepEqual(
+      parsed["@graph"].map((node) => node["@id"]),
+      expectedGraph.ids,
+      `${route.pathname}: graph IDs`,
+    );
+    const hash = sha256Source(jsonLd);
+    liveInlineScriptHashes.add(hash);
     assert.ok(
-      contentSecurityPolicy.includes(sha256Source(jsonLd)),
+      contentSecurityPolicy.includes(hash),
       `${route.pathname}: JSON-LD CSP hash`,
     );
+    for (const forbidden of [
+      "Meta React",
+      "https://www.ibm.com/skills-network",
+      '"issuer"',
+      '"issuedBy"',
+      '"dateIssued"',
+      '"offers"',
+      '"price"',
+      '"rating"',
+      '"review"',
+      '"operatingSystem"',
+      "SoftwareApplication",
+    ]) {
+      assert.ok(!jsonLd.includes(forbidden), `${route.pathname}: ${forbidden}`);
+    }
   }
 
   const assetReferences = [
@@ -228,6 +348,21 @@ assert.ok(!notFoundHtml.includes("Sitios web que comunican y convierten."));
 assert.ok(!notFoundHtml.includes("Websites built to communicate and convert."));
 assert.ok(!notFoundHtml.includes("<!--app-head-->"));
 assert.ok(!notFoundHtml.includes("<!--app-html-->"));
+
+const scriptSourceDirective = contentSecurityPolicy
+  .split(";")
+  .map((directive) => directive.trim().split(/\s+/))
+  .find(([name]) => name === "script-src");
+assert.ok(scriptSourceDirective, "Missing script-src directive");
+const configuredInlineHashes = scriptSourceDirective
+  .slice(1)
+  .filter((source) => source.startsWith("'sha256-"));
+assert.deepEqual(
+  configuredInlineHashes.toSorted(),
+  [...liveInlineScriptHashes].toSorted(),
+  "script-src must contain every live inline hash and no obsolete inline hash",
+);
+assert.ok(!scriptSourceDirective.includes("'unsafe-inline'"));
 
 const robots = await readFile(path.join(distDirectory, "robots.txt"), "utf8");
 assert.equal(

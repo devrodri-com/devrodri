@@ -1,8 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import {
-  ibmFullStackCredential,
-  metaReactCredential,
-} from "../seo/homeCredentialsJsonLd";
+  STRUCTURED_DATA_BY_ROUTE,
+} from "../seo/structuredData";
 
 interface FileSystemApi {
   readFileSync(path: string, encoding: "utf8"): string;
@@ -59,7 +58,14 @@ const vercelConfigurationPath = path.join(projectRoot, "vercel.json");
 const indexHtmlPath = path.join(projectRoot, "index.html");
 
 const expectedContentSecurityPolicy =
-  "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://formsubmit.co; script-src 'self' https://www.googletagmanager.com 'sha256-P01WC+VRcpA8HZ8Eg8qvHTell49g+1+ojplDsdfvSJY=' 'sha256-NGTPVuZtJv6KrQNvN78pj9Fz+4CuArpGSOhRfc3CjvI='; script-src-attr 'none'; style-src 'self' https://fonts.googleapis.com; style-src-attr 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' https://*.google-analytics.com https://www.googletagmanager.com; media-src 'self'; connect-src 'self' https://formsubmit.co https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; frame-src 'none'; manifest-src 'self'; worker-src 'none'; upgrade-insecure-requests";
+  "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://formsubmit.co; script-src 'self' https://www.googletagmanager.com 'sha256-PFtIWoSjDUGI9FDBejrY6GsmT+jNY2fnEk/Wu0PMTxo=' 'sha256-NJsY0F2k7FEFgpKyakOXbgKzmylETn07jGhl+846ouI=' 'sha256-5JAfEolKKBpyKuNkJyFVP4QM03AqudwLaL6W4YE9Dow=' 'sha256-MWbnLG8L270wPoFC3v581s2nVNl/XC/TRKETtAkKpjY='; script-src-attr 'none'; style-src 'self' https://fonts.googleapis.com; style-src-attr 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' https://*.google-analytics.com https://www.googletagmanager.com; media-src 'self'; connect-src 'self' https://formsubmit.co https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; frame-src 'none'; manifest-src 'self'; worker-src 'none'; upgrade-insecure-requests";
+
+const publishedStructuredData = [
+  STRUCTURED_DATA_BY_ROUTE["home:es"],
+  STRUCTURED_DATA_BY_ROUTE["home:en"],
+  STRUCTURED_DATA_BY_ROUTE["lem-box:es"],
+  STRUCTURED_DATA_BY_ROUTE["lem-box:en"],
+] as const;
 
 const expectedSecurityHeaders = new Map([
   ["x-content-type-options", "nosniff"],
@@ -235,8 +241,10 @@ describe("web delivery policy", () => {
           [
             "'self'",
             "https://www.googletagmanager.com",
-            "'sha256-P01WC+VRcpA8HZ8Eg8qvHTell49g+1+ojplDsdfvSJY='",
-            "'sha256-NGTPVuZtJv6KrQNvN78pj9Fz+4CuArpGSOhRfc3CjvI='",
+            "'sha256-PFtIWoSjDUGI9FDBejrY6GsmT+jNY2fnEk/Wu0PMTxo='",
+            "'sha256-NJsY0F2k7FEFgpKyakOXbgKzmylETn07jGhl+846ouI='",
+            "'sha256-5JAfEolKKBpyKuNkJyFVP4QM03AqudwLaL6W4YE9Dow='",
+            "'sha256-MWbnLG8L270wPoFC3v581s2nVNl/XC/TRKETtAkKpjY='",
           ],
         ],
         ["script-src-attr", ["'none'"]],
@@ -281,9 +289,15 @@ describe("web delivery policy", () => {
     expect(
       scriptSources.filter((source) => source.startsWith("'sha256-")),
     ).toEqual(
-      [metaReactCredential, ibmFullStackCredential].map((credential) =>
-        sha256Source(JSON.stringify(credential)),
+      publishedStructuredData.map((structuredData) =>
+        sha256Source(JSON.stringify(structuredData)),
       ),
+    );
+    expect(scriptSources).not.toContain(
+      "'sha256-P01WC+VRcpA8HZ8Eg8qvHTell49g+1+ojplDsdfvSJY='",
+    );
+    expect(scriptSources).not.toContain(
+      "'sha256-NGTPVuZtJv6KrQNvN78pj9Fz+4CuArpGSOhRfc3CjvI='",
     );
 
     expect(directives.get("form-action")).toContain("https://formsubmit.co");
