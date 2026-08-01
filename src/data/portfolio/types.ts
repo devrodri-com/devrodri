@@ -97,6 +97,25 @@ export type PortfolioCaseContent = {
   details?: PortfolioCaseDetails;
 };
 
+export type ResponsiveImageCandidate = {
+  src: string;
+  width: number;
+};
+
+export type ResponsiveImageCandidates = readonly [
+  ResponsiveImageCandidate,
+  ...ResponsiveImageCandidate[],
+];
+
+export type ResponsivePortfolioCover = {
+  width: number;
+  height: number;
+  sources: {
+    avif: ResponsiveImageCandidates;
+    webp: ResponsiveImageCandidates;
+  };
+};
+
 type PortfolioCaseStudyCardContent = Omit<PortfolioCaseContent, "details"> & {
   details?: never;
 };
@@ -113,6 +132,7 @@ type PortfolioCaseDefinitionBase<
   portfolioOrder: number;
   category: ProjectCategory;
   cover: string;
+  responsiveCover?: ResponsivePortfolioCover;
   actions: readonly PortfolioAction[];
   content: Localized<Content>;
   home?: {
