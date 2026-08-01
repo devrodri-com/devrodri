@@ -2,6 +2,68 @@
 
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
+import type {
+  ResponsiveImageCandidates,
+  ResponsivePortfolioCover,
+} from "../../data/portfolio/types";
+
+type PortfolioCoverImageProps = {
+  alt: string;
+  className: string;
+  cover: string;
+  priority?: boolean;
+  responsiveCover?: ResponsivePortfolioCover;
+  sizes: string;
+};
+
+function toSrcSet(candidates: ResponsiveImageCandidates) {
+  return candidates
+    .map((candidate) => `${candidate.src} ${candidate.width}w`)
+    .join(", ");
+}
+
+export function PortfolioCoverImage({
+  alt,
+  className,
+  cover,
+  priority = false,
+  responsiveCover,
+  sizes,
+}: PortfolioCoverImageProps) {
+  const image = (
+    <img
+      src={cover}
+      alt={alt}
+      className={className}
+      loading={priority ? "eager" : "lazy"}
+      decoding="async"
+      {...(priority ? { fetchpriority: "high" } : {})}
+      {...(responsiveCover === undefined
+        ? {}
+        : { width: responsiveCover.width, height: responsiveCover.height })}
+    />
+  );
+
+  if (responsiveCover === undefined) {
+    return image;
+  }
+
+  return (
+    <picture className="contents">
+      <source
+        type="image/avif"
+        srcSet={toSrcSet(responsiveCover.sources.avif)}
+        sizes={sizes}
+      />
+      <source
+        type="image/webp"
+        srcSet={toSrcSet(responsiveCover.sources.webp)}
+        sizes={sizes}
+      />
+      {image}
+    </picture>
+  );
+}
 
 interface PortfolioCardProps {
   actions: ReactNode;
@@ -11,6 +73,8 @@ interface PortfolioCardProps {
   expanded: boolean;
   headingLevel?: "h2" | "h3";
   disclaimer?: string;
+  priority?: boolean;
+  responsiveCover?: ResponsivePortfolioCover;
   status?: string;
   tags: string;
   title: string;
@@ -24,6 +88,8 @@ export default function PortfolioCard({
   expanded,
   headingLevel = "h3",
   disclaimer,
+  priority = false,
+  responsiveCover,
   status,
   tags,
   title,
@@ -41,12 +107,19 @@ export default function PortfolioCard({
       <div className="flex flex-col md:flex-row">
         <div className="md:w-5/12">
           <div className="w-full aspect-[16/9] p-5 md:p-7 rounded-2xl bg-white overflow-hidden flex items-center justify-center">
-            <img
-              src={cover}
+            <PortfolioCoverImage
+              cover={cover}
               alt=""
-              className="w-full h-full object-cover object-center rounded-xl"
-              loading="lazy"
-              decoding="async"
+              className={`w-full h-full object-center rounded-xl ${
+                responsiveCover === undefined
+                  ? "object-cover"
+                  : "object-contain"
+              }`}
+              priority={priority}
+              sizes="(min-width: 1280px) 457px, (min-width: 768px) calc(41.67vw - 76px), calc(100vw - 88px)"
+              {...(responsiveCover === undefined
+                ? {}
+                : { responsiveCover })}
             />
           </div>
         </div>

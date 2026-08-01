@@ -84,7 +84,7 @@ export default function PortfolioPage() {
         </div>
 
         <div className="space-y-10">
-          {list.map((portfolioCase) => {
+          {list.map((portfolioCase, portfolioIndex) => {
             const content = portfolioCase.content[language];
             const detailsId = `portfolio-details-${portfolioCase.key}`;
             const caseStudy = portfolioCase.caseStudy;
@@ -183,8 +183,12 @@ export default function PortfolioPage() {
                     caseStudy === undefined && expanded[portfolioCase.key]
                   }
                   headingLevel="h2"
+                  priority={portfolioIndex === 0}
                   tags={content.tags.join(" · ")}
                   title={content.title}
+                  {...(portfolioCase.responsiveCover === undefined
+                    ? {}
+                    : { responsiveCover: portfolioCase.responsiveCover })}
                   {...(content.status === undefined
                     ? {}
                     : { status: content.status })}
