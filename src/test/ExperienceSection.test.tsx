@@ -22,6 +22,28 @@ function getExperienceSection(container: HTMLElement): HTMLElement {
 }
 
 describe("ExperienceSection positioning", () => {
+  it("reserves the approved 3:2 image and responsive delivery contract", () => {
+    const rendered = renderExperience("es");
+    const image = rendered.container.querySelector<HTMLImageElement>(
+      'img[data-home-image="experience"]',
+    );
+    const sources = Array.from(
+      image?.closest("picture")?.querySelectorAll("source") ?? [],
+    );
+
+    expect(image).toHaveAttribute("alt", "");
+    expect(image).toHaveAttribute("width", "1536");
+    expect(image).toHaveAttribute("height", "1024");
+    expect(image).toHaveAttribute("loading", "lazy");
+    expect(image).toHaveAttribute("decoding", "async");
+    expect(sources.map((source) => source.type)).toEqual([
+      "image/avif",
+      "image/webp",
+    ]);
+    expect(image).toHaveClass("object-cover", "w-full", "h-full");
+    expect(image).toHaveStyle({ objectPosition: "53% 50%" });
+  });
+
   it("renders the approved Spanish positioning", () => {
     const rendered = renderExperience("es");
     const section = getExperienceSection(rendered.container);

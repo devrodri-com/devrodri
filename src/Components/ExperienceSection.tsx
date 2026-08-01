@@ -1,6 +1,8 @@
 // src/Components/ExperienceSection.tsx
 import translations from "../i18n";
 import { useLanguage } from "../i18n/useLanguage";
+import ResponsivePicture from "./ResponsivePicture";
+import { experienceImage } from "./homeImageSources";
 export default function ExperienceSection() {
   const { language } = useLanguage();
   const t = translations[language];
@@ -14,14 +16,11 @@ export default function ExperienceSection() {
       <div className="max-w-6xl mx-auto grid md:grid-cols-12 items-center gap-12">
         {/* Imagen */}
         <div className="relative rounded-xl overflow-hidden shadow-xl md:col-span-6 order-1 md:order-none min-h-[360px]">
-          <img
-            src="/img/experience.jpg"
+          <ResponsivePicture
+            {...experienceImage}
             alt=""
-            width={1200}
-            height={900}
-            loading="lazy"
-            decoding="async"
-            sizes="(min-width:768px) 50vw, 100vw"
+            data-home-image="experience"
+            pictureClassName="block"
             className="object-cover w-full h-full"
             style={{ objectPosition: "53% 50%" }}
           />

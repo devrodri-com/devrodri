@@ -414,14 +414,18 @@ describe("headings, controls and image semantics", () => {
     await screen.findByRole("heading", { level: 1 });
     expect(screen.getByRole("img", { name: "Rodrigo Opalo" })).toBeInTheDocument();
 
-    for (const source of [
-      "/img/hero-visual.jpg",
-      "/img/impact.jpg",
-      "/img/experience.jpg",
-      "/img/servicios.jpg",
-      "/img/certs/ibm-fullstack.png",
+    expect(
+      document.querySelector('img[src="/img/hero-visual.jpg"]'),
+    ).toHaveAttribute("alt", "");
+    for (const imageId of [
+      "impact",
+      "experience",
+      "servicios",
+      "ibm-certificate",
     ]) {
-      expect(document.querySelector(`img[src="${source}"]`)).toHaveAttribute("alt", "");
+      expect(
+        document.querySelector(`img[data-home-image="${imageId}"]`),
+      ).toHaveAttribute("alt", "");
     }
     expect(
       document.querySelector(

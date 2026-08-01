@@ -5,6 +5,8 @@ import { FiCheckCircle, FiLayers, FiMessageCircle } from "react-icons/fi";
 import translations from "../i18n";
 import { useLanguage } from "../i18n/useLanguage";
 import { getLocalizedPath } from "../routes/siteRoutes";
+import ResponsivePicture from "./ResponsivePicture";
+import { servicesImage } from "./homeImageSources";
 
 type BridgeProps = { variant?: "default" | "afterPortfolio" };
 
@@ -115,9 +117,11 @@ export default function TransitionServicesIntro({ variant = "default" }: BridgeP
         ) : (
           // Default: conservar la pieza visual existente
           <div className="mt-6 rounded-3xl overflow-hidden shadow-xl transition hover:shadow-2xl w-full max-w-[1600px] mx-auto">
-            <img
-              src="/img/servicios.jpg"
+            <ResponsivePicture
+              {...servicesImage}
               alt=""
+              data-home-image="servicios"
+              pictureClassName="block"
               className="w-full h-24 object-cover object-center sm:h-28 md:h-32"
             />
           </div>

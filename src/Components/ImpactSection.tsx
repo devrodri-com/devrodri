@@ -2,6 +2,8 @@
 import translations from "../i18n";
 import { useLanguage } from "../i18n/useLanguage";
 import { getLocalizedPath } from "../routes/siteRoutes";
+import ResponsivePicture from "./ResponsivePicture";
+import { impactImage } from "./homeImageSources";
 export default function ImpactSection() {
   const { language } = useLanguage();
   const t = translations[language];
@@ -48,14 +50,11 @@ export default function ImpactSection() {
           </div>
           {/* Imagen con overlay limpio */}
           <div className="relative rounded-xl overflow-hidden shadow-xl md:col-span-6">
-            <img
-              src="/img/impact.jpg"
+            <ResponsivePicture
+              {...impactImage}
               alt=""
-              width={1200}
-              height={900}
-              loading="lazy"
-              decoding="async"
-              sizes="(min-width:768px) 50vw, 100vw"
+              data-home-image="impact"
+              pictureClassName="block"
               className="object-cover w-full h-full object-right"
               style={{ objectPosition: "72% 46%" }}
             />

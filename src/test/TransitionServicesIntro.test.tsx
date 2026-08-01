@@ -1,16 +1,10 @@
 import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import App from "../App";
 import TransitionServicesIntro from "../Components/TransitionServicesIntro";
 import { LanguageProvider } from "../i18n/LanguageProvider";
 import type { Language } from "../i18n/language";
-
-interface FileSystemApi {
-  existsSync(path: string): boolean;
-}
-
-const fs = await vi.importActual<FileSystemApi>("node:fs");
 
 function renderBridge(
   language: Language,
@@ -81,7 +75,7 @@ describe("TransitionServicesIntro portfolio bridge", () => {
     expect(section.textContent).not.toMatch(/[\u2013\u2014]/);
   });
 
-  it("restores the original panoramic image, container, and responsive crop", () => {
+  it("keeps the approved panoramic layout while delivering responsive variants", () => {
     renderBridge("es");
     const bridge = getBridgeSection(
       screen.getByRole("heading", {
@@ -89,10 +83,21 @@ describe("TransitionServicesIntro portfolio bridge", () => {
         name: "Del enfoque a la implementación.",
       }),
     );
-    const image = bridge.querySelector('img[src="/img/servicios.jpg"]');
-    const imageContainer = image?.parentElement;
+    const image = bridge.querySelector<HTMLImageElement>(
+      'img[data-home-image="servicios"]',
+    );
+    const picture = image?.closest("picture");
+    const imageContainer = picture?.parentElement;
 
     expect(image).toHaveAttribute("alt", "");
+    expect(image).toHaveAttribute("loading", "lazy");
+    expect(image).toHaveAttribute("decoding", "async");
+    expect(image).toHaveAttribute("width", "480");
+    expect(image).toHaveAttribute("height", "160");
+    expect(image).toHaveAttribute(
+      "sizes",
+      "(min-width: 1200px) 1152px, (min-width: 640px) calc(100vw - 48px), calc(100vw - 32px)",
+    );
     expect(image).toHaveClass(
       "w-full",
       "h-24",
@@ -101,6 +106,8 @@ describe("TransitionServicesIntro portfolio bridge", () => {
       "sm:h-28",
       "md:h-32",
     );
+    expect(picture).toHaveClass("block");
+    expect(picture?.querySelectorAll("img")).toHaveLength(1);
     expect(imageContainer).toHaveClass(
       "mt-6",
       "rounded-3xl",
@@ -112,7 +119,6 @@ describe("TransitionServicesIntro portfolio bridge", () => {
       "max-w-[1600px]",
       "mx-auto",
     );
-    expect(fs.existsSync("public/img/servicios.jpg")).toBe(true);
   });
 
   it("renders the approved Spanish next-step flow without a secondary email link", () => {
