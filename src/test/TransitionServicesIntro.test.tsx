@@ -5,6 +5,7 @@ import App from "../App";
 import TransitionServicesIntro from "../Components/TransitionServicesIntro";
 import { LanguageProvider } from "../i18n/LanguageProvider";
 import type { Language } from "../i18n/language";
+import portfolioSource from "../Components/PortfolioSection.tsx?raw";
 
 function renderBridge(
   language: Language,
@@ -189,9 +190,17 @@ describe("TransitionServicesIntro portfolio bridge", () => {
       }),
     );
     const portfolio = bridge.nextElementSibling;
-
     expect(portfolio).toBeInstanceOf(HTMLElement);
     expect(portfolio).toHaveAttribute("id", "portfolio");
+    expect(portfolio).toHaveClass(
+      "relative",
+      "py-28",
+      "px-4",
+      "sm:px-6",
+      "text-white",
+      "overflow-hidden",
+    );
+    expect(portfolio).not.toHaveAttribute("style");
     expect(portfolio).toHaveTextContent("PORTFOLIO");
     expect(portfolio).toHaveTextContent("Proyectos seleccionados");
     expect(portfolio).toHaveTextContent(
@@ -207,6 +216,40 @@ describe("TransitionServicesIntro portfolio bridge", () => {
     expect(
       within(portfolio as HTMLElement).getAllByRole("heading", { level: 2 }),
     ).toHaveLength(1);
+
+    const grid = portfolio?.querySelector(".grid");
+    const cardLinks = Array.from(grid?.children ?? []);
+    const cards = cardLinks.map((link) => link.firstElementChild);
+
+    expect(grid).toHaveClass("gap-6", "md:grid-cols-2");
+    expect(cardLinks).toHaveLength(4);
+    expect(cardLinks.map((link) => link.getAttribute("href"))).toEqual([
+      "/portfolio/lem-box",
+      "/portfolio",
+      "/portfolio",
+      "/portfolio",
+    ]);
+    cards.forEach((card) => {
+      expect(card).toHaveClass(
+        "backdrop-blur",
+        "shadow-md",
+        "transition-all",
+        "duration-300",
+        "motion-reduce:transition-none",
+        "hover:-translate-y-1",
+        "hover:shadow-lg",
+      );
+    });
+
+    expect(portfolioSource).toContain('<section\n      id="portfolio"');
+    expect(portfolioSource).not.toContain("<motion.section");
+    expect(portfolioSource).not.toContain("initial={false}");
+    expect(portfolioSource).toContain("initial={{ opacity: 0, y: 20 }}");
+    expect(portfolioSource).toContain("whileInView={{ opacity: 1, y: 0 }}");
+    expect(portfolioSource).toContain(
+      "transition={{ duration: 0.45, delay: 0.05 * index }}",
+    );
+    expect(portfolioSource).toContain("viewport={{ once: true }}");
   });
 
   it("renders the single approved English Portfolio introduction", () => {
