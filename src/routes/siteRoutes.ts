@@ -65,10 +65,8 @@ type RouteDefinition = {
     Language,
     {
       description: string;
-      ogDescription: string;
       ogImageAlt: string;
       ogImagePath: string;
-      ogTitle: string;
       ogType: "article" | "website";
       title: string;
     }
@@ -84,8 +82,6 @@ const routeDefinitions = [
       es: {
         title: translations.es.seo.title,
         description: translations.es.seo.description,
-        ogTitle: translations.es.seo.ogTitle,
-        ogDescription: translations.es.seo.ogDescription,
         ogImagePath: "/img/social-preview.png",
         ogImageAlt: "Vista previa de devrodri",
         ogType: "website",
@@ -93,8 +89,6 @@ const routeDefinitions = [
       en: {
         title: translations.en.seo.title,
         description: translations.en.seo.description,
-        ogTitle: translations.en.seo.ogTitle,
-        ogDescription: translations.en.seo.ogDescription,
         ogImagePath: "/img/social-preview.png",
         ogImageAlt: "devrodri social preview",
         ogType: "website",
@@ -108,8 +102,6 @@ const routeDefinitions = [
       es: {
         title: translations.es.portfolio.seo.title,
         description: translations.es.portfolio.seo.description,
-        ogTitle: translations.es.portfolio.seo.title,
-        ogDescription: translations.es.portfolio.seo.description,
         ogImagePath: "/img/social-preview.png",
         ogImageAlt: "Vista previa del portfolio de Rodrigo Opalo",
         ogType: "website",
@@ -117,8 +109,6 @@ const routeDefinitions = [
       en: {
         title: translations.en.portfolio.seo.title,
         description: translations.en.portfolio.seo.description,
-        ogTitle: translations.en.portfolio.seo.title,
-        ogDescription: translations.en.portfolio.seo.description,
         ogImagePath: "/img/social-preview.png",
         ogImageAlt: "Rodrigo Opalo portfolio preview",
         ogType: "website",
@@ -135,8 +125,6 @@ const routeDefinitions = [
       es: {
         title: lemBoxCase.caseStudy.content.es.seo.title,
         description: lemBoxCase.caseStudy.content.es.seo.description,
-        ogTitle: lemBoxCase.caseStudy.content.es.seo.title,
-        ogDescription: lemBoxCase.caseStudy.content.es.seo.description,
         ogImagePath: lemBoxCase.cover,
         ogImageAlt: lemBoxCase.caseStudy.content.es.header.coverAlt,
         ogType: "article",
@@ -144,8 +132,6 @@ const routeDefinitions = [
       en: {
         title: lemBoxCase.caseStudy.content.en.seo.title,
         description: lemBoxCase.caseStudy.content.en.seo.description,
-        ogTitle: lemBoxCase.caseStudy.content.en.seo.title,
-        ogDescription: lemBoxCase.caseStudy.content.en.seo.description,
         ogImagePath: lemBoxCase.cover,
         ogImageAlt: lemBoxCase.caseStudy.content.en.header.coverAlt,
         ogType: "article",
@@ -197,9 +183,9 @@ function createRoute(
         },
       ],
       og: {
-        description: values.ogDescription,
+        description: values.description,
         image,
-        title: values.ogTitle,
+        title: values.title,
         type: values.ogType,
         url: absoluteUrl(pathname),
       },
@@ -207,9 +193,9 @@ function createRoute(
       title: values.title,
       twitter: {
         card: "summary_large_image",
-        description: values.ogDescription,
+        description: values.description,
         image,
-        title: values.ogTitle,
+        title: values.title,
       },
     },
     sitemap: { include: true },

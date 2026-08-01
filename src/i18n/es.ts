@@ -158,8 +158,8 @@ export const es = {
         link: "Ver código",
       },
       seo: {
-        title: "Portfolio | Rodrigo Opalo",
-        description: "Explorá algunos de los sitios web desarrollados por mí, con diseño moderno, SEO y experiencia optimizada.",
+        title: "Portfolio: sitios, sistemas y productos | Rodrigo Opalo",
+        description: "Explorá proyectos de sistemas, sitios web, e-commerce y estrategia de marca, con detalles de alcance, rol y tecnología.",
         keywords: "portfolio, sitios web, trabajos, diseño, desarrollador web, Rodrigo Opalo",
       },
     },
@@ -281,11 +281,9 @@ export const es = {
       },
     },
     seo: {
-      title: "Rodrigo Opalo | Diseñador y Desarrollador Web",
-      description: "Desarrollo sitios web profesionales, multilenguaje y optimizados para SEO.",
+      title: "Rodrigo Opalo | Sitios, sistemas y automatización",
+      description: "Desarrollo sitios, aplicaciones y sistemas a medida, además de automatizaciones e integraciones orientadas a objetivos reales de negocio.",
       keywords: "sitios web, desarrollador, diseño web, seo, rodrigo opalo, sitios multilenguaje, programador",
-      ogTitle: "devrodri - Diseño y desarrollo web",
-      ogDescription: "Portfolio profesional de Rodrigo Opalo. Diseño y desarrollo sitios web modernos, rápidos y optimizados para marcas que quieren destacarse online.",
     },
   } as const;
 

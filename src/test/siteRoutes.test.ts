@@ -54,6 +54,40 @@ const expectedRoutes = [
   },
 ] as const;
 
+const expectedCommercialMetadata = {
+  "home:es": {
+    title: "Rodrigo Opalo | Sitios, sistemas y automatización",
+    description:
+      "Desarrollo sitios, aplicaciones y sistemas a medida, además de automatizaciones e integraciones orientadas a objetivos reales de negocio.",
+  },
+  "home:en": {
+    title: "Rodrigo Opalo | Websites, systems and automation",
+    description:
+      "I build custom websites, applications, and systems, plus automations and integrations aligned with real business goals.",
+  },
+  "portfolio:es": {
+    title: "Portfolio: sitios, sistemas y productos | Rodrigo Opalo",
+    description:
+      "Explorá proyectos de sistemas, sitios web, e-commerce y estrategia de marca, con detalles de alcance, rol y tecnología.",
+  },
+  "portfolio:en": {
+    title: "Portfolio: websites, systems and products | Rodrigo Opalo",
+    description:
+      "Explore systems, websites, e-commerce, and brand strategy projects with details on scope, role, and technology.",
+  },
+} as const;
+
+const lockedLemBoxMetadata = {
+  "lem-box:es": {
+    title: "LEM-BOX: plataforma logística y producto propio | Rodrigo Opalo",
+    canonical: "https://www.devrodri.com/portfolio/lem-box",
+  },
+  "lem-box:en": {
+    title: "LEM-BOX: logistics platform and own product | Rodrigo Opalo",
+    canonical: "https://www.devrodri.com/en/portfolio/lem-box",
+  },
+} as const;
+
 describe("public route registry", () => {
   it("contains exactly the approved six ES/EN routes", () => {
     expect(
@@ -104,6 +138,44 @@ describe("public route registry", () => {
         route.metadata.hreflang[0]?.href,
       );
       expect(route.sitemap.include).toBe(true);
+    }
+  });
+
+  it("publishes the exact approved Home and Portfolio commercial metadata", () => {
+    for (const [routeKey, expected] of Object.entries(
+      expectedCommercialMetadata,
+    )) {
+      const route = PUBLIC_ROUTES.find(
+        (candidate) => candidate.routeKey === routeKey,
+      );
+
+      expect(route).toBeDefined();
+      expect(route?.metadata.title).toBe(expected.title);
+      expect(route?.metadata.description).toBe(expected.description);
+      expect(route?.metadata.og?.title).toBe(expected.title);
+      expect(route?.metadata.og?.description).toBe(expected.description);
+      expect(route?.metadata.twitter?.title).toBe(expected.title);
+      expect(route?.metadata.twitter?.description).toBe(expected.description);
+    }
+  });
+
+  it("keeps the locked LEM-BOX metadata and social image unchanged", () => {
+    for (const [routeKey, expected] of Object.entries(lockedLemBoxMetadata)) {
+      const route = PUBLIC_ROUTES.find(
+        (candidate) => candidate.routeKey === routeKey,
+      );
+
+      expect(route).toBeDefined();
+      expect(route?.metadata.title).toBe(expected.title);
+      expect(route?.metadata.canonical).toBe(expected.canonical);
+      expect(route?.metadata.og?.image).toEqual({
+        alt: route?.locale === "es"
+          ? "Portada de LEM-BOX"
+          : "LEM-BOX cover",
+        height: 630,
+        url: "https://www.devrodri.com/img/lem-box-cover.png",
+        width: 1200,
+      });
     }
   });
 

@@ -162,8 +162,8 @@ export const en = {
         link: "View code",
       },
       seo: {
-        title: "Portfolio | Rodrigo Opalo",
-        description: "Take a look at some of the websites I’ve built - modern, optimized and user-focused.",
+        title: "Portfolio: websites, systems and products | Rodrigo Opalo",
+        description: "Explore systems, websites, e-commerce, and brand strategy projects with details on scope, role, and technology.",
         keywords: "portfolio, web design, projects, websites, Rodrigo Opalo, developer",
       },
     },
@@ -283,12 +283,10 @@ export const en = {
       },
     },
     seo: {
-      title: "Rodrigo Opalo | Web Designer and Developer",
-      description: "I build professional websites with SEO and multilingual support.",
+      title: "Rodrigo Opalo | Websites, systems and automation",
+      description: "I build custom websites, applications, and systems, plus automations and integrations aligned with real business goals.",
       keywords:
         "websites, developer, web design, seo, rodrigo opalo, multilingual sites, web developer",
-      ogTitle: "devrodri - Web design & development",
-      ogDescription: "Professional portfolio of Rodrigo Opalo. I design and build modern, fast and optimized websites for brands that want to stand out online.",
     },
   } as const satisfies TranslationSchema<typeof es>;
 

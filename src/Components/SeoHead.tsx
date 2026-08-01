@@ -4,15 +4,14 @@ import {
   getNotFoundMetadata,
   getPublicRoute,
 } from "../routes/siteRoutes";
-import {
-  ibmFullStackCredential,
-  metaReactCredential,
-} from "../seo/homeCredentialsJsonLd";
+import { getStructuredData } from "../seo/structuredData";
 
 export default function SeoHead() {
   const { pathname } = useLocation();
   const route = getPublicRoute(pathname);
   const metadata = route?.metadata ?? getNotFoundMetadata();
+  const structuredData =
+    route === null ? null : getStructuredData(route.routeKey);
 
   return (
     <Helmet>
@@ -96,14 +95,9 @@ export default function SeoHead() {
         />
       )}
 
-      {route?.page === "home" && (
+      {structuredData !== null && (
         <script type="application/ld+json">
-          {JSON.stringify(metaReactCredential)}
-        </script>
-      )}
-      {route?.page === "home" && (
-        <script type="application/ld+json">
-          {JSON.stringify(ibmFullStackCredential)}
+          {JSON.stringify(structuredData)}
         </script>
       )}
     </Helmet>

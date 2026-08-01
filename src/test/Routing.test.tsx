@@ -4,6 +4,9 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { MemoryRouter, useLocation } from "react-router-dom";
 import App from "../App";
 import { RoutedLanguageProvider } from "../i18n/LanguageProvider";
+import {
+  STRUCTURED_DATA_BY_ROUTE,
+} from "../seo/structuredData";
 
 type TestRouteEntry =
   | string
@@ -77,6 +80,31 @@ describe("application routing", () => {
       ).toHaveAttribute("href", "https://www.devrodri.com/");
     });
   });
+
+  it.each([
+    { pathname: "/", routeKey: "home:es" },
+    { pathname: "/portfolio", routeKey: "portfolio:es" },
+    { pathname: "/portfolio/lem-box", routeKey: "lem-box:es" },
+    { pathname: "/en", routeKey: "home:en" },
+    { pathname: "/en/portfolio", routeKey: "portfolio:en" },
+    { pathname: "/en/portfolio/lem-box", routeKey: "lem-box:en" },
+  ] as const)(
+    "keeps one client JSON-LD script at most for $pathname",
+    async ({ pathname, routeKey }) => {
+      renderApp(pathname);
+      const expected = STRUCTURED_DATA_BY_ROUTE[routeKey];
+
+      await waitFor(() => {
+        const scripts = document.head.querySelectorAll(
+          'script[type="application/ld+json"]',
+        );
+        expect(scripts).toHaveLength(expected === null ? 0 : 1);
+        if (expected !== null) {
+          expect(scripts[0]?.textContent).toBe(JSON.stringify(expected));
+        }
+      });
+    },
+  );
 
   it.each(["/portfolio", "/portfolio/", "/portfolio?utm_source=test"])(
     "loads the lazy portfolio route and canonical metadata for %s",
