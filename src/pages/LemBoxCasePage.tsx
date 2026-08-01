@@ -7,6 +7,7 @@ import {
 } from "../data/portfolio/cases/lemBox";
 import { useLanguage } from "../i18n/useLanguage";
 import { getLocalizedPath } from "../routes/siteRoutes";
+import { PortfolioCoverImage } from "../Components/portfolio/PortfolioCard";
 
 type LemBoxEditorialColumnProps = {
   id: string;
@@ -78,17 +79,19 @@ export default function LemBoxCasePage() {
             </div>
 
             <div className="overflow-hidden rounded-xl md:col-span-6">
-              <img
-                src={lemBoxCase.cover}
+              <PortfolioCoverImage
+                cover={lemBoxCase.cover}
                 alt={
                   language === "es"
                     ? "Logo de LEM-BOX con el lema «Logística en Miami»"
                     : "LEM-BOX logo with the tagline “Logística en Miami”"
                 }
-                width={caseStudy.coverWidth}
-                height={caseStudy.coverHeight}
-                className="h-auto w-full object-cover"
-                decoding="async"
+                className="h-auto w-full object-contain"
+                priority
+                sizes="(min-width: 1200px) 552px, (min-width: 768px) calc(50vw - 48px), (min-width: 640px) calc(100vw - 48px), calc(100vw - 32px)"
+                {...(lemBoxCase.responsiveCover === undefined
+                  ? {}
+                  : { responsiveCover: lemBoxCase.responsiveCover })}
               />
             </div>
           </div>

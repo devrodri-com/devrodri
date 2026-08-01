@@ -4,6 +4,7 @@ import { homePortfolioCases } from "../data/portfolio";
 import { useLanguage } from "../i18n/useLanguage";
 import { Link } from "react-router-dom";
 import { getLocalizedPath } from "../routes/siteRoutes";
+import { PortfolioCoverImage } from "./portfolio/PortfolioCard";
 
 export default function PortfolioSection() {
   const { language } = useLanguage();
@@ -11,6 +12,7 @@ export default function PortfolioSection() {
     category: portfolioCase.content[language].tags[0],
     key: portfolioCase.key,
     cover: portfolioCase.cover,
+    responsiveCover: portfolioCase.responsiveCover,
     status: portfolioCase.content[language].status,
     title: portfolioCase.content[language].title,
     summary: portfolioCase.home.summary[language],
@@ -100,12 +102,19 @@ export default function PortfolioSection() {
                 viewport={{ once: true }}
               >
                 <div className="aspect-[2/1] overflow-hidden bg-white">
-                  <img
-                    src={p.cover}
+                  <PortfolioCoverImage
+                    cover={p.cover}
                     alt=""
-                    className="h-full w-full object-cover"
-                    loading="lazy"
-                    decoding="async"
+                    className={`h-full w-full ${
+                      p.responsiveCover === undefined
+                        ? "object-cover"
+                        : "object-contain"
+                    }`}
+                    priority={false}
+                    sizes="(min-width: 1200px) 564px, (min-width: 768px) calc(50vw - 36px), (min-width: 640px) calc(100vw - 48px), calc(100vw - 32px)"
+                    {...(p.responsiveCover === undefined
+                      ? {}
+                      : { responsiveCover: p.responsiveCover })}
                   />
                 </div>
                 <div className="flex h-full flex-col gap-3 p-5 sm:p-6">

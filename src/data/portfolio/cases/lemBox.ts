@@ -1,9 +1,33 @@
 import { en, es } from "../../../i18n";
+import lemBox480Avif from "../../../assets/lem-box/lem-box-480.avif";
+import lemBox480Webp from "../../../assets/lem-box/lem-box-480.webp";
+import lemBox768Avif from "../../../assets/lem-box/lem-box-768.avif";
+import lemBox768Webp from "../../../assets/lem-box/lem-box-768.webp";
+import lemBox1200Avif from "../../../assets/lem-box/lem-box-1200.avif";
+import lemBox1200Webp from "../../../assets/lem-box/lem-box-1200.webp";
 import {
   definePortfolioCase,
   type Localized,
   type PortfolioAction,
+  type ResponsivePortfolioCover,
 } from "../types";
+
+const lemBoxResponsiveCover = {
+  width: 1200,
+  height: 630,
+  sources: {
+    avif: [
+      { src: lemBox480Avif, width: 480 },
+      { src: lemBox768Avif, width: 768 },
+      { src: lemBox1200Avif, width: 1200 },
+    ],
+    webp: [
+      { src: lemBox480Webp, width: 480 },
+      { src: lemBox768Webp, width: 768 },
+      { src: lemBox1200Webp, width: 1200 },
+    ],
+  },
+} as const satisfies ResponsivePortfolioCover;
 
 const stack = [
   "Next.js",
@@ -131,6 +155,7 @@ export const lemBoxCase = definePortfolioCase({
   portfolioOrder: 0,
   category: "systems",
   cover: "/img/lem-box-cover.png",
+  responsiveCover: lemBoxResponsiveCover,
   actions: lemBoxPublicLinks,
   content: {
     es: {
@@ -151,8 +176,8 @@ export const lemBoxCase = definePortfolioCase({
   caseStudy: {
     slug: "lem-box",
     path: "/portfolio/lem-box",
-    coverWidth: 1200,
-    coverHeight: 630,
+    coverWidth: lemBoxResponsiveCover.width,
+    coverHeight: lemBoxResponsiveCover.height,
     stack,
     publicLinks: lemBoxPublicLinks,
     finalCtaHref: "/#contacto",

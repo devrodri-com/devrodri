@@ -1,16 +1,30 @@
 // src/Components/HeroSlider.tsx
-import { useState, useEffect, useRef, useCallback } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  type CSSProperties,
+} from "react";
 import { useLanguage } from "../i18n/useLanguage";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { getLocalizedPath } from "../routes/siteRoutes";
 
+type HeroImageStyle = CSSProperties & {
+  "--hero-mobile-object-position": string;
+};
+
 const slides = [
   {
     id: 1,
     image: "/img/hero-visual.jpg",
+    imageWidth: 1536,
+    imageHeight: 1024,
     imageMobile: "/img/hero-visual-mobile.jpg",
+    imageMobileWidth: 1000,
+    imageMobileHeight: 1384,
     imageAlt: "Man working on web design project on laptop",
     mobileObjectPosition: "center 46%",
     claim: {
@@ -39,7 +53,11 @@ const slides = [
   {
     id: 2,
     image: "/img/software-slide.jpg",
+    imageWidth: 1536,
+    imageHeight: 1024,
     imageMobile: "/img/software-slide-mobile.jpg",
+    imageMobileWidth: 1024,
+    imageMobileHeight: 1536,
     imageAlt: "Dashboard of a custom software with charts and code",
     mobileObjectPosition: "center 44%",
     claim: {
@@ -68,7 +86,11 @@ const slides = [
   {
     id: 3,
     image: "/img/branding-slide.jpg",
+    imageWidth: 1536,
+    imageHeight: 1024,
     imageMobile: "/img/branding-slide-mobile.jpg",
+    imageMobileWidth: 1024,
+    imageMobileHeight: 1536,
     imageAlt: "Brand strategy and color palette design on tablet",
     mobileObjectPosition: "center 50%",
     claim: {
@@ -97,7 +119,11 @@ const slides = [
   {
     id: 4,
     image: "/img/automations-slide.jpg",
+    imageWidth: 1536,
+    imageHeight: 1024,
     imageMobile: "/img/automations-slide-mobile.jpg",
+    imageMobileWidth: 1024,
+    imageMobileHeight: 1536,
     imageAlt: "Automation workflows dashboard",
     mobileObjectPosition: "center 48%",
     claim: {
@@ -230,6 +256,11 @@ export default function HeroSlider() {
       : currentSlide.buttonLink === "/portfolio"
         ? getLocalizedPath("portfolio", language)
         : currentSlide.buttonLink;
+  const heroImageStyle: HeroImageStyle = {
+    "--hero-mobile-object-position": currentSlide.mobileObjectPosition,
+  };
+  const imagePriorityProps: { fetchpriority?: "high" } =
+    index === 0 ? { fetchpriority: "high" } : {};
 
   return (
     <section
@@ -248,28 +279,31 @@ export default function HeroSlider() {
           exit={{ opacity: 0, x: -100 }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
         >
-          {/* Mobile image zone */}
-          <div className="absolute inset-x-0 top-[3.3125rem] h-[clamp(18rem,38svh,21rem)] md:hidden">
-            <img
-              src={currentSlide.imageMobile}
-              alt=""
-              className="h-full w-full object-cover"
-              style={{ objectPosition: currentSlide.mobileObjectPosition }}
-              draggable="false"
-            />
-            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-gradient-to-b from-transparent to-black" />
-          </div>
-
-          {/* Desktop image on the right half (unchanged) */}
-          <div className="absolute inset-y-0 right-0 w-1/2 hidden md:block">
-            <img
-              src={currentSlide.image}
-              alt=""
-              className="h-full w-full object-cover object-center"
-              draggable="false"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent pointer-events-none" />
-            <div className="absolute left-0 top-0 h-full w-24 sm:w-40 md:w-56 bg-gradient-to-r from-black to-transparent pointer-events-none" />
+          {/* One responsive image, preserving the mobile and desktop compositions. */}
+          <div
+            className="absolute inset-x-0 top-[3.3125rem] h-[clamp(18rem,38svh,21rem)] md:inset-y-0 md:left-auto md:h-auto md:w-1/2"
+            style={heroImageStyle}
+          >
+            <picture className="block h-full w-full">
+              <source
+                media="(max-width: 767px)"
+                srcSet={currentSlide.imageMobile}
+                width={currentSlide.imageMobileWidth}
+                height={currentSlide.imageMobileHeight}
+              />
+              <img
+                src={currentSlide.image}
+                alt=""
+                width={currentSlide.imageWidth}
+                height={currentSlide.imageHeight}
+                {...imagePriorityProps}
+                className="h-full w-full object-cover [object-position:var(--hero-mobile-object-position)] md:object-center"
+                draggable="false"
+              />
+            </picture>
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-12 bg-gradient-to-b from-transparent to-black md:hidden" />
+            <div className="pointer-events-none absolute inset-0 hidden bg-gradient-to-r from-black/60 via-black/30 to-transparent md:block" />
+            <div className="pointer-events-none absolute left-0 top-0 hidden h-full w-24 bg-gradient-to-r from-black to-transparent sm:w-40 md:block md:w-56" />
           </div>
         </motion.div>
       </AnimatePresence>
