@@ -22,13 +22,9 @@ export default function PortfolioSection() {
   }));
 
   return (
-    <motion.section
+    <section
       id="portfolio"
       className="relative py-28 px-4 sm:px-6 text-white overflow-hidden"
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      transition={{ duration: 0.7 }}
-      viewport={{ once: true }}
     >
       {/* Fondo visual con oscurecimiento */}
       <div className="absolute inset-0 z-0">
@@ -95,7 +91,7 @@ export default function PortfolioSection() {
               }
             >
               <motion.div
-                className="group h-full overflow-hidden rounded-2xl bg-white/95 backdrop-blur border border-gray-200/80 shadow-md transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                className="group h-full overflow-hidden rounded-2xl bg-white/95 backdrop-blur border border-gray-200/80 shadow-md transition-all duration-300 motion-reduce:transition-none hover:-translate-y-1 hover:shadow-lg"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.45, delay: 0.05 * index }}
@@ -166,6 +162,6 @@ export default function PortfolioSection() {
           </div>
         </div>
       </div>
-    </motion.section>
+    </section>
   );
 }
