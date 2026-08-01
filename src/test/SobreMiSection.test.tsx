@@ -20,6 +20,42 @@ function getAboutSection(container: HTMLElement) {
 }
 
 describe("SobreMiSection", () => {
+  it("delivers the portrait and certificate thumbnails without changing their semantics", () => {
+    const { container } = renderAboutSection("es");
+    const portrait = container.querySelector<HTMLImageElement>(
+      'img[data-home-image="sobremi"]',
+    );
+    const certificate = container.querySelector<HTMLImageElement>(
+      'img[data-home-image="ibm-certificate"]',
+    );
+    const certificatePicture = certificate?.closest("picture");
+
+    expect(portrait).toHaveAttribute("alt", "Rodrigo Opalo");
+    expect(portrait).toHaveAttribute("width", "320");
+    expect(portrait).toHaveAttribute("height", "320");
+    expect(portrait).toHaveAttribute("loading", "lazy");
+    expect(portrait).toHaveAttribute("decoding", "async");
+    expect(portrait).toHaveAttribute(
+      "sizes",
+      "(min-width: 640px) 96px, 80px",
+    );
+    expect(portrait).toHaveClass("w-20", "h-20", "sm:w-24", "sm:h-24", "object-cover");
+
+    expect(certificate).toHaveAttribute("alt", "");
+    expect(certificate).toHaveAttribute("width", "88");
+    expect(certificate).toHaveAttribute("height", "68");
+    expect(certificate).toHaveAttribute("sizes", "83px");
+    expect(certificatePicture?.querySelectorAll("source")).toHaveLength(1);
+    expect(certificatePicture?.querySelector("source")).toHaveAttribute(
+      "type",
+      "image/webp",
+    );
+    expect(certificate?.closest("a")).toHaveAttribute(
+      "href",
+      "/img/certs/ibm-fullstack.png",
+    );
+  });
+
   it("stacks the IBM certificate content on mobile and restores the row at the small breakpoint", () => {
     const { container } = renderAboutSection("es");
     const section = getAboutSection(container);

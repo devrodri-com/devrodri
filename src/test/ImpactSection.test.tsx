@@ -14,6 +14,28 @@ function renderImpactSection(language: Language) {
 }
 
 describe("ImpactSection", () => {
+  it("reserves the approved 3:2 image and responsive delivery contract", () => {
+    const { container } = renderImpactSection("es");
+    const image = container.querySelector<HTMLImageElement>(
+      'img[data-home-image="impact"]',
+    );
+    const sources = Array.from(
+      image?.closest("picture")?.querySelectorAll("source") ?? [],
+    );
+
+    expect(image).toHaveAttribute("alt", "");
+    expect(image).toHaveAttribute("width", "1536");
+    expect(image).toHaveAttribute("height", "1024");
+    expect(image).toHaveAttribute("loading", "lazy");
+    expect(image).toHaveAttribute("decoding", "async");
+    expect(sources.map((source) => source.type)).toEqual([
+      "image/avif",
+      "image/webp",
+    ]);
+    expect(image).toHaveClass("object-cover", "w-full", "h-full", "object-right");
+    expect(image).toHaveStyle({ objectPosition: "72% 46%" });
+  });
+
   it("presents the approved problem-first positioning in Spanish", () => {
     renderImpactSection("es");
 
