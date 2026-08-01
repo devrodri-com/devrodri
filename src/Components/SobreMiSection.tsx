@@ -3,6 +3,11 @@ import { motion } from "framer-motion";
 import translations from "../i18n";
 import { useLanguage } from "../i18n/useLanguage";
 import { getLocalizedPath } from "../routes/siteRoutes";
+import ResponsivePicture from "./ResponsivePicture";
+import {
+  aboutPortraitImage,
+  ibmCertificateImage,
+} from "./homeImageSources";
 export default function SobreMiSection() {
   const { language } = useLanguage();
   const t = translations[language];
@@ -17,11 +22,10 @@ export default function SobreMiSection() {
       transition={{ duration: 0.55 }}
     >
       <div className="flex justify-center mb-5">
-        <img
-          src="/img/sobremi.jpg"
+        <ResponsivePicture
+          {...aboutPortraitImage}
           alt="Rodrigo Opalo"
-          loading="lazy"
-          decoding="async"
+          data-home-image="sobremi"
           className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover ring-1 ring-gray-300/80 shadow"
         />
       </div>
@@ -107,12 +111,11 @@ export default function SobreMiSection() {
             className="mt-1 inline-flex items-center justify-center"
             aria-label={language === "es" ? "Ampliar certificado IBM (imagen)" : "Open IBM certificate image"}
           >
-            <img
-              src="/img/certs/ibm-fullstack.png"
+            <ResponsivePicture
+              {...ibmCertificateImage}
               alt=""
+              data-home-image="ibm-certificate"
               className="h-16 w-auto rounded ring-1 ring-gray-300 hover:ring-gray-400 shadow-sm hover:scale-105 transition-transform duration-300"
-              loading="lazy"
-              decoding="async"
             />
           </a>
           <p className="text-[11px] text-gray-400 mt-1">{language === "es" ? "Vista previa" : "Preview"}</p>
