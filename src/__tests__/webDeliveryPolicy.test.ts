@@ -315,6 +315,16 @@ describe("web delivery policy", () => {
     expect(indexHtml).not.toContain("googletagmanager.com/gtag/js");
     expect(indexHtml).not.toContain("function gtag");
     expect(indexHtml).not.toMatch(/G-[A-Z0-9]{6,}/);
+    expect(indexHtml.match(/rel="preconnect"/g)).toHaveLength(2);
+    expect(indexHtml).toContain(
+      '<link rel="preconnect" href="https://fonts.googleapis.com" />',
+    );
+    expect(indexHtml).toContain(
+      '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />',
+    );
+    expect(indexHtml).toContain(
+      "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap",
+    );
 
     const cacheControlRules = configuration.headers.flatMap((rule) =>
       rule.headers

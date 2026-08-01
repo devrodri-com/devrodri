@@ -8,6 +8,7 @@ import {
 } from "../data/portfolio";
 import {
   lemBoxAudienceIntro,
+  lemBoxCase,
   lemBoxPublicLinks,
   lemBoxPublicLinksSection,
 } from "../data/portfolio/cases/lemBox";
@@ -543,6 +544,40 @@ describe("portfolio architecture invariants", () => {
     expect(
       crypto.createHash("sha256").update(coverData).digest("hex"),
     ).toBe(lemBoxCoverHash);
+  });
+
+  it("declares ordered responsive LEM-BOX visual assets without replacing the social PNG", () => {
+    const responsiveCover = lemBoxCase.responsiveCover;
+    if (responsiveCover === undefined) {
+      throw new Error("Missing responsive LEM-BOX cover");
+    }
+
+    expect(lemBoxCase.cover).toBe("/img/lem-box-cover.png");
+    expect({
+      width: responsiveCover.width,
+      height: responsiveCover.height,
+    }).toEqual({ width: 1200, height: 630 });
+    expect({
+      width: lemBoxCase.caseStudy.coverWidth,
+      height: lemBoxCase.caseStudy.coverHeight,
+    }).toEqual({ width: 1200, height: 630 });
+
+    for (const format of ["avif", "webp"] as const) {
+      const candidates = responsiveCover.sources[format];
+      expect(candidates.map(({ width }) => width)).toEqual([480, 768, 1200]);
+
+      for (const candidate of candidates) {
+        const fileName = `lem-box-${candidate.width}.${format}`;
+        expect(candidate.src).toContain(fileName);
+        const assetPath = path.join(
+          projectRoot,
+          "src/assets/lem-box",
+          fileName,
+        );
+        expect(fs.existsSync(assetPath)).toBe(true);
+        expect(fs.statSync(assetPath).size).toBeGreaterThan(0);
+      }
+    }
   });
 
   it("publishes ZENTRA without private documents or restricted names", () => {

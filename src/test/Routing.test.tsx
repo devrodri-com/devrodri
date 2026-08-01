@@ -222,6 +222,21 @@ describe("application routing", () => {
     expect(
       screen.getByRole("link", { name: "Ver caso LEM-BOX" }),
     ).toHaveAttribute("href", "/portfolio/lem-box");
+    const lemBoxHomeLink = screen.getByRole("link", {
+      name: "Ver caso LEM-BOX",
+    });
+    const lemBoxHomePicture = lemBoxHomeLink.querySelector("picture");
+    const lemBoxHomeImage = lemBoxHomePicture?.querySelector("img");
+    expect(lemBoxHomePicture).not.toBeNull();
+    expect(lemBoxHomePicture?.querySelectorAll("img")).toHaveLength(1);
+    expect(lemBoxHomeImage).toHaveAttribute("loading", "lazy");
+    expect(lemBoxHomeImage).not.toHaveAttribute("fetchpriority");
+    expect(lemBoxHomeImage).toHaveClass("object-contain");
+    expect(
+      Array.from(lemBoxHomePicture?.querySelectorAll("source") ?? []).map(
+        (source) => source.getAttribute("type"),
+      ),
+    ).toEqual(["image/avif", "image/webp"]);
     expect(
       screen
         .getAllByRole("link", { name: /Ver este caso en el portfolio:/ })
@@ -281,6 +296,29 @@ describe("application routing", () => {
     expect(
       document.getElementById("portfolio-details-lem_box"),
     ).not.toBeInTheDocument();
+
+    const portfolioCards = Array.from(
+      document.querySelectorAll<HTMLElement>('[id^="portfolio-case-"]'),
+    );
+    const portfolioImages = portfolioCards.map((card) => {
+      const image = card.querySelector("img");
+      if (image === null) {
+        throw new Error(`Missing portfolio image: ${card.id}`);
+      }
+      return image;
+    });
+    expect(portfolioImages).toHaveLength(8);
+    expect(portfolioImages[0]).toHaveAttribute("loading", "eager");
+    expect(portfolioImages[0]).toHaveAttribute("fetchpriority", "high");
+    expect(portfolioImages[0]).toHaveClass("object-contain");
+    expect(
+      portfolioImages[0]?.closest("picture")?.querySelectorAll("img"),
+    ).toHaveLength(1);
+    for (const image of portfolioImages.slice(1)) {
+      expect(image).toHaveAttribute("loading", "lazy");
+      expect(image).not.toHaveAttribute("fetchpriority");
+      expect(image).toHaveClass("object-cover");
+    }
   });
 
   it("expands and contracts the other seven cases with the same ARIA contract", async () => {
@@ -964,14 +1002,34 @@ describe("application routing", () => {
     const lemBoxImage = screen.getByRole("img", {
       name: "Logo de LEM-BOX con el lema «Logística en Miami»",
     });
-    expect(lemBoxImage).toHaveAttribute(
-      "width",
-      "1200",
-    );
-    expect(lemBoxImage).toHaveAttribute(
-      "height",
-      "630",
-    );
+    expect(lemBoxImage).toHaveAttribute("src", "/img/lem-box-cover.png");
+    expect(lemBoxImage).toHaveAttribute("width", "1200");
+    expect(lemBoxImage).toHaveAttribute("height", "630");
+    expect(lemBoxImage).toHaveAttribute("loading", "eager");
+    expect(lemBoxImage).toHaveAttribute("fetchpriority", "high");
+    expect(lemBoxImage).toHaveAttribute("decoding", "async");
+    expect(lemBoxImage).toHaveClass("object-contain");
+
+    const picture = lemBoxImage.closest("picture");
+    expect(picture).not.toBeNull();
+    if (picture === null) {
+      throw new Error("Missing LEM-BOX picture");
+    }
+    expect(picture.querySelectorAll("img")).toHaveLength(1);
+    const sources = Array.from(picture.querySelectorAll("source"));
+    expect(sources.map((source) => source.getAttribute("type"))).toEqual([
+      "image/avif",
+      "image/webp",
+    ]);
+    for (const source of sources) {
+      expect(source.getAttribute("srcset")).toMatch(
+        /lem-box-480\.(?:avif|webp) 480w, .*lem-box-768\.(?:avif|webp) 768w, .*lem-box-1200\.(?:avif|webp) 1200w/,
+      );
+      expect(source).toHaveAttribute(
+        "sizes",
+        "(min-width: 1200px) 552px, (min-width: 768px) calc(50vw - 48px), (min-width: 640px) calc(100vw - 48px), calc(100vw - 32px)",
+      );
+    }
   });
 
   it("renders the LEM-BOX public links as a light editorial directory", async () => {

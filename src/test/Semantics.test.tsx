@@ -416,7 +416,6 @@ describe("headings, controls and image semantics", () => {
 
     for (const source of [
       "/img/hero-visual.jpg",
-      "/img/hero-visual-mobile.jpg",
       "/img/impact.jpg",
       "/img/experience.jpg",
       "/img/servicios.jpg",
@@ -424,6 +423,14 @@ describe("headings, controls and image semantics", () => {
     ]) {
       expect(document.querySelector(`img[src="${source}"]`)).toHaveAttribute("alt", "");
     }
+    expect(
+      document.querySelector(
+        'picture source[srcset="/img/hero-visual-mobile.jpg"]',
+      ),
+    ).toHaveAttribute("media", "(max-width: 767px)");
+    expect(
+      document.querySelector('picture img[src="/img/hero-visual.jpg"]'),
+    ).toHaveAttribute("alt", "");
 
     homeRender.unmount();
     renderApp("/portfolio/lem-box");

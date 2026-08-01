@@ -12,6 +12,7 @@ import { MemoryRouter } from "react-router-dom";
 import HeroSlider from "../Components/HeroSlider";
 import { LanguageProvider } from "../i18n/LanguageProvider";
 import type { Language } from "../i18n/language";
+import heroSliderSource from "../Components/HeroSlider.tsx?raw";
 
 const expectedCopy = {
   es: [
@@ -176,74 +177,127 @@ describe("HeroSlider resilience", () => {
     }
   });
 
-  it("keeps asset order and uses the approved split mobile image treatment", async () => {
+  it("uses one responsive picture per active slide with the approved compositions", async () => {
     const user = userEvent.setup();
     const { container } = renderHero();
     const tabs = getSlideButtons();
     const expectedAssets = [
       {
         desktop: "/img/hero-visual.jpg",
+        desktopWidth: "1536",
+        desktopHeight: "1024",
         mobile: "/img/hero-visual-mobile.jpg",
+        mobileWidth: "1000",
+        mobileHeight: "1384",
         mobilePosition: "center 46%",
       },
       {
         desktop: "/img/software-slide.jpg",
+        desktopWidth: "1536",
+        desktopHeight: "1024",
         mobile: "/img/software-slide-mobile.jpg",
+        mobileWidth: "1024",
+        mobileHeight: "1536",
         mobilePosition: "center 44%",
       },
       {
         desktop: "/img/branding-slide.jpg",
+        desktopWidth: "1536",
+        desktopHeight: "1024",
         mobile: "/img/branding-slide-mobile.jpg",
+        mobileWidth: "1024",
+        mobileHeight: "1536",
         mobilePosition: "center 50%",
       },
       {
         desktop: "/img/automations-slide.jpg",
+        desktopWidth: "1536",
+        desktopHeight: "1024",
         mobile: "/img/automations-slide-mobile.jpg",
+        mobileWidth: "1024",
+        mobileHeight: "1536",
         mobilePosition: "center 48%",
       },
     ] as const;
 
     for (const [index, asset] of expectedAssets.entries()) {
       await user.click(tabs[index] as HTMLElement);
-      const images = await waitFor(() => {
-        const currentImages = Array.from(
-          container.querySelectorAll<HTMLImageElement>('img[alt=""]'),
-        ).filter((image) => {
-          const source = image.getAttribute("src");
-          return source === asset.desktop || source === asset.mobile;
-        });
-        expect(currentImages).toHaveLength(2);
-        return currentImages;
+      const picture = await waitFor(() => {
+        const activePicture = container.querySelector("picture");
+        expect(activePicture?.querySelector("img")).toHaveAttribute(
+          "src",
+          asset.desktop,
+        );
+        return activePicture;
       });
-      expect(images).toHaveLength(2);
-      expect(images.map((image) => image.getAttribute("src")).sort()).toEqual(
-        [asset.desktop, asset.mobile].sort(),
-      );
+      if (!(picture instanceof HTMLPictureElement)) {
+        throw new Error("Expected one active Hero picture");
+      }
+      const source = picture.querySelector("source");
+      const image = picture.querySelector("img");
 
-      const mobileImage = images.find(
-        (image) => image.getAttribute("src") === asset.mobile,
+      expect(container.querySelectorAll("picture")).toHaveLength(1);
+      expect(picture.querySelectorAll("img")).toHaveLength(1);
+      expect(source).toHaveAttribute("media", "(max-width: 767px)");
+      expect(source).toHaveAttribute("srcset", asset.mobile);
+      expect(source).toHaveAttribute("width", asset.mobileWidth);
+      expect(source).toHaveAttribute("height", asset.mobileHeight);
+      expect(image).toHaveAttribute("src", asset.desktop);
+      expect(image).toHaveAttribute("width", asset.desktopWidth);
+      expect(image).toHaveAttribute("height", asset.desktopHeight);
+      expect(image).toHaveAttribute("alt", "");
+      expect(image).toHaveClass(
+        "object-cover",
+        "[object-position:var(--hero-mobile-object-position)]",
+        "md:object-center",
       );
-      expect(mobileImage).toHaveClass("object-cover");
-      expect(mobileImage).toHaveStyle({
-        objectPosition: asset.mobilePosition,
+      expect(picture.parentElement).toHaveStyle({
+        "--hero-mobile-object-position": asset.mobilePosition,
       });
-      expect(mobileImage?.nextElementSibling).toHaveClass(
+      expect(picture.nextElementSibling).toHaveClass(
         "h-12",
         "bg-gradient-to-b",
         "from-transparent",
         "to-black",
+        "md:hidden",
       );
+
+      if (index === 0) {
+        expect(image).toHaveAttribute("fetchpriority", "high");
+      } else {
+        expect(image).not.toHaveAttribute("fetchpriority");
+      }
     }
 
-    const mobileLayer = container.querySelector(".md\\:hidden");
-    const desktopLayer = container.querySelector(".md\\:block");
-    expect(mobileLayer).toBeInTheDocument();
-    expect(mobileLayer).toHaveClass(
+    const imageLayer = container.querySelector("picture")?.parentElement;
+    expect(imageLayer).toHaveClass(
       "top-[3.3125rem]",
       "h-[clamp(18rem,38svh,21rem)]",
+      "md:inset-y-0",
+      "md:left-auto",
+      "md:h-auto",
+      "md:w-1/2",
     );
-    expect(mobileLayer?.lastElementChild).toHaveClass("bg-gradient-to-b");
-    expect(desktopLayer?.querySelector("img")).toHaveClass("object-center");
+    expect(imageLayer?.querySelectorAll(".bg-gradient-to-r")).toHaveLength(2);
+  });
+
+  it("keeps the approved Hero motion inventory with no initial=false override", () => {
+    expect(heroSliderSource.match(/<AnimatePresence\b/g) ?? []).toHaveLength(1);
+    expect(heroSliderSource).toContain('<AnimatePresence mode="wait">');
+    expect(heroSliderSource.match(/<motion\.div\b/g) ?? []).toHaveLength(1);
+    expect(heroSliderSource).toContain("key={currentSlide.id}");
+    expect(heroSliderSource).toContain("initial={{ opacity: 0, x: 100 }}");
+    expect(heroSliderSource).toContain("animate={{ opacity: 1, x: 0 }}");
+    expect(heroSliderSource).toContain("exit={{ opacity: 0, x: -100 }}");
+    expect(heroSliderSource).toContain(
+      'transition={{ duration: 0.5, ease: "easeInOut" }}',
+    );
+    expect(heroSliderSource).not.toContain("initial={false}");
+    expect(heroSliderSource).not.toContain("whileInView");
+    expect(heroSliderSource).not.toContain("viewport=");
+    expect(heroSliderSource).not.toContain("whileHover");
+    expect(heroSliderSource).not.toContain("whileTap");
+    expect(heroSliderSource).not.toContain("MotionConfig");
   });
 
   it.each(["es", "en"] as const)(
