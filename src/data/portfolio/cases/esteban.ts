@@ -1,5 +1,32 @@
 import { en, es } from "../../../i18n";
-import { definePortfolioCase } from "../types";
+import esteban480Avif from "../../../assets/portfolio/esteban/esteban-480.avif";
+import esteban480Webp from "../../../assets/portfolio/esteban/esteban-480.webp";
+import esteban768Avif from "../../../assets/portfolio/esteban/esteban-768.avif";
+import esteban768Webp from "../../../assets/portfolio/esteban/esteban-768.webp";
+import esteban1200Avif from "../../../assets/portfolio/esteban/esteban-1200.avif";
+import esteban1200Webp from "../../../assets/portfolio/esteban/esteban-1200.webp";
+import {
+  definePortfolioCase,
+  type ResponsivePortfolioCover,
+} from "../types";
+
+const estebanResponsiveCover = {
+  width: 1200,
+  height: 630,
+  fit: "cover",
+  sources: {
+    avif: [
+      { src: esteban480Avif, width: 480 },
+      { src: esteban768Avif, width: 768 },
+      { src: esteban1200Avif, width: 1200 },
+    ],
+    webp: [
+      { src: esteban480Webp, width: 480 },
+      { src: esteban768Webp, width: 768 },
+      { src: esteban1200Webp, width: 1200 },
+    ],
+  },
+} as const satisfies ResponsivePortfolioCover;
 
 const stackEs = [
   "Frontend: Next.js 15 (App Router) + TypeScript + Tailwind",
@@ -21,6 +48,7 @@ export const estebanCase = definePortfolioCase({
   portfolioOrder: 2,
   category: "web",
   cover: "/img/esteban.png",
+  responsiveCover: estebanResponsiveCover,
   actions: [
     {
       href: "https://estebanfirpo.com",
