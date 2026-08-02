@@ -11,12 +11,19 @@ Producción: [www.devrodri.com](https://www.devrodri.com)
 - Vitest 4
 - Node.js 22 y npm 9.9.4
 
-Las rutas públicas son `/`, `/portfolio` y el caso flagship de LEM-BOX en
-`/portfolio/lem-box`. El catálogo tipado admite un caso completo opcional,
-utilizado actualmente solo por LEM-BOX; los otros siete proyectos conservan
-sus tarjetas expandibles. La metadata del caso se actualiza en cliente y la
-metadata visible desde servidor queda diferida a una auditoría específica de
-visibilidad. Las rutas desconocidas muestran la vista de página no encontrada.
+El sitio usa Vite + React y se prerenderiza durante el build. Publica seis rutas
+estáticas:
+
+- Español: `/`, `/portfolio`, `/portfolio/lem-box`
+- Inglés: `/en`, `/en/portfolio`, `/en/portfolio/lem-box`
+
+Cada ruta entrega HTML y contenido visibles desde el servidor, incluidos su
+`title`, descripción, URL canonical, `hreflang`, Open Graph y metadata de
+Twitter localizados. Los datos estructurados se definen por ruta cuando
+corresponde, y React hidrata el cliente después de cargar el documento inicial.
+Las rutas desconocidas devuelven un HTTP 404 real localizado en español o
+inglés. El build también publica `robots.txt` y `sitemap.xml`, que enumera las
+seis URLs públicas.
 
 ## Desarrollo
 
@@ -46,7 +53,7 @@ npm run dev
 - El proyecto canónico de Vercel es `minisitio-rodrigo`; producción es `www.devrodri.com`.
 - Analytics es opcional y no recibe el contenido del formulario.
 - FormSubmit procesa los envíos de contacto.
-- La CSP, los headers de seguridad, el cache y el rewrite SPA viven en `vercel.json`.
+- La CSP, los headers de seguridad, el cache de assets y los tipos de contenido explícitos de `robots.txt` y `sitemap.xml` viven en `vercel.json`.
 - Consultá [SECURITY.md](SECURITY.md) para reportar vulnerabilidades de forma privada.
 
 Las fronteras principales del código son `src/i18n`, `src/data/portfolio`, `src/Components`, `src/pages` y los dos directorios de tests.
