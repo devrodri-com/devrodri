@@ -6,6 +6,8 @@ import { useLanguage } from "../i18n/useLanguage";
 import { Link } from "react-router-dom";
 import { getLocalizedPath } from "../routes/siteRoutes";
 
+const MotionLink = motion(Link);
+
 export default function CTASection() {
   const { language } = useLanguage();
   const t = translations[language];
@@ -47,20 +49,18 @@ export default function CTASection() {
       <h2 className="text-2xl sm:text-4xl font-bold mb-8 leading-snug">{t.call.title}</h2>
       <p className="text-lg text-gray-300 mb-8">{t.call.subtitle}</p>
 
-      <motion.div
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.97 }}
-        className="inline-block w-full sm:w-auto"
-      >
-        <Link
+      <div className="inline-block w-full sm:w-auto">
+        <MotionLink
           to={`${getLocalizedPath("home", language)}#contacto`}
           aria-label={language === "es" ? "Ir al formulario de contacto" : "Go to contact form"}
           data-analytics="cta-start-project"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.97 }}
           className="inline-flex items-center justify-center min-h-[44px] bg-white text-black font-semibold px-6 py-3 rounded-xl shadow-md hover:bg-gray-200 transition-all duration-300 focus-visible:ring-2 ring-offset-2 ring-white w-full sm:w-auto text-center"
         >
           {t.call.button}
-        </Link>
-      </motion.div>
+        </MotionLink>
+      </div>
       <p className="mt-1 text-sm text-gray-400">
         <a
           href="https://wa.me/17544653318?text=Hola%20Rodrigo%2C%20vengo%20de%20devrodri.com%20y%20quiero%20empezar%20un%20proyecto"
