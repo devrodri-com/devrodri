@@ -109,6 +109,27 @@ describe("CTASection", () => {
     );
   });
 
+  it("keeps the primary CTA as the only tab stop in its animated wrapper", () => {
+    renderCta("es");
+
+    const primaryCta = screen.getByRole("link", {
+      name: "Ir al formulario de contacto",
+    });
+    const wrapper = primaryCta.parentElement;
+
+    expect(wrapper).not.toBeNull();
+    expect(wrapper).not.toHaveAttribute("tabindex");
+    expect(wrapper).not.toHaveAttribute("role");
+    expect(primaryCta).toHaveAttribute("tabindex", "0");
+    expect(
+      wrapper?.querySelectorAll(
+        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      ),
+    ).toHaveLength(1);
+    expect(primaryCta).toHaveClass("focus-visible:ring-2");
+    expect(primaryCta).toHaveAttribute("data-analytics", "cta-start-project");
+  });
+
   it("removes the previous CTA copy without adding dashes or requests", () => {
     const publicCopy = JSON.stringify({
       es: translations.es.call,

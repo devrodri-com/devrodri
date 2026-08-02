@@ -285,3 +285,10 @@ export function getNotFoundMetadata(locale: Language): RouteMetadata {
     twitter: null,
   };
 }
+
+export function getMetadataForPathname(pathname: string): RouteMetadata {
+  return (
+    getPublicRoute(pathname)?.metadata ??
+    getNotFoundMetadata(getLocaleForPathname(pathname))
+  );
+}
