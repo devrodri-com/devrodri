@@ -111,25 +111,48 @@ describe("analytics", () => {
   });
 
   it.each([
-    "/",
-    "/portfolio",
-    "/portfolio/lem-box",
-    "/en",
-    "/en/portfolio",
-    "/en/portfolio/lem-box",
-  ])("classifies the public ES/EN route without an unknown bucket: %s", async (path) => {
-    vi.stubEnv("VITE_GA_ID", VALID_TEST_MEASUREMENT_ID);
-    const { trackPageView } = await import("../lib/analytics");
+    {
+      path: "/",
+      title: "Rodrigo Opalo | Sitios, sistemas y automatización",
+    },
+    {
+      path: "/portfolio",
+      title: "Portfolio: sitios, sistemas y productos | Rodrigo Opalo",
+    },
+    {
+      path: "/portfolio/lem-box",
+      title: "LEM-BOX: plataforma logística y producto propio | Rodrigo Opalo",
+    },
+    {
+      path: "/en",
+      title: "Rodrigo Opalo | Websites, systems and automation",
+    },
+    {
+      path: "/en/portfolio",
+      title: "Portfolio: websites, systems and products | Rodrigo Opalo",
+    },
+    {
+      path: "/en/portfolio/lem-box",
+      title: "LEM-BOX: logistics platform and own product | Rodrigo Opalo",
+    },
+  ] as const)(
+    "reports the canonical title for $path without an unknown bucket",
+    async ({ path, title }) => {
+      vi.stubEnv("VITE_GA_ID", VALID_TEST_MEASUREMENT_ID);
+      const { trackPageView } = await import("../lib/analytics");
 
-    trackPageView(path);
+      document.title = "Stale title from the previous route";
+      trackPageView(path);
 
-    expect(pageViewCommands()).toHaveLength(1);
-    expect(pageViewCommands()[0]?.[2]).toMatchObject({
-      page_location: `${window.location.origin}${path}`,
-      page_path: path,
-    });
-    expect(JSON.stringify(dataLayerCommands())).not.toContain("/unknown");
-  });
+      expect(pageViewCommands()).toHaveLength(1);
+      expect(pageViewCommands()[0]?.[2]).toMatchObject({
+        page_location: `${window.location.origin}${path}`,
+        page_path: path,
+        page_title: title,
+      });
+      expect(JSON.stringify(dataLayerCommands())).not.toContain("/unknown");
+    },
+  );
 
   it("keeps allowlisted campaign attribution only on the first pageview", async () => {
     vi.stubEnv("VITE_GA_ID", VALID_TEST_MEASUREMENT_ID);
@@ -140,7 +163,7 @@ describe("analytics", () => {
     );
     const { trackPageView } = await import("../lib/analytics");
 
-    document.title = "Inicio";
+    document.title = "Stale title before Home";
     trackPageView(window.location.pathname);
 
     window.history.replaceState(
@@ -148,17 +171,17 @@ describe("analytics", () => {
       "",
       "/portfolio?utm_source=must-not-persist#sensitive",
     );
-    document.title = "Portfolio";
+    document.title = "Stale title before Portfolio";
     trackPageView(window.location.pathname);
 
     expect(pageViewCommands()).toHaveLength(2);
     expect(pageViewCommands()[0]?.[2]).toEqual({
-      page_title: "Inicio",
+      page_title: "Rodrigo Opalo | Sitios, sistemas y automatización",
       page_location: `${window.location.origin}/?utm_source=google&utm_medium=cpc&utm_campaign=lanzamiento`,
       page_path: "/",
     });
     expect(pageViewCommands()[1]?.[2]).toEqual({
-      page_title: "Portfolio",
+      page_title: "Portfolio: sitios, sistemas y productos | Rodrigo Opalo",
       page_location: `${window.location.origin}/portfolio`,
       page_path: "/portfolio",
     });
@@ -218,14 +241,16 @@ describe("analytics", () => {
     {
       locale: "es",
       sensitivePath: "/client/alice@example.com?token=private#message",
+      title: "Página no encontrada | devrodri",
     },
     {
       locale: "en",
       sensitivePath: "/en/client/alice@example.com?token=private#message",
+      title: "Page not found | devrodri",
     },
   ] as const)(
     "maps an unrecognized $locale path to the shared non-sensitive 404 analytics bucket",
-    async ({ locale, sensitivePath }) => {
+    async ({ locale, sensitivePath, title }) => {
       vi.stubEnv("VITE_GA_ID", VALID_TEST_MEASUREMENT_ID);
       window.history.replaceState(null, "", sensitivePath);
       const { trackContactAttempt, trackPageView } = await import(
@@ -242,6 +267,7 @@ describe("analytics", () => {
       expect(pageViewCommands()[0]?.[2]).toMatchObject({
         page_location: `${window.location.origin}/404`,
         page_path: "/404",
+        page_title: title,
       });
       const events = analyticsEventCommands();
       expect(events[events.length - 1]?.[2]).toMatchObject({
@@ -283,7 +309,7 @@ describe("analytics", () => {
     trackPageView(window.location.pathname);
 
     expect(pageViewCommands()[0]?.[2]).toEqual({
-      page_title: document.title,
+      page_title: "LEM-BOX: plataforma logística y producto propio | Rodrigo Opalo",
       page_location: `${window.location.origin}/portfolio/lem-box?utm_source=google&utm_medium=cpc`,
       page_path: "/portfolio/lem-box",
     });

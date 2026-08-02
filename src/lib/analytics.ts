@@ -1,5 +1,8 @@
 import type { Language } from "../i18n/language";
-import { getPublicRoute } from "../routes/siteRoutes";
+import {
+  getMetadataForPathname,
+  getPublicRoute,
+} from "../routes/siteRoutes";
 
 const GOOGLE_TAG_SCRIPT_ID = "devrodri-google-tag";
 const GOOGLE_TAG_CONFIGURED_ATTRIBUTE = "data-devrodri-ga-configured";
@@ -146,7 +149,7 @@ export function trackPageView(pathname: string): void {
   hasTrackedPageView = true;
   setPageLocation(window.gtag, pageLocation);
   window.gtag("event", "page_view", {
-    page_title: document.title,
+    page_title: getMetadataForPathname(pathname).title,
     page_location: pageLocation,
     page_path: pagePath,
   });
