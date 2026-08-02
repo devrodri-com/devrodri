@@ -60,6 +60,14 @@ function renderApp(entry: TestRouteEntry) {
   );
 }
 
+function responsiveWidths(element: Element) {
+  const srcSet = element.getAttribute("srcset");
+  if (srcSet === null) throw new Error("Missing responsive srcset");
+  return Array.from(srcSet.matchAll(/\s(\d+)w(?:,|$)/g), (match) =>
+    Number(match[1]),
+  );
+}
+
 describe("application routing", () => {
   beforeEach(() => {
     localStorage.setItem("language", "es");
@@ -237,6 +245,33 @@ describe("application routing", () => {
         (source) => source.getAttribute("type"),
       ),
     ).toEqual(["image/avif", "image/webp"]);
+    const estebanHomeLink = screen.getByRole("link", {
+      name: "Ver este caso en el portfolio: Esteban Firpo · Miami Real Estate",
+    });
+    const estebanHomePicture = estebanHomeLink.querySelector("picture");
+    const estebanHomeImage = estebanHomePicture?.querySelector("img");
+    expect(estebanHomePicture).not.toBeNull();
+    expect(estebanHomePicture?.querySelectorAll("img")).toHaveLength(1);
+    expect(estebanHomeImage).toHaveAttribute("src", "/img/esteban.png");
+    expect(estebanHomeImage).toHaveAttribute("width", "1200");
+    expect(estebanHomeImage).toHaveAttribute("height", "630");
+    expect(estebanHomeImage).toHaveAttribute("loading", "lazy");
+    expect(estebanHomeImage).toHaveAttribute("decoding", "async");
+    expect(estebanHomeImage).not.toHaveAttribute("fetchpriority");
+    expect(estebanHomeImage).toHaveClass("object-cover");
+    const estebanHomeSources = Array.from(
+      estebanHomePicture?.querySelectorAll("source") ?? [],
+    );
+    expect(estebanHomeSources.map((source) => source.type)).toEqual([
+      "image/avif",
+      "image/webp",
+    ]);
+    for (const source of estebanHomeSources) {
+      expect(responsiveWidths(source)).toEqual([480, 768, 1200]);
+    }
+    expect(
+      document.getElementById("portfolio")?.querySelectorAll("picture"),
+    ).toHaveLength(2);
     expect(
       screen
         .getAllByRole("link", { name: /Ver este caso en el portfolio:/ })
@@ -319,6 +354,57 @@ describe("application routing", () => {
       expect(image).not.toHaveAttribute("fetchpriority");
       expect(image).toHaveClass("object-cover");
     }
+
+    const responsiveContracts = [
+      {
+        key: "esteban",
+        fallback: "/img/esteban.png",
+        dimensions: [1200, 630],
+        widths: [480, 768, 1200],
+      },
+      {
+        key: "federico",
+        fallback: "/img/federico-cover.jpg",
+        dimensions: [1200, 630],
+        widths: [480, 768, 1200],
+      },
+      {
+        key: "campings_demo",
+        fallback: "/img/campings-concept-cover.jpg",
+        dimensions: [1600, 800],
+        widths: [480, 768, 1200, 1600],
+      },
+    ] as const;
+
+    for (const contract of responsiveContracts) {
+      const card = document.getElementById(`portfolio-case-${contract.key}`);
+      const picture = card?.querySelector("picture");
+      const image = picture?.querySelector("img");
+      if (!(picture instanceof HTMLPictureElement) || !(image instanceof HTMLImageElement)) {
+        throw new Error(`Missing responsive Portfolio image: ${contract.key}`);
+      }
+
+      expect(picture.querySelectorAll("img")).toHaveLength(1);
+      expect(image).toHaveAttribute("src", contract.fallback);
+      expect(image).toHaveAttribute("width", String(contract.dimensions[0]));
+      expect(image).toHaveAttribute("height", String(contract.dimensions[1]));
+      expect(image).toHaveAttribute("loading", "lazy");
+      expect(image).toHaveAttribute("decoding", "async");
+      expect(image).not.toHaveAttribute("fetchpriority");
+      expect(image).toHaveClass("object-cover");
+      const sources = Array.from(picture.querySelectorAll("source"));
+      expect(sources.map((source) => source.type)).toEqual([
+        "image/avif",
+        "image/webp",
+      ]);
+      for (const source of sources) {
+        expect(responsiveWidths(source)).toEqual(contract.widths);
+      }
+    }
+
+    expect(
+      document.querySelectorAll('[id^="portfolio-case-"] picture'),
+    ).toHaveLength(4);
   });
 
   it("expands and contracts the other seven cases with the same ARIA contract", async () => {
