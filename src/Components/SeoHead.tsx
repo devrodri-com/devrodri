@@ -1,6 +1,7 @@
 import { Helmet } from "react-helmet-async";
 import { useLocation } from "react-router-dom";
 import {
+  getLocaleForPathname,
   getNotFoundMetadata,
   getPublicRoute,
 } from "../routes/siteRoutes";
@@ -9,13 +10,14 @@ import { getStructuredData } from "../seo/structuredData";
 export default function SeoHead() {
   const { pathname } = useLocation();
   const route = getPublicRoute(pathname);
-  const metadata = route?.metadata ?? getNotFoundMetadata();
+  const locale = route?.locale ?? getLocaleForPathname(pathname);
+  const metadata = route?.metadata ?? getNotFoundMetadata(locale);
   const structuredData =
     route === null ? null : getStructuredData(route.routeKey);
 
   return (
     <Helmet>
-      <html lang={route?.locale ?? "es"} />
+      <html lang={locale} />
       <title>{metadata.title}</title>
       <meta name="description" content={metadata.description} />
       <meta name="robots" content={metadata.robots} />

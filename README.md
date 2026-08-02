@@ -15,12 +15,18 @@ Production: [www.devrodri.com](https://www.devrodri.com)
 - Vitest 4
 - Node.js 22 and npm 9.9.4
 
-The public routes are `/`, `/portfolio`, and the LEM-BOX flagship case at
-`/portfolio/lem-box`. The typed portfolio catalog supports an optional case
-study, currently used only by LEM-BOX; the other seven projects keep their
-expandable cards. Case metadata is client-side, while server-visible metadata
-remains deferred to a dedicated visibility audit. Unknown routes render the
-application’s not-found view.
+The site uses Vite + React and is prerendered at build time. It publishes six
+static public routes:
+
+- Spanish: `/`, `/portfolio`, `/portfolio/lem-box`
+- English: `/en`, `/en/portfolio`, `/en/portfolio/lem-box`
+
+Each route ships server-visible HTML and content, including its localized
+`title`, description, canonical URL, `hreflang`, Open Graph, and Twitter
+metadata. Structured data is scoped per route where applicable, and React
+hydrates the client after the initial document loads. Unknown paths return a
+real HTTP 404 localized in Spanish or English. The build also publishes
+`robots.txt` and `sitemap.xml`, which lists the six public URLs.
 
 ## Local development
 
@@ -50,7 +56,7 @@ npm run dev
 - The canonical Vercel project is `minisitio-rodrigo`; production remains `www.devrodri.com`.
 - Google Analytics is enabled only when `VITE_GA_ID` is configured and does not receive contact-form contents.
 - Contact submissions are processed by FormSubmit.
-- `vercel.json` owns the Content Security Policy, security headers, caching, and SPA rewrite.
+- `vercel.json` owns the Content Security Policy, security headers, asset caching, and the explicit content types for `robots.txt` and `sitemap.xml`.
 - Vulnerability reporting guidance is in [SECURITY.md](SECURITY.md).
 
 ## Repository structure

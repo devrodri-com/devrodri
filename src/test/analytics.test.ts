@@ -214,30 +214,41 @@ describe("analytics", () => {
     expect(pageLocation).not.toContain("#");
   });
 
-  it("maps unrecognized paths to a non-sensitive 404 analytics bucket", async () => {
-    vi.stubEnv("VITE_GA_ID", VALID_TEST_MEASUREMENT_ID);
-    const sensitivePath = "/client/alice@example.com?token=private#message";
-    window.history.replaceState(null, "", sensitivePath);
-    const { trackContactAttempt, trackPageView } = await import(
-      "../lib/analytics"
-    );
+  it.each([
+    {
+      locale: "es",
+      sensitivePath: "/client/alice@example.com?token=private#message",
+    },
+    {
+      locale: "en",
+      sensitivePath: "/en/client/alice@example.com?token=private#message",
+    },
+  ] as const)(
+    "maps an unrecognized $locale path to the shared non-sensitive 404 analytics bucket",
+    async ({ locale, sensitivePath }) => {
+      vi.stubEnv("VITE_GA_ID", VALID_TEST_MEASUREMENT_ID);
+      window.history.replaceState(null, "", sensitivePath);
+      const { trackContactAttempt, trackPageView } = await import(
+        "../lib/analytics"
+      );
 
-    trackPageView(sensitivePath);
-    trackContactAttempt("en");
+      trackPageView(sensitivePath);
+      trackContactAttempt(locale);
 
-    const serializedCommands = JSON.stringify(dataLayerCommands());
-    expect(serializedCommands).not.toContain("alice@example.com");
-    expect(serializedCommands).not.toContain("token");
-    expect(serializedCommands).not.toContain("private");
-    expect(pageViewCommands()[0]?.[2]).toMatchObject({
-      page_location: `${window.location.origin}/404`,
-      page_path: "/404",
-    });
-    const events = analyticsEventCommands();
-    expect(events[events.length - 1]?.[2]).toMatchObject({
-      page_path: "/404",
-    });
-  });
+      const serializedCommands = JSON.stringify(dataLayerCommands());
+      expect(serializedCommands).not.toContain("alice@example.com");
+      expect(serializedCommands).not.toContain("token");
+      expect(serializedCommands).not.toContain("private");
+      expect(pageViewCommands()[0]?.[2]).toMatchObject({
+        page_location: `${window.location.origin}/404`,
+        page_path: "/404",
+      });
+      const events = analyticsEventCommands();
+      expect(events[events.length - 1]?.[2]).toMatchObject({
+        page_path: "/404",
+      });
+    },
+  );
 
   it.each([
     "/portfolio/lem-box",

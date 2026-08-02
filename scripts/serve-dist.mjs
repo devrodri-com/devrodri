@@ -67,7 +67,10 @@ async function resolveFile(pathname) {
     return { filePath: indexPath, status: 200 };
   }
 
-  return { filePath: path.join(distDirectory, "404.html"), status: 404 };
+  const notFoundFile = pathname === "/en" || pathname.startsWith("/en/")
+    ? path.join(distDirectory, "en", "404.html")
+    : path.join(distDirectory, "404.html");
+  return { filePath: notFoundFile, status: 404 };
 }
 
 const server = http.createServer(async (request, response) => {

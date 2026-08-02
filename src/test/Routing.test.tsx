@@ -1284,7 +1284,7 @@ describe("application routing", () => {
     });
   });
 
-  it("shows the Spanish not-found route with noindex metadata", async () => {
+  it("shows the complete localized Spanish not-found contract", async () => {
     renderApp("/ruta-inexistente");
 
     expect(
@@ -1293,58 +1293,115 @@ describe("application routing", () => {
         name: "Página no encontrada",
       }),
     ).toBeInTheDocument();
+    expect(
+      screen.getByText("La página que buscás no está disponible."),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Volver al inicio" }))
+      .toHaveAttribute("href", "/");
     await waitFor(() => {
+      expect(document.documentElement).toHaveAttribute("lang", "es");
+      expect(document.title).toBe("Página no encontrada | devrodri");
+      expect(document.head.querySelector('meta[name="description"]'))
+        .toHaveAttribute(
+          "content",
+          "La página solicitada no está disponible.",
+        );
       expect(document.head.querySelector('meta[name="robots"]')).toHaveAttribute(
         "content",
         "noindex, nofollow",
       );
+      expect(document.head.querySelector('link[rel="canonical"]')).toBeNull();
+      expect(document.head.querySelector('link[rel="alternate"]')).toBeNull();
+      expect(document.head.querySelector('meta[property^="og:"]')).toBeNull();
+      expect(document.head.querySelector('meta[name^="twitter:"]')).toBeNull();
+      expect(document.head.querySelector('script[type="application/ld+json"]'))
+        .toBeNull();
     });
   });
 
-  it("keeps the 404 footer at the viewport bottom through normal flow", async () => {
-    renderApp("/ruta-inexistente");
+  it.each([
+    { heading: "Página no encontrada", path: "/ruta-inexistente" },
+    { heading: "Page not found", path: "/en/missing-page" },
+  ])(
+    "keeps the $path footer at the viewport bottom through normal flow",
+    async ({ heading: expectedHeading, path }) => {
+      renderApp(path);
 
-    const heading = await screen.findByRole("heading", {
-      level: 1,
-      name: "Página no encontrada",
-    });
-    const main = heading.closest("main");
-    const shell = main?.parentElement;
-    const footer = screen.getByRole("contentinfo");
+      const heading = await screen.findByRole("heading", {
+        level: 1,
+        name: expectedHeading,
+      });
+      const main = heading.closest("main");
+      const shell = main?.parentElement;
+      const footer = screen.getByRole("contentinfo");
 
-    expect(main).toHaveClass("flex-1");
-    expect(shell).toHaveClass("min-h-screen", "flex", "flex-col");
-    expect(shell).toHaveStyle({ minHeight: "100dvh" });
-    expect(footer.parentElement).toBe(shell);
-    expect(shell).not.toHaveClass("fixed", "sticky", "absolute");
-    expect(main).not.toHaveClass("fixed", "sticky", "absolute");
-    expect(footer).not.toHaveClass("fixed", "sticky", "absolute");
-  });
+      expect(main).toHaveClass("flex-1");
+      expect(shell).toHaveClass("min-h-screen", "flex", "flex-col");
+      expect(shell).toHaveStyle({ minHeight: "100dvh" });
+      expect(footer.parentElement).toBe(shell);
+      expect(shell).not.toHaveClass("fixed", "sticky", "absolute");
+      expect(main).not.toHaveClass("fixed", "sticky", "absolute");
+      expect(footer).not.toHaveClass("fixed", "sticky", "absolute");
+    },
+  );
 
-  it("uses the default Spanish 404 for unregistered paths", async () => {
+  it("shows the complete localized English not-found contract", async () => {
     renderApp("/en/missing-page");
 
     expect(
       await screen.findByRole("heading", {
         level: 1,
-        name: "Página no encontrada",
+        name: "Page not found",
       }),
     ).toBeInTheDocument();
-  });
-
-  it("returns home from the not-found route through React Router", async () => {
-    const user = userEvent.setup();
-    renderApp("/ruta-inexistente");
-
-    await user.click(
-      await screen.findByRole("link", { name: "Volver al inicio" }),
-    );
-
     expect(
-      await screen.findByRole("heading", {
-        level: 1,
-        name: "Sitios web que comunican y convierten.",
-      }),
+      screen.getByText("The page you're looking for isn't available."),
     ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Back to home" }))
+      .toHaveAttribute("href", "/en");
+    await waitFor(() => {
+      expect(document.documentElement).toHaveAttribute("lang", "en");
+      expect(document.title).toBe("Page not found | devrodri");
+      expect(document.head.querySelector('meta[name="description"]'))
+        .toHaveAttribute("content", "The requested page isn't available.");
+      expect(document.head.querySelector('meta[name="robots"]')).toHaveAttribute(
+        "content",
+        "noindex, nofollow",
+      );
+      expect(document.head.querySelector('link[rel="canonical"]')).toBeNull();
+      expect(document.head.querySelector('link[rel="alternate"]')).toBeNull();
+      expect(document.head.querySelector('meta[property^="og:"]')).toBeNull();
+      expect(document.head.querySelector('meta[name^="twitter:"]')).toBeNull();
+      expect(document.head.querySelector('script[type="application/ld+json"]'))
+        .toBeNull();
+    });
   });
+
+  it.each([
+    {
+      cta: "Volver al inicio",
+      destinationHeading: "Sitios web que comunican y convierten.",
+      path: "/ruta-inexistente",
+    },
+    {
+      cta: "Back to home",
+      destinationHeading: "Websites built to communicate and convert.",
+      path: "/en/missing-page",
+    },
+  ])(
+    "returns to the localized home from $path through React Router",
+    async ({ cta, destinationHeading, path }) => {
+      const user = userEvent.setup();
+      renderApp(path);
+
+      await user.click(await screen.findByRole("link", { name: cta }));
+
+      expect(
+        await screen.findByRole("heading", {
+          level: 1,
+          name: destinationHeading,
+        }),
+      ).toBeInTheDocument();
+    },
+  );
 });

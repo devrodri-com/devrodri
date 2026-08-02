@@ -40,10 +40,25 @@ interface RewriteRule {
   destination: string;
 }
 
+interface FileSystemRouteRule {
+  handle: "filesystem";
+}
+
+interface NotFoundRouteRule {
+  caseSensitive?: boolean;
+  dest: string;
+  headers: Record<string, string>;
+  src: string;
+  status: number;
+}
+
+type RouteRule = FileSystemRouteRule | NotFoundRouteRule;
+
 interface VercelConfiguration {
   headers: HeaderRule[];
   outputDirectory: string;
   rewrites: RewriteRule[];
+  routes: RouteRule[];
   trailingSlash: boolean;
 }
 
@@ -123,6 +138,43 @@ function parseRewriteRule(value: unknown): RewriteRule | null {
   };
 }
 
+function parseRouteRule(value: unknown): RouteRule | null {
+  if (!isRecord(value)) return null;
+
+  if (value.handle === "filesystem") {
+    return { handle: "filesystem" };
+  }
+
+  if (!isRecord(value.headers)) return null;
+  const parsedHeaders: Record<string, string> = {};
+  for (const [key, headerValue] of Object.entries(value.headers)) {
+    if (typeof headerValue !== "string") return null;
+    parsedHeaders[key] = headerValue;
+  }
+  if (Object.keys(parsedHeaders).length === 0) return null;
+
+  if (
+    typeof value.src !== "string" ||
+    typeof value.dest !== "string" ||
+    typeof value.status !== "number" ||
+    value.continue !== undefined ||
+    (value.caseSensitive !== undefined &&
+      typeof value.caseSensitive !== "boolean")
+  ) {
+    return null;
+  }
+
+  return {
+    ...(value.caseSensitive === undefined
+      ? {}
+      : { caseSensitive: value.caseSensitive }),
+    dest: value.dest,
+    headers: parsedHeaders,
+    src: value.src,
+    status: value.status,
+  };
+}
+
 function parseVercelConfiguration(value: unknown): VercelConfiguration | null {
   if (!isRecord(value)) return null;
   if (
@@ -131,16 +183,22 @@ function parseVercelConfiguration(value: unknown): VercelConfiguration | null {
   ) {
     return null;
   }
-  if (!Array.isArray(value.headers) || !Array.isArray(value.rewrites)) {
+  if (
+    !Array.isArray(value.headers) ||
+    !Array.isArray(value.rewrites) ||
+    !Array.isArray(value.routes)
+  ) {
     return null;
   }
 
   const parsedHeaders = value.headers.map(parseHeaderRule);
   const parsedRewrites = value.rewrites.map(parseRewriteRule);
+  const parsedRoutes = value.routes.map(parseRouteRule);
 
   if (
     parsedHeaders.some((rule) => rule === null) ||
-    parsedRewrites.some((rule) => rule === null)
+    parsedRewrites.some((rule) => rule === null) ||
+    parsedRoutes.some((rule) => rule === null)
   ) {
     return null;
   }
@@ -152,6 +210,9 @@ function parseVercelConfiguration(value: unknown): VercelConfiguration | null {
     outputDirectory: value.outputDirectory,
     rewrites: parsedRewrites.filter(
       (rule): rule is RewriteRule => rule !== null,
+    ),
+    routes: parsedRoutes.filter(
+      (rule): rule is RouteRule => rule !== null,
     ),
     trailingSlash: value.trailingSlash,
   };
@@ -363,6 +424,59 @@ describe("web delivery policy", () => {
     expect(configuration.outputDirectory).toBe("dist");
     expect(configuration.trailingSlash).toBe(false);
     expect(configuration.rewrites).toEqual([]);
+    const localizedNotFoundRouteSource =
+      "/en/(?!portfolio(?:/lem-box)?/?$).+$";
+    const canonicalRouteSecurityHeaders = Object.fromEntries(
+      globalRule.headers.map(({ key, value }) => [key, value]),
+    );
+    expect(configuration.routes).toEqual([
+      {
+        caseSensitive: true,
+        dest: "/en/404.html",
+        headers: canonicalRouteSecurityHeaders,
+        src: localizedNotFoundRouteSource,
+        status: 404,
+      },
+    ]);
+    expect(source).not.toContain('"handle": "filesystem"');
+    expect(
+      source.match(/"Content-Security-Policy"\s*:/g) ?? [],
+    ).toHaveLength(1);
+
+    const [localizedNotFoundTerminalRoute] = configuration.routes;
+    expect(localizedNotFoundTerminalRoute).toBeDefined();
+    if (
+      localizedNotFoundTerminalRoute === undefined ||
+      !("dest" in localizedNotFoundTerminalRoute)
+    ) {
+      throw new Error("The localized 404 terminal route is missing");
+    }
+    expect(localizedNotFoundTerminalRoute.headers).toEqual(
+      canonicalRouteSecurityHeaders,
+    );
+    expect("continue" in localizedNotFoundTerminalRoute).toBe(false);
+    expect(localizedNotFoundTerminalRoute.dest).toBe("/en/404.html");
+    expect(localizedNotFoundTerminalRoute.status).toBe(404);
+    expect(
+      Object.keys(localizedNotFoundTerminalRoute.headers).filter(
+        (key) => key.toLowerCase() === "content-security-policy",
+      ),
+    ).toHaveLength(1);
+    const localizedNotFoundPattern = new RegExp(
+      localizedNotFoundTerminalRoute.src,
+    );
+    expect([
+      "/en",
+      "/en/",
+      "/en/portfolio",
+      "/en/portfolio/",
+      "/en/portfolio/lem-box",
+      "/en/portfolio/lem-box/",
+    ].some((pathname) => localizedNotFoundPattern.test(pathname))).toBe(false);
+    expect([
+      "/en/no-existe",
+      "/en/portfolio/no-existe",
+    ].every((pathname) => localizedNotFoundPattern.test(pathname))).toBe(true);
     expect(source).not.toContain('"destination": "/index.html"');
   });
 });

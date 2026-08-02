@@ -91,23 +91,71 @@ try {
     assert.ok(html.includes('name="robots" content="index, follow"'), pathname);
   }
 
-  const invalidPaths = [
-    "/no-existe",
-    "/portfolio/no-existe",
-    "/en/no-existe",
-    "/en/portfolio/no-existe",
-  ];
-  for (const pathname of invalidPaths) {
+  const invalidPaths = new Map([
+    [
+      "/no-existe",
+      {
+        lang: "es",
+        heading: "Página no encontrada",
+        cta: "Volver al inicio",
+        ctaPath: "/",
+      },
+    ],
+    [
+      "/portfolio/no-existe",
+      {
+        lang: "es",
+        heading: "Página no encontrada",
+        cta: "Volver al inicio",
+        ctaPath: "/",
+      },
+    ],
+    [
+      "/en/no-existe",
+      {
+        lang: "en",
+        heading: "Page not found",
+        cta: "Back to home",
+        ctaPath: "/en",
+      },
+    ],
+    [
+      "/en/portfolio/no-existe",
+      {
+        lang: "en",
+        heading: "Page not found",
+        cta: "Back to home",
+        ctaPath: "/en",
+      },
+    ],
+  ]);
+  const invalidBodies = [];
+  for (const [pathname, expected] of invalidPaths) {
     const response = await request(pathname);
     assert.equal(response.status, 404, pathname);
+    assert.equal(
+      response.headers.get("content-type"),
+      "text/html; charset=utf-8",
+      pathname,
+    );
     const html = await response.text();
-    assert.ok(html.includes("Página no encontrada"), pathname);
+    invalidBodies.push(html);
+    assert.ok(html.includes(`<html lang="${expected.lang}"`), pathname);
+    assert.ok(html.includes(expected.heading), pathname);
+    assert.ok(html.includes(expected.cta), pathname);
+    assert.ok(html.includes(`href="${expected.ctaPath}"`), pathname);
     assert.ok(
       html.includes('name="robots" content="noindex, nofollow"'),
       pathname,
     );
+    assert.ok(!html.includes('rel="canonical"'), pathname);
+    assert.ok(!html.includes('rel="alternate"'), pathname);
+    assert.ok(!html.includes('property="og:'), pathname);
+    assert.ok(!html.includes('name="twitter:'), pathname);
+    assert.ok(!html.includes('type="application/ld+json"'), pathname);
     assert.ok(!html.includes("Sitios web que comunican y convierten."), pathname);
   }
+  assert.equal(new Set(invalidBodies).size, 2);
 
   const trailingSlashRedirects = new Map([
     ["/portfolio/?source=vis01", "/portfolio?source=vis01"],

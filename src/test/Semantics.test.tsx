@@ -27,6 +27,7 @@ const publicRoutes = [
   { path: "/en/portfolio", skip: "Skip to main content" },
   { path: "/en/portfolio/lem-box", skip: "Skip to main content" },
   { path: "/no-existe", skip: "Saltar al contenido principal" },
+  { path: "/en/no-existe", skip: "Skip to main content" },
 ] as const;
 
 function renderApp(entry: TestEntry, controls?: React.ReactNode) {
@@ -125,23 +126,31 @@ describe("semantic navigation contracts", () => {
     expect(Element.prototype.scrollIntoView).not.toHaveBeenCalled();
   });
 
-  it("focuses the shared main once on direct 404 access and preserves its flex shell", async () => {
-    renderApp("/no-existe");
-    const main = await screen.findByRole("main");
-    await waitFor(() => expect(main).toHaveFocus());
+  it.each([
+    { heading: "Página no encontrada", locale: "es", path: "/no-existe" },
+    { heading: "Page not found", locale: "en", path: "/en/no-existe" },
+  ])(
+    "focuses the shared main once on direct $locale 404 access and preserves its flex shell",
+    async ({ heading, locale, path }) => {
+      renderApp(path);
+      await screen.findByRole("heading", { level: 1, name: heading });
+      const main = await screen.findByRole("main");
+      await waitFor(() => expect(main).toHaveFocus());
 
-    expect(main).toHaveClass("flex", "flex-1");
-    expect(main.parentElement).toHaveClass("flex", "flex-col", "min-h-screen");
-    expect(main.parentElement).toHaveStyle({ minHeight: "100dvh" });
-    expect(main.firstElementChild).toHaveClass("flex-1");
-    expect(main.nextElementSibling).toBe(screen.getByRole("contentinfo"));
-    await waitFor(() => {
-      expect(document.head.querySelector('meta[name="robots"]')).toHaveAttribute(
-        "content",
-        "noindex, nofollow",
-      );
-    });
-  });
+      expect(document.documentElement).toHaveAttribute("lang", locale);
+      expect(main).toHaveClass("flex", "flex-1");
+      expect(main.parentElement).toHaveClass("flex", "flex-col", "min-h-screen");
+      expect(main.parentElement).toHaveStyle({ minHeight: "100dvh" });
+      expect(main.firstElementChild).toHaveClass("flex-1");
+      expect(main.nextElementSibling).toBe(screen.getByRole("contentinfo"));
+      await waitFor(() => {
+        expect(document.head.querySelector('meta[name="robots"]')).toHaveAttribute(
+          "content",
+          "noindex, nofollow",
+        );
+      });
+    },
+  );
 
   it("activates the skip link and focuses main content", async () => {
     const user = userEvent.setup();
@@ -203,6 +212,31 @@ describe("semantic navigation contracts", () => {
       name: "Sitios web que comunican y convierten.",
     });
     await waitFor(() => expect(notFoundMain).toHaveFocus());
+  });
+
+  it("localizes an English 404 reached through client navigation", async () => {
+    const user = userEvent.setup();
+    renderApp(
+      "/en/portfolio",
+      <Link to="/en/client-missing">Open missing English route</Link>,
+    );
+    const main = await screen.findByRole("main");
+
+    await user.click(
+      await screen.findByRole("link", { name: "Open missing English route" }),
+    );
+
+    await screen.findByRole("heading", { level: 1, name: "Page not found" });
+    expect(screen.getByRole("link", { name: "Back to home" }))
+      .toHaveAttribute("href", "/en");
+    await waitFor(() => {
+      expect(main).toHaveFocus();
+      expect(document.documentElement).toHaveAttribute("lang", "en");
+      expect(document.head.querySelector('meta[name="robots"]')).toHaveAttribute(
+        "content",
+        "noindex, nofollow",
+      );
+    });
   });
 
   it("focuses a valid hash target and removes only its temporary tabindex", async () => {
@@ -293,6 +327,51 @@ describe("semantic navigation contracts", () => {
     await screen.findByRole("heading", { level: 1, name: "Algunos trabajos" });
     await waitFor(() => expect(main).toHaveFocus());
     expect(window.scrollTo).not.toHaveBeenCalled();
+  });
+
+  it("preserves localized 404 content and focus through Back and Forward", async () => {
+    const user = userEvent.setup();
+    render(
+      <MemoryRouter
+        initialEntries={["/", "/no-existe", "/en/no-existe"]}
+        initialIndex={2}
+      >
+        <RoutedLanguageProvider>
+          <App />
+          <HistoryControls />
+        </RoutedLanguageProvider>
+      </MemoryRouter>,
+    );
+    const main = await screen.findByRole("main");
+    await screen.findByRole("heading", { level: 1, name: "Page not found" });
+    await waitFor(() => expect(main).toHaveFocus());
+
+    await user.click(screen.getByRole("button", { name: "Back test" }));
+    await screen.findByRole("heading", {
+      level: 1,
+      name: "Página no encontrada",
+    });
+    await waitFor(() => expect(main).toHaveFocus());
+    expect(document.documentElement).toHaveAttribute("lang", "es");
+
+    await user.click(screen.getByRole("button", { name: "Back test" }));
+    await screen.findByRole("heading", {
+      level: 1,
+      name: "Sitios web que comunican y convierten.",
+    });
+    await waitFor(() => expect(main).toHaveFocus());
+
+    await user.click(screen.getByRole("button", { name: "Forward test" }));
+    await screen.findByRole("heading", {
+      level: 1,
+      name: "Página no encontrada",
+    });
+    await waitFor(() => expect(main).toHaveFocus());
+
+    await user.click(screen.getByRole("button", { name: "Forward test" }));
+    await screen.findByRole("heading", { level: 1, name: "Page not found" });
+    await waitFor(() => expect(main).toHaveFocus());
+    expect(document.documentElement).toHaveAttribute("lang", "en");
   });
 
   it("does not move focus or scroll for query-only navigation", async () => {

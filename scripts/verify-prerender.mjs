@@ -148,13 +148,18 @@ function inlineScripts(html) {
   ];
 }
 
-const vercelConfiguration = JSON.parse(
-  await readFile(path.join(projectRoot, "vercel.json"), "utf8"),
+const vercelConfigurationSource = await readFile(
+  path.join(projectRoot, "vercel.json"),
+  "utf8",
 );
+const vercelConfiguration = JSON.parse(vercelConfigurationSource);
 const globalHeaderRule = vercelConfiguration.headers.find(
   (rule) => rule.source === "/(.*)",
 );
 assert.ok(globalHeaderRule, "Missing global Vercel header rule");
+const canonicalSecurityHeaders = Object.fromEntries(
+  globalHeaderRule.headers.map((header) => [header.key, header.value]),
+);
 const contentSecurityPolicy =
   globalHeaderRule.headers.find(
     (header) => header.key.toLowerCase() === "content-security-policy",
@@ -328,26 +333,65 @@ assert.equal(
   1,
 );
 
-const notFoundHtml = await readFile(
-  path.join(distDirectory, "404.html"),
-  "utf8",
-);
-assert.match(notFoundHtml, /<html lang="es"/);
-assert.ok(notFoundHtml.includes("Página no encontrada"));
-assert.ok(notFoundHtml.includes('name="robots" content="noindex, nofollow"'));
-assert.equal(count(notFoundHtml, "<title"), 1);
-assert.equal(count(notFoundHtml, 'name="description"'), 1);
-assert.equal(count(notFoundHtml, 'name="robots"'), 1);
-assert.equal(count(notFoundHtml, 'rel="canonical"'), 0);
-assert.equal(count(notFoundHtml, 'rel="alternate"'), 0);
-assert.equal(count(notFoundHtml, 'property="og:'), 0);
-assert.equal(count(notFoundHtml, 'name="twitter:'), 0);
-assert.equal(inlineScripts(notFoundHtml).length, 0);
-assert.ok(notFoundHtml.includes("<main"));
-assert.ok(!notFoundHtml.includes("Sitios web que comunican y convierten."));
-assert.ok(!notFoundHtml.includes("Websites built to communicate and convert."));
-assert.ok(!notFoundHtml.includes("<!--app-head-->"));
-assert.ok(!notFoundHtml.includes("<!--app-html-->"));
+const expectedNotFoundArtifacts = [
+  {
+    file: "404.html",
+    lang: "es",
+    title: "Página no encontrada | devrodri",
+    description: "La página solicitada no está disponible.",
+    heading: "Página no encontrada",
+    body: "La página que buscás no está disponible.",
+    cta: "Volver al inicio",
+    ctaPath: "/",
+  },
+  {
+    file: "en/404.html",
+    lang: "en",
+    title: "Page not found | devrodri",
+    description: "The requested page isn't available.",
+    heading: "Page not found",
+    body: "The page you're looking for isn't available.",
+    cta: "Back to home",
+    ctaPath: "/en",
+  },
+];
+const notFoundDocuments = [];
+for (const artifact of expectedNotFoundArtifacts) {
+  const html = await readFile(path.join(distDirectory, artifact.file), "utf8");
+  notFoundDocuments.push(html);
+
+  assert.match(html, new RegExp(`<html lang="${artifact.lang}"`));
+  assert.ok(html.includes(`<title data-rh="true">${artifact.title}</title>`));
+  assert.ok(
+    html.includes(
+      `name="description" content="${escapeHtmlAttribute(artifact.description)}"`,
+    ),
+    artifact.file,
+  );
+  assert.ok(html.includes(artifact.heading), artifact.file);
+  assert.ok(
+    html.includes(artifact.body.replaceAll("'", "&#x27;")),
+    artifact.file,
+  );
+  assert.ok(html.includes(`href="${artifact.ctaPath}"`), artifact.file);
+  assert.ok(html.includes(artifact.cta), artifact.file);
+  assert.ok(html.includes('name="robots" content="noindex, nofollow"'));
+  assert.equal(count(html, "<title"), 1);
+  assert.equal(count(html, 'name="description"'), 1);
+  assert.equal(count(html, 'name="robots"'), 1);
+  assert.equal(count(html, 'rel="canonical"'), 0);
+  assert.equal(count(html, 'rel="alternate"'), 0);
+  assert.equal(count(html, 'property="og:'), 0);
+  assert.equal(count(html, 'name="twitter:'), 0);
+  assert.equal(inlineScripts(html).length, 0);
+  assert.equal(count(html, "<main"), 1);
+  assert.equal(count(html, "<h1"), 1);
+  assert.ok(!html.includes("Sitios web que comunican y convierten."));
+  assert.ok(!html.includes("Websites built to communicate and convert."));
+  assert.ok(!html.includes("<!--app-head-->"));
+  assert.ok(!html.includes("<!--app-html-->"));
+}
+assert.equal(new Set(notFoundDocuments).size, expectedNotFoundArtifacts.length);
 
 const scriptSourceDirective = contentSecurityPolicy
   .split(";")
@@ -399,6 +443,55 @@ assert.equal(vercelConfiguration.outputDirectory, "dist");
 assert.equal(vercelConfiguration.trailingSlash, false);
 assert.deepEqual(vercelConfiguration.rewrites, []);
 assert.ok(!JSON.stringify(vercelConfiguration).includes('"/index.html"'));
+const localizedNotFoundRouteSource =
+  "/en/(?!portfolio(?:/lem-box)?/?$).+$";
+assert.deepEqual(vercelConfiguration.routes, [
+  {
+    src: localizedNotFoundRouteSource,
+    caseSensitive: true,
+    status: 404,
+    dest: "/en/404.html",
+    headers: canonicalSecurityHeaders,
+  },
+]);
+assert.ok(!JSON.stringify(vercelConfiguration.routes).includes('"handle"'));
+assert.equal(
+  vercelConfigurationSource.match(/"Content-Security-Policy"\s*:/g)?.length ?? 0,
+  1,
+);
+
+const [localizedNotFoundTerminalRoute] = vercelConfiguration.routes;
+assert.equal(localizedNotFoundTerminalRoute.dest, "/en/404.html");
+assert.equal(localizedNotFoundTerminalRoute.status, 404);
+assert.ok(!("continue" in localizedNotFoundTerminalRoute));
+assert.deepEqual(
+  localizedNotFoundTerminalRoute.headers,
+  canonicalSecurityHeaders,
+);
+assert.equal(
+  Object.keys(localizedNotFoundTerminalRoute.headers).filter(
+    (key) => key.toLowerCase() === "content-security-policy",
+  ).length,
+  1,
+);
+
+const localizedNotFoundRoute = new RegExp(localizedNotFoundRouteSource);
+for (const publicEnglishPath of [
+  "/en",
+  "/en/",
+  "/en/portfolio",
+  "/en/portfolio/",
+  "/en/portfolio/lem-box",
+  "/en/portfolio/lem-box/",
+]) {
+  assert.equal(localizedNotFoundRoute.test(publicEnglishPath), false);
+}
+for (const invalidEnglishPath of [
+  "/en/no-existe",
+  "/en/portfolio/no-existe",
+]) {
+  assert.equal(localizedNotFoundRoute.test(invalidEnglishPath), true);
+}
 
 function configuredContentType(source) {
   const rule = vercelConfiguration.headers.find(

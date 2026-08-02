@@ -123,11 +123,16 @@ for (const route of PUBLIC_ROUTES) {
   await writeFile(outputPath, createDocument(result));
 }
 
-const notFoundResult = await render("/__not-found__");
-await writeFile(
-  path.join(distDirectory, "404.html"),
-  createDocument(notFoundResult),
-);
+const notFoundArtifacts = [
+  { pathname: "/__not-found__", file: "404.html" },
+  { pathname: "/en/__not-found__", file: "en/404.html" },
+];
+for (const artifact of notFoundArtifacts) {
+  const result = await render(artifact.pathname);
+  const outputPath = path.join(distDirectory, artifact.file);
+  await mkdir(path.dirname(outputPath), { recursive: true });
+  await writeFile(outputPath, createDocument(result));
+}
 
 await writeFile(
   path.join(distDirectory, "robots.txt"),
@@ -154,4 +159,6 @@ await writeFile(
   ].join("\n"),
 );
 
-console.log(`Prerendered ${PUBLIC_ROUTES.length} public routes and 404.html`);
+console.log(
+  `Prerendered ${PUBLIC_ROUTES.length} public routes and ${notFoundArtifacts.length} localized 404 artifacts`,
+);

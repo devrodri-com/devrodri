@@ -246,7 +246,13 @@ export function getLocalizedPath(
 }
 
 export function getLocaleForPathname(pathname: string): Language {
-  return getPublicRoute(pathname)?.locale ?? "es";
+  const normalizedPathname = normalizePathname(pathname);
+  const publicLocale = getPublicRoute(normalizedPathname)?.locale;
+  if (publicLocale !== undefined) return publicLocale;
+
+  return normalizedPathname === "/en" || normalizedPathname.startsWith("/en/")
+    ? "en"
+    : "es";
 }
 
 export function getEquivalentLocalePath(
@@ -258,14 +264,24 @@ export function getEquivalentLocalePath(
   return getLocalizedPath(currentRoute.page, locale);
 }
 
-export function getNotFoundMetadata(): RouteMetadata {
+export function getNotFoundMetadata(locale: Language): RouteMetadata {
+  const localized = locale === "es"
+    ? {
+        description: "La página solicitada no está disponible.",
+        title: "Página no encontrada | devrodri",
+      }
+    : {
+        description: "The requested page isn't available.",
+        title: "Page not found | devrodri",
+      };
+
   return {
     canonical: null,
-    description: "La página solicitada no está disponible.",
+    description: localized.description,
     hreflang: [],
     og: null,
     robots: "noindex, nofollow",
-    title: "Página no encontrada | devrodri",
+    title: localized.title,
     twitter: null,
   };
 }

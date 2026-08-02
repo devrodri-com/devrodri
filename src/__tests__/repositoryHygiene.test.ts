@@ -169,4 +169,104 @@ describe("repository hygiene", () => {
       fs.readFileSync(repositoryPath("SECURITY.md"), "utf8"),
     ).toContain("Private Vulnerability Reporting");
   });
+
+  it("documents the current static delivery contract consistently", () => {
+    const documentation = [
+      {
+        path: "README.md",
+        descriptionLabel: "description",
+        localizedContract: [
+          /prerendered at build time/i,
+          /server-visible HTML and content/i,
+          /structured data is scoped per route/i,
+          /hydrates the client after/i,
+          /real HTTP 404 localized in Spanish or English/i,
+          /sitemap\.xml.*, which lists the six public URLs/is,
+        ],
+      },
+      {
+        path: "README.es.md",
+        descriptionLabel: "descripción",
+        localizedContract: [
+          /prerenderiza durante el build/i,
+          /HTML y contenido visibles desde el servidor/i,
+          /datos estructurados se definen por ruta/i,
+          /hidrata el cliente después/i,
+          /HTTP 404 real localizado en español o\s+inglés/i,
+          /sitemap\.xml.*, que enumera las\s+seis URLs públicas/is,
+        ],
+      },
+      {
+        path: "README.en.md",
+        descriptionLabel: "description",
+        localizedContract: [
+          /prerendered at build time/i,
+          /server-visible HTML and content/i,
+          /structured data is scoped per route/i,
+          /hydrates the client after/i,
+          /real HTTP 404 localized in Spanish or English/i,
+          /sitemap\.xml.*, which lists the six public URLs/is,
+        ],
+      },
+    ];
+    const publicRoutes = [
+      "`/`",
+      "`/portfolio`",
+      "`/portfolio/lem-box`",
+      "`/en`",
+      "`/en/portfolio`",
+      "`/en/portfolio/lem-box`",
+    ];
+    const serverMetadata = [
+      "`title`",
+      "canonical",
+      "`hreflang`",
+      "Open Graph",
+      "Twitter",
+    ];
+    const obsoleteClaims = [
+      /metadata (?:visible desde (?:el )?servidor|server-visible).*diferida/is,
+      /server-visible metadata remains deferred/is,
+      /(?:case metadata is (?:client-side|updated client-side)|metadata .*se actualiza en cliente)/i,
+      /SEO.*(?:only|únicamente).*Helmet/is,
+      /(?:generic head|head genérico)/i,
+      /(?:Portfolio|LEM-BOX).*no (?:has|tiene).*HTML/is,
+      /(?:catch-all 200|SPA rewrite|rewrite SPA)/i,
+      /(?:robots|sitemap|404).*(?:pending|pendiente)/i,
+      /(?:Google (?:has )?indexed|Google indexó|indexad[ao] por Google)/i,
+    ];
+
+    for (const {
+      path: documentationPath,
+      descriptionLabel,
+      localizedContract,
+    } of documentation) {
+      const readme = fs.readFileSync(
+        repositoryPath(documentationPath),
+        "utf8",
+      );
+
+      expect(readme).toContain("Vite");
+      expect(readme).toContain("React");
+      expect(readme).toContain("`robots.txt`");
+      expect(readme).toContain("`sitemap.xml`");
+      expect(readme).toContain(descriptionLabel);
+
+      for (const publicRoute of publicRoutes) {
+        expect(readme).toContain(publicRoute);
+      }
+
+      for (const metadataField of serverMetadata) {
+        expect(readme).toContain(metadataField);
+      }
+
+      for (const contractPattern of localizedContract) {
+        expect(readme).toMatch(contractPattern);
+      }
+
+      for (const obsoleteClaim of obsoleteClaims) {
+        expect(readme).not.toMatch(obsoleteClaim);
+      }
+    }
+  });
 });
