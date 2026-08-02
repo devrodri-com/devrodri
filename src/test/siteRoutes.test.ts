@@ -3,6 +3,7 @@ import {
   PUBLIC_ROUTES,
   SITE_ORIGIN,
   getEquivalentLocalePath,
+  getLocaleForPathname,
   getLocalizedPath,
   getNotFoundMetadata,
   getPublicRoute,
@@ -206,13 +207,38 @@ describe("public route registry", () => {
     expect(getPublicRoute("/es")).toBeNull();
   });
 
-  it("keeps NotFound closed to indexing and social metadata", () => {
-    const metadata = getNotFoundMetadata();
-
-    expect(metadata.robots).toBe("noindex, nofollow");
-    expect(metadata.canonical).toBeNull();
-    expect(metadata.hreflang).toEqual([]);
-    expect(metadata.og).toBeNull();
-    expect(metadata.twitter).toBeNull();
+  it("derives an unknown route locale from the exact lowercase /en prefix", () => {
+    expect(getLocaleForPathname("/en/no-existe")).toBe("en");
+    expect(getLocaleForPathname("/en/portfolio/no-existe")).toBe("en");
+    expect(getLocaleForPathname("/en/private?source=test#details")).toBe("en");
+    expect(getLocaleForPathname("/no-existe")).toBe("es");
+    expect(getLocaleForPathname("/portfolio/no-existe")).toBe("es");
+    expect(getLocaleForPathname("/EN/no-existe")).toBe("es");
   });
+
+  it.each([
+    {
+      description: "La página solicitada no está disponible.",
+      locale: "es",
+      title: "Página no encontrada | devrodri",
+    },
+    {
+      description: "The requested page isn't available.",
+      locale: "en",
+      title: "Page not found | devrodri",
+    },
+  ] as const)(
+    "keeps the $locale NotFound metadata localized and closed to indexing",
+    ({ description, locale, title }) => {
+      const metadata = getNotFoundMetadata(locale);
+
+      expect(metadata.title).toBe(title);
+      expect(metadata.description).toBe(description);
+      expect(metadata.robots).toBe("noindex, nofollow");
+      expect(metadata.canonical).toBeNull();
+      expect(metadata.hreflang).toEqual([]);
+      expect(metadata.og).toBeNull();
+      expect(metadata.twitter).toBeNull();
+    },
+  );
 });

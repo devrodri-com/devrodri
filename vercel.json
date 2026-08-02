@@ -56,5 +56,21 @@
       ]
     }
   ],
-  "rewrites": []
+  "rewrites": [],
+  "routes": [
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/en(?:/.*)?",
+      "caseSensitive": true,
+      "status": 404,
+      "dest": "/en/404.html"
+    },
+    {
+      "src": "/(.*)",
+      "status": 404,
+      "dest": "/404.html"
+    }
+  ]
 }

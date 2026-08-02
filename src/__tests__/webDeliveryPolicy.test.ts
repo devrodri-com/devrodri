@@ -40,10 +40,24 @@ interface RewriteRule {
   destination: string;
 }
 
+interface FileSystemRouteRule {
+  handle: "filesystem";
+}
+
+interface NotFoundRouteRule {
+  caseSensitive?: boolean;
+  dest: string;
+  src: string;
+  status: number;
+}
+
+type RouteRule = FileSystemRouteRule | NotFoundRouteRule;
+
 interface VercelConfiguration {
   headers: HeaderRule[];
   outputDirectory: string;
   rewrites: RewriteRule[];
+  routes: RouteRule[];
   trailingSlash: boolean;
 }
 
@@ -123,6 +137,33 @@ function parseRewriteRule(value: unknown): RewriteRule | null {
   };
 }
 
+function parseRouteRule(value: unknown): RouteRule | null {
+  if (!isRecord(value)) return null;
+
+  if (value.handle === "filesystem") {
+    return { handle: "filesystem" };
+  }
+
+  if (
+    typeof value.src !== "string" ||
+    typeof value.dest !== "string" ||
+    typeof value.status !== "number" ||
+    (value.caseSensitive !== undefined &&
+      typeof value.caseSensitive !== "boolean")
+  ) {
+    return null;
+  }
+
+  return {
+    ...(value.caseSensitive === undefined
+      ? {}
+      : { caseSensitive: value.caseSensitive }),
+    dest: value.dest,
+    src: value.src,
+    status: value.status,
+  };
+}
+
 function parseVercelConfiguration(value: unknown): VercelConfiguration | null {
   if (!isRecord(value)) return null;
   if (
@@ -131,16 +172,22 @@ function parseVercelConfiguration(value: unknown): VercelConfiguration | null {
   ) {
     return null;
   }
-  if (!Array.isArray(value.headers) || !Array.isArray(value.rewrites)) {
+  if (
+    !Array.isArray(value.headers) ||
+    !Array.isArray(value.rewrites) ||
+    !Array.isArray(value.routes)
+  ) {
     return null;
   }
 
   const parsedHeaders = value.headers.map(parseHeaderRule);
   const parsedRewrites = value.rewrites.map(parseRewriteRule);
+  const parsedRoutes = value.routes.map(parseRouteRule);
 
   if (
     parsedHeaders.some((rule) => rule === null) ||
-    parsedRewrites.some((rule) => rule === null)
+    parsedRewrites.some((rule) => rule === null) ||
+    parsedRoutes.some((rule) => rule === null)
   ) {
     return null;
   }
@@ -152,6 +199,9 @@ function parseVercelConfiguration(value: unknown): VercelConfiguration | null {
     outputDirectory: value.outputDirectory,
     rewrites: parsedRewrites.filter(
       (rule): rule is RewriteRule => rule !== null,
+    ),
+    routes: parsedRoutes.filter(
+      (rule): rule is RouteRule => rule !== null,
     ),
     trailingSlash: value.trailingSlash,
   };
@@ -363,6 +413,20 @@ describe("web delivery policy", () => {
     expect(configuration.outputDirectory).toBe("dist");
     expect(configuration.trailingSlash).toBe(false);
     expect(configuration.rewrites).toEqual([]);
+    expect(configuration.routes).toEqual([
+      { handle: "filesystem" },
+      {
+        caseSensitive: true,
+        dest: "/en/404.html",
+        src: "/en(?:/.*)?",
+        status: 404,
+      },
+      {
+        dest: "/404.html",
+        src: "/(.*)",
+        status: 404,
+      },
+    ]);
     expect(source).not.toContain('"destination": "/index.html"');
   });
 });
