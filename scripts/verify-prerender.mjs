@@ -148,13 +148,18 @@ function inlineScripts(html) {
   ];
 }
 
-const vercelConfiguration = JSON.parse(
-  await readFile(path.join(projectRoot, "vercel.json"), "utf8"),
+const vercelConfigurationSource = await readFile(
+  path.join(projectRoot, "vercel.json"),
+  "utf8",
 );
+const vercelConfiguration = JSON.parse(vercelConfigurationSource);
 const globalHeaderRule = vercelConfiguration.headers.find(
   (rule) => rule.source === "/(.*)",
 );
 assert.ok(globalHeaderRule, "Missing global Vercel header rule");
+const canonicalSecurityHeaders = Object.fromEntries(
+  globalHeaderRule.headers.map((header) => [header.key, header.value]),
+);
 const contentSecurityPolicy =
   globalHeaderRule.headers.find(
     (header) => header.key.toLowerCase() === "content-security-policy",
@@ -438,19 +443,39 @@ assert.equal(vercelConfiguration.outputDirectory, "dist");
 assert.equal(vercelConfiguration.trailingSlash, false);
 assert.deepEqual(vercelConfiguration.rewrites, []);
 assert.ok(!JSON.stringify(vercelConfiguration).includes('"/index.html"'));
+const localizedNotFoundRouteSource =
+  "/en/(?!portfolio(?:/lem-box)?/?$).+$";
 assert.deepEqual(vercelConfiguration.routes, [
   {
-    src: "/en/(?!portfolio(?:/lem-box)?/?$).+$",
+    src: localizedNotFoundRouteSource,
     caseSensitive: true,
     status: 404,
     dest: "/en/404.html",
+    headers: canonicalSecurityHeaders,
   },
 ]);
 assert.ok(!JSON.stringify(vercelConfiguration.routes).includes('"handle"'));
-
-const localizedNotFoundRoute = new RegExp(
-  vercelConfiguration.routes[0].src,
+assert.equal(
+  vercelConfigurationSource.match(/"Content-Security-Policy"\s*:/g)?.length ?? 0,
+  1,
 );
+
+const [localizedNotFoundTerminalRoute] = vercelConfiguration.routes;
+assert.equal(localizedNotFoundTerminalRoute.dest, "/en/404.html");
+assert.equal(localizedNotFoundTerminalRoute.status, 404);
+assert.ok(!("continue" in localizedNotFoundTerminalRoute));
+assert.deepEqual(
+  localizedNotFoundTerminalRoute.headers,
+  canonicalSecurityHeaders,
+);
+assert.equal(
+  Object.keys(localizedNotFoundTerminalRoute.headers).filter(
+    (key) => key.toLowerCase() === "content-security-policy",
+  ).length,
+  1,
+);
+
+const localizedNotFoundRoute = new RegExp(localizedNotFoundRouteSource);
 for (const publicEnglishPath of [
   "/en",
   "/en/",

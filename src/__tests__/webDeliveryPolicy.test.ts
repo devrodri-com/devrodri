@@ -47,6 +47,7 @@ interface FileSystemRouteRule {
 interface NotFoundRouteRule {
   caseSensitive?: boolean;
   dest: string;
+  headers: Record<string, string>;
   src: string;
   status: number;
 }
@@ -144,10 +145,19 @@ function parseRouteRule(value: unknown): RouteRule | null {
     return { handle: "filesystem" };
   }
 
+  if (!isRecord(value.headers)) return null;
+  const parsedHeaders: Record<string, string> = {};
+  for (const [key, headerValue] of Object.entries(value.headers)) {
+    if (typeof headerValue !== "string") return null;
+    parsedHeaders[key] = headerValue;
+  }
+  if (Object.keys(parsedHeaders).length === 0) return null;
+
   if (
     typeof value.src !== "string" ||
     typeof value.dest !== "string" ||
     typeof value.status !== "number" ||
+    value.continue !== undefined ||
     (value.caseSensitive !== undefined &&
       typeof value.caseSensitive !== "boolean")
   ) {
@@ -159,6 +169,7 @@ function parseRouteRule(value: unknown): RouteRule | null {
       ? {}
       : { caseSensitive: value.caseSensitive }),
     dest: value.dest,
+    headers: parsedHeaders,
     src: value.src,
     status: value.status,
   };
@@ -413,26 +424,46 @@ describe("web delivery policy", () => {
     expect(configuration.outputDirectory).toBe("dist");
     expect(configuration.trailingSlash).toBe(false);
     expect(configuration.rewrites).toEqual([]);
+    const localizedNotFoundRouteSource =
+      "/en/(?!portfolio(?:/lem-box)?/?$).+$";
+    const canonicalRouteSecurityHeaders = Object.fromEntries(
+      globalRule.headers.map(({ key, value }) => [key, value]),
+    );
     expect(configuration.routes).toEqual([
       {
         caseSensitive: true,
         dest: "/en/404.html",
-        src: "/en/(?!portfolio(?:/lem-box)?/?$).+$",
+        headers: canonicalRouteSecurityHeaders,
+        src: localizedNotFoundRouteSource,
         status: 404,
       },
     ]);
     expect(source).not.toContain('"handle": "filesystem"');
+    expect(
+      source.match(/"Content-Security-Policy"\s*:/g) ?? [],
+    ).toHaveLength(1);
 
-    const localizedNotFoundRoute = configuration.routes[0];
-    expect(localizedNotFoundRoute).toBeDefined();
+    const [localizedNotFoundTerminalRoute] = configuration.routes;
+    expect(localizedNotFoundTerminalRoute).toBeDefined();
     if (
-      localizedNotFoundRoute === undefined ||
-      "handle" in localizedNotFoundRoute
+      localizedNotFoundTerminalRoute === undefined ||
+      !("dest" in localizedNotFoundTerminalRoute)
     ) {
-      throw new Error("The localized 404 route is missing");
+      throw new Error("The localized 404 terminal route is missing");
     }
+    expect(localizedNotFoundTerminalRoute.headers).toEqual(
+      canonicalRouteSecurityHeaders,
+    );
+    expect("continue" in localizedNotFoundTerminalRoute).toBe(false);
+    expect(localizedNotFoundTerminalRoute.dest).toBe("/en/404.html");
+    expect(localizedNotFoundTerminalRoute.status).toBe(404);
+    expect(
+      Object.keys(localizedNotFoundTerminalRoute.headers).filter(
+        (key) => key.toLowerCase() === "content-security-policy",
+      ),
+    ).toHaveLength(1);
     const localizedNotFoundPattern = new RegExp(
-      localizedNotFoundRoute.src,
+      localizedNotFoundTerminalRoute.src,
     );
     expect([
       "/en",
