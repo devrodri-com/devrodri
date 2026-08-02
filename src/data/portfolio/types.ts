@@ -107,14 +107,24 @@ export type ResponsiveImageCandidates = readonly [
   ...ResponsiveImageCandidate[],
 ];
 
+export type PortfolioCoverFit = "cover" | "contain";
+
 export type ResponsivePortfolioCover = {
   width: number;
   height: number;
+  fit?: PortfolioCoverFit;
   sources: {
     avif: ResponsiveImageCandidates;
     webp: ResponsiveImageCandidates;
   };
 };
+
+export function getPortfolioCoverFit(
+  responsiveCover: ResponsivePortfolioCover | undefined,
+): PortfolioCoverFit {
+  if (responsiveCover === undefined) return "cover";
+  return responsiveCover.fit ?? "contain";
+}
 
 type PortfolioCaseStudyCardContent = Omit<PortfolioCaseContent, "details"> & {
   details?: never;

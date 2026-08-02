@@ -1,5 +1,32 @@
 import { en, es } from "../../../i18n";
-import { definePortfolioCase } from "../types";
+import federico480Avif from "../../../assets/portfolio/federico/federico-480.avif";
+import federico480Webp from "../../../assets/portfolio/federico/federico-480.webp";
+import federico768Avif from "../../../assets/portfolio/federico/federico-768.avif";
+import federico768Webp from "../../../assets/portfolio/federico/federico-768.webp";
+import federico1200Avif from "../../../assets/portfolio/federico/federico-1200.avif";
+import federico1200Webp from "../../../assets/portfolio/federico/federico-1200.webp";
+import {
+  definePortfolioCase,
+  type ResponsivePortfolioCover,
+} from "../types";
+
+const federicoResponsiveCover = {
+  width: 1200,
+  height: 630,
+  fit: "cover",
+  sources: {
+    avif: [
+      { src: federico480Avif, width: 480 },
+      { src: federico768Avif, width: 768 },
+      { src: federico1200Avif, width: 1200 },
+    ],
+    webp: [
+      { src: federico480Webp, width: 480 },
+      { src: federico768Webp, width: 768 },
+      { src: federico1200Webp, width: 1200 },
+    ],
+  },
+} as const satisfies ResponsivePortfolioCover;
 
 const stackEs = [
   "Frontend: React + Vite + TypeScript",
@@ -26,6 +53,7 @@ export const federicoCase = definePortfolioCase({
   portfolioOrder: 5,
   category: "web",
   cover: "/img/federico-cover.jpg",
+  responsiveCover: federicoResponsiveCover,
   actions: [
     {
       href: "https://www.federicoroma.com",

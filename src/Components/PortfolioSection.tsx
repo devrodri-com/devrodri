@@ -4,6 +4,7 @@ import { homePortfolioCases } from "../data/portfolio";
 import { useLanguage } from "../i18n/useLanguage";
 import { Link } from "react-router-dom";
 import { getLocalizedPath } from "../routes/siteRoutes";
+import { getPortfolioCoverFit } from "../data/portfolio/types";
 import { PortfolioCoverImage } from "./portfolio/PortfolioCard";
 
 export default function PortfolioSection() {
@@ -12,6 +13,7 @@ export default function PortfolioSection() {
     category: portfolioCase.content[language].tags[0],
     key: portfolioCase.key,
     cover: portfolioCase.cover,
+    coverFit: getPortfolioCoverFit(portfolioCase.responsiveCover),
     responsiveCover: portfolioCase.responsiveCover,
     status: portfolioCase.content[language].status,
     title: portfolioCase.content[language].title,
@@ -102,7 +104,7 @@ export default function PortfolioSection() {
                     cover={p.cover}
                     alt=""
                     className={`h-full w-full ${
-                      p.responsiveCover === undefined
+                      p.coverFit === "cover"
                         ? "object-cover"
                         : "object-contain"
                     }`}

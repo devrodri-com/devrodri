@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import type { ReactNode } from "react";
+import { getPortfolioCoverFit } from "../../data/portfolio/types";
 import type {
   ResponsiveImageCandidates,
   ResponsivePortfolioCover,
@@ -95,6 +96,7 @@ export default function PortfolioCard({
   title,
 }: PortfolioCardProps) {
   const Heading = headingLevel;
+  const coverFit = getPortfolioCoverFit(responsiveCover);
 
   return (
     <motion.div
@@ -111,9 +113,7 @@ export default function PortfolioCard({
               cover={cover}
               alt=""
               className={`w-full h-full object-center rounded-xl ${
-                responsiveCover === undefined
-                  ? "object-cover"
-                  : "object-contain"
+                coverFit === "cover" ? "object-cover" : "object-contain"
               }`}
               priority={priority}
               sizes="(min-width: 1280px) 457px, (min-width: 768px) calc(41.67vw - 76px), calc(100vw - 88px)"

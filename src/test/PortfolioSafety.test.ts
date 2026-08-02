@@ -12,6 +12,10 @@ import {
   lemBoxPublicLinks,
   lemBoxPublicLinksSection,
 } from "../data/portfolio/cases/lemBox";
+import {
+  getPortfolioCoverFit,
+  type PortfolioCoverFit,
+} from "../data/portfolio/types";
 import translations from "../i18n";
 
 interface FileSystemApi {
@@ -92,8 +96,36 @@ const removedLiveDemo = [
   "https://reservas-campings-nacionales",
   "vercel.app",
 ].join(".");
-const lemBoxCoverHash =
-  "a920605fc287def43c752f2f0fd58f197e2b11440d59c339d7a9084741ed42f5";
+const originalCoverContracts = [
+  {
+    key: "lem_box",
+    path: "public/img/lem-box-cover.png",
+    dimensions: { width: 1200, height: 630 },
+    bytes: 1_256_806,
+    hash: "a920605fc287def43c752f2f0fd58f197e2b11440d59c339d7a9084741ed42f5",
+  },
+  {
+    key: "esteban",
+    path: "public/img/esteban.png",
+    dimensions: { width: 1200, height: 630 },
+    bytes: 699_200,
+    hash: "86c27874e255decb55e2a4792d43b54318ef64b5eded0edee3dfefad68cdebec",
+  },
+  {
+    key: "federico",
+    path: "public/img/federico-cover.jpg",
+    dimensions: { width: 1200, height: 630 },
+    bytes: 547_400,
+    hash: "186cd88d5dfedbb7da4dc197196e309c5e29fcd57c5be1ee8faf3d3cd557b1f5",
+  },
+  {
+    key: "campings_demo",
+    path: "public/img/campings-concept-cover.jpg",
+    dimensions: { width: 1600, height: 800 },
+    bytes: 280_518,
+    hash: "e2e8d3adb8861a9f9895ea327ce0151abe5993dffc5eaecc879e61b83640ab82",
+  },
+] as const;
 
 function getCase(key: (typeof expectedProjectKeys)[number]) {
   const portfolioCase = portfolioCases.find((item) => item.key === key);
@@ -531,53 +563,120 @@ describe("portfolio architecture invariants", () => {
     }
   });
 
-  it("keeps the exact LEM-BOX cover unchanged", () => {
-    const coverPath = path.join(projectRoot, "public/img/lem-box-cover.png");
-    const coverData = fs.readFileSync(coverPath);
+  it("keeps the exact original Portfolio covers unchanged", () => {
+    for (const contract of originalCoverContracts) {
+      const coverPath = path.join(projectRoot, contract.path);
+      const coverData = fs.readFileSync(coverPath);
+      const dimensions = contract.path.endsWith(".png")
+        ? readPngDimensions(coverData)
+        : readJpegDimensions(coverData);
 
-    expect(fs.existsSync(coverPath)).toBe(true);
-    expect(readPngDimensions(coverData)).toEqual({
-      width: 1200,
-      height: 630,
-    });
-    expect(fs.statSync(coverPath).size).toBe(1_256_806);
-    expect(
-      crypto.createHash("sha256").update(coverData).digest("hex"),
-    ).toBe(lemBoxCoverHash);
+      expect(fs.existsSync(coverPath)).toBe(true);
+      expect(dimensions).toEqual(contract.dimensions);
+      expect(fs.statSync(coverPath).size).toBe(contract.bytes);
+      expect(
+        crypto.createHash("sha256").update(coverData).digest("hex"),
+      ).toBe(contract.hash);
+    }
   });
 
-  it("declares ordered responsive LEM-BOX visual assets without replacing the social PNG", () => {
+  it("declares ordered responsive Portfolio assets with explicit fit contracts", () => {
+    const approvedFits = ["cover", "contain"] as const satisfies readonly PortfolioCoverFit[];
+    const contracts = [
+      {
+        key: "lem_box",
+        fallback: "/img/lem-box-cover.png",
+        directory: "src/assets/lem-box",
+        stem: "lem-box",
+        dimensions: { width: 1200, height: 630 },
+        widths: [480, 768, 1200],
+        declaredFit: undefined,
+        effectiveFit: "contain",
+      },
+      {
+        key: "esteban",
+        fallback: "/img/esteban.png",
+        directory: "src/assets/portfolio/esteban",
+        stem: "esteban",
+        dimensions: { width: 1200, height: 630 },
+        widths: [480, 768, 1200],
+        declaredFit: "cover",
+        effectiveFit: "cover",
+      },
+      {
+        key: "federico",
+        fallback: "/img/federico-cover.jpg",
+        directory: "src/assets/portfolio/federico",
+        stem: "federico",
+        dimensions: { width: 1200, height: 630 },
+        widths: [480, 768, 1200],
+        declaredFit: "cover",
+        effectiveFit: "cover",
+      },
+      {
+        key: "campings_demo",
+        fallback: "/img/campings-concept-cover.jpg",
+        directory: "src/assets/portfolio/campings",
+        stem: "campings-concept",
+        dimensions: { width: 1600, height: 800 },
+        widths: [480, 768, 1200, 1600],
+        declaredFit: "cover",
+        effectiveFit: "cover",
+      },
+    ] as const;
+
+    expect(approvedFits).toEqual(["cover", "contain"]);
+    expect(getPortfolioCoverFit(undefined)).toBe("cover");
+    expect(
+      portfolioCases
+        .filter(({ responsiveCover }) => responsiveCover !== undefined)
+        .map(({ key }) => key),
+    ).toEqual(["lem_box", "esteban", "federico", "campings_demo"]);
+
+    for (const contract of contracts) {
+      const portfolioCase = getCase(contract.key);
+      const responsiveCover = portfolioCase.responsiveCover;
+      if (responsiveCover === undefined) {
+        throw new Error(`Missing responsive cover: ${contract.key}`);
+      }
+
+      expect(portfolioCase.cover).toBe(contract.fallback);
+      expect({
+        width: responsiveCover.width,
+        height: responsiveCover.height,
+      }).toEqual(contract.dimensions);
+      expect(responsiveCover.fit).toBe(contract.declaredFit);
+      expect(getPortfolioCoverFit(responsiveCover)).toBe(
+        contract.effectiveFit,
+      );
+      expect(Object.keys(responsiveCover.sources)).toEqual(["avif", "webp"]);
+
+      for (const format of ["avif", "webp"] as const) {
+        const candidates = responsiveCover.sources[format];
+        expect(candidates.map(({ width }) => width)).toEqual(contract.widths);
+
+        for (const candidate of candidates) {
+          const fileName = `${contract.stem}-${candidate.width}.${format}`;
+          expect(candidate.src).toContain(fileName);
+          const assetPath = path.join(
+            projectRoot,
+            contract.directory,
+            fileName,
+          );
+          expect(fs.existsSync(assetPath)).toBe(true);
+          expect(fs.statSync(assetPath).size).toBeGreaterThan(0);
+        }
+      }
+    }
+
     const responsiveCover = lemBoxCase.responsiveCover;
     if (responsiveCover === undefined) {
       throw new Error("Missing responsive LEM-BOX cover");
     }
-
-    expect(lemBoxCase.cover).toBe("/img/lem-box-cover.png");
-    expect({
-      width: responsiveCover.width,
-      height: responsiveCover.height,
-    }).toEqual({ width: 1200, height: 630 });
     expect({
       width: lemBoxCase.caseStudy.coverWidth,
       height: lemBoxCase.caseStudy.coverHeight,
     }).toEqual({ width: 1200, height: 630 });
-
-    for (const format of ["avif", "webp"] as const) {
-      const candidates = responsiveCover.sources[format];
-      expect(candidates.map(({ width }) => width)).toEqual([480, 768, 1200]);
-
-      for (const candidate of candidates) {
-        const fileName = `lem-box-${candidate.width}.${format}`;
-        expect(candidate.src).toContain(fileName);
-        const assetPath = path.join(
-          projectRoot,
-          "src/assets/lem-box",
-          fileName,
-        );
-        expect(fs.existsSync(assetPath)).toBe(true);
-        expect(fs.statSync(assetPath).size).toBeGreaterThan(0);
-      }
-    }
   });
 
   it("publishes ZENTRA without private documents or restricted names", () => {
@@ -673,6 +772,14 @@ describe("portfolio architecture invariants", () => {
       ),
       "utf8",
     );
+    const portfolioSectionSource = fs.readFileSync(
+      path.join(projectRoot, "src/Components/PortfolioSection.tsx"),
+      "utf8",
+    );
+    const portfolioTypesSource = fs.readFileSync(
+      path.join(projectRoot, "src/data/portfolio/types.ts"),
+      "utf8",
+    );
     const faqSource = fs.readFileSync(
       path.join(projectRoot, "src/Components/FaqSection.tsx"),
       "utf8",
@@ -683,6 +790,24 @@ describe("portfolio architecture invariants", () => {
     expect(portfolioCardSource).not.toContain("Children.toArray");
     expect(portfolioCardSource).not.toContain("isValidElement");
     expect(portfolioCardSource).not.toContain("className?.includes");
+    expect(portfolioCardSource).toContain(
+      "getPortfolioCoverFit(responsiveCover)",
+    );
+    expect(portfolioSectionSource).toContain(
+      "getPortfolioCoverFit(portfolioCase.responsiveCover)",
+    );
+    expect(portfolioCardSource).not.toMatch(/object-\$\{/);
+    expect(portfolioSectionSource).not.toMatch(/object-\$\{/);
+    expect(portfolioTypesSource).toContain(
+      'export type PortfolioCoverFit = "cover" | "contain";',
+    );
+    expect(portfolioTypesSource).toContain(
+      'return responsiveCover.fit ?? "contain";',
+    );
+    expect(portfolioTypesSource).not.toContain("fit?: string");
+    expect(portfolioTypesSource).not.toMatch(
+      /responsiveCover\.(?:key|cover|path|file)/,
+    );
     expect(faqSource).toContain("const FAQ_KEYS");
     for (const key of [
       "projectTypes",

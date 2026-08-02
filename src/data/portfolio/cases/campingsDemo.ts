@@ -1,5 +1,36 @@
 import { en, es } from "../../../i18n";
-import { definePortfolioCase } from "../types";
+import campings480Avif from "../../../assets/portfolio/campings/campings-concept-480.avif";
+import campings480Webp from "../../../assets/portfolio/campings/campings-concept-480.webp";
+import campings768Avif from "../../../assets/portfolio/campings/campings-concept-768.avif";
+import campings768Webp from "../../../assets/portfolio/campings/campings-concept-768.webp";
+import campings1200Avif from "../../../assets/portfolio/campings/campings-concept-1200.avif";
+import campings1200Webp from "../../../assets/portfolio/campings/campings-concept-1200.webp";
+import campings1600Avif from "../../../assets/portfolio/campings/campings-concept-1600.avif";
+import campings1600Webp from "../../../assets/portfolio/campings/campings-concept-1600.webp";
+import {
+  definePortfolioCase,
+  type ResponsivePortfolioCover,
+} from "../types";
+
+const campingsResponsiveCover = {
+  width: 1600,
+  height: 800,
+  fit: "cover",
+  sources: {
+    avif: [
+      { src: campings480Avif, width: 480 },
+      { src: campings768Avif, width: 768 },
+      { src: campings1200Avif, width: 1200 },
+      { src: campings1600Avif, width: 1600 },
+    ],
+    webp: [
+      { src: campings480Webp, width: 480 },
+      { src: campings768Webp, width: 768 },
+      { src: campings1200Webp, width: 1200 },
+      { src: campings1600Webp, width: 1600 },
+    ],
+  },
+} as const satisfies ResponsivePortfolioCover;
 
 const stackEs = [
   "Frontend: Next.js 16 + React 19 + TypeScript + App Router",
@@ -33,6 +64,7 @@ export const campingsDemoCase = definePortfolioCase({
   portfolioOrder: 7,
   category: "systems",
   cover: "/img/campings-concept-cover.jpg",
+  responsiveCover: campingsResponsiveCover,
   actions: [
     {
       href: "https://github.com/devrodri-com/reservas-campings-nacionales",
