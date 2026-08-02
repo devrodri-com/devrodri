@@ -54,20 +54,29 @@ describe("repository hygiene", () => {
     expect(indexHtml).not.toContain("/src/index.css");
   });
 
-  it("loads Inter through one stylesheet with every used weight", () => {
+  it("self-hosts one Inter file with every used weight", () => {
     const indexHtml = fs.readFileSync(repositoryPath("index.html"), "utf8");
     const indexCss = fs.readFileSync(
       repositoryPath("src/index.css"),
       "utf8",
     );
-    const stylesheetRequests =
-      indexHtml.match(/https:\/\/fonts\.googleapis\.com\/css2[^"]+/g) ?? [];
 
-    expect(stylesheetRequests).toEqual([
-      "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap",
-    ]);
+    expect(indexHtml).not.toContain("fonts.googleapis.com");
+    expect(indexHtml).not.toContain("fonts.gstatic.com");
     expect(indexCss).not.toContain("@import");
     expect(indexCss).not.toContain("fonts.googleapis.com");
+    expect(indexCss).toContain('font-family: "Inter"');
+    expect(indexCss).toContain("font-weight: 300 700");
+    expect(indexCss).toContain("font-display: swap");
+    expect(indexCss).toContain(
+      'url("./assets/fonts/Inter-latin.woff2") format("woff2")',
+    );
+    expect(
+      fs.existsSync(repositoryPath("src/assets/fonts/Inter-latin.woff2")),
+    ).toBe(true);
+    expect(fs.existsSync(repositoryPath("src/assets/fonts/OFL.txt"))).toBe(
+      true,
+    );
   });
 
   it("removes only the confirmed dead modules and starter asset", () => {
