@@ -59,18 +59,10 @@
   "rewrites": [],
   "routes": [
     {
-      "handle": "filesystem"
-    },
-    {
-      "src": "/en(?:/.*)?",
+      "src": "/en/(?!portfolio(?:/lem-box)?/?$).+$",
       "caseSensitive": true,
       "status": 404,
       "dest": "/en/404.html"
-    },
-    {
-      "src": "/(.*)",
-      "status": 404,
-      "dest": "/404.html"
     }
   ]
 }

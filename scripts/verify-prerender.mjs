@@ -439,15 +439,34 @@ assert.equal(vercelConfiguration.trailingSlash, false);
 assert.deepEqual(vercelConfiguration.rewrites, []);
 assert.ok(!JSON.stringify(vercelConfiguration).includes('"/index.html"'));
 assert.deepEqual(vercelConfiguration.routes, [
-  { handle: "filesystem" },
   {
-    src: "/en(?:/.*)?",
+    src: "/en/(?!portfolio(?:/lem-box)?/?$).+$",
     caseSensitive: true,
     status: 404,
     dest: "/en/404.html",
   },
-  { src: "/(.*)", status: 404, dest: "/404.html" },
 ]);
+assert.ok(!JSON.stringify(vercelConfiguration.routes).includes('"handle"'));
+
+const localizedNotFoundRoute = new RegExp(
+  vercelConfiguration.routes[0].src,
+);
+for (const publicEnglishPath of [
+  "/en",
+  "/en/",
+  "/en/portfolio",
+  "/en/portfolio/",
+  "/en/portfolio/lem-box",
+  "/en/portfolio/lem-box/",
+]) {
+  assert.equal(localizedNotFoundRoute.test(publicEnglishPath), false);
+}
+for (const invalidEnglishPath of [
+  "/en/no-existe",
+  "/en/portfolio/no-existe",
+]) {
+  assert.equal(localizedNotFoundRoute.test(invalidEnglishPath), true);
+}
 
 function configuredContentType(source) {
   const rule = vercelConfiguration.headers.find(

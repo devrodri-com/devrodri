@@ -414,19 +414,38 @@ describe("web delivery policy", () => {
     expect(configuration.trailingSlash).toBe(false);
     expect(configuration.rewrites).toEqual([]);
     expect(configuration.routes).toEqual([
-      { handle: "filesystem" },
       {
         caseSensitive: true,
         dest: "/en/404.html",
-        src: "/en(?:/.*)?",
-        status: 404,
-      },
-      {
-        dest: "/404.html",
-        src: "/(.*)",
+        src: "/en/(?!portfolio(?:/lem-box)?/?$).+$",
         status: 404,
       },
     ]);
+    expect(source).not.toContain('"handle": "filesystem"');
+
+    const localizedNotFoundRoute = configuration.routes[0];
+    expect(localizedNotFoundRoute).toBeDefined();
+    if (
+      localizedNotFoundRoute === undefined ||
+      "handle" in localizedNotFoundRoute
+    ) {
+      throw new Error("The localized 404 route is missing");
+    }
+    const localizedNotFoundPattern = new RegExp(
+      localizedNotFoundRoute.src,
+    );
+    expect([
+      "/en",
+      "/en/",
+      "/en/portfolio",
+      "/en/portfolio/",
+      "/en/portfolio/lem-box",
+      "/en/portfolio/lem-box/",
+    ].some((pathname) => localizedNotFoundPattern.test(pathname))).toBe(false);
+    expect([
+      "/en/no-existe",
+      "/en/portfolio/no-existe",
+    ].every((pathname) => localizedNotFoundPattern.test(pathname))).toBe(true);
     expect(source).not.toContain('"destination": "/index.html"');
   });
 });
