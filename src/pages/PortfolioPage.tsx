@@ -88,7 +88,11 @@ export default function PortfolioPage() {
             const content = portfolioCase.content[language];
             const detailsId = `portfolio-details-${portfolioCase.key}`;
             const caseStudy = portfolioCase.caseStudy;
-            const toggleLabel = expanded[portfolioCase.key]
+            const detailsExpanded =
+              caseStudy === undefined &&
+              content.details !== undefined &&
+              expanded[portfolioCase.key];
+            const toggleLabel = detailsExpanded
               ? language === "es"
                 ? "Ver menos"
                 : "View less"
@@ -140,8 +144,8 @@ export default function PortfolioPage() {
                         ))}
                         <button
                           type="button"
-                          aria-expanded={expanded[portfolioCase.key]}
-                          aria-controls={detailsId}
+                          aria-expanded={detailsExpanded}
+                          aria-controls={detailsExpanded ? detailsId : undefined}
                           aria-label={`${toggleLabel}: ${content.title}`}
                           onClick={() =>
                             setExpanded((current) => ({
@@ -152,7 +156,7 @@ export default function PortfolioPage() {
                           }
                           className="text-sm text-gray-700 hover:text-black underline focus-visible:ring-2 ring-offset-2 ring-gray-300 rounded-sm min-h-[44px] min-w-[44px] inline-flex items-center"
                         >
-                          {expanded[portfolioCase.key]
+                          {detailsExpanded
                             ? language === "es"
                               ? "Ver menos"
                               : "View less"
@@ -166,9 +170,7 @@ export default function PortfolioPage() {
                   cover={portfolioCase.cover}
                   desc={content.description}
                   details={
-                    caseStudy === undefined &&
-                    expanded[portfolioCase.key] &&
-                    content.details !== undefined ? (
+                    detailsExpanded && content.details !== undefined ? (
                       <PortfolioCaseDetails
                         details={content.details}
                         id={detailsId}
@@ -179,9 +181,7 @@ export default function PortfolioPage() {
                       />
                     ) : null
                   }
-                  expanded={
-                    caseStudy === undefined && expanded[portfolioCase.key]
-                  }
+                  expanded={detailsExpanded}
                   headingLevel="h2"
                   priority={portfolioIndex === 0}
                   tags={content.tags.join(" · ")}
