@@ -5,8 +5,10 @@ import { useLanguage } from "../i18n/useLanguage";
 import { motion } from "framer-motion";
 import { FaWhatsapp, FaEnvelope } from "react-icons/fa";
 import {
-  CONTACT_FORM_ENDPOINT,
+  CONTACT_FORM_AJAX_ENDPOINT,
   CONTACT_FORM_LIMITS,
+  CONTACT_FORM_NATIVE_ENDPOINT,
+  getContactFormNextUrl,
   submitContactForm,
 } from "../services/contactForm";
 import {
@@ -49,7 +51,7 @@ export default function ContactSection() {
     const form = e.currentTarget;
     const formData = new FormData(form);
     trackContactAttempt(language);
-    const request = submitContactForm(form.action, formData);
+    const request = submitContactForm(CONTACT_FORM_AJAX_ENDPOINT, formData);
     activeRequestRef.current = request.controller;
 
     try {
@@ -136,8 +138,9 @@ export default function ContactSection() {
         </p>
 
         <form
-          action={CONTACT_FORM_ENDPOINT}
+          action={CONTACT_FORM_NATIVE_ENDPOINT}
           method="POST"
+          encType="application/x-www-form-urlencoded"
           onSubmit={handleSubmit}
           className="space-y-5"
           aria-describedby="contact-privacy-disclosure"
@@ -145,6 +148,7 @@ export default function ContactSection() {
           <input type="hidden" name="_captcha" value="false" />
           <input type="hidden" name="_subject" value="Nuevo mensaje desde devrodri.com" />
           <input type="text" name="_honey" className="hidden" style={{ display: "none" }} />
+          <input type="hidden" name="_next" value={getContactFormNextUrl(language)} />
           <div className="space-y-2">
             <label htmlFor="name" className="block text-left text-sm font-medium text-gray-700">
               {t.contact.nameLabel}

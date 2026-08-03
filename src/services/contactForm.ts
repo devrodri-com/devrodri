@@ -1,6 +1,27 @@
-export const CONTACT_FORM_ENDPOINT =
-  "https://formsubmit.co/ajax/r.opalo@icloud.com";
+import type { Language } from "../i18n/language";
+
+const FORM_PROVIDER_ORIGIN = "https://formsubmit.co";
+const CONTACT_FORM_RECIPIENT = "r.opalo@icloud.com";
+
+export const CONTACT_FORM_NATIVE_ENDPOINT =
+  `${FORM_PROVIDER_ORIGIN}/${CONTACT_FORM_RECIPIENT}`;
+export const CONTACT_FORM_AJAX_ENDPOINT =
+  `${FORM_PROVIDER_ORIGIN}/ajax/${CONTACT_FORM_RECIPIENT}`;
+
+// Backward-compatible name for the existing AJAX transport contract.
+export const CONTACT_FORM_ENDPOINT = CONTACT_FORM_AJAX_ENDPOINT;
 export const CONTACT_FORM_TIMEOUT_MS = 15_000;
+
+type AbsoluteHttpsUrl = `https://${string}`;
+
+const CONTACT_FORM_NEXT_BY_LANGUAGE = {
+  es: "https://www.devrodri.com/gracias",
+  en: "https://www.devrodri.com/en/thank-you",
+} as const satisfies Record<Language, AbsoluteHttpsUrl>;
+
+export function getContactFormNextUrl(language: Language): AbsoluteHttpsUrl {
+  return CONTACT_FORM_NEXT_BY_LANGUAGE[language];
+}
 
 export const CONTACT_FORM_LIMITS = {
   name: { min: 2, max: 100 },
@@ -20,7 +41,6 @@ export interface ContactFormRequest {
   result: Promise<ContactFormResult>;
 }
 
-const FORM_PROVIDER_ORIGIN = "https://formsubmit.co";
 const CONTACT_FORM_SUBJECT = "Nuevo mensaje desde devrodri.com";
 
 function getTrimmedField(formData: FormData, name: string): string | null {
@@ -33,7 +53,7 @@ function isValidEndpoint(endpoint: string): boolean {
     const url = new URL(endpoint);
     return url.origin === FORM_PROVIDER_ORIGIN &&
       url.protocol === "https:" &&
-      url.href === CONTACT_FORM_ENDPOINT;
+      url.href === CONTACT_FORM_AJAX_ENDPOINT;
   } catch {
     return false;
   }
@@ -79,7 +99,7 @@ function buildProviderPayload(
   payload.set("_subject", CONTACT_FORM_SUBJECT);
 
   const honeypot = source.get("_honey");
-  if (typeof honeypot === "string") payload.set("_honey", honeypot);
+  payload.set("_honey", typeof honeypot === "string" ? honeypot : "");
 
   return payload;
 }
