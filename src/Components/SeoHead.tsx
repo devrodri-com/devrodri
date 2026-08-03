@@ -4,6 +4,7 @@ import {
   getLocaleForPathname,
   getNotFoundMetadata,
   getPublicRoute,
+  isIndexablePublicRoute,
 } from "../routes/siteRoutes";
 import { getStructuredData } from "../seo/structuredData";
 
@@ -12,8 +13,9 @@ export default function SeoHead() {
   const route = getPublicRoute(pathname);
   const locale = route?.locale ?? getLocaleForPathname(pathname);
   const metadata = route?.metadata ?? getNotFoundMetadata(locale);
-  const structuredData =
-    route === null ? null : getStructuredData(route.routeKey);
+  const structuredData = route !== null && isIndexablePublicRoute(route)
+    ? getStructuredData(route.routeKey)
+    : null;
 
   return (
     <Helmet>

@@ -524,7 +524,7 @@ describe("web delivery policy", () => {
     expect(configuration.trailingSlash).toBe(false);
     expect(configuration.rewrites).toEqual([]);
     const localizedNotFoundRouteSource =
-      "/en/(?!portfolio(?:/lem-box)?/?$).+$";
+      "/en/(?!(?:portfolio(?:/lem-box)?|thank-you)/?$).+$";
     const canonicalRouteSecurityHeaders = Object.fromEntries(
       globalRule.headers.map(({ key, value }) => [key, value]),
     );
@@ -581,6 +581,8 @@ describe("web delivery policy", () => {
       "/en/portfolio/",
       "/en/portfolio/lem-box",
       "/en/portfolio/lem-box/",
+      "/en/thank-you",
+      "/en/thank-you/",
     ].some((pathname) => localizedNotFoundPattern.test(pathname))).toBe(false);
     expect([
       "/en/no-existe",

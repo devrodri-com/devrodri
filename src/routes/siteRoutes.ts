@@ -4,15 +4,20 @@ import type { Language } from "../i18n/language";
 
 export const SITE_ORIGIN = "https://www.devrodri.com";
 
-export type PageKey = "home" | "portfolio" | "lem-box";
-export type PublicRouteKey = `${PageKey}:${Language}`;
-export type PublicPathname =
+export type IndexablePageKey = "home" | "portfolio" | "lem-box";
+export type ThankYouPageKey = "thank-you";
+export type PageKey = IndexablePageKey | ThankYouPageKey;
+export type PublicRouteKey = `${IndexablePageKey}:${Language}`;
+export type ThankYouRouteKey = `${ThankYouPageKey}:${Language}`;
+export type IndexablePublicPathname =
   | "/"
   | "/portfolio"
   | "/portfolio/lem-box"
   | "/en"
   | "/en/portfolio"
   | "/en/portfolio/lem-box";
+export type ThankYouPathname = "/gracias" | "/en/thank-you";
+export type PublicPathname = IndexablePublicPathname | ThankYouPathname;
 
 type Hreflang = {
   href: string;
@@ -47,20 +52,33 @@ export type RouteMetadata = {
   } | null;
 };
 
-export type PublicRoute = {
+type PublicRouteBase = {
   equivalentLocalePath: PublicPathname;
   locale: Language;
   metadata: RouteMetadata;
-  page: PageKey;
   pathname: PublicPathname;
+};
+
+export type IndexablePublicRoute = PublicRouteBase & {
+  page: IndexablePageKey;
   routeKey: PublicRouteKey;
   sitemap: {
     include: true;
   };
 };
 
+export type ThankYouPublicRoute = PublicRouteBase & {
+  page: ThankYouPageKey;
+  routeKey: ThankYouRouteKey;
+  sitemap: {
+    include: false;
+  };
+};
+
+export type PublicRoute = IndexablePublicRoute | ThankYouPublicRoute;
+
 type RouteDefinition = {
-  localePath: Record<Language, PublicPathname>;
+  localePath: Record<Language, IndexablePublicPathname>;
   metadata: Record<
     Language,
     {
@@ -71,7 +89,7 @@ type RouteDefinition = {
       title: string;
     }
   >;
-  page: PageKey;
+  page: IndexablePageKey;
 };
 
 const routeDefinitions = [
@@ -147,7 +165,7 @@ function absoluteUrl(pathname: string): string {
 function createRoute(
   definition: RouteDefinition,
   locale: Language,
-): PublicRoute {
+): IndexablePublicRoute {
   const pathname = definition.localePath[locale];
   const alternateLocale: Language = locale === "es" ? "en" : "es";
   const equivalentLocalePath = definition.localePath[alternateLocale];
@@ -202,12 +220,62 @@ function createRoute(
   };
 }
 
-export const PUBLIC_ROUTES: readonly PublicRoute[] = routeDefinitions.flatMap(
+const indexableRoutes: readonly IndexablePublicRoute[] = routeDefinitions.flatMap(
   (definition) => [
     createRoute(definition, "es"),
     createRoute(definition, "en"),
   ],
 );
+
+const thankYouRoutes = [
+  {
+    equivalentLocalePath: "/en/thank-you",
+    locale: "es",
+    metadata: {
+      canonical: null,
+      description:
+        "Gracias por escribirme. Recibí tu consulta y te voy a responder lo antes posible.",
+      hreflang: [],
+      og: null,
+      robots: "noindex, nofollow",
+      title: "Consulta enviada | Rodrigo Opalo",
+      twitter: null,
+    },
+    page: "thank-you",
+    pathname: "/gracias",
+    routeKey: "thank-you:es",
+    sitemap: { include: false },
+  },
+  {
+    equivalentLocalePath: "/gracias",
+    locale: "en",
+    metadata: {
+      canonical: null,
+      description:
+        "Thanks for getting in touch. I received your inquiry and will get back to you as soon as possible.",
+      hreflang: [],
+      og: null,
+      robots: "noindex, nofollow",
+      title: "Inquiry sent | Rodrigo Opalo",
+      twitter: null,
+    },
+    page: "thank-you",
+    pathname: "/en/thank-you",
+    routeKey: "thank-you:en",
+    sitemap: { include: false },
+  },
+] as const satisfies readonly ThankYouPublicRoute[];
+
+export const PUBLIC_ROUTES: readonly PublicRoute[] = [
+  ...indexableRoutes,
+  ...thankYouRoutes,
+];
+
+export function isIndexablePublicRoute(
+  route: PublicRoute,
+): route is IndexablePublicRoute {
+  return route.sitemap.include;
+}
 
 function stripQueryAndHash(value: string): string {
   const queryIndex = value.indexOf("?");

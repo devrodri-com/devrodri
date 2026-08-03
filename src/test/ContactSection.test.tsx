@@ -1,18 +1,21 @@
-import { render, screen, waitFor } from "@testing-library/react";
+import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import ContactSection from "../Components/ContactSection";
 import { LanguageProvider } from "../i18n/LanguageProvider";
 import type { Language } from "../i18n/language";
 import {
-  CONTACT_FORM_ENDPOINT,
+  CONTACT_FORM_AJAX_ENDPOINT,
   CONTACT_FORM_LIMITS,
+  CONTACT_FORM_NATIVE_ENDPOINT,
   CONTACT_FORM_TIMEOUT_MS,
+  getContactFormNextUrl,
 } from "../services/contactForm";
 import {
   trackContactAttempt,
   trackContactError,
   trackContactSuccess,
+  trackContactTimeout,
 } from "../lib/analytics";
 
 vi.mock("../lib/analytics", () => ({
@@ -47,6 +50,10 @@ describe("ContactSection", () => {
     vi.clearAllMocks();
   });
 
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
   it("keeps required fields, limits, captcha choice, and honeypot", () => {
     renderContactSection();
 
@@ -78,7 +85,12 @@ describe("ContactSection", () => {
       "maxlength",
       String(CONTACT_FORM_LIMITS.message.max),
     );
-    expect(form).toHaveAttribute("action", CONTACT_FORM_ENDPOINT);
+    expect(form).toHaveAttribute("action", CONTACT_FORM_NATIVE_ENDPOINT);
+    expect(form).toHaveAttribute("method", "POST");
+    expect(form).toHaveAttribute(
+      "enctype",
+      "application/x-www-form-urlencoded",
+    );
     expect(
       form?.querySelector('input[name="_captcha"]'),
     ).toHaveAttribute("value", "false");
@@ -86,6 +98,10 @@ describe("ContactSection", () => {
       form?.querySelector('input[name="_subject"]'),
     ).toHaveAttribute("value", "Nuevo mensaje desde devrodri.com");
     expect(form?.querySelector('input[name="_honey"]')).toBeInTheDocument();
+    expect(form?.querySelector('input[name="_next"]')).toHaveAttribute(
+      "value",
+      getContactFormNextUrl("es"),
+    );
     expect(CONTACT_FORM_TIMEOUT_MS).toBe(15_000);
   });
 
@@ -142,6 +158,12 @@ describe("ContactSection", () => {
       expect(label).not.toHaveClass("sr-only");
       expect(field).not.toHaveAttribute("placeholder");
     }
+
+    const form = screen.getByLabelText("Name").closest("form");
+    expect(form?.querySelector('input[name="_next"]')).toHaveAttribute(
+      "value",
+      getContactFormNextUrl("en"),
+    );
   });
 
   it("preserves the approved email and WhatsApp alternatives", () => {
@@ -175,7 +197,7 @@ describe("ContactSection", () => {
     ).toBeInTheDocument();
     expect(fetchSpy).toHaveBeenCalledTimes(1);
     expect(fetchSpy).toHaveBeenCalledWith(
-      CONTACT_FORM_ENDPOINT,
+      CONTACT_FORM_AJAX_ENDPOINT,
       expect.objectContaining({
         method: "POST",
         headers: { Accept: "application/json" },
@@ -241,6 +263,90 @@ describe("ContactSection", () => {
     resolveRequest(new Response("{}", { status: 200 }));
 
     await waitFor(() => expect(submit).toBeEnabled());
+  });
+
+  it("keeps both repeated submit events in-page and sends only one AJAX request", async () => {
+    let resolveRequest: ((response: Response) => void) | undefined;
+    const pendingResponse = new Promise<Response>((resolve) => {
+      resolveRequest = resolve;
+    });
+    const fetchSpy = vi
+      .spyOn(globalThis, "fetch")
+      .mockReturnValue(pendingResponse);
+    renderContactSection();
+    await fillContactForm();
+    const form = screen.getByLabelText("Nombre").closest("form");
+    if (!(form instanceof HTMLFormElement)) {
+      throw new Error("Expected the contact form");
+    }
+
+    const firstSubmit = new Event("submit", { bubbles: true, cancelable: true });
+    const secondSubmit = new Event("submit", { bubbles: true, cancelable: true });
+    let firstDispatchResult = true;
+    let secondDispatchResult = true;
+    act(() => {
+      firstDispatchResult = form.dispatchEvent(firstSubmit);
+      secondDispatchResult = form.dispatchEvent(secondSubmit);
+    });
+
+    expect(firstDispatchResult).toBe(false);
+    expect(secondDispatchResult).toBe(false);
+    expect(firstSubmit.defaultPrevented).toBe(true);
+    expect(secondSubmit.defaultPrevented).toBe(true);
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(fetchSpy.mock.calls[0]?.[0]).toBe(CONTACT_FORM_AJAX_ENDPOINT);
+
+    if (!resolveRequest) throw new Error("Expected pending request resolver");
+    resolveRequest(new Response("{}", { status: 200 }));
+    await waitFor(() =>
+      expect(
+        screen.getByRole("button", { name: "Enviar consulta" }),
+      ).toBeEnabled(),
+    );
+  });
+
+  it("preserves the localized timeout state and Analytics event", async () => {
+    vi.useFakeTimers();
+    const fetchSpy = vi
+      .spyOn(globalThis, "fetch")
+      .mockImplementation((_input, requestInit) =>
+        new Promise<Response>((_resolve, reject) => {
+          requestInit?.signal?.addEventListener(
+            "abort",
+            () => reject(new DOMException("Aborted", "AbortError")),
+            { once: true },
+          );
+        }),
+      );
+    renderContactSection();
+    fireEvent.change(screen.getByLabelText("Nombre"), {
+      target: { value: "Rodrigo" },
+    });
+    fireEvent.change(screen.getByLabelText("Correo electrónico"), {
+      target: { value: "rodrigo@example.com" },
+    });
+    fireEvent.change(screen.getByLabelText("¿En qué te puedo ayudar?"), {
+      target: { value: "Este es un mensaje de prueba." },
+    });
+    const form = screen.getByLabelText("Nombre").closest("form");
+    if (!(form instanceof HTMLFormElement)) {
+      throw new Error("Expected the contact form");
+    }
+    fireEvent.submit(form);
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(CONTACT_FORM_TIMEOUT_MS);
+    });
+
+    expect(
+      screen.getByText(
+        "El envío tardó demasiado. Probá nuevamente o escribime a r.opalo@icloud.com",
+      ),
+    ).toBeInTheDocument();
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+    expect(trackContactAttempt).toHaveBeenCalledWith("es");
+    expect(trackContactTimeout).toHaveBeenCalledWith("es");
+    expect(trackContactError).not.toHaveBeenCalled();
   });
 
   it("aborts an active request when the form unmounts", async () => {

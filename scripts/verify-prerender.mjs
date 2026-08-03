@@ -15,6 +15,8 @@ const expectedRoutes = [
     description:
       "Desarrollo sitios, aplicaciones y sistemas a medida, además de automatizaciones e integraciones orientadas a objetivos reales de negocio.",
     content: "Sitios web que comunican y convierten.",
+    metadataHash:
+      "5ac1c1ca09ea94009f771a4e855df20938c2095f9e2e1e77f5bfa9ef75d6badb",
     noJavaScriptMarkers: 17,
   },
   {
@@ -25,6 +27,8 @@ const expectedRoutes = [
     description:
       "Explorá proyectos de sistemas, sitios web, e-commerce y estrategia de marca, con detalles de alcance, rol y tecnología.",
     content: "Algunos trabajos",
+    metadataHash:
+      "cd512b5198897bcb9be4842be31e3abeb34c90dfffa40aa1f8cb1f2ac235df64",
     noJavaScriptMarkers: 9,
   },
   {
@@ -35,6 +39,8 @@ const expectedRoutes = [
     description:
       "Caso de producto propio: un ecosistema digital conectado con la operación logística de LEM-BOX en Estados Unidos, Uruguay y Argentina.",
     content: "Un producto conectado a una operación real",
+    metadataHash:
+      "15285d851d28855ec6ec1ea965d8f7d8f82eb32fb35bfded55e17a916a15929b",
     noJavaScriptMarkers: 1,
   },
   {
@@ -45,6 +51,8 @@ const expectedRoutes = [
     description:
       "I build custom websites, applications, and systems, plus automations and integrations aligned with real business goals.",
     content: "Websites built to communicate and convert.",
+    metadataHash:
+      "4efb4c65eb51e9c52f20d5b49072a135ad73791dc89e81facae035c68a86a647",
     noJavaScriptMarkers: 17,
   },
   {
@@ -55,6 +63,8 @@ const expectedRoutes = [
     description:
       "Explore systems, websites, e-commerce, and brand strategy projects with details on scope, role, and technology.",
     content: "Some Work",
+    metadataHash:
+      "12917e19570724e638b29b068da29f0122c5fb8b576adfa55bd748dced4a35f9",
     noJavaScriptMarkers: 9,
   },
   {
@@ -65,6 +75,36 @@ const expectedRoutes = [
     description:
       "Own-product case study: a digital ecosystem connected to LEM-BOX's logistics operation across the United States, Uruguay, and Argentina.",
     content: "A product connected to a real operation",
+    metadataHash:
+      "a82aa0233255e55dded2e20c18b752f88b22965f1692be24dfe75fa34319a27c",
+    noJavaScriptMarkers: 1,
+  },
+];
+const expectedThankYouRoutes = [
+  {
+    pathname: "/gracias",
+    file: "gracias/index.html",
+    lang: "es",
+    title: "Consulta enviada | Rodrigo Opalo",
+    description:
+      "Gracias por escribirme. Recibí tu consulta y te voy a responder lo antes posible.",
+    heading: "Consulta enviada",
+    cta: "Volver al inicio",
+    ctaPath: "/",
+    equivalentLocalePath: "/en/thank-you",
+    noJavaScriptMarkers: 1,
+  },
+  {
+    pathname: "/en/thank-you",
+    file: "en/thank-you/index.html",
+    lang: "en",
+    title: "Inquiry sent | Rodrigo Opalo",
+    description:
+      "Thanks for getting in touch. I received your inquiry and will get back to you as soon as possible.",
+    heading: "Inquiry sent",
+    cta: "Back to home",
+    ctaPath: "/en",
+    equivalentLocalePath: "/gracias",
     noJavaScriptMarkers: 1,
   },
 ];
@@ -245,6 +285,16 @@ function inlineScripts(html) {
   ];
 }
 
+function helmetMetadataSource(html) {
+  const head = html.match(/<head>([\s\S]*?)<\/head>/)?.[1];
+  assert.ok(head, "Missing document head");
+  return [
+    ...head.matchAll(
+      /<title\b[^>]*data-rh="true"[^>]*>[\s\S]*?<\/title>|<(?:meta|link)\b[^>]*data-rh="true"[^>]*>/g,
+    ),
+  ].map(([tag]) => tag).join("");
+}
+
 const vercelConfigurationSource = await readFile(
   path.join(projectRoot, "vercel.json"),
   "utf8",
@@ -277,6 +327,11 @@ for (const route of expectedRoutes) {
   noJavaScriptDocuments.push(html);
   routeDocumentHashes.push(
     createHash("sha256").update(html).digest("hex"),
+  );
+  assert.equal(
+    createHash("sha256").update(helmetMetadataSource(html)).digest("hex"),
+    route.metadataHash,
+    `${route.pathname}: approved metadata bytes`,
   );
 
   assert.match(html, new RegExp(`<html lang="${route.lang}"`));
@@ -445,8 +500,92 @@ for (const route of expectedRoutes) {
   }
 }
 
-assert.equal(new Set(routeDocuments).size, expectedRoutes.length);
-assert.equal(new Set(routeDocumentHashes).size, expectedRoutes.length);
+for (const route of expectedThankYouRoutes) {
+  const html = await readFile(path.join(distDirectory, route.file), "utf8");
+  routeDocuments.push(html);
+  noJavaScriptDocuments.push(html);
+  routeDocumentHashes.push(
+    createHash("sha256").update(html).digest("hex"),
+  );
+
+  assert.match(html, new RegExp(`<html lang="${route.lang}"`));
+  assert.ok(html.includes(`<title data-rh="true">${route.title}</title>`));
+  assert.ok(
+    html.includes(
+      `name="description" content="${escapeHtmlAttribute(route.description)}"`,
+    ),
+    `${route.pathname}: description`,
+  );
+  assert.ok(html.includes(route.heading), `${route.pathname}: heading`);
+  assert.ok(
+    html.includes(escapeHtmlAttribute(route.description)),
+    `${route.pathname}: localized copy`,
+  );
+  assert.ok(html.includes(`href="${route.ctaPath}"`), route.pathname);
+  assert.ok(html.includes(route.cta), route.pathname);
+  assert.ok(html.includes('name="robots" content="noindex, nofollow"'));
+  assert.equal(count(html, "<title"), 1);
+  assert.equal(count(html, 'name="description"'), 1);
+  assert.equal(count(html, 'name="robots"'), 1);
+  assert.equal(count(html, 'rel="canonical"'), 0);
+  assert.equal(count(html, 'rel="alternate"'), 0);
+  assert.equal(count(html, 'property="og:'), 0);
+  assert.equal(count(html, 'name="twitter:'), 0);
+  assert.equal(inlineScripts(html).length, 0);
+  assert.equal(count(html, "<main"), 1);
+  assert.equal(count(html, "<h1"), 1);
+  assert.equal(count(html, "<form"), 0);
+  assert.ok(html.includes('<div id="root"><div'));
+  assert.ok(!html.includes("<!--app-head-->"));
+  assert.ok(!html.includes("<!--app-html-->"));
+  assert.ok(!html.includes("/unknown"));
+  assert.ok(!html.includes("data:image/gif"), `${route.pathname}: data GIF`);
+  assert.equal(
+    count(html, noJavaScriptBlock),
+    1,
+    `${route.pathname}: exact no-JavaScript block`,
+  );
+  assert.equal(
+    count(html, 'data-nojs-visible="true"'),
+    route.noJavaScriptMarkers,
+    `${route.pathname}: no-JavaScript markers`,
+  );
+  assert.match(
+    html,
+    /<footer[^>]*data-nojs-visible="true"[^>]*>/,
+    `${route.pathname}: marked Footer`,
+  );
+  assertNoJavaScriptNavigation(html, {
+    englishPath: route.lang === "es"
+      ? route.equivalentLocalePath
+      : route.pathname,
+    lang: route.lang,
+    spanishPath: route.lang === "es"
+      ? route.pathname
+      : route.equivalentLocalePath,
+  });
+  prerenderedNoJavaScriptMarkerTotal += route.noJavaScriptMarkers;
+  for (const fallback of suspenseFallbacks) {
+    assert.ok(!html.includes(fallback), `${route.pathname}: ${fallback}`);
+  }
+
+  const assetReferences = [
+    ...html.matchAll(/(?:src|href)="(\/assets\/[^"]+)"/g),
+  ].map((match) => match[1]);
+  assert.ok(assetReferences.length >= 2);
+  for (const assetReference of assetReferences) {
+    const assetPath = path.join(
+      distDirectory,
+      assetReference.replace(/^\/+/, ""),
+    );
+    assert.ok((await stat(assetPath)).isFile(), `${assetReference} is missing`);
+  }
+}
+
+const expectedRouteDocumentCount =
+  expectedRoutes.length + expectedThankYouRoutes.length;
+assert.equal(new Set(routeDocuments).size, expectedRouteDocumentCount);
+assert.equal(new Set(routeDocumentHashes).size, expectedRouteDocumentCount);
 
 const assetFiles = await readdir(path.join(distDirectory, "assets"));
 assert.equal(
@@ -542,8 +681,21 @@ for (const artifact of expectedNotFoundArtifacts) {
   prerenderedNoJavaScriptMarkerTotal += artifact.noJavaScriptMarkers;
 }
 assert.equal(new Set(notFoundDocuments).size, expectedNotFoundArtifacts.length);
-assert.equal(noJavaScriptDocuments.length, 8);
-assert.equal(prerenderedNoJavaScriptMarkerTotal, 56);
+assert.equal(noJavaScriptDocuments.length, 10);
+assert.equal(prerenderedNoJavaScriptMarkerTotal, 58);
+
+const expectedHtmlArtifacts = [
+  ...expectedRoutes.map((route) => route.file),
+  ...expectedThankYouRoutes.map((route) => route.file),
+  ...expectedNotFoundArtifacts.map((artifact) => artifact.file),
+].toSorted();
+const actualHtmlArtifacts = (
+  await readdir(distDirectory, { recursive: true })
+)
+  .map((file) => String(file).replaceAll(path.sep, "/"))
+  .filter((file) => file.endsWith(".html"))
+  .toSorted();
+assert.deepEqual(actualHtmlArtifacts, expectedHtmlArtifacts);
 
 const styleSourceDirective = contentSecurityPolicy
   .split(";")
@@ -596,6 +748,8 @@ for (const forbidden of [
   "<priority>",
   "<changefreq>",
   "/404",
+  "/gracias",
+  "/en/thank-you",
   "vercel.app",
 ]) {
   assert.ok(!sitemap.includes(forbidden));
@@ -607,7 +761,7 @@ assert.equal(vercelConfiguration.trailingSlash, false);
 assert.deepEqual(vercelConfiguration.rewrites, []);
 assert.ok(!JSON.stringify(vercelConfiguration).includes('"/index.html"'));
 const localizedNotFoundRouteSource =
-  "/en/(?!portfolio(?:/lem-box)?/?$).+$";
+  "/en/(?!(?:portfolio(?:/lem-box)?|thank-you)/?$).+$";
 assert.deepEqual(vercelConfiguration.routes, [
   {
     src: localizedNotFoundRouteSource,
@@ -646,6 +800,8 @@ for (const publicEnglishPath of [
   "/en/portfolio/",
   "/en/portfolio/lem-box",
   "/en/portfolio/lem-box/",
+  "/en/thank-you",
+  "/en/thank-you/",
 ]) {
   assert.equal(localizedNotFoundRoute.test(publicEnglishPath), false);
 }
@@ -704,5 +860,5 @@ assert.ok(
 );
 
 console.log(
-  `Verified ${expectedRoutes.length} route documents, metadata, CSP, 404, robots and sitemap`,
+  `Verified ${expectedRouteDocumentCount} route documents, metadata, CSP, 404, robots and sitemap`,
 );

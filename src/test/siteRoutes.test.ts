@@ -53,6 +53,20 @@ const expectedRoutes = [
     equivalentLocalePath: "/portfolio/lem-box",
     page: "lem-box",
   },
+  {
+    routeKey: "thank-you:es",
+    locale: "es",
+    pathname: "/gracias",
+    equivalentLocalePath: "/en/thank-you",
+    page: "thank-you",
+  },
+  {
+    routeKey: "thank-you:en",
+    locale: "en",
+    pathname: "/en/thank-you",
+    equivalentLocalePath: "/gracias",
+    page: "thank-you",
+  },
 ] as const;
 
 const expectedCommercialMetadata = {
@@ -90,7 +104,7 @@ const lockedLemBoxMetadata = {
 } as const;
 
 describe("public route registry", () => {
-  it("contains exactly the approved six ES/EN routes", () => {
+  it("contains the six indexable routes and two localized confirmation routes", () => {
     expect(
       PUBLIC_ROUTES.map(
         ({
@@ -108,14 +122,23 @@ describe("public route registry", () => {
         }),
       ),
     ).toEqual(expectedRoutes);
-    expect(new Set(PUBLIC_ROUTES.map((route) => route.pathname)).size).toBe(6);
+    expect(new Set(PUBLIC_ROUTES.map((route) => route.pathname)).size).toBe(8);
+    expect(new Set(PUBLIC_ROUTES.map((route) => route.routeKey)).size).toBe(8);
+    expect(PUBLIC_ROUTES.filter((route) => route.sitemap.include)).toHaveLength(
+      6,
+    );
+    expect(PUBLIC_ROUTES.filter((route) => !route.sitemap.include)).toHaveLength(
+      2,
+    );
     expect(PUBLIC_ROUTES.map((route) => String(route.pathname))).not.toContain(
       "/es",
     );
   });
 
   it("keeps canonical, social, hreflang and sitemap metadata complete", () => {
-    for (const route of PUBLIC_ROUTES) {
+    for (const route of PUBLIC_ROUTES.filter(
+      (candidate) => candidate.sitemap.include,
+    )) {
       expect(route.metadata.canonical).toBe(
         `${SITE_ORIGIN}${route.pathname}`,
       );
@@ -139,6 +162,30 @@ describe("public route registry", () => {
         route.metadata.hreflang[0]?.href,
       );
       expect(route.sitemap.include).toBe(true);
+    }
+  });
+
+  it("keeps confirmation route identities unique and all discovery metadata absent", () => {
+    const thankYouRoutes = PUBLIC_ROUTES.filter(
+      (route) => !route.sitemap.include,
+    );
+
+    expect(thankYouRoutes.map((route) => route.routeKey)).toEqual([
+      "thank-you:es",
+      "thank-you:en",
+    ]);
+    expect(
+      thankYouRoutes.some((route) => route.routeKey.startsWith("portfolio:")),
+    ).toBe(false);
+
+    for (const route of thankYouRoutes) {
+      expect(route.page).toBe("thank-you");
+      expect(route.sitemap.include).toBe(false);
+      expect(route.metadata.robots).toBe("noindex, nofollow");
+      expect(route.metadata.canonical).toBeNull();
+      expect(route.metadata.hreflang).toEqual([]);
+      expect(route.metadata.og).toBeNull();
+      expect(route.metadata.twitter).toBeNull();
     }
   });
 
@@ -195,6 +242,14 @@ describe("public route registry", () => {
     expect(getEquivalentLocalePath("/en/portfolio/lem-box", "es")).toBe(
       "/portfolio/lem-box",
     );
+    expect(getLocalizedPath("thank-you", "es")).toBe("/gracias");
+    expect(getLocalizedPath("thank-you", "en")).toBe("/en/thank-you");
+    expect(getEquivalentLocalePath("/gracias", "en")).toBe(
+      "/en/thank-you",
+    );
+    expect(getEquivalentLocalePath("/en/thank-you", "es")).toBe(
+      "/gracias",
+    );
   });
 
   it("normalizes only routing syntax and rejects unregistered paths", () => {
@@ -203,6 +258,9 @@ describe("public route registry", () => {
     );
     expect(getPublicRoute("/portfolio/?source=vis01#portfolio-grid")?.routeKey)
       .toBe("portfolio:es");
+    expect(getPublicRoute("/gracias/?source=form#main-content")?.routeKey)
+      .toBe("thank-you:es");
+    expect(getPublicRoute("/en/thank-you/")?.routeKey).toBe("thank-you:en");
     expect(getPublicRoute("/en/portfolio/no-existe")).toBeNull();
     expect(getPublicRoute("/es")).toBeNull();
   });
