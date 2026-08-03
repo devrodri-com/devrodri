@@ -59,7 +59,7 @@
   "rewrites": [],
   "routes": [
     {
-      "src": "/en/(?!portfolio(?:/lem-box)?/?$).+$",
+      "src": "/en/(?!(?:portfolio(?:/lem-box)?|thank-you)/?$).+$",
       "caseSensitive": true,
       "status": 404,
       "dest": "/en/404.html",

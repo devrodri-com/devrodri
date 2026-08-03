@@ -19,6 +19,7 @@ import ImpactSection from "./Components/ImpactSection";
 import ExperienceSection from "./Components/ExperienceSection";
 import TransitionServicesIntro from "./Components/TransitionServicesIntro";
 import NotFoundPage from "./pages/NotFoundPage";
+import ThankYouPage from "./pages/ThankYouPage";
 import CTASection from "./Components/CTASection";
 import {
   Routes,
@@ -76,6 +77,7 @@ function PublicPage({ page }: { page: PageKey }) {
   const { language } = useLanguage();
 
   if (page === "home") return <HomePage />;
+  if (page === "thank-you") return <ThankYouPage />;
   if (page === "portfolio") {
     return (
       <Suspense
@@ -230,7 +232,9 @@ function App({
   helmetContext?: Partial<FilledContext>;
 } = {}) {
   const location = useLocation();
-  const isNotFound = getPublicRoute(location.pathname) === null;
+  const publicRoute = getPublicRoute(location.pathname);
+  const isNotFound = publicRoute === null;
+  const isFullHeightPage = isNotFound || publicRoute.page === "thank-you";
   const { language } = useLanguage();
 
   usePageview();
@@ -243,9 +247,9 @@ function App({
       <MotionConfig reducedMotion="user">
         <div
           className={`font-sans bg-neutral text-gray-900 min-h-screen${
-            isNotFound ? " flex flex-col" : ""
+            isFullHeightPage ? " flex flex-col" : ""
           }`}
-          style={isNotFound ? { minHeight: "100dvh" } : undefined}
+          style={isFullHeightPage ? { minHeight: "100dvh" } : undefined}
         >
           <SeoHead />
 
@@ -265,7 +269,11 @@ function App({
           <main
             id="main-content"
             tabIndex={-1}
-            className={isNotFound ? "flex flex-1 focus:outline-none" : "focus:outline-none"}
+            className={
+              isFullHeightPage
+                ? "flex flex-1 focus:outline-none"
+                : "focus:outline-none"
+            }
           >
             <Routes>
               {PUBLIC_ROUTES.map((route) => (

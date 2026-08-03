@@ -5,6 +5,19 @@ import path from "node:path";
 import { spawn } from "node:child_process";
 
 const projectRoot = process.cwd();
+const vercelConfiguration = JSON.parse(
+  await readFile(path.join(projectRoot, "vercel.json"), "utf8"),
+);
+const globalHeaderRule = vercelConfiguration.headers.find(
+  (rule) => rule.source === "/(.*)",
+);
+assert.ok(globalHeaderRule, "Missing global Vercel header rule");
+const expectedSecurityHeaders = new Map(
+  globalHeaderRule.headers.map((header) => [
+    header.key.toLowerCase(),
+    header.value,
+  ]),
+);
 const serverProcess = spawn(process.execPath, ["scripts/serve-dist.mjs"], {
   cwd: projectRoot,
   env: { ...process.env, PORT: "0" },
@@ -54,6 +67,12 @@ async function request(pathname) {
   return fetch(`${serverUrl}${pathname}`, { redirect: "manual" });
 }
 
+function assertSecurityHeaders(response, pathname) {
+  for (const [name, value] of expectedSecurityHeaders) {
+    assert.equal(response.headers.get(name), value, `${pathname}: ${name}`);
+  }
+}
+
 async function stopServer() {
   if (serverProcess.exitCode !== null) return;
   await new Promise((resolve, reject) => {
@@ -70,7 +89,7 @@ async function stopServer() {
 }
 
 try {
-  const publicPaths = [
+  const indexablePaths = [
     "/",
     "/portfolio",
     "/portfolio/lem-box",
@@ -78,7 +97,7 @@ try {
     "/en/portfolio",
     "/en/portfolio/lem-box",
   ];
-  for (const pathname of publicPaths) {
+  for (const pathname of indexablePaths) {
     const response = await request(pathname);
     assert.equal(response.status, 200, pathname);
     assert.equal(
@@ -86,9 +105,68 @@ try {
       "text/html; charset=utf-8",
       pathname,
     );
+    assertSecurityHeaders(response, pathname);
     const html = await response.text();
     assert.ok(html.includes('<div id="root"><div'), pathname);
     assert.ok(html.includes('name="robots" content="index, follow"'), pathname);
+  }
+
+  const thankYouPaths = new Map([
+    [
+      "/gracias",
+      {
+        lang: "es",
+        title: "Consulta enviada | Rodrigo Opalo",
+        heading: "Consulta enviada",
+        copy:
+          "Gracias por escribirme. Recibí tu consulta y te voy a responder lo antes posible.",
+        cta: "Volver al inicio",
+        ctaPath: "/",
+      },
+    ],
+    [
+      "/en/thank-you",
+      {
+        lang: "en",
+        title: "Inquiry sent | Rodrigo Opalo",
+        heading: "Inquiry sent",
+        copy:
+          "Thanks for getting in touch. I received your inquiry and will get back to you as soon as possible.",
+        cta: "Back to home",
+        ctaPath: "/en",
+      },
+    ],
+  ]);
+  for (const [pathname, expected] of thankYouPaths) {
+    const response = await request(pathname);
+    assert.equal(response.status, 200, pathname);
+    assert.equal(
+      response.headers.get("content-type"),
+      "text/html; charset=utf-8",
+      pathname,
+    );
+    assertSecurityHeaders(response, pathname);
+    const html = await response.text();
+    assert.ok(html.includes(`<html lang="${expected.lang}"`), pathname);
+    assert.ok(
+      html.includes(`<title data-rh="true">${expected.title}</title>`),
+      pathname,
+    );
+    assert.ok(html.includes(expected.heading), pathname);
+    assert.ok(html.includes(expected.copy), pathname);
+    assert.ok(html.includes(expected.cta), pathname);
+    assert.ok(html.includes(`href="${expected.ctaPath}"`), pathname);
+    assert.ok(html.includes('<div id="root"><div'), pathname);
+    assert.ok(
+      html.includes('name="robots" content="noindex, nofollow"'),
+      pathname,
+    );
+    assert.ok(!html.includes('rel="canonical"'), pathname);
+    assert.ok(!html.includes('rel="alternate"'), pathname);
+    assert.ok(!html.includes('property="og:'), pathname);
+    assert.ok(!html.includes('name="twitter:'), pathname);
+    assert.ok(!html.includes('type="application/ld+json"'), pathname);
+    assert.ok(!html.includes("<form"), pathname);
   }
 
   const invalidPaths = new Map([
@@ -138,6 +216,7 @@ try {
       "text/html; charset=utf-8",
       pathname,
     );
+    assertSecurityHeaders(response, pathname);
     const html = await response.text();
     invalidBodies.push(html);
     assert.ok(html.includes(`<html lang="${expected.lang}"`), pathname);
@@ -169,6 +248,11 @@ try {
       "/en/portfolio/lem-box/?source=vis01",
       "/en/portfolio/lem-box?source=vis01",
     ],
+    ["/gracias/?source=vis01", "/gracias?source=vis01"],
+    [
+      "/en/thank-you/?source=vis01",
+      "/en/thank-you?source=vis01",
+    ],
   ]);
   for (const [pathname, expectedLocation] of trailingSlashRedirects) {
     const response = await request(pathname);
@@ -187,6 +271,15 @@ try {
     robotsResponse.headers.get("content-type"),
     "text/plain; charset=utf-8",
   );
+  assert.equal(
+    await robotsResponse.text(),
+    [
+      "User-agent: *",
+      "Allow: /",
+      "Sitemap: https://www.devrodri.com/sitemap.xml",
+      "",
+    ].join("\n"),
+  );
 
   const sitemapResponse = await request("/sitemap.xml");
   assert.equal(sitemapResponse.status, 200);
@@ -194,6 +287,16 @@ try {
     sitemapResponse.headers.get("content-type"),
     "application/xml; charset=utf-8",
   );
+  const sitemap = await sitemapResponse.text();
+  assert.equal(sitemap.split("<url>").length - 1, indexablePaths.length);
+  for (const pathname of indexablePaths) {
+    assert.ok(
+      sitemap.includes(`<loc>https://www.devrodri.com${pathname}</loc>`),
+      pathname,
+    );
+  }
+  assert.ok(!sitemap.includes("/gracias"));
+  assert.ok(!sitemap.includes("/en/thank-you"));
 
   const homeHtml = await readFile(
     path.join(projectRoot, "dist", "index.html"),
@@ -224,7 +327,7 @@ try {
   }
 
   console.log(
-    "Verified static HTTP routes, redirects, MIME types, assets and 404 responses",
+    "Verified static HTTP routes, localized confirmations, redirects, MIME types, assets and 404 responses",
   );
 } finally {
   await stopServer();
