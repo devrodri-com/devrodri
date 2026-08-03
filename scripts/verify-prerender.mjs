@@ -147,11 +147,95 @@ function sha256Source(value) {
 }
 
 const noJavaScriptStyle =
-  "[data-nojs-visible]{opacity:1!important;transform:none!important}";
+  "[data-nojs-visible]{opacity:1!important;transform:none!important}[data-nojs-hide]{display:none!important}[data-nojs-language]{display:flex!important}@media(max-width:639px){[data-nojs-navbar]{position:static!important}[data-nojs-mobile-nav]{display:flex!important}}";
 const noJavaScriptStyleHash =
+  "'sha256-F3e8uFPgP10pK68RX7B5e1ZHd++LBK67gz3K7SNPrgA='";
+const previousNoJavaScriptStyleHash =
   "'sha256-s8Yo+QmbhprPrMTPA+WlxksKujTWurQ8EScEm2yFeM4='";
 const noJavaScriptBlock =
   `<noscript><style>${noJavaScriptStyle}</style></noscript>`;
+
+function assertNoJavaScriptNavigation(
+  html,
+  { englishPath, lang, spanishPath },
+) {
+  const mobileFallbackStart = html.indexOf(
+    '<div data-nojs-mobile-nav="true"',
+  );
+  assert.notEqual(mobileFallbackStart, -1, `${lang}: mobile fallback`);
+  const mobileFallbackEnd = html.indexOf("</nav>", mobileFallbackStart);
+  assert.notEqual(mobileFallbackEnd, -1, `${lang}: Navbar close`);
+  const mobileFallback = html.slice(mobileFallbackStart, mobileFallbackEnd);
+  const localizedHomePath = lang === "es" ? "/" : "/en";
+  const localizedPortfolioPath = lang === "es"
+    ? "/portfolio"
+    : "/en/portfolio";
+  const expectedNavigationHrefs = [
+    `${localizedHomePath}#sobremi`,
+    `${localizedHomePath}#porqueelegirnos`,
+    localizedPortfolioPath,
+    `${localizedHomePath}#contacto`,
+    `${localizedHomePath}#faq`,
+    spanishPath,
+    englishPath,
+  ];
+  const fallbackAnchors = [
+    ...mobileFallback.matchAll(/<a\b[^>]*>/g),
+  ].map(([anchor]) => anchor);
+
+  assert.equal(count(html, 'data-nojs-navbar="true"'), 1, `${lang}: Navbar`);
+  assert.equal(
+    count(html, 'data-nojs-mobile-nav="true"'),
+    1,
+    `${lang}: mobile fallback count`,
+  );
+  assert.equal(
+    count(html, 'data-nojs-language="true"'),
+    2,
+    `${lang}: language fallback count`,
+  );
+  assert.equal(
+    count(html, 'data-nojs-hide="true"'),
+    2,
+    `${lang}: JavaScript-only controls`,
+  );
+  assert.equal(
+    count(html, 'aria-current="page"'),
+    2,
+    `${lang}: language current state`,
+  );
+  assert.ok(
+    html.includes(
+      `aria-label="${lang === "es" ? "Navegación principal" : "Primary navigation"}"`,
+    ),
+    `${lang}: localized navigation label`,
+  );
+  assert.ok(
+    mobileFallback.includes(
+      `aria-label="${lang === "es" ? "Selector de idioma" : "Language selector"}"`,
+    ),
+    `${lang}: localized language label`,
+  );
+  assert.ok(
+    mobileFallback.includes(
+      `aria-label="${lang === "es" ? "Español, idioma actual" : "English, current language"}"`,
+    ),
+    `${lang}: current language label`,
+  );
+  assert.equal(fallbackAnchors.length, expectedNavigationHrefs.length);
+  assert.deepEqual(
+    fallbackAnchors.map((anchor) =>
+      anchor.match(/\shref="([^"]+)"/)?.[1]
+    ),
+    expectedNavigationHrefs,
+    `${lang}: fallback hrefs`,
+  );
+  assert.ok(fallbackAnchors.every((anchor) => /\shref="[^"]+"/.test(anchor)));
+  assert.equal(count(mobileFallback, "focus-visible:ring-2"), 7);
+  assert.ok(!mobileFallback.includes("<button"));
+  assert.ok(!mobileFallback.includes("aria-pressed"));
+  assert.ok(!mobileFallback.includes("tabindex="));
+}
 
 function inlineScripts(html) {
   return [
@@ -178,8 +262,9 @@ const contentSecurityPolicy =
     (header) => header.key.toLowerCase() === "content-security-policy",
   )?.value ?? "";
 assert.notEqual(contentSecurityPolicy, "", "Missing Content-Security-Policy");
-assert.equal(Buffer.byteLength(noJavaScriptStyle, "utf8"), 65);
+assert.equal(Buffer.byteLength(noJavaScriptStyle, "utf8"), 265);
 assert.equal(sha256Source(noJavaScriptStyle), noJavaScriptStyleHash);
+assert.ok(!vercelConfigurationSource.includes(previousNoJavaScriptStyleHash));
 
 const routeDocuments = [];
 const routeDocumentHashes = [];
@@ -297,6 +382,11 @@ for (const route of expectedRoutes) {
     /<footer[^>]*data-nojs-visible="true"[^>]*>/,
     `${route.pathname}: marked Footer`,
   );
+  assertNoJavaScriptNavigation(html, {
+    englishPath,
+    lang: route.lang,
+    spanishPath,
+  });
   prerenderedNoJavaScriptMarkerTotal += route.noJavaScriptMarkers;
   for (const fallback of suspenseFallbacks) {
     assert.ok(!html.includes(fallback), `${route.pathname}: ${fallback}`);
@@ -444,6 +534,11 @@ for (const artifact of expectedNotFoundArtifacts) {
     /<footer[^>]*data-nojs-visible="true"[^>]*>/,
     `${artifact.file}: marked Footer`,
   );
+  assertNoJavaScriptNavigation(html, {
+    englishPath: "/en",
+    lang: artifact.lang,
+    spanishPath: "/",
+  });
   prerenderedNoJavaScriptMarkerTotal += artifact.noJavaScriptMarkers;
 }
 assert.equal(new Set(notFoundDocuments).size, expectedNotFoundArtifacts.length);
