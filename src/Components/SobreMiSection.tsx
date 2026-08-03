@@ -15,6 +15,7 @@ export default function SobreMiSection() {
   return (
     <motion.section
       id="sobremi"
+      data-nojs-visible
       className="bg-neutral py-24 px-4 sm:px-6 relative"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
@@ -31,6 +32,7 @@ export default function SobreMiSection() {
       </div>
       <div className="max-w-5xl mx-auto text-center">
         <motion.h2
+          data-nojs-visible
           className="text-4xl sm:text-5xl font-semibold tracking-tight text-gray-900 mb-4 md:mb-6"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

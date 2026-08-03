@@ -22,6 +22,7 @@ export default function CTASection() {
   return (
     <motion.section
       id="cta"
+      data-nojs-visible
       className="relative bg-black text-white py-16 sm:py-20 px-4 sm:px-6 text-center"
       {...(shouldReduceMotion
         ? {

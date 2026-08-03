@@ -26,6 +26,7 @@ export default function Footer() {
 
   return (
     <motion.footer
+      data-nojs-visible
       className="border-t border-gray-200 bg-white py-3 px-4 sm:px-6"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
