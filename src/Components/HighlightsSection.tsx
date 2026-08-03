@@ -50,7 +50,6 @@ export default function HighlightsSection() {
               srcSet="/img/highlights-systems-bg.jpg"
             />
             <img
-              src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=="
               alt=""
               aria-hidden="true"
               loading="lazy"

@@ -263,6 +263,7 @@ for (const route of expectedRoutes) {
   assert.ok(!html.includes("<!--app-head-->"));
   assert.ok(!html.includes("<!--app-html-->"));
   assert.ok(!html.includes("/unknown"));
+  assert.ok(!html.includes("data:image/gif"), `${route.pathname}: data GIF`);
   for (const fallback of suspenseFallbacks) {
     assert.ok(!html.includes(fallback), `${route.pathname}: ${fallback}`);
   }
@@ -390,6 +391,7 @@ for (const artifact of expectedNotFoundArtifacts) {
   assert.ok(!html.includes("Websites built to communicate and convert."));
   assert.ok(!html.includes("<!--app-head-->"));
   assert.ok(!html.includes("<!--app-html-->"));
+  assert.ok(!html.includes("data:image/gif"), `${artifact.file}: data GIF`);
 }
 assert.equal(new Set(notFoundDocuments).size, expectedNotFoundArtifacts.length);
 
@@ -516,6 +518,22 @@ await assert.rejects(
   (error) => error?.code === "ENOENT",
 );
 const serverFiles = await readdir(serverDirectory, { recursive: true });
+for (const assetFile of assetFiles.filter((file) =>
+  /\.(?:css|js)$/.test(file)
+)) {
+  const source = await readFile(
+    path.join(distDirectory, "assets", assetFile),
+    "utf8",
+  );
+  assert.ok(!source.includes("data:image/gif"), `${assetFile}: data GIF`);
+}
+for (const serverFile of serverFiles.filter((file) => /\.mjs$/.test(file))) {
+  const source = await readFile(
+    path.join(serverDirectory, serverFile),
+    "utf8",
+  );
+  assert.ok(!source.includes("data:image/gif"), `${serverFile}: data GIF`);
+}
 assert.ok(
   serverFiles.every(
     (file) =>

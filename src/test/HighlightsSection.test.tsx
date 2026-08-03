@@ -1,6 +1,7 @@
 import { render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import HighlightsSection from "../Components/HighlightsSection";
+import highlightsSource from "../Components/HighlightsSection.tsx?raw";
 import { LanguageProvider } from "../i18n/LanguageProvider";
 
 function renderHighlights() {
@@ -35,12 +36,24 @@ describe("HighlightsSection static background", () => {
       "srcset",
       "/img/highlights-systems-bg.jpg",
     );
+    expect(image).not.toHaveAttribute("src");
     expect(image).toHaveAttribute("alt", "");
     expect(image).toHaveAttribute("aria-hidden", "true");
     expect(image).toHaveAttribute("loading", "lazy");
     expect(image).toHaveAttribute("decoding", "async");
     expect(image).toHaveAttribute("width", "1672");
     expect(image).toHaveAttribute("height", "941");
+    expect(image).toHaveClass(
+      "absolute",
+      "inset-0",
+      "hidden",
+      "h-full",
+      "w-full",
+      "object-cover",
+      "object-center",
+      "lg:block",
+    );
+    expect(highlightsSource).not.toContain("data:image/gif");
     expect(section.querySelector("video")).not.toBeInTheDocument();
     expect(section.querySelector("video source")).not.toBeInTheDocument();
     expect(section).not.toHaveTextContent("WEBSITE");
