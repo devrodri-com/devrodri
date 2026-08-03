@@ -168,8 +168,17 @@ describe("semantic navigation contracts", () => {
     const user = userEvent.setup();
     const firstRender = renderApp("/");
     const main = screen.getByRole("main");
+    const desktopNavigation = document.querySelector<HTMLElement>(
+      "[data-navbar-desktop]",
+    );
+    expect(desktopNavigation).not.toBeNull();
+    if (desktopNavigation === null) {
+      throw new Error("Missing desktop Navbar links");
+    }
 
-    await user.click(screen.getByRole("link", { name: "Portfolio" }));
+    await user.click(
+      within(desktopNavigation).getByRole("link", { name: "Portfolio" }),
+    );
     await screen.findByRole("heading", { level: 1, name: "Algunos trabajos" });
     await waitFor(() => expect(main).toHaveFocus());
     expect(window.scrollTo).toHaveBeenCalledWith({

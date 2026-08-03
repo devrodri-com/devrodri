@@ -164,8 +164,17 @@ describe("application routing", () => {
       level: 1,
       name: "Sitios web que comunican y convierten.",
     });
+    const desktopNavigation = document.querySelector<HTMLElement>(
+      "[data-navbar-desktop]",
+    );
+    expect(desktopNavigation).not.toBeNull();
+    if (desktopNavigation === null) {
+      throw new Error("Missing desktop Navbar links");
+    }
 
-    await user.click(screen.getByRole("link", { name: "Portfolio" }));
+    await user.click(
+      within(desktopNavigation).getByRole("link", { name: "Portfolio" }),
+    );
 
     expect(
       await screen.findByRole("heading", {
