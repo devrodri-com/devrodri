@@ -15,6 +15,7 @@ const expectedRoutes = [
     description:
       "Desarrollo sitios, aplicaciones y sistemas a medida, además de automatizaciones e integraciones orientadas a objetivos reales de negocio.",
     content: "Sitios web que comunican y convierten.",
+    noJavaScriptMarkers: 17,
   },
   {
     pathname: "/portfolio",
@@ -24,6 +25,7 @@ const expectedRoutes = [
     description:
       "Explorá proyectos de sistemas, sitios web, e-commerce y estrategia de marca, con detalles de alcance, rol y tecnología.",
     content: "Algunos trabajos",
+    noJavaScriptMarkers: 9,
   },
   {
     pathname: "/portfolio/lem-box",
@@ -33,6 +35,7 @@ const expectedRoutes = [
     description:
       "Caso de producto propio: un ecosistema digital conectado con la operación logística de LEM-BOX en Estados Unidos, Uruguay y Argentina.",
     content: "Un producto conectado a una operación real",
+    noJavaScriptMarkers: 1,
   },
   {
     pathname: "/en",
@@ -42,6 +45,7 @@ const expectedRoutes = [
     description:
       "I build custom websites, applications, and systems, plus automations and integrations aligned with real business goals.",
     content: "Websites built to communicate and convert.",
+    noJavaScriptMarkers: 17,
   },
   {
     pathname: "/en/portfolio",
@@ -51,6 +55,7 @@ const expectedRoutes = [
     description:
       "Explore systems, websites, e-commerce, and brand strategy projects with details on scope, role, and technology.",
     content: "Some Work",
+    noJavaScriptMarkers: 9,
   },
   {
     pathname: "/en/portfolio/lem-box",
@@ -60,6 +65,7 @@ const expectedRoutes = [
     description:
       "Own-product case study: a digital ecosystem connected to LEM-BOX's logistics operation across the United States, Uruguay, and Argentina.",
     content: "A product connected to a real operation",
+    noJavaScriptMarkers: 1,
   },
 ];
 const localePairs = [
@@ -140,6 +146,13 @@ function sha256Source(value) {
   return `'sha256-${digest}'`;
 }
 
+const noJavaScriptStyle =
+  "[data-nojs-visible]{opacity:1!important;transform:none!important}";
+const noJavaScriptStyleHash =
+  "'sha256-s8Yo+QmbhprPrMTPA+WlxksKujTWurQ8EScEm2yFeM4='";
+const noJavaScriptBlock =
+  `<noscript><style>${noJavaScriptStyle}</style></noscript>`;
+
 function inlineScripts(html) {
   return [
     ...html.matchAll(
@@ -165,13 +178,18 @@ const contentSecurityPolicy =
     (header) => header.key.toLowerCase() === "content-security-policy",
   )?.value ?? "";
 assert.notEqual(contentSecurityPolicy, "", "Missing Content-Security-Policy");
+assert.equal(Buffer.byteLength(noJavaScriptStyle, "utf8"), 65);
+assert.equal(sha256Source(noJavaScriptStyle), noJavaScriptStyleHash);
 
 const routeDocuments = [];
 const routeDocumentHashes = [];
 const liveInlineScriptHashes = new Set();
+const noJavaScriptDocuments = [];
+let prerenderedNoJavaScriptMarkerTotal = 0;
 for (const route of expectedRoutes) {
   const html = await readFile(path.join(distDirectory, route.file), "utf8");
   routeDocuments.push(html);
+  noJavaScriptDocuments.push(html);
   routeDocumentHashes.push(
     createHash("sha256").update(html).digest("hex"),
   );
@@ -264,6 +282,22 @@ for (const route of expectedRoutes) {
   assert.ok(!html.includes("<!--app-html-->"));
   assert.ok(!html.includes("/unknown"));
   assert.ok(!html.includes("data:image/gif"), `${route.pathname}: data GIF`);
+  assert.equal(
+    count(html, noJavaScriptBlock),
+    1,
+    `${route.pathname}: exact no-JavaScript block`,
+  );
+  assert.equal(
+    count(html, 'data-nojs-visible="true"'),
+    route.noJavaScriptMarkers,
+    `${route.pathname}: no-JavaScript markers`,
+  );
+  assert.match(
+    html,
+    /<footer[^>]*data-nojs-visible="true"[^>]*>/,
+    `${route.pathname}: marked Footer`,
+  );
+  prerenderedNoJavaScriptMarkerTotal += route.noJavaScriptMarkers;
   for (const fallback of suspenseFallbacks) {
     assert.ok(!html.includes(fallback), `${route.pathname}: ${fallback}`);
   }
@@ -344,6 +378,7 @@ const expectedNotFoundArtifacts = [
     body: "La página que buscás no está disponible.",
     cta: "Volver al inicio",
     ctaPath: "/",
+    noJavaScriptMarkers: 1,
   },
   {
     file: "en/404.html",
@@ -354,12 +389,14 @@ const expectedNotFoundArtifacts = [
     body: "The page you're looking for isn't available.",
     cta: "Back to home",
     ctaPath: "/en",
+    noJavaScriptMarkers: 1,
   },
 ];
 const notFoundDocuments = [];
 for (const artifact of expectedNotFoundArtifacts) {
   const html = await readFile(path.join(distDirectory, artifact.file), "utf8");
   notFoundDocuments.push(html);
+  noJavaScriptDocuments.push(html);
 
   assert.match(html, new RegExp(`<html lang="${artifact.lang}"`));
   assert.ok(html.includes(`<title data-rh="true">${artifact.title}</title>`));
@@ -392,8 +429,37 @@ for (const artifact of expectedNotFoundArtifacts) {
   assert.ok(!html.includes("<!--app-head-->"));
   assert.ok(!html.includes("<!--app-html-->"));
   assert.ok(!html.includes("data:image/gif"), `${artifact.file}: data GIF`);
+  assert.equal(
+    count(html, noJavaScriptBlock),
+    1,
+    `${artifact.file}: exact no-JavaScript block`,
+  );
+  assert.equal(
+    count(html, 'data-nojs-visible="true"'),
+    artifact.noJavaScriptMarkers,
+    `${artifact.file}: no-JavaScript markers`,
+  );
+  assert.match(
+    html,
+    /<footer[^>]*data-nojs-visible="true"[^>]*>/,
+    `${artifact.file}: marked Footer`,
+  );
+  prerenderedNoJavaScriptMarkerTotal += artifact.noJavaScriptMarkers;
 }
 assert.equal(new Set(notFoundDocuments).size, expectedNotFoundArtifacts.length);
+assert.equal(noJavaScriptDocuments.length, 8);
+assert.equal(prerenderedNoJavaScriptMarkerTotal, 56);
+
+const styleSourceDirective = contentSecurityPolicy
+  .split(";")
+  .map((directive) => directive.trim().split(/\s+/))
+  .find(([name]) => name === "style-src");
+assert.deepEqual(styleSourceDirective, [
+  "style-src",
+  "'self'",
+  noJavaScriptStyleHash,
+]);
+assert.equal(count(contentSecurityPolicy, noJavaScriptStyleHash), 1);
 
 const scriptSourceDirective = contentSecurityPolicy
   .split(";")
