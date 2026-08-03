@@ -273,6 +273,7 @@ export default function HeroSlider() {
       <AnimatePresence mode="wait">
         <motion.div
           key={currentSlide.id}
+          data-nojs-visible
           className="absolute inset-0"
           initial={{ opacity: 0, x: 100 }}
           animate={{ opacity: 1, x: 0 }}

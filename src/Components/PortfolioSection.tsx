@@ -43,6 +43,7 @@ export default function PortfolioSection() {
       {/* Contenido */}
       <div className="relative z-20 max-w-6xl mx-auto">
         <motion.p
+          data-nojs-visible
           className="text-xs sm:text-sm uppercase tracking-widest text-white/80 drop-shadow-md mb-3 text-center"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -53,6 +54,7 @@ export default function PortfolioSection() {
         </motion.p>
 
         <motion.h2
+          data-nojs-visible
           className="text-3xl sm:text-4xl font-bold text-center text-white leading-tight mb-4 max-w-3xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -62,6 +64,7 @@ export default function PortfolioSection() {
         </motion.h2>
 
         <motion.p
+          data-nojs-visible
           className="text-sm sm:text-base text-center text-white/80 max-w-2xl mx-auto mb-12"
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -93,6 +96,7 @@ export default function PortfolioSection() {
               }
             >
               <motion.div
+                data-nojs-visible
                 className="group h-full overflow-hidden rounded-2xl bg-white/95 backdrop-blur border border-gray-200/80 shadow-md transition-all duration-300 motion-reduce:transition-none hover:-translate-y-1 hover:shadow-lg"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}

@@ -54,6 +54,7 @@ export default function TransitionServicesIntro({ variant = "default" }: BridgeP
 
   return (
     <motion.section
+      data-nojs-visible
       className="bg-white py-10 px-4 sm:px-6 text-center shadow-[0_-8px_24px_rgba(0,0,0,.18)]"
       initial={{ opacity: 0 }}
       whileInView={{ opacity: 1 }}
@@ -61,6 +62,7 @@ export default function TransitionServicesIntro({ variant = "default" }: BridgeP
       viewport={{ once: true, amount: 0.25 }}
     >
       <motion.div
+        data-nojs-visible
         initial={{ opacity: 0, y: 18 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}

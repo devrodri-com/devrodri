@@ -100,6 +100,7 @@ export default function PortfolioCard({
 
   return (
     <motion.div
+      data-nojs-visible
       className={`border border-gray-200 rounded-2xl shadow-sm bg-white ${expanded || status ? "" : "md:h-[280px] md:overflow-hidden"}`}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}

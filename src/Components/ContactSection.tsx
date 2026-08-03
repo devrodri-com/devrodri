@@ -120,6 +120,7 @@ export default function ContactSection() {
       <div className="absolute inset-x-0 -top-[1px] h-24 bg-gradient-to-b from-black/95 via-black/70 to-transparent z-20" />
 
       <motion.div
+        data-nojs-visible
         className="relative z-30 bg-white border border-white/70 max-w-xl mx-auto rounded-3xl shadow-xl p-10 sm:p-12 text-center"
         initial={{ opacity: 0, scale: 0.95 }}
         whileInView={{ opacity: 1, scale: 1 }}

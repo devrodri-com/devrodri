@@ -75,8 +75,18 @@ const indexHtmlPath = path.join(projectRoot, "index.html");
 const contentSecurityPolicyBeforeCleanup =
   "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://formsubmit.co; script-src 'self' https://www.googletagmanager.com 'sha256-PFtIWoSjDUGI9FDBejrY6GsmT+jNY2fnEk/Wu0PMTxo=' 'sha256-NJsY0F2k7FEFgpKyakOXbgKzmylETn07jGhl+846ouI=' 'sha256-5JAfEolKKBpyKuNkJyFVP4QM03AqudwLaL6W4YE9Dow=' 'sha256-MWbnLG8L270wPoFC3v581s2nVNl/XC/TRKETtAkKpjY='; script-src-attr 'none'; style-src 'self' https://fonts.googleapis.com; style-src-attr 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' https://*.google-analytics.com https://www.googletagmanager.com; media-src 'self'; connect-src 'self' https://formsubmit.co https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; frame-src 'none'; manifest-src 'self'; worker-src 'none'; upgrade-insecure-requests";
 
-const expectedContentSecurityPolicy =
+const contentSecurityPolicyBeforeNoJavaScript =
   "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://formsubmit.co; script-src 'self' https://www.googletagmanager.com 'sha256-PFtIWoSjDUGI9FDBejrY6GsmT+jNY2fnEk/Wu0PMTxo=' 'sha256-NJsY0F2k7FEFgpKyakOXbgKzmylETn07jGhl+846ouI=' 'sha256-5JAfEolKKBpyKuNkJyFVP4QM03AqudwLaL6W4YE9Dow=' 'sha256-MWbnLG8L270wPoFC3v581s2nVNl/XC/TRKETtAkKpjY='; script-src-attr 'none'; style-src 'self'; style-src-attr 'unsafe-inline'; font-src 'self'; img-src 'self' https://*.google-analytics.com https://www.googletagmanager.com; media-src 'self'; connect-src 'self' https://formsubmit.co https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; frame-src 'none'; manifest-src 'self'; worker-src 'none'; upgrade-insecure-requests";
+
+const noJavaScriptStyle =
+  "[data-nojs-visible]{opacity:1!important;transform:none!important}";
+const noJavaScriptStyleHash =
+  "'sha256-s8Yo+QmbhprPrMTPA+WlxksKujTWurQ8EScEm2yFeM4='";
+const noJavaScriptBlock =
+  `<noscript><style>${noJavaScriptStyle}</style></noscript>`;
+
+const expectedContentSecurityPolicy =
+  "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://formsubmit.co; script-src 'self' https://www.googletagmanager.com 'sha256-PFtIWoSjDUGI9FDBejrY6GsmT+jNY2fnEk/Wu0PMTxo=' 'sha256-NJsY0F2k7FEFgpKyakOXbgKzmylETn07jGhl+846ouI=' 'sha256-5JAfEolKKBpyKuNkJyFVP4QM03AqudwLaL6W4YE9Dow=' 'sha256-MWbnLG8L270wPoFC3v581s2nVNl/XC/TRKETtAkKpjY='; script-src-attr 'none'; style-src 'self' 'sha256-s8Yo+QmbhprPrMTPA+WlxksKujTWurQ8EScEm2yFeM4='; style-src-attr 'unsafe-inline'; font-src 'self'; img-src 'self' https://*.google-analytics.com https://www.googletagmanager.com; media-src 'self'; connect-src 'self' https://formsubmit.co https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; frame-src 'none'; manifest-src 'self'; worker-src 'none'; upgrade-insecure-requests";
 
 const publishedStructuredData = [
   STRUCTURED_DATA_BY_ROUTE["home:es"],
@@ -316,10 +326,16 @@ describe("web delivery policy", () => {
     const directivesBeforeCleanup = parseContentSecurityPolicy(
       contentSecurityPolicyBeforeCleanup,
     );
+    const directivesBeforeNoJavaScript = parseContentSecurityPolicy(
+      contentSecurityPolicyBeforeNoJavaScript,
+    );
 
     expect([...directives.keys()]).toEqual([...directivesBeforeCleanup.keys()]);
     expect(
-      diffContentSecurityPolicy(directivesBeforeCleanup, directives),
+      diffContentSecurityPolicy(
+        directivesBeforeCleanup,
+        directivesBeforeNoJavaScript,
+      ),
     ).toEqual([
       {
         change: "removed",
@@ -330,6 +346,15 @@ describe("web delivery policy", () => {
         change: "removed",
         directive: "font-src",
         source: "https://fonts.gstatic.com",
+      },
+    ]);
+    expect(
+      diffContentSecurityPolicy(directivesBeforeNoJavaScript, directives),
+    ).toEqual([
+      {
+        change: "added",
+        directive: "style-src",
+        source: noJavaScriptStyleHash,
       },
     ]);
 
@@ -352,7 +377,7 @@ describe("web delivery policy", () => {
           ],
         ],
         ["script-src-attr", ["'none'"]],
-        ["style-src", ["'self'"]],
+        ["style-src", ["'self'", noJavaScriptStyleHash]],
         ["style-src-attr", ["'unsafe-inline'"]],
         ["font-src", ["'self'"]],
         [
@@ -409,6 +434,17 @@ describe("web delivery policy", () => {
     expect(directives.get("style-src")).not.toContain(
       "https://fonts.googleapis.com",
     );
+    expect(directives.get("style-src")).toEqual([
+      "'self'",
+      noJavaScriptStyleHash,
+    ]);
+    expect(
+      directives
+        .get("style-src")
+        ?.filter((source) => source === noJavaScriptStyleHash),
+    ).toHaveLength(1);
+    expect(directives.get("style-src")).not.toContain("'unsafe-inline'");
+    expect(directives.get("style-src")).not.toContain("'unsafe-eval'");
     expect(directives.get("font-src")).not.toContain(
       "https://fonts.gstatic.com",
     );
@@ -417,6 +453,12 @@ describe("web delivery policy", () => {
     expect(directives.get("img-src")).not.toContain("data:");
 
     const indexHtml = fs.readFileSync(indexHtmlPath, "utf8");
+    expect(new TextEncoder().encode(noJavaScriptStyle)).toHaveLength(65);
+    expect(sha256Source(noJavaScriptStyle)).toBe(noJavaScriptStyleHash);
+    expect(indexHtml.split(noJavaScriptBlock)).toHaveLength(2);
+    expect(indexHtml).toContain(noJavaScriptBlock);
+    expect(indexHtml.match(/<noscript>/g) ?? []).toHaveLength(1);
+    expect(indexHtml.match(/<noscript><style>/g) ?? []).toHaveLength(1);
     expect(indexHtml).not.toContain("googletagmanager.com/gtag/js");
     expect(indexHtml).not.toContain("function gtag");
     expect(indexHtml).not.toMatch(/G-[A-Z0-9]{6,}/);
@@ -498,6 +540,16 @@ describe("web delivery policy", () => {
     expect(localizedNotFoundTerminalRoute.headers).toEqual(
       canonicalRouteSecurityHeaders,
     );
+    for (const effectivePolicy of [
+      contentSecurityPolicy,
+      localizedNotFoundTerminalRoute.headers["Content-Security-Policy"],
+    ]) {
+      expect(effectivePolicy).toBe(expectedContentSecurityPolicy);
+      if (effectivePolicy === undefined) {
+        throw new Error("An effective CSP policy is missing");
+      }
+      expect(effectivePolicy.split(noJavaScriptStyleHash)).toHaveLength(2);
+    }
     expect("continue" in localizedNotFoundTerminalRoute).toBe(false);
     expect(localizedNotFoundTerminalRoute.dest).toBe("/en/404.html");
     expect(localizedNotFoundTerminalRoute.status).toBe(404);
