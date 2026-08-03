@@ -72,8 +72,11 @@ const projectRoot = path.join(testDirectory, "../..");
 const vercelConfigurationPath = path.join(projectRoot, "vercel.json");
 const indexHtmlPath = path.join(projectRoot, "index.html");
 
-const expectedContentSecurityPolicy =
+const contentSecurityPolicyBeforeCleanup =
   "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://formsubmit.co; script-src 'self' https://www.googletagmanager.com 'sha256-PFtIWoSjDUGI9FDBejrY6GsmT+jNY2fnEk/Wu0PMTxo=' 'sha256-NJsY0F2k7FEFgpKyakOXbgKzmylETn07jGhl+846ouI=' 'sha256-5JAfEolKKBpyKuNkJyFVP4QM03AqudwLaL6W4YE9Dow=' 'sha256-MWbnLG8L270wPoFC3v581s2nVNl/XC/TRKETtAkKpjY='; script-src-attr 'none'; style-src 'self' https://fonts.googleapis.com; style-src-attr 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' https://*.google-analytics.com https://www.googletagmanager.com; media-src 'self'; connect-src 'self' https://formsubmit.co https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; frame-src 'none'; manifest-src 'self'; worker-src 'none'; upgrade-insecure-requests";
+
+const expectedContentSecurityPolicy =
+  "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://formsubmit.co; script-src 'self' https://www.googletagmanager.com 'sha256-PFtIWoSjDUGI9FDBejrY6GsmT+jNY2fnEk/Wu0PMTxo=' 'sha256-NJsY0F2k7FEFgpKyakOXbgKzmylETn07jGhl+846ouI=' 'sha256-5JAfEolKKBpyKuNkJyFVP4QM03AqudwLaL6W4YE9Dow=' 'sha256-MWbnLG8L270wPoFC3v581s2nVNl/XC/TRKETtAkKpjY='; script-src-attr 'none'; style-src 'self'; style-src-attr 'unsafe-inline'; font-src 'self'; img-src 'self' https://*.google-analytics.com https://www.googletagmanager.com; media-src 'self'; connect-src 'self' https://formsubmit.co https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; frame-src 'none'; manifest-src 'self'; worker-src 'none'; upgrade-insecure-requests";
 
 const publishedStructuredData = [
   STRUCTURED_DATA_BY_ROUTE["home:es"],
@@ -229,6 +232,27 @@ function parseContentSecurityPolicy(
   );
 }
 
+function diffContentSecurityPolicy(
+  before: ReadonlyMap<string, readonly string[]>,
+  after: ReadonlyMap<string, readonly string[]>,
+): Array<{ change: "added" | "removed"; directive: string; source: string }> {
+  const directiveNames = new Set([...before.keys(), ...after.keys()]);
+
+  return [...directiveNames].flatMap((directive) => {
+    const beforeSources = before.get(directive) ?? [];
+    const afterSources = after.get(directive) ?? [];
+
+    return [
+      ...beforeSources
+        .filter((source) => !afterSources.includes(source))
+        .map((source) => ({ change: "removed" as const, directive, source })),
+      ...afterSources
+        .filter((source) => !beforeSources.includes(source))
+        .map((source) => ({ change: "added" as const, directive, source })),
+    ];
+  });
+}
+
 function sha256Source(value: string): string {
   const digest = crypto.createHash("sha256").update(value).digest("base64");
   return `'sha256-${digest}'`;
@@ -289,6 +313,25 @@ describe("web delivery policy", () => {
     const directives = parseContentSecurityPolicy(
       contentSecurityPolicy ?? "",
     );
+    const directivesBeforeCleanup = parseContentSecurityPolicy(
+      contentSecurityPolicyBeforeCleanup,
+    );
+
+    expect([...directives.keys()]).toEqual([...directivesBeforeCleanup.keys()]);
+    expect(
+      diffContentSecurityPolicy(directivesBeforeCleanup, directives),
+    ).toEqual([
+      {
+        change: "removed",
+        directive: "style-src",
+        source: "https://fonts.googleapis.com",
+      },
+      {
+        change: "removed",
+        directive: "font-src",
+        source: "https://fonts.gstatic.com",
+      },
+    ]);
 
     expect(directives).toEqual(
       new Map([
@@ -309,9 +352,9 @@ describe("web delivery policy", () => {
           ],
         ],
         ["script-src-attr", ["'none'"]],
-        ["style-src", ["'self'", "https://fonts.googleapis.com"]],
+        ["style-src", ["'self'"]],
         ["style-src-attr", ["'unsafe-inline'"]],
-        ["font-src", ["'self'", "https://fonts.gstatic.com"]],
+        ["font-src", ["'self'"]],
         [
           "img-src",
           [
@@ -363,14 +406,15 @@ describe("web delivery policy", () => {
 
     expect(directives.get("form-action")).toContain("https://formsubmit.co");
     expect(directives.get("connect-src")).toContain("https://formsubmit.co");
-    expect(directives.get("style-src")).toContain(
+    expect(directives.get("style-src")).not.toContain(
       "https://fonts.googleapis.com",
     );
-    expect(directives.get("font-src")).toContain(
+    expect(directives.get("font-src")).not.toContain(
       "https://fonts.gstatic.com",
     );
     expect(directives.get("media-src")).toEqual(["'self'"]);
     expect(directives.get("img-src")).toContain("'self'");
+    expect(directives.get("img-src")).not.toContain("data:");
 
     const indexHtml = fs.readFileSync(indexHtmlPath, "utf8");
     expect(indexHtml).not.toContain("googletagmanager.com/gtag/js");
