@@ -5,9 +5,19 @@ import lemBox768Avif from "../../../assets/lem-box/lem-box-768.avif";
 import lemBox768Webp from "../../../assets/lem-box/lem-box-768.webp";
 import lemBox1200Avif from "../../../assets/lem-box/lem-box-1200.avif";
 import lemBox1200Webp from "../../../assets/lem-box/lem-box-1200.webp";
+import lemBoxPortfolioCover from "../../../assets/portfolio/lem-box/lem-box-portfolio-cover.jpg";
+import lemBoxPortfolioCover480Avif from "../../../assets/portfolio/lem-box/lem-box-portfolio-cover-480.avif";
+import lemBoxPortfolioCover480Webp from "../../../assets/portfolio/lem-box/lem-box-portfolio-cover-480.webp";
+import lemBoxPortfolioCover768Avif from "../../../assets/portfolio/lem-box/lem-box-portfolio-cover-768.avif";
+import lemBoxPortfolioCover768Webp from "../../../assets/portfolio/lem-box/lem-box-portfolio-cover-768.webp";
+import lemBoxPortfolioCover1200Avif from "../../../assets/portfolio/lem-box/lem-box-portfolio-cover-1200.avif";
+import lemBoxPortfolioCover1200Webp from "../../../assets/portfolio/lem-box/lem-box-portfolio-cover-1200.webp";
+import lemBoxPortfolioCover1600Avif from "../../../assets/portfolio/lem-box/lem-box-portfolio-cover-1600.avif";
+import lemBoxPortfolioCover1600Webp from "../../../assets/portfolio/lem-box/lem-box-portfolio-cover-1600.webp";
 import {
   definePortfolioCase,
   type Localized,
+  type PortfolioCardCover,
   type PortfolioAction,
   type ResponsivePortfolioCover,
 } from "../types";
@@ -28,6 +38,33 @@ const lemBoxResponsiveCover = {
     ],
   },
 } as const satisfies ResponsivePortfolioCover;
+
+const lemBoxPortfolioCardCover = {
+  cover: lemBoxPortfolioCover,
+  fullBleed: true,
+  objectPosition: "center 55%",
+  sizes:
+    "(min-width: 1280px) 513px, (min-width: 768px) calc(41.67vw - 21px), calc(100vw - 50px)",
+  responsiveCover: {
+    width: 1920,
+    height: 1440,
+    fit: "cover",
+    sources: {
+      avif: [
+        { src: lemBoxPortfolioCover480Avif, width: 480 },
+        { src: lemBoxPortfolioCover768Avif, width: 768 },
+        { src: lemBoxPortfolioCover1200Avif, width: 1200 },
+        { src: lemBoxPortfolioCover1600Avif, width: 1600 },
+      ],
+      webp: [
+        { src: lemBoxPortfolioCover480Webp, width: 480 },
+        { src: lemBoxPortfolioCover768Webp, width: 768 },
+        { src: lemBoxPortfolioCover1200Webp, width: 1200 },
+        { src: lemBoxPortfolioCover1600Webp, width: 1600 },
+      ],
+    },
+  },
+} as const satisfies PortfolioCardCover;
 
 const stack = [
   "Next.js",
@@ -156,6 +193,7 @@ export const lemBoxCase = definePortfolioCase({
   category: "systems",
   cover: "/img/lem-box-cover.png",
   responsiveCover: lemBoxResponsiveCover,
+  portfolioCardCover: lemBoxPortfolioCardCover,
   actions: lemBoxPublicLinks,
   content: {
     es: {

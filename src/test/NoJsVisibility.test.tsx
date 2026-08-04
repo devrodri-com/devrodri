@@ -84,7 +84,7 @@ const approvedFiles = {
   },
   "src/Components/portfolio/PortfolioCard.tsx": {
     baselineHash:
-      "21d3c7fd9bf7a16818bd63e7dc1715035dca463551bec5518b686a4393ca3158",
+      "c74bed74086dabd4988f143a677732349715168e106af4f6bcddc9d3bf615369",
     markers: 1,
   },
 } as const;

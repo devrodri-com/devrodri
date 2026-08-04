@@ -119,6 +119,14 @@ export type ResponsivePortfolioCover = {
   };
 };
 
+export type PortfolioCardCover = {
+  cover: string;
+  fullBleed: boolean;
+  objectPosition?: string;
+  responsiveCover: ResponsivePortfolioCover;
+  sizes: string;
+};
+
 export function getPortfolioCoverFit(
   responsiveCover: ResponsivePortfolioCover | undefined,
 ): PortfolioCoverFit {
@@ -143,6 +151,7 @@ type PortfolioCaseDefinitionBase<
   category: ProjectCategory;
   cover: string;
   responsiveCover?: ResponsivePortfolioCover;
+  portfolioCardCover?: PortfolioCardCover;
   actions: readonly PortfolioAction[];
   content: Localized<Content>;
   home?: {

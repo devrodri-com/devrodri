@@ -12,6 +12,7 @@ type PortfolioCoverImageProps = {
   alt: string;
   className: string;
   cover: string;
+  objectPosition?: string;
   priority?: boolean;
   responsiveCover?: ResponsivePortfolioCover;
   sizes: string;
@@ -27,6 +28,7 @@ export function PortfolioCoverImage({
   alt,
   className,
   cover,
+  objectPosition,
   priority = false,
   responsiveCover,
   sizes,
@@ -38,6 +40,9 @@ export function PortfolioCoverImage({
       className={className}
       loading={priority ? "eager" : "lazy"}
       decoding="async"
+      {...(objectPosition === undefined
+        ? {}
+        : { style: { objectPosition } })}
       {...(priority ? { fetchpriority: "high" } : {})}
       {...(responsiveCover === undefined
         ? {}
@@ -72,10 +77,13 @@ interface PortfolioCardProps {
   desc: string;
   details: ReactNode;
   expanded: boolean;
+  fullBleed?: boolean;
   headingLevel?: "h2" | "h3";
   disclaimer?: string;
+  objectPosition?: string;
   priority?: boolean;
   responsiveCover?: ResponsivePortfolioCover;
+  sizes?: string;
   status?: string;
   tags: string;
   title: string;
@@ -87,10 +95,13 @@ export default function PortfolioCard({
   desc,
   details,
   expanded,
+  fullBleed = false,
   headingLevel = "h3",
   disclaimer,
+  objectPosition,
   priority = false,
   responsiveCover,
+  sizes = "(min-width: 1280px) 457px, (min-width: 768px) calc(41.67vw - 76px), calc(100vw - 88px)",
   status,
   tags,
   title,
@@ -109,15 +120,22 @@ export default function PortfolioCard({
     >
       <div className="flex flex-col md:flex-row lg:h-full">
         <div className="md:w-5/12 lg:h-full">
-          <div className="flex aspect-[16/9] w-full items-center justify-center overflow-hidden rounded-2xl bg-white p-5 md:p-7 lg:h-full lg:aspect-auto">
+          <div
+            className={`flex aspect-[16/9] w-full items-center justify-center overflow-hidden rounded-2xl bg-white lg:h-full lg:aspect-auto ${
+              fullBleed ? "" : "p-5 md:p-7"
+            }`}
+          >
             <PortfolioCoverImage
               cover={cover}
               alt=""
-              className={`w-full h-full object-center rounded-xl ${
+              className={`w-full h-full object-center ${
+                fullBleed ? "" : "rounded-xl"
+              } ${
                 coverFit === "cover" ? "object-cover" : "object-contain"
               }`}
+              {...(objectPosition === undefined ? {} : { objectPosition })}
               priority={priority}
-              sizes="(min-width: 1280px) 457px, (min-width: 768px) calc(41.67vw - 76px), calc(100vw - 88px)"
+              sizes={sizes}
               {...(responsiveCover === undefined
                 ? {}
                 : { responsiveCover })}

@@ -126,6 +126,12 @@ const originalCoverContracts = [
     hash: "e2e8d3adb8861a9f9895ea327ce0151abe5993dffc5eaecc879e61b83640ab82",
   },
 ] as const;
+const lemBoxPortfolioCoverContract = {
+  path: "src/assets/portfolio/lem-box/lem-box-portfolio-cover.jpg",
+  dimensions: { width: 1920, height: 1440 },
+  bytes: 329_873,
+  hash: "414c465da87ec113cadda69b488d17905b12e4418c2583b3154f6dcfaf486b6d",
+} as const;
 
 function getCase(key: (typeof expectedProjectKeys)[number]) {
   const portfolioCase = portfolioCases.find((item) => item.key === key);
@@ -679,6 +685,61 @@ describe("portfolio architecture invariants", () => {
     }).toEqual({ width: 1200, height: 630 });
   });
 
+  it("isolates Rodrigo's exact LEM-BOX cover to the full-bleed Portfolio card", () => {
+    const coverPath = path.join(projectRoot, lemBoxPortfolioCoverContract.path);
+    const coverData = fs.readFileSync(coverPath);
+    const portfolioCardCover = lemBoxCase.portfolioCardCover;
+    if (portfolioCardCover === undefined) {
+      throw new Error("Missing Portfolio-only LEM-BOX cover");
+    }
+
+    expect(readJpegDimensions(coverData)).toEqual(
+      lemBoxPortfolioCoverContract.dimensions,
+    );
+    expect(fs.statSync(coverPath).size).toBe(
+      lemBoxPortfolioCoverContract.bytes,
+    );
+    expect(
+      crypto.createHash("sha256").update(coverData).digest("hex"),
+    ).toBe(lemBoxPortfolioCoverContract.hash);
+    expect(portfolioCardCover.cover).toContain(
+      "lem-box-portfolio-cover.jpg",
+    );
+    expect(portfolioCardCover.fullBleed).toBe(true);
+    expect(portfolioCardCover.objectPosition).toBe("center 55%");
+    expect(portfolioCardCover.sizes).toBe(
+      "(min-width: 1280px) 513px, (min-width: 768px) calc(41.67vw - 21px), calc(100vw - 50px)",
+    );
+    expect(portfolioCardCover.responsiveCover.fit).toBe("cover");
+    expect(getPortfolioCoverFit(portfolioCardCover.responsiveCover)).toBe(
+      "cover",
+    );
+    expect({
+      width: portfolioCardCover.responsiveCover.width,
+      height: portfolioCardCover.responsiveCover.height,
+    }).toEqual(lemBoxPortfolioCoverContract.dimensions);
+
+    for (const format of ["avif", "webp"] as const) {
+      const candidates = portfolioCardCover.responsiveCover.sources[format];
+      expect(candidates.map(({ width }) => width)).toEqual([
+        480, 768, 1200, 1600,
+      ]);
+      for (const candidate of candidates) {
+        const assetPath = path.join(
+          projectRoot,
+          `src/assets/portfolio/lem-box/lem-box-portfolio-cover-${candidate.width}.${format}`,
+        );
+        expect(fs.existsSync(assetPath)).toBe(true);
+        expect(fs.statSync(assetPath).size).toBeGreaterThan(0);
+      }
+    }
+
+    expect(lemBoxCase.cover).toBe("/img/lem-box-cover.png");
+    expect(getPortfolioCoverFit(lemBoxCase.responsiveCover)).toBe("contain");
+    expect(lemBoxCase.caseStudy.coverWidth).toBe(1200);
+    expect(lemBoxCase.caseStudy.coverHeight).toBe(630);
+  });
+
   it("publishes ZENTRA without private documents or restricted names", () => {
     const zentra = getCase("zentra");
     const serialized = JSON.stringify(zentra);
@@ -885,7 +946,7 @@ describe("portfolio architecture invariants", () => {
       "package-lock.json":
         "762aafad2219fddf1ab53b99879359da27f18c62f31ee8a3f411b45081381d3b",
       "src/pages/PortfolioPage.tsx":
-        "f6c8bf1860fddfd2bae5d9cee07a819f8b3808f2bd39e3e3bb3d1a804f72b9e7",
+        "5c2f248ed582eace7bc37663e844879b6374cf18b3456e54998c7477d0980c2d",
       "src/Components/PortfolioSection.tsx":
         "8f5cae48ef7226c453a4b993b6be408b888ab0d6dc11c12b9029178a000b98dc",
     });

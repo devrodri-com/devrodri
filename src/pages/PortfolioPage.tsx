@@ -91,6 +91,10 @@ export default function PortfolioPage() {
             const content = portfolioCase.content[language];
             const detailsId = `portfolio-details-${portfolioCase.key}`;
             const caseStudy = portfolioCase.caseStudy;
+            const portfolioCardCover = portfolioCase.portfolioCardCover;
+            const cardCover = portfolioCardCover?.cover ?? portfolioCase.cover;
+            const cardResponsiveCover =
+              portfolioCardCover?.responsiveCover ?? portfolioCase.responsiveCover;
             const detailsExpanded =
               caseStudy === undefined &&
               content.details !== undefined &&
@@ -171,7 +175,7 @@ export default function PortfolioPage() {
                       </>
                     )
                   }
-                  cover={portfolioCase.cover}
+                  cover={cardCover}
                   desc={content.description}
                   details={
                     detailsExpanded && content.details !== undefined ? (
@@ -186,13 +190,25 @@ export default function PortfolioPage() {
                     ) : null
                   }
                   expanded={detailsExpanded}
+                  {...(portfolioCardCover === undefined
+                    ? {}
+                    : {
+                        fullBleed: portfolioCardCover.fullBleed,
+                        sizes: portfolioCardCover.sizes,
+                        ...(portfolioCardCover.objectPosition === undefined
+                          ? {}
+                          : {
+                              objectPosition:
+                                portfolioCardCover.objectPosition,
+                            }),
+                      })}
                   headingLevel="h2"
                   priority={portfolioIndex === 0}
                   tags={content.tags.join(" · ")}
                   title={content.title}
-                  {...(portfolioCase.responsiveCover === undefined
+                  {...(cardResponsiveCover === undefined
                     ? {}
-                    : { responsiveCover: portfolioCase.responsiveCover })}
+                    : { responsiveCover: cardResponsiveCover })}
                   {...(content.status === undefined
                     ? {}
                     : { status: content.status })}

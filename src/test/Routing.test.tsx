@@ -267,6 +267,7 @@ describe("application routing", () => {
     const lemBoxHomeImage = lemBoxHomePicture?.querySelector("img");
     expect(lemBoxHomePicture).not.toBeNull();
     expect(lemBoxHomePicture?.querySelectorAll("img")).toHaveLength(1);
+    expect(lemBoxHomeImage).toHaveAttribute("src", "/img/lem-box-cover.png");
     expect(lemBoxHomeImage).toHaveAttribute("loading", "lazy");
     expect(lemBoxHomeImage).not.toHaveAttribute("fetchpriority");
     expect(lemBoxHomeImage).toHaveClass("object-contain");
@@ -458,10 +459,37 @@ describe("application routing", () => {
     expect(portfolioImages).toHaveLength(8);
     expect(portfolioImages[0]).toHaveAttribute("loading", "eager");
     expect(portfolioImages[0]).toHaveAttribute("fetchpriority", "high");
-    expect(portfolioImages[0]).toHaveClass("object-contain");
+    expect(portfolioImages[0]).toHaveAttribute("width", "1920");
+    expect(portfolioImages[0]).toHaveAttribute("height", "1440");
+    expect(portfolioImages[0]).toHaveAttribute(
+      "style",
+      "object-position: center 55%;",
+    );
+    expect(portfolioImages[0]).toHaveClass("object-cover");
+    expect(portfolioImages[0]).not.toHaveClass("object-contain", "rounded-xl");
+    expect(portfolioImages[0]?.getAttribute("src")).toContain(
+      "lem-box-portfolio-cover.jpg",
+    );
     expect(
       portfolioImages[0]?.closest("picture")?.querySelectorAll("img"),
     ).toHaveLength(1);
+    const lemBoxPortfolioSources = Array.from(
+      portfolioImages[0]?.closest("picture")?.querySelectorAll("source") ?? [],
+    );
+    expect(lemBoxPortfolioSources.map((source) => source.type)).toEqual([
+      "image/avif",
+      "image/webp",
+    ]);
+    for (const source of lemBoxPortfolioSources) {
+      expect(responsiveWidths(source)).toEqual([480, 768, 1200, 1600]);
+      expect(source).toHaveAttribute(
+        "sizes",
+        "(min-width: 1280px) 513px, (min-width: 768px) calc(41.67vw - 21px), calc(100vw - 50px)",
+      );
+    }
+    const lemBoxMediaFrame = portfolioImages[0]?.closest("picture")?.parentElement;
+    expect(lemBoxMediaFrame).toHaveClass("aspect-[16/9]", "overflow-hidden");
+    expect(lemBoxMediaFrame).not.toHaveClass("p-5", "md:p-7");
     for (const image of portfolioImages.slice(1)) {
       expect(image).toHaveAttribute("loading", "lazy");
       expect(image).not.toHaveAttribute("fetchpriority");
