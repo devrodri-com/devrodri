@@ -764,6 +764,133 @@ describe("portfolio architecture invariants", () => {
     ).not.toMatch(/[—–]/);
   });
 
+  it("locks full Portfolio geometry without suppressing card content", () => {
+    const portfolioCardSource = fs.readFileSync(
+      path.join(
+        projectRoot,
+        "src/Components/portfolio/PortfolioCard.tsx",
+      ),
+      "utf8",
+    );
+
+    expect(portfolioCases).toHaveLength(8);
+    expect(portfolioCardSource).toContain(
+      'expanded ? "" : "lg:h-[360px]"',
+    );
+    expect(portfolioCardSource).toContain(
+      'className="flex flex-col md:flex-row lg:h-full"',
+    );
+    expect(portfolioCardSource).toContain(
+      "lg:h-full lg:aspect-auto",
+    );
+    expect(portfolioCardSource).toContain(
+      'className="p-6 md:w-7/12 lg:flex lg:h-full lg:flex-col"',
+    );
+    expect(portfolioCardSource).toContain(
+      "lg:mt-auto lg:pt-4",
+    );
+    expect(portfolioCardSource).toContain("inline-flex self-start");
+    expect(portfolioCardSource).toContain("aspect-[16/9]");
+    expect(portfolioCardSource).not.toContain("md:h-[280px]");
+    expect(portfolioCardSource).not.toMatch(
+      /line-clamp|\btruncate\b|text-overflow|md:overflow-hidden/,
+    );
+  });
+
+  it("preserves Portfolio actions, fits, Home, no-JS, Motion, and package boundaries", () => {
+    const portfolioCardSource = fs.readFileSync(
+      path.join(
+        projectRoot,
+        "src/Components/portfolio/PortfolioCard.tsx",
+      ),
+      "utf8",
+    );
+    const portfolioPageSource = fs.readFileSync(
+      path.join(projectRoot, "src/pages/PortfolioPage.tsx"),
+      "utf8",
+    );
+    const portfolioSectionSource = fs.readFileSync(
+      path.join(projectRoot, "src/Components/PortfolioSection.tsx"),
+      "utf8",
+    );
+    const fileHashes = Object.fromEntries(
+      [
+        "package.json",
+        "package-lock.json",
+        "src/pages/PortfolioPage.tsx",
+        "src/Components/PortfolioSection.tsx",
+      ].map((file) => [
+        file,
+        crypto
+          .createHash("sha256")
+          .update(fs.readFileSync(path.join(projectRoot, file), "utf8"))
+          .digest("hex"),
+      ]),
+    );
+
+    expect(
+      Object.fromEntries(
+        portfolioCases.map((portfolioCase) => [
+          portfolioCase.key,
+          portfolioCase.actions.map(({ href }) => href),
+        ]),
+      ),
+    ).toEqual({
+      lem_box: [
+        "https://lem-box.com",
+        "https://lem-box.com.uy",
+        "https://lem-box.com.ar",
+      ],
+      zentra: ["https://zentrascent.com"],
+      esteban: ["https://estebanfirpo.com"],
+      mutter: ["https://www.muttergames.com"],
+      magenta: ["https://magenta-paysandu-m5in.vercel.app"],
+      federico: ["https://www.federicoroma.com"],
+      boating: ["https://www.boatingadventuresmiami.com"],
+      campings_demo: [campingsRepository],
+    });
+    expect(
+      Object.fromEntries(
+        portfolioCases.map((portfolioCase) => [
+          portfolioCase.key,
+          getPortfolioCoverFit(portfolioCase.responsiveCover),
+        ]),
+      ),
+    ).toEqual({
+      lem_box: "contain",
+      zentra: "cover",
+      esteban: "cover",
+      mutter: "cover",
+      magenta: "cover",
+      federico: "cover",
+      boating: "cover",
+      campings_demo: "cover",
+    });
+    expect(portfolioCardSource).toContain("data-nojs-visible");
+    expect(portfolioCardSource).toContain(
+      "initial={{ opacity: 0, y: 20 }}",
+    );
+    expect(portfolioCardSource).toContain(
+      "whileInView={{ opacity: 1, y: 0 }}",
+    );
+    expect(portfolioCardSource).toContain(
+      "transition={{ duration: 0.45 }}",
+    );
+    expect(portfolioCardSource).toContain("viewport={{ once: true }}");
+    expect(portfolioPageSource.match(/data-nojs-hide/g) ?? []).toHaveLength(2);
+    expect(portfolioSectionSource).not.toContain("<motion.section");
+    expect(fileHashes).toEqual({
+      "package.json":
+        "826b5b8d943491f5482a96266b5d5b7aea8ec47ea00630aa567ba757e8acb43e",
+      "package-lock.json":
+        "762aafad2219fddf1ab53b99879359da27f18c62f31ee8a3f411b45081381d3b",
+      "src/pages/PortfolioPage.tsx":
+        "f6c8bf1860fddfd2bae5d9cee07a819f8b3808f2bd39e3e3bb3d1a804f72b9e7",
+      "src/Components/PortfolioSection.tsx":
+        "8f5cae48ef7226c453a4b993b6be408b888ab0d6dc11c12b9029178a000b98dc",
+    });
+  });
+
   it("uses explicit card slots and a stable FAQ key contract", () => {
     const portfolioCardSource = fs.readFileSync(
       path.join(
