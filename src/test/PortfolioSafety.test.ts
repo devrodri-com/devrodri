@@ -826,4 +826,45 @@ describe("portfolio architecture invariants", () => {
     expect(faqSource).not.toContain("techAnswer");
     expect(faqSource).not.toMatch(/questions\[\d+\]/);
   });
+
+  it("locks the compact editorial row contract without rigid card heights", () => {
+    const portfolioCardSource = fs.readFileSync(
+      path.join(
+        projectRoot,
+        "src/Components/portfolio/PortfolioCard.tsx",
+      ),
+      "utf8",
+    );
+    const portfolioPageSource = fs.readFileSync(
+      path.join(projectRoot, "src/pages/PortfolioPage.tsx"),
+      "utf8",
+    );
+
+    expect(portfolioCardSource).toContain(
+      'className="flex flex-col lg:flex-row"',
+    );
+    expect(portfolioCardSource).not.toContain("md:flex-row");
+    expect(portfolioCardSource).toContain(
+      "lg:w-[340px] lg:shrink-0",
+    );
+    expect(portfolioCardSource).toContain(
+      "max-w-[280px] sm:max-w-[360px] lg:max-w-none aspect-[40/21]",
+    );
+    expect(portfolioCardSource).toContain(
+      'sizes="(min-width: 1024px) 300px, (min-width: 640px) 360px, (min-width: 358px) 280px, calc(100vw - 80px)"',
+    );
+    expect(portfolioCardSource).toContain(
+      'className="min-w-0 flex flex-col p-6 lg:flex-1"',
+    );
+    expect(portfolioCardSource).toContain("lg:mt-auto lg:pt-4");
+    expect(portfolioCardSource).toContain("inline-flex self-start");
+    expect(portfolioCardSource).not.toContain('expanded: boolean');
+    expect(portfolioPageSource).not.toMatch(
+      /\n\s+expanded=\{detailsExpanded\}/,
+    );
+    expect(portfolioCardSource).not.toMatch(/(?:min-)?h-\[(?:280|360)px\]/);
+    expect(portfolioCardSource).not.toContain("line-clamp");
+    expect(portfolioCardSource).not.toContain("truncate");
+    expect(portfolioCardSource).not.toContain("w-full h-full object-center");
+  });
 });
