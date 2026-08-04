@@ -35,6 +35,8 @@ type PersonNode = {
   "@type": "Person";
   "@id": typeof PERSON_ID;
   name: "Rodrigo Opalo";
+  jobTitle: string;
+  description: string;
   url: typeof SITE_URL;
   image: "https://www.devrodri.com/img/sobremi.jpg";
   sameAs: readonly [
@@ -93,6 +95,18 @@ const credentialDescriptions = {
   en: "Professional certification verified by IBM Skills Network and Credly.",
 } as const satisfies Record<Language, string>;
 
+// Mirrors the visible About-section copy in SobreMiSection.tsx verbatim.
+export const PERSON_JOB_TITLES = {
+  es: "Integrador de tecnología con mentalidad de producto",
+  en: "Technology integrator with a product mindset",
+} as const satisfies Record<Language, string>;
+
+// Mirrors the visible About-section copy in SobreMiSection.tsx verbatim.
+export const PERSON_DESCRIPTIONS = {
+  es: "Creo sitios, aplicaciones y sistemas a medida combinando estrategia, experiencia de usuario y tecnología. También implemento automatizaciones, integraciones y asistentes con IA para conectar herramientas, optimizar procesos y reducir trabajo manual.",
+  en: "I create custom websites, applications, and systems by combining strategy, user experience, and technology. I also implement automations, integrations, and AI assistants to connect tools, optimize processes, and reduce manual work.",
+} as const satisfies Record<Language, string>;
+
 function reference(id: string): Reference {
   return { "@id": id };
 }
@@ -113,6 +127,8 @@ function createHomeStructuredData(locale: Language): HomeStructuredData {
         "@type": "Person",
         "@id": PERSON_ID,
         name: "Rodrigo Opalo",
+        jobTitle: PERSON_JOB_TITLES[locale],
+        description: PERSON_DESCRIPTIONS[locale],
         url: SITE_URL,
         image: "https://www.devrodri.com/img/sobremi.jpg",
         sameAs: [

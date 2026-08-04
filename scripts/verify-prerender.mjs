@@ -119,6 +119,24 @@ const suspenseFallbacks = [
   "Cargando caso LEM-BOX…",
   "Loading LEM-BOX case study…",
 ];
+const expectedPersonContent = new Map([
+  [
+    "/",
+    {
+      description:
+        "Creo sitios, aplicaciones y sistemas a medida combinando estrategia, experiencia de usuario y tecnología. También implemento automatizaciones, integraciones y asistentes con IA para conectar herramientas, optimizar procesos y reducir trabajo manual.",
+      jobTitle: "Integrador de tecnología con mentalidad de producto",
+    },
+  ],
+  [
+    "/en",
+    {
+      description:
+        "I create custom websites, applications, and systems by combining strategy, user experience, and technology. I also implement automations, integrations, and AI assistants to connect tools, optimize processes, and reduce manual work.",
+      jobTitle: "Technology integrator with a product mindset",
+    },
+  ],
+]);
 const expectedStructuredData = new Map([
   [
     "/",
@@ -616,6 +634,13 @@ for (const route of expectedRoutes) {
   const expectedGraph = expectedStructuredData.get(route.pathname);
   const expectedJsonLdCount = expectedGraph === undefined ? 0 : 1;
   assert.equal(scripts.length, expectedJsonLdCount, route.pathname);
+  if (expectedJsonLdCount === 1) {
+    assert.match(
+      html,
+      /<script data-rh="true" type="application\/ld\+json">/,
+      `${route.pathname}: JSON-LD data-rh marker`,
+    );
+  }
   for (const [, jsonLd] of scripts) {
     const parsed = JSON.parse(jsonLd);
     assert.equal(parsed["@context"], "https://schema.org", route.pathname);
@@ -629,6 +654,33 @@ for (const route of expectedRoutes) {
       expectedGraph.ids,
       `${route.pathname}: graph IDs`,
     );
+    const personContent = expectedPersonContent.get(route.pathname);
+    if (personContent !== undefined) {
+      const personNodes = parsed["@graph"].filter(
+        (node) => node["@type"] === "Person",
+      );
+      assert.equal(
+        personNodes.length,
+        1,
+        `${route.pathname}: single canonical Person node`,
+      );
+      const [person] = personNodes;
+      assert.equal(
+        person["@id"],
+        "https://www.devrodri.com/#person",
+        `${route.pathname}: canonical Person @id`,
+      );
+      assert.equal(
+        person.description,
+        personContent.description,
+        `${route.pathname}: Person description`,
+      );
+      assert.equal(
+        person.jobTitle,
+        personContent.jobTitle,
+        `${route.pathname}: Person jobTitle`,
+      );
+    }
     const hash = sha256Source(jsonLd);
     liveInlineScriptHashes.add(hash);
     assert.ok(

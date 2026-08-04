@@ -4,7 +4,9 @@ import {
   IBM_CREDLY_URL,
   LEM_BOX_CASE_STUDY_IDS,
   LEM_BOX_WEB_APPLICATION_ID,
+  PERSON_DESCRIPTIONS,
   PERSON_ID,
+  PERSON_JOB_TITLES,
   STRUCTURED_DATA_BY_ROUTE,
   WEBSITE_ID,
   getStructuredData,
@@ -77,6 +79,8 @@ describe("route structured data", () => {
         "@type": "Person",
         "@id": PERSON_ID,
         name: "Rodrigo Opalo",
+        jobTitle: PERSON_JOB_TITLES[locale],
+        description: PERSON_DESCRIPTIONS[locale],
         url: "https://www.devrodri.com/",
         image: "https://www.devrodri.com/img/sobremi.jpg",
         sameAs: [
@@ -85,6 +89,16 @@ describe("route structured data", () => {
         ],
         hasCredential: { "@id": IBM_CREDENTIAL_ID },
       });
+      expect(person.jobTitle).toBe(
+        locale === "es"
+          ? "Integrador de tecnología con mentalidad de producto"
+          : "Technology integrator with a product mindset",
+      );
+      expect(person.description).toBe(
+        locale === "es"
+          ? "Creo sitios, aplicaciones y sistemas a medida combinando estrategia, experiencia de usuario y tecnología. También implemento automatizaciones, integraciones y asistentes con IA para conectar herramientas, optimizar procesos y reducir trabajo manual."
+          : "I create custom websites, applications, and systems by combining strategy, user experience, and technology. I also implement automations, integrations, and AI assistants to connect tools, optimize processes, and reduce manual work.",
+      );
       expect(credential).toMatchObject({
         "@type": "EducationalOccupationalCredential",
         "@id": IBM_CREDENTIAL_ID,
