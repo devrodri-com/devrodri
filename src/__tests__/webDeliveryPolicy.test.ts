@@ -73,10 +73,10 @@ const vercelConfigurationPath = path.join(projectRoot, "vercel.json");
 const indexHtmlPath = path.join(projectRoot, "index.html");
 
 const contentSecurityPolicyBeforeCleanup =
-  "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://formsubmit.co; script-src 'self' https://www.googletagmanager.com 'sha256-PFtIWoSjDUGI9FDBejrY6GsmT+jNY2fnEk/Wu0PMTxo=' 'sha256-NJsY0F2k7FEFgpKyakOXbgKzmylETn07jGhl+846ouI=' 'sha256-5JAfEolKKBpyKuNkJyFVP4QM03AqudwLaL6W4YE9Dow=' 'sha256-MWbnLG8L270wPoFC3v581s2nVNl/XC/TRKETtAkKpjY='; script-src-attr 'none'; style-src 'self' https://fonts.googleapis.com; style-src-attr 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' https://*.google-analytics.com https://www.googletagmanager.com; media-src 'self'; connect-src 'self' https://formsubmit.co https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; frame-src 'none'; manifest-src 'self'; worker-src 'none'; upgrade-insecure-requests";
+  "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://formsubmit.co; script-src 'self' https://www.googletagmanager.com 'sha256-O8l3yTyim5wlcCf0NH8eooMDbrLdmZb7wspJwSqm1F8=' 'sha256-14RAKb0fSoF/0NrAPsGFzhEcabDY08YgW52+HTiwOC8=' 'sha256-5JAfEolKKBpyKuNkJyFVP4QM03AqudwLaL6W4YE9Dow=' 'sha256-MWbnLG8L270wPoFC3v581s2nVNl/XC/TRKETtAkKpjY='; script-src-attr 'none'; style-src 'self' https://fonts.googleapis.com; style-src-attr 'unsafe-inline'; font-src 'self' https://fonts.gstatic.com; img-src 'self' https://*.google-analytics.com https://www.googletagmanager.com; media-src 'self'; connect-src 'self' https://formsubmit.co https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; frame-src 'none'; manifest-src 'self'; worker-src 'none'; upgrade-insecure-requests";
 
 const contentSecurityPolicyBeforeNoJavaScript =
-  "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://formsubmit.co; script-src 'self' https://www.googletagmanager.com 'sha256-PFtIWoSjDUGI9FDBejrY6GsmT+jNY2fnEk/Wu0PMTxo=' 'sha256-NJsY0F2k7FEFgpKyakOXbgKzmylETn07jGhl+846ouI=' 'sha256-5JAfEolKKBpyKuNkJyFVP4QM03AqudwLaL6W4YE9Dow=' 'sha256-MWbnLG8L270wPoFC3v581s2nVNl/XC/TRKETtAkKpjY='; script-src-attr 'none'; style-src 'self'; style-src-attr 'unsafe-inline'; font-src 'self'; img-src 'self' https://*.google-analytics.com https://www.googletagmanager.com; media-src 'self'; connect-src 'self' https://formsubmit.co https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; frame-src 'none'; manifest-src 'self'; worker-src 'none'; upgrade-insecure-requests";
+  "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://formsubmit.co; script-src 'self' https://www.googletagmanager.com 'sha256-O8l3yTyim5wlcCf0NH8eooMDbrLdmZb7wspJwSqm1F8=' 'sha256-14RAKb0fSoF/0NrAPsGFzhEcabDY08YgW52+HTiwOC8=' 'sha256-5JAfEolKKBpyKuNkJyFVP4QM03AqudwLaL6W4YE9Dow=' 'sha256-MWbnLG8L270wPoFC3v581s2nVNl/XC/TRKETtAkKpjY='; script-src-attr 'none'; style-src 'self'; style-src-attr 'unsafe-inline'; font-src 'self'; img-src 'self' https://*.google-analytics.com https://www.googletagmanager.com; media-src 'self'; connect-src 'self' https://formsubmit.co https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; frame-src 'none'; manifest-src 'self'; worker-src 'none'; upgrade-insecure-requests";
 
 const noJavaScriptStyle =
   "[data-nojs-visible]{opacity:1!important;transform:none!important}[data-nojs-hide]{display:none!important}[data-nojs-language]{display:flex!important}@media(max-width:639px){[data-nojs-navbar]{position:static!important}[data-nojs-mobile-nav]{display:flex!important}}";
@@ -88,7 +88,7 @@ const noJavaScriptBlock =
   `<noscript><style>${noJavaScriptStyle}</style></noscript>`;
 
 const expectedContentSecurityPolicy =
-  "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://formsubmit.co; script-src 'self' https://www.googletagmanager.com 'sha256-PFtIWoSjDUGI9FDBejrY6GsmT+jNY2fnEk/Wu0PMTxo=' 'sha256-NJsY0F2k7FEFgpKyakOXbgKzmylETn07jGhl+846ouI=' 'sha256-5JAfEolKKBpyKuNkJyFVP4QM03AqudwLaL6W4YE9Dow=' 'sha256-MWbnLG8L270wPoFC3v581s2nVNl/XC/TRKETtAkKpjY='; script-src-attr 'none'; style-src 'self' 'sha256-F3e8uFPgP10pK68RX7B5e1ZHd++LBK67gz3K7SNPrgA='; style-src-attr 'unsafe-inline'; font-src 'self'; img-src 'self' https://*.google-analytics.com https://www.googletagmanager.com; media-src 'self'; connect-src 'self' https://formsubmit.co https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; frame-src 'none'; manifest-src 'self'; worker-src 'none'; upgrade-insecure-requests";
+  "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self' https://formsubmit.co; script-src 'self' https://www.googletagmanager.com 'sha256-O8l3yTyim5wlcCf0NH8eooMDbrLdmZb7wspJwSqm1F8=' 'sha256-14RAKb0fSoF/0NrAPsGFzhEcabDY08YgW52+HTiwOC8=' 'sha256-5JAfEolKKBpyKuNkJyFVP4QM03AqudwLaL6W4YE9Dow=' 'sha256-MWbnLG8L270wPoFC3v581s2nVNl/XC/TRKETtAkKpjY='; script-src-attr 'none'; style-src 'self' 'sha256-F3e8uFPgP10pK68RX7B5e1ZHd++LBK67gz3K7SNPrgA='; style-src-attr 'unsafe-inline'; font-src 'self'; img-src 'self' https://*.google-analytics.com https://www.googletagmanager.com; media-src 'self'; connect-src 'self' https://formsubmit.co https://www.googletagmanager.com https://*.google-analytics.com https://*.analytics.google.com; frame-src 'none'; manifest-src 'self'; worker-src 'none'; upgrade-insecure-requests";
 
 const publishedStructuredData = [
   STRUCTURED_DATA_BY_ROUTE["home:es"],
@@ -372,8 +372,8 @@ describe("web delivery policy", () => {
           [
             "'self'",
             "https://www.googletagmanager.com",
-            "'sha256-PFtIWoSjDUGI9FDBejrY6GsmT+jNY2fnEk/Wu0PMTxo='",
-            "'sha256-NJsY0F2k7FEFgpKyakOXbgKzmylETn07jGhl+846ouI='",
+            "'sha256-O8l3yTyim5wlcCf0NH8eooMDbrLdmZb7wspJwSqm1F8='",
+            "'sha256-14RAKb0fSoF/0NrAPsGFzhEcabDY08YgW52+HTiwOC8='",
             "'sha256-5JAfEolKKBpyKuNkJyFVP4QM03AqudwLaL6W4YE9Dow='",
             "'sha256-MWbnLG8L270wPoFC3v581s2nVNl/XC/TRKETtAkKpjY='",
           ],
@@ -429,6 +429,12 @@ describe("web delivery policy", () => {
     );
     expect(scriptSources).not.toContain(
       "'sha256-NGTPVuZtJv6KrQNvN78pj9Fz+4CuArpGSOhRfc3CjvI='",
+    );
+    expect(scriptSources).not.toContain(
+      "'sha256-PFtIWoSjDUGI9FDBejrY6GsmT+jNY2fnEk/Wu0PMTxo='",
+    );
+    expect(scriptSources).not.toContain(
+      "'sha256-NJsY0F2k7FEFgpKyakOXbgKzmylETn07jGhl+846ouI='",
     );
 
     expect(directives.get("form-action")).toContain("https://formsubmit.co");
