@@ -45,6 +45,9 @@ export default function LemBoxCasePage() {
   const cardContent = lemBoxCase.content[language];
   const audienceIntro = lemBoxAudienceIntro[language];
   const publicLinksSection = lemBoxPublicLinksSection[language];
+  const centralPlatform = lemBoxPublicLinks[0].directory[language];
+  const uruguaySite = lemBoxPublicLinks[1].directory[language];
+  const argentinaSite = lemBoxPublicLinks[2].directory[language];
 
   return (
     <div className="bg-black text-white">
@@ -330,19 +333,68 @@ export default function LemBoxCasePage() {
               data-public-links-directory
               className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,0.39fr)_minmax(0,0.61fr)] lg:gap-16"
             >
-              <div className="lg:pr-4">
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary-on-light">
-                  {publicLinksSection.eyebrow}
-                </p>
-                <h2
-                  id="lem-box-public-links"
-                  className="mt-4 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl"
+              <div className="lg:flex lg:h-full lg:flex-col lg:overflow-hidden lg:rounded-2xl lg:border lg:border-gray-200 lg:bg-white lg:shadow-[0_20px_50px_rgba(15,23,42,0.06)]">
+                <div
+                  aria-hidden="true"
+                  data-public-links-ecosystem-preview
+                  className="relative hidden min-h-[15rem] overflow-hidden border-b border-white/10 bg-gray-950 px-8 py-8 text-white lg:block"
                 >
-                  {publicLinksSection.title}
-                </h2>
-                <p className="mt-5 max-w-[32rem] text-base leading-relaxed text-gray-700 sm:text-lg">
-                  {publicLinksSection.description}
-                </p>
+                  <span className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(10,132,255,0.24),_transparent_58%)]" />
+                  <div className="relative">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-semibold uppercase tracking-[0.16em] text-white/75">
+                        LEM-BOX
+                      </span>
+                      <span className="h-2 w-2 rounded-full bg-primary shadow-[0_0_18px_rgba(10,132,255,0.75)]" />
+                    </div>
+
+                    <div className="mt-8">
+                      <div className="mx-auto w-fit rounded-full border border-primary/40 bg-primary/10 px-4 py-2 text-center">
+                        <span className="block text-xs font-semibold">
+                          {centralPlatform.title}
+                        </span>
+                        <span className="mt-0.5 block text-[0.6875rem] text-white/60">
+                          {centralPlatform.domain}
+                        </span>
+                      </div>
+                      <div className="mx-auto h-6 w-px bg-primary/45" />
+                      <div className="relative mx-auto max-w-[17rem]">
+                        <span className="absolute left-[25%] right-[25%] top-0 h-px bg-primary/45" />
+                        <div className="grid grid-cols-2 gap-6 pt-3">
+                          {[uruguaySite, argentinaSite].map((site) => (
+                            <div
+                              key={site.domain}
+                              className="relative rounded-lg border border-white/15 bg-white/[0.06] px-3 py-2 text-center"
+                            >
+                              <span className="absolute -top-3 left-1/2 h-3 w-px -translate-x-1/2 bg-primary/45" />
+                              <span className="block text-xs font-medium">
+                                {site.title}
+                              </span>
+                              <span className="mt-0.5 block text-[0.6875rem] text-white/55">
+                                {site.domain}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="lg:flex lg:flex-1 lg:flex-col lg:p-8">
+                  <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary-on-light">
+                    {publicLinksSection.eyebrow}
+                  </p>
+                  <h2
+                    id="lem-box-public-links"
+                    className="mt-4 text-3xl font-semibold leading-tight tracking-tight sm:text-4xl"
+                  >
+                    {publicLinksSection.title}
+                  </h2>
+                  <p className="mt-5 max-w-[32rem] text-base leading-relaxed text-gray-700 sm:text-lg">
+                    {publicLinksSection.description}
+                  </p>
+                </div>
               </div>
 
               <div className="border-b border-gray-300">

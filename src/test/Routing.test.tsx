@@ -1305,14 +1305,24 @@ describe("application routing", () => {
       "lg:grid-cols-[minmax(0,0.39fr)_minmax(0,0.61fr)]",
       "lg:gap-16",
     );
+    const ecosystemPreview = section.querySelector(
+      "[data-public-links-ecosystem-preview]",
+    );
+    expect(ecosystemPreview).not.toBeNull();
+    expect(ecosystemPreview).toHaveAttribute("aria-hidden", "true");
+    expect(ecosystemPreview).toHaveClass("hidden", "lg:block", "bg-gray-950");
+    expect(ecosystemPreview).toHaveTextContent("Plataforma central");
+    expect(ecosystemPreview).toHaveTextContent("lem-box.com");
+    expect(ecosystemPreview).toHaveTextContent("Uruguay");
+    expect(ecosystemPreview).toHaveTextContent("lem-box.com.uy");
+    expect(ecosystemPreview).toHaveTextContent("Argentina");
+    expect(ecosystemPreview).toHaveTextContent("lem-box.com.ar");
     const rows = section.querySelectorAll("[data-public-link-row]");
     expect(rows).toHaveLength(3);
     expect(section.querySelectorAll("[data-public-link-domain]")).toHaveLength(
       3,
     );
     expect(section.querySelector("img")).toBeNull();
-    expect(section.querySelector('[class*="rounded"]')).toBeNull();
-    expect(section.querySelector('[class*="shadow"]')).toBeNull();
 
     const spanishLinks = [
       {
