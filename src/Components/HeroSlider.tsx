@@ -349,6 +349,7 @@ export default function HeroSlider() {
             )}
           </div>
           <div
+            data-nojs-hide
             className="relative z-20 mt-[2.625rem] h-2 w-24 self-center md:absolute md:bottom-6 md:left-1/2 md:mt-0 md:-translate-x-1/2 md:self-auto"
             role="group"
             aria-label={
@@ -386,7 +387,10 @@ export default function HeroSlider() {
       <div className="pointer-events-none absolute bottom-0 left-0 hidden h-24 w-full bg-gradient-to-b from-transparent to-black md:block" />
 
       {/* Flechas navegación */}
-      <div className="hidden md:flex justify-between items-center absolute top-1/2 left-0 right-0 px-6 z-20 pointer-events-none transform -translate-y-1/2">
+      <div
+        data-nojs-hide
+        className="hidden md:flex justify-between items-center absolute top-1/2 left-0 right-0 px-6 z-20 pointer-events-none transform -translate-y-1/2"
+      >
         <button
           onClick={() => handleSwipe("right")}
           className="bg-black/40 hover:bg-black/70 text-white rounded-full p-2 transition-all duration-300 pointer-events-auto"
