@@ -101,15 +101,15 @@ export default function PortfolioCard({
   return (
     <motion.div
       data-nojs-visible
-      className={`border border-gray-200 rounded-2xl shadow-sm bg-white ${expanded || status ? "" : "md:h-[280px] md:overflow-hidden"}`}
+      className={`border border-gray-200 rounded-2xl shadow-sm bg-white ${expanded ? "" : "lg:h-[360px]"}`}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45 }}
       viewport={{ once: true }}
     >
-      <div className="flex flex-col md:flex-row">
-        <div className="md:w-5/12">
-          <div className="w-full aspect-[16/9] p-5 md:p-7 rounded-2xl bg-white overflow-hidden flex items-center justify-center">
+      <div className="flex flex-col md:flex-row lg:h-full">
+        <div className="md:w-5/12 lg:h-full">
+          <div className="flex aspect-[16/9] w-full items-center justify-center overflow-hidden rounded-2xl bg-white p-5 md:p-7 lg:h-full lg:aspect-auto">
             <PortfolioCoverImage
               cover={cover}
               alt=""
@@ -124,9 +124,9 @@ export default function PortfolioCard({
             />
           </div>
         </div>
-        <div className="md:w-7/12 p-6">
+        <div className="p-6 md:w-7/12 lg:flex lg:h-full lg:flex-col">
           {status && (
-            <p className="mb-2 inline-flex rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800">
+            <p className="mb-2 inline-flex self-start rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800">
               {status}
             </p>
           )}
@@ -140,7 +140,7 @@ export default function PortfolioCard({
             </p>
           )}
           <p className="mt-3 text-sm text-gray-600">• {tags}</p>
-          <div className="mt-4 flex items-center gap-4 flex-wrap">
+          <div className="mt-4 flex flex-wrap items-center gap-4 lg:mt-auto lg:pt-4">
             {actions}
           </div>
           {details}
