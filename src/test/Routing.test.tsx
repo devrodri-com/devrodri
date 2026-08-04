@@ -1286,7 +1286,8 @@ describe("application routing", () => {
       "py-12",
       "text-gray-900",
       "sm:px-6",
-      "sm:py-24",
+      "sm:py-20",
+      "lg:py-24",
     );
     expect(within(section).getByText("ENLACES PÚBLICOS")).toHaveClass(
       "uppercase",
@@ -1299,20 +1300,41 @@ describe("application routing", () => {
       ),
     ).toBeInTheDocument();
 
+    const intro = section.querySelector("[data-public-links-intro]");
+    expect(intro).toHaveClass("max-w-[40rem]");
+
     const directory = section.querySelector("[data-public-links-directory]");
     expect(directory).toHaveClass(
-      "grid",
-      "lg:grid-cols-[minmax(0,0.39fr)_minmax(0,0.61fr)]",
-      "lg:gap-16",
+      "mt-10",
+      "border-y",
+      "sm:mt-12",
+      "lg:grid",
+      "lg:grid-cols-3",
     );
-    const rows = section.querySelectorAll("[data-public-link-row]");
+    const rows = Array.from(
+      section.querySelectorAll("[data-public-link-row]"),
+    );
     expect(rows).toHaveLength(3);
+    expect(rows[0]).toHaveClass("lg:pl-0");
+    expect(rows[0]).not.toHaveClass("border-t", "lg:border-l");
+    expect(rows[1]).toHaveClass(
+      "border-t",
+      "lg:border-l",
+      "lg:border-t-0",
+    );
+    expect(rows[2]).toHaveClass(
+      "border-t",
+      "lg:border-l",
+      "lg:border-t-0",
+      "lg:pr-0",
+    );
     expect(section.querySelectorAll("[data-public-link-domain]")).toHaveLength(
       3,
     );
     expect(section.querySelector("img")).toBeNull();
     expect(section.querySelector('[class*="rounded"]')).toBeNull();
     expect(section.querySelector('[class*="shadow"]')).toBeNull();
+    expect(section.querySelector('[class*="gradient"]')).toBeNull();
 
     const spanishLinks = [
       {
@@ -1337,9 +1359,16 @@ describe("application routing", () => {
       expect(link).toHaveAttribute("rel", "noopener noreferrer");
       expect(link).toHaveClass(
         "min-h-[44px]",
-        "border-t",
+        "lg:px-8",
+        "lg:py-9",
         "focus-visible:ring-2",
         "focus-visible:ring-inset",
+      );
+      expect(link.querySelector('[aria-hidden="true"]')).toHaveClass(
+        "group-hover:translate-x-0.5",
+        "group-focus-visible:translate-x-0.5",
+        "motion-reduce:transform-none",
+        "motion-reduce:transition-none",
       );
       expect(link.querySelector("a")).toBeNull();
     }

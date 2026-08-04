@@ -324,13 +324,10 @@ export default function LemBoxCasePage() {
         <div>
           <section
             aria-labelledby="lem-box-public-links"
-            className="bg-neutral px-4 py-12 text-gray-900 sm:px-6 sm:py-24"
+            className="bg-neutral px-4 py-12 text-gray-900 sm:px-6 sm:py-20 lg:py-24"
           >
-            <div
-              data-public-links-directory
-              className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-[minmax(0,0.39fr)_minmax(0,0.61fr)] lg:gap-16"
-            >
-              <div className="lg:pr-4">
+            <div className="mx-auto max-w-6xl">
+              <div data-public-links-intro className="max-w-[40rem]">
                 <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary-on-light">
                   {publicLinksSection.eyebrow}
                 </p>
@@ -345,9 +342,14 @@ export default function LemBoxCasePage() {
                 </p>
               </div>
 
-              <div className="border-b border-gray-300">
-                {lemBoxPublicLinks.map((link) => {
+              <div
+                data-public-links-directory
+                className="mt-10 border-y border-gray-300 sm:mt-12 lg:grid lg:grid-cols-3"
+              >
+                {lemBoxPublicLinks.map((link, index) => {
                   const directory = link.directory[language];
+                  const isFirst = index === 0;
+                  const isLast = index === lemBoxPublicLinks.length - 1;
 
                   return (
                     <a
@@ -356,10 +358,14 @@ export default function LemBoxCasePage() {
                       target="_blank"
                       rel="noopener noreferrer"
                       data-public-link-row
-                      className="group grid min-h-[44px] grid-cols-[minmax(0,1fr)_auto] gap-6 border-t border-gray-300 py-6 text-gray-900 no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-on-light sm:py-7"
+                      className={`group grid min-h-[44px] grid-cols-[minmax(0,1fr)_auto] gap-6 py-6 text-gray-900 no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary-on-light sm:py-7 lg:px-8 lg:py-9 ${
+                        isFirst
+                          ? "lg:pl-0"
+                          : "border-t border-gray-300 lg:border-l lg:border-t-0"
+                      } ${isLast ? "lg:pr-0" : ""}`}
                     >
-                      <span>
-                        <span className="block text-lg font-semibold tracking-tight transition-colors group-hover:text-primary-on-light-hover group-focus-visible:text-primary-on-light-hover">
+                      <span className="flex h-full flex-col">
+                        <span className="block text-lg font-semibold tracking-tight transition-colors group-hover:text-primary-on-light-hover group-focus-visible:text-primary-on-light-hover motion-reduce:transition-none">
                           {directory.title}
                         </span>
                         <span
@@ -371,13 +377,13 @@ export default function LemBoxCasePage() {
                         <span className="mt-4 block text-sm leading-relaxed text-gray-700">
                           {directory.description}
                         </span>
-                        <span className="mt-4 block text-xs font-semibold uppercase tracking-[0.12em] text-primary-on-light">
+                        <span className="mt-5 block text-xs font-semibold uppercase tracking-[0.12em] text-primary-on-light lg:mt-auto lg:pt-6">
                           {directory.action}
                         </span>
                       </span>
                       <span
                         aria-hidden="true"
-                        className="mt-1 text-xl leading-none text-gray-500 transition-[color,transform] duration-200 group-hover:translate-x-0.5 group-hover:text-primary-on-light group-focus-visible:text-primary-on-light"
+                        className="mt-1 text-xl leading-none text-gray-500 transition-[color,transform] duration-200 group-hover:translate-x-0.5 group-hover:text-primary-on-light group-focus-visible:translate-x-0.5 group-focus-visible:text-primary-on-light motion-reduce:transform-none motion-reduce:transition-none"
                       >
                         ↗
                       </span>
