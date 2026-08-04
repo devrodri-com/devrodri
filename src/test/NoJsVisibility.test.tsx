@@ -64,7 +64,7 @@ const approvedFiles = {
   },
   "src/Components/HeroSlider.tsx": {
     baselineHash:
-      "ca4c4cb57cb2030aeb4baca2a81e319cb8542e7064673d956209601870be558e",
+      "884719867960021cb39d358e7fbd61357209093378dd64e07ae0f34745a293b9",
     markers: 1,
   },
   "src/Components/PortfolioSection.tsx": {

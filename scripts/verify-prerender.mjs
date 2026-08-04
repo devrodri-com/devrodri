@@ -168,6 +168,12 @@ function count(haystack, needle) {
   return haystack.split(needle).length - 1;
 }
 
+function openingTags(html, tagName) {
+  return [...html.matchAll(new RegExp(`<${tagName}\\b[^>]*>`, "g"))].map(
+    ([tag]) => tag,
+  );
+}
+
 function canonical(pathname) {
   return `https://www.devrodri.com${pathname}`;
 }
@@ -199,12 +205,15 @@ function assertNoJavaScriptNavigation(
   html,
   { englishPath, lang, spanishPath },
 ) {
+  const navbarStart = html.indexOf('<nav data-nojs-navbar="true"');
+  assert.notEqual(navbarStart, -1, `${lang}: Navbar start`);
   const mobileFallbackStart = html.indexOf(
     '<div data-nojs-mobile-nav="true"',
   );
   assert.notEqual(mobileFallbackStart, -1, `${lang}: mobile fallback`);
   const mobileFallbackEnd = html.indexOf("</nav>", mobileFallbackStart);
   assert.notEqual(mobileFallbackEnd, -1, `${lang}: Navbar close`);
+  const navbar = html.slice(navbarStart, mobileFallbackEnd);
   const mobileFallback = html.slice(mobileFallbackStart, mobileFallbackEnd);
   const localizedHomePath = lang === "es" ? "/" : "/en";
   const localizedPortfolioPath = lang === "es"
@@ -235,9 +244,9 @@ function assertNoJavaScriptNavigation(
     `${lang}: language fallback count`,
   );
   assert.equal(
-    count(html, 'data-nojs-hide="true"'),
+    count(navbar, 'data-nojs-hide="true"'),
     2,
-    `${lang}: JavaScript-only controls`,
+    `${lang}: Navbar JavaScript-only controls`,
   );
   assert.equal(
     count(html, 'aria-current="page"'),
@@ -275,6 +284,161 @@ function assertNoJavaScriptNavigation(
   assert.ok(!mobileFallback.includes("<button"));
   assert.ok(!mobileFallback.includes("aria-pressed"));
   assert.ok(!mobileFallback.includes("tabindex="));
+}
+
+function assertNoJavaScriptOnlyControls(html, { lang, pathname }) {
+  const buttons = openingTags(html, "button");
+  const anchors = openingTags(html, "a");
+  const nativeSubmitButtons = buttons.filter((button) =>
+    button.includes('type="submit"')
+  );
+
+  assert.ok(
+    nativeSubmitButtons.every(
+      (button) => !button.includes('data-nojs-hide="true"'),
+    ),
+    `${pathname}: native submit must remain available without JavaScript`,
+  );
+  assert.ok(
+    anchors.every((anchor) => !anchor.includes('data-nojs-hide="true"')),
+    `${pathname}: real anchors must not be marked as JavaScript-only`,
+  );
+
+  if (pathname === "/" || pathname === "/en") {
+    const slideNavigationLabel = lang === "es"
+      ? "Navegación de slides"
+      : "Slide navigation";
+    const slideNavigation = openingTags(html, "div").find(
+      (tag) =>
+        tag.includes('role="group"') &&
+        tag.includes(`aria-label="${slideNavigationLabel}"`),
+    );
+    assert.ok(slideNavigation, `${pathname}: Hero dots wrapper`);
+    assert.ok(
+      slideNavigation.includes('data-nojs-hide="true"'),
+      `${pathname}: Hero dots must be hidden without JavaScript`,
+    );
+
+    const slideNavigationStart = html.indexOf(slideNavigation);
+    const slideNavigationEnd = html.indexOf("</div>", slideNavigationStart);
+    const dotButtons = openingTags(
+      html.slice(slideNavigationStart, slideNavigationEnd),
+      "button",
+    );
+    assert.equal(dotButtons.length, 4, `${pathname}: Hero dot count`);
+    assert.ok(
+      dotButtons.every((button) => !button.includes('data-nojs-hide="true"')),
+      `${pathname}: dots must use their shared wrapper`,
+    );
+
+    const arrowNavigation = openingTags(html, "div").find((tag) =>
+      tag.includes(
+        'class="hidden md:flex justify-between items-center absolute top-1/2',
+      )
+    );
+    assert.ok(arrowNavigation, `${pathname}: Hero arrows wrapper`);
+    assert.ok(
+      arrowNavigation.includes('data-nojs-hide="true"'),
+      `${pathname}: Hero arrows must be hidden without JavaScript`,
+    );
+    const arrowLabels = lang === "es"
+      ? ['aria-label="Slide anterior"', 'aria-label="Slide siguiente"']
+      : ['aria-label="Previous slide"', 'aria-label="Next slide"'];
+    const arrowButtons = buttons.filter((button) =>
+      arrowLabels.some((label) => button.includes(label))
+    );
+    assert.equal(arrowButtons.length, 2, `${pathname}: Hero arrow count`);
+    assert.ok(
+      arrowButtons.every(
+        (button) => !button.includes('data-nojs-hide="true"'),
+      ),
+      `${pathname}: arrows must use their shared wrapper`,
+    );
+    assert.equal(
+      count(html, 'data-nojs-hide="true"'),
+      4,
+      `${pathname}: approved no-JavaScript hide markers`,
+    );
+    assert.equal(nativeSubmitButtons.length, 1, `${pathname}: native submit`);
+    return;
+  }
+
+  if (pathname === "/portfolio" || pathname === "/en/portfolio") {
+    const filterNavigation = openingTags(html, "div").find((tag) =>
+      tag.includes(
+        'class="mt-4 flex flex-wrap items-center justify-center gap-2"',
+      )
+    );
+    assert.ok(filterNavigation, `${pathname}: Portfolio filters wrapper`);
+    assert.ok(
+      filterNavigation.includes('data-nojs-hide="true"'),
+      `${pathname}: Portfolio filters must be hidden without JavaScript`,
+    );
+    const filterNavigationStart = html.indexOf(filterNavigation);
+    const filterNavigationEnd = html.indexOf("</div>", filterNavigationStart);
+    const filterButtons = openingTags(
+      html.slice(filterNavigationStart, filterNavigationEnd),
+      "button",
+    );
+    assert.equal(filterButtons.length, 5, `${pathname}: Portfolio filter count`);
+    assert.ok(
+      filterButtons.every(
+        (button) => !button.includes('data-nojs-hide="true"'),
+      ),
+      `${pathname}: filters must use their shared wrapper`,
+    );
+
+    const detailLabelPrefix = lang === "es" ? "Ver más:" : "View more:";
+    const detailButtons = buttons.filter(
+      (button) =>
+        button.includes('type="button"') &&
+        button.includes('aria-expanded="false"') &&
+        button.includes(`aria-label="${detailLabelPrefix}`),
+    );
+    assert.equal(detailButtons.length, 7, `${pathname}: detail toggle count`);
+    assert.ok(
+      detailButtons.every((button) =>
+        button.includes('data-nojs-hide="true"')
+      ),
+      `${pathname}: detail toggles must be hidden without JavaScript`,
+    );
+    assert.ok(
+      detailButtons.every((button) => !button.includes("aria-controls=")),
+      `${pathname}: collapsed toggles must not expose orphan aria-controls`,
+    );
+    assert.equal(
+      count(
+        html,
+        lang === "es" ? ">Ver más</button>" : ">View details</button>",
+      ),
+      7,
+      `${pathname}: localized detail toggle copy`,
+    );
+    assert.equal(
+      count(html, 'id="portfolio-case-'),
+      8,
+      `${pathname}: prerendered Portfolio cards`,
+    );
+    assert.ok(
+      html.includes(
+        `href="${lang === "es" ? "/portfolio/lem-box" : "/en/portfolio/lem-box"}"`,
+      ),
+      `${pathname}: LEM-BOX case link`,
+    );
+    assert.equal(
+      count(html, 'data-nojs-hide="true"'),
+      10,
+      `${pathname}: approved no-JavaScript hide markers`,
+    );
+    assert.equal(nativeSubmitButtons.length, 0, `${pathname}: no form submit`);
+    return;
+  }
+
+  assert.equal(
+    count(html, 'data-nojs-hide="true"'),
+    2,
+    `${pathname}: Navbar-only no-JavaScript hide markers`,
+  );
 }
 
 function inlineScripts(html) {
@@ -442,6 +606,7 @@ for (const route of expectedRoutes) {
     lang: route.lang,
     spanishPath,
   });
+  assertNoJavaScriptOnlyControls(html, route);
   prerenderedNoJavaScriptMarkerTotal += route.noJavaScriptMarkers;
   for (const fallback of suspenseFallbacks) {
     assert.ok(!html.includes(fallback), `${route.pathname}: ${fallback}`);
@@ -564,6 +729,7 @@ for (const route of expectedThankYouRoutes) {
       ? route.pathname
       : route.equivalentLocalePath,
   });
+  assertNoJavaScriptOnlyControls(html, route);
   prerenderedNoJavaScriptMarkerTotal += route.noJavaScriptMarkers;
   for (const fallback of suspenseFallbacks) {
     assert.ok(!html.includes(fallback), `${route.pathname}: ${fallback}`);
@@ -599,6 +765,7 @@ assert.equal(
 
 const expectedNotFoundArtifacts = [
   {
+    pathname: "/__not-found__",
     file: "404.html",
     lang: "es",
     title: "Página no encontrada | devrodri",
@@ -610,6 +777,7 @@ const expectedNotFoundArtifacts = [
     noJavaScriptMarkers: 1,
   },
   {
+    pathname: "/en/__not-found__",
     file: "en/404.html",
     lang: "en",
     title: "Page not found | devrodri",
@@ -678,6 +846,7 @@ for (const artifact of expectedNotFoundArtifacts) {
     lang: artifact.lang,
     spanishPath: "/",
   });
+  assertNoJavaScriptOnlyControls(html, artifact);
   prerenderedNoJavaScriptMarkerTotal += artifact.noJavaScriptMarkers;
 }
 assert.equal(new Set(notFoundDocuments).size, expectedNotFoundArtifacts.length);

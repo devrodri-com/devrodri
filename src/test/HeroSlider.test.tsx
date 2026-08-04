@@ -363,6 +363,45 @@ describe("HeroSlider resilience", () => {
     expect(copyColumn?.className).not.toMatch(/\b(bg-|backdrop-blur)/);
   });
 
+  it("marks only the JavaScript-only Hero navigation wrappers for no-JS hiding", () => {
+    const { container } = renderHero();
+    const slideNavigation = screen.getByRole("group", {
+      name: "Navegación de slides",
+    });
+    const dotButtons = within(slideNavigation).getAllByRole("button");
+    const previousButton = screen.getByRole("button", {
+      name: "Slide anterior",
+    });
+    const nextButton = screen.getByRole("button", {
+      name: "Slide siguiente",
+    });
+
+    expect(slideNavigation).toHaveAttribute("data-nojs-hide", "true");
+    expect(dotButtons).toHaveLength(4);
+    for (const button of dotButtons) {
+      expect(button).not.toHaveAttribute("data-nojs-hide");
+    }
+
+    expect(previousButton.parentElement).toBe(nextButton.parentElement);
+    expect(previousButton.parentElement).toHaveAttribute(
+      "data-nojs-hide",
+      "true",
+    );
+    expect(previousButton).not.toHaveAttribute("data-nojs-hide");
+    expect(nextButton).not.toHaveAttribute("data-nojs-hide");
+    expect(container.querySelectorAll("[data-nojs-hide]")).toHaveLength(2);
+
+    const initialHeading = screen.getByRole("heading", {
+      level: 1,
+      name: "Sitios web que comunican y convierten.",
+    });
+    const initialCta = screen.getByRole("link", { name: "Ver trabajos" });
+    const initialPicture = container.querySelector("picture");
+    expect(initialHeading.closest("[data-nojs-hide]")).toBeNull();
+    expect(initialCta.closest("[data-nojs-hide]")).toBeNull();
+    expect(initialPicture?.closest("[data-nojs-hide]")).toBeNull();
+  });
+
   it("keeps approved slide navigation working", async () => {
     const user = userEvent.setup();
     renderHero();

@@ -334,6 +334,89 @@ describe("application routing", () => {
     ).not.toBeInTheDocument();
   });
 
+  it.each([
+    { language: "es", path: "/portfolio", toggleCopy: "Ver más" },
+    { language: "en", path: "/en/portfolio", toggleCopy: "View details" },
+  ] as const)(
+    "marks only the $language Portfolio JS-only controls for no-JS hiding",
+    async ({ path, toggleCopy }) => {
+      renderApp(path);
+      const heading = await screen.findByRole("heading", { level: 1 });
+      const portfolio = heading.closest("section");
+      expect(portfolio).not.toBeNull();
+      if (portfolio === null) {
+        throw new Error("Portfolio section is missing");
+      }
+
+      const filterButtons = Array.from(
+        portfolio.querySelectorAll<HTMLButtonElement>("button[aria-pressed]"),
+      );
+      expect(filterButtons).toHaveLength(5);
+      const filterWrapper = filterButtons[0]?.parentElement;
+      expect(filterWrapper).toHaveAttribute("data-nojs-hide", "true");
+      for (const button of filterButtons) {
+        expect(button.parentElement).toBe(filterWrapper);
+        expect(button).not.toHaveAttribute("data-nojs-hide");
+      }
+
+      const detailToggles = Array.from(
+        portfolio.querySelectorAll<HTMLButtonElement>(
+          "button[data-nojs-hide][aria-expanded]",
+        ),
+      );
+      expect(detailToggles).toHaveLength(7);
+      for (const button of detailToggles) {
+        expect(button).toHaveAttribute("data-nojs-hide", "true");
+        expect(button).toHaveAttribute("aria-expanded", "false");
+        expect(button).not.toHaveAttribute("aria-controls");
+        expect(button).toHaveTextContent(toggleCopy);
+      }
+
+      const cards = Array.from(
+        portfolio.querySelectorAll<HTMLElement>('[id^="portfolio-case-"]'),
+      );
+      expect(cards).toHaveLength(8);
+      expect(portfolio.querySelectorAll("[data-nojs-hide]")).toHaveLength(8);
+      for (const card of cards) {
+        expect(card).not.toHaveAttribute("data-nojs-hide");
+      }
+
+      const realLinks = Array.from(portfolio.querySelectorAll("a[href]"));
+      expect(realLinks.length).toBeGreaterThan(0);
+      for (const link of realLinks) {
+        expect(link.closest("[data-nojs-hide]")).toBeNull();
+      }
+      expect(
+        within(portfolio).getByRole("link", {
+          name: /LEM-BOX/,
+        }),
+      ).toBeInTheDocument();
+    },
+  );
+
+  it("preserves native and no-JS navigation controls outside Hero hiding", async () => {
+    renderApp("/");
+    await screen.findByRole("heading", {
+      level: 1,
+      name: "Sitios web que comunican y convierten.",
+    });
+
+    const submit = screen.getByRole("button", { name: "Enviar consulta" });
+    const noJavaScriptNavigation = document.querySelector(
+      "[data-nojs-mobile-nav]",
+    );
+    const noJavaScriptLanguages = document.querySelectorAll(
+      "[data-nojs-language]",
+    );
+    expect(submit.closest("[data-nojs-hide]")).toBeNull();
+    expect(noJavaScriptNavigation).not.toHaveAttribute("data-nojs-hide");
+    expect(noJavaScriptLanguages).toHaveLength(2);
+    for (const languageSelector of noJavaScriptLanguages) {
+      expect(languageSelector).not.toHaveAttribute("data-nojs-hide");
+      expect(languageSelector.querySelectorAll("a[href]")).toHaveLength(2);
+    }
+  });
+
   it("shows the LEM-BOX summary card with one internal case-study CTA", async () => {
     renderApp("/portfolio");
 

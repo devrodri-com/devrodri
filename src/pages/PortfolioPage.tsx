@@ -59,7 +59,10 @@ export default function PortfolioPage() {
               ? "Sistemas, sitios web, e-commerce y estrategia de marca."
               : "Systems, websites, e-commerce, and brand strategy."}
           </p>
-          <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+          <div
+            data-nojs-hide
+            className="mt-4 flex flex-wrap items-center justify-center gap-2"
+          >
             {filters.map(f => (
               <button
                 key={f.key}
@@ -143,6 +146,7 @@ export default function PortfolioPage() {
                           </span>
                         ))}
                         <button
+                          data-nojs-hide
                           type="button"
                           aria-expanded={detailsExpanded}
                           aria-controls={detailsExpanded ? detailsId : undefined}
