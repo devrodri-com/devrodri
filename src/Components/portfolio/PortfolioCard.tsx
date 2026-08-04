@@ -71,7 +71,6 @@ interface PortfolioCardProps {
   cover: string;
   desc: string;
   details: ReactNode;
-  expanded: boolean;
   headingLevel?: "h2" | "h3";
   disclaimer?: string;
   priority?: boolean;
@@ -86,7 +85,6 @@ export default function PortfolioCard({
   cover,
   desc,
   details,
-  expanded,
   headingLevel = "h3",
   disclaimer,
   priority = false,
@@ -101,32 +99,32 @@ export default function PortfolioCard({
   return (
     <motion.div
       data-nojs-visible
-      className={`border border-gray-200 rounded-2xl shadow-sm bg-white ${expanded || status ? "" : "md:h-[280px] md:overflow-hidden"}`}
+      className="border border-gray-200 rounded-2xl shadow-sm bg-white"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45 }}
       viewport={{ once: true }}
     >
-      <div className="flex flex-col md:flex-row">
-        <div className="md:w-5/12">
-          <div className="w-full aspect-[16/9] p-5 md:p-7 rounded-2xl bg-white overflow-hidden flex items-center justify-center">
+      <div className="flex flex-col lg:flex-row">
+        <div className="flex items-center justify-center lg:w-[340px] lg:shrink-0">
+          <div className="w-full p-4 sm:p-5 rounded-2xl bg-white overflow-hidden flex items-center justify-center">
             <PortfolioCoverImage
               cover={cover}
               alt=""
-              className={`w-full h-full object-center rounded-xl ${
+              className={`w-full h-auto max-w-[280px] sm:max-w-[360px] lg:max-w-none aspect-[40/21] object-center rounded-xl ${
                 coverFit === "cover" ? "object-cover" : "object-contain"
               }`}
               priority={priority}
-              sizes="(min-width: 1280px) 457px, (min-width: 768px) calc(41.67vw - 76px), calc(100vw - 88px)"
+              sizes="(min-width: 1024px) 300px, (min-width: 640px) 360px, (min-width: 358px) 280px, calc(100vw - 80px)"
               {...(responsiveCover === undefined
                 ? {}
                 : { responsiveCover })}
             />
           </div>
         </div>
-        <div className="md:w-7/12 p-6">
+        <div className="min-w-0 flex flex-col p-6 lg:flex-1">
           {status && (
-            <p className="mb-2 inline-flex rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800">
+            <p className="mb-2 inline-flex self-start rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800">
               {status}
             </p>
           )}
@@ -140,7 +138,7 @@ export default function PortfolioCard({
             </p>
           )}
           <p className="mt-3 text-sm text-gray-600">• {tags}</p>
-          <div className="mt-4 flex items-center gap-4 flex-wrap">
+          <div className="mt-4 flex items-center gap-4 flex-wrap lg:mt-auto lg:pt-4">
             {actions}
           </div>
           {details}

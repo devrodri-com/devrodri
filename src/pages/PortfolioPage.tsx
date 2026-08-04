@@ -185,7 +185,6 @@ export default function PortfolioPage() {
                       />
                     ) : null
                   }
-                  expanded={detailsExpanded}
                   headingLevel="h2"
                   priority={portfolioIndex === 0}
                   tags={content.tags.join(" · ")}
