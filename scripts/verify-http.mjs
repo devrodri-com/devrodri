@@ -93,9 +93,15 @@ try {
     "/",
     "/portfolio",
     "/portfolio/lem-box",
+    "/servicios",
+    "/servicios/sitios-web-para-empresas",
+    "/servicios/sistemas-a-medida",
     "/en",
     "/en/portfolio",
     "/en/portfolio/lem-box",
+    "/en/services",
+    "/en/services/business-websites",
+    "/en/services/custom-software",
   ];
   for (const pathname of indexablePaths) {
     const response = await request(pathname);
@@ -206,6 +212,24 @@ try {
         ctaPath: "/en",
       },
     ],
+    [
+      "/servicios/no-existe",
+      {
+        lang: "es",
+        heading: "Página no encontrada",
+        cta: "Volver al inicio",
+        ctaPath: "/",
+      },
+    ],
+    [
+      "/en/services/no-existe",
+      {
+        lang: "en",
+        heading: "Page not found",
+        cta: "Back to home",
+        ctaPath: "/en",
+      },
+    ],
   ]);
   const invalidBodies = [];
   for (const [pathname, expected] of invalidPaths) {
@@ -242,11 +266,29 @@ try {
       "/portfolio/lem-box/?source=vis01",
       "/portfolio/lem-box?source=vis01",
     ],
+    ["/servicios/?source=vis01", "/servicios?source=vis01"],
+    [
+      "/servicios/sitios-web-para-empresas/?source=vis01",
+      "/servicios/sitios-web-para-empresas?source=vis01",
+    ],
+    [
+      "/servicios/sistemas-a-medida/?source=vis01",
+      "/servicios/sistemas-a-medida?source=vis01",
+    ],
     ["/en/?source=vis01", "/en?source=vis01"],
     ["/en/portfolio/?source=vis01", "/en/portfolio?source=vis01"],
     [
       "/en/portfolio/lem-box/?source=vis01",
       "/en/portfolio/lem-box?source=vis01",
+    ],
+    ["/en/services/?source=vis01", "/en/services?source=vis01"],
+    [
+      "/en/services/business-websites/?source=vis01",
+      "/en/services/business-websites?source=vis01",
+    ],
+    [
+      "/en/services/custom-software/?source=vis01",
+      "/en/services/custom-software?source=vis01",
     ],
     ["/gracias/?source=vis01", "/gracias?source=vis01"],
     [
@@ -313,9 +355,10 @@ try {
 
   const assetFiles = await readdir(path.join(projectRoot, "dist", "assets"));
   const lazyChunks = assetFiles.filter((file) =>
-    /^(PortfolioPage|LemBoxCasePage)-.*\.js$/.test(file),
+    /^(PortfolioPage|LemBoxCasePage|ServicesHubPage|BusinessWebsitesPage|CustomSoftwarePage)-.*\.js$/
+      .test(file),
   );
-  assert.equal(lazyChunks.length, 2);
+  assert.equal(lazyChunks.length, 5);
   for (const lazyChunk of lazyChunks) {
     const response = await request(`/assets/${lazyChunk}`);
     assert.equal(response.status, 200, lazyChunk);

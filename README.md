@@ -15,18 +15,20 @@ Production: [www.devrodri.com](https://www.devrodri.com)
 - Vitest 4
 - Node.js 22 and npm 9.9.4
 
-The site uses Vite + React and is prerendered at build time. It publishes six
-static public routes:
+The site uses Vite + React and is prerendered at build time. It publishes
+twelve static public routes:
 
-- Spanish: `/`, `/portfolio`, `/portfolio/lem-box`
-- English: `/en`, `/en/portfolio`, `/en/portfolio/lem-box`
+- Spanish: `/`, `/portfolio`, `/portfolio/lem-box`, `/servicios`,
+  `/servicios/sitios-web-para-empresas`, `/servicios/sistemas-a-medida`
+- English: `/en`, `/en/portfolio`, `/en/portfolio/lem-box`, `/en/services`,
+  `/en/services/business-websites`, `/en/services/custom-software`
 
 Each route ships server-visible HTML and content, including its localized
 `title`, description, canonical URL, `hreflang`, Open Graph, and Twitter
 metadata. Structured data is scoped per route where applicable, and React
 hydrates the client after the initial document loads. Unknown paths return a
 real HTTP 404 localized in Spanish or English. The build also publishes
-`robots.txt` and `sitemap.xml`, which lists the six public URLs.
+`robots.txt` and `sitemap.xml`, which lists the twelve public URLs.
 
 ## Local development
 

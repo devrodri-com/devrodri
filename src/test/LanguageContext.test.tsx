@@ -61,7 +61,7 @@ describe("i18n contract", () => {
     const enPaths = collectTranslationPaths(translations.en);
 
     expect(Object.keys(translations)).toEqual(["es", "en"]);
-    expect(esPaths).toHaveLength(144);
+    expect(esPaths).toHaveLength(273);
     expect(enPaths).toEqual(esPaths);
     expect(JSON.parse(JSON.stringify(translations))).toEqual(translations);
   });

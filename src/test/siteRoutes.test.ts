@@ -54,6 +54,48 @@ const expectedRoutes = [
     page: "lem-box",
   },
   {
+    routeKey: "services:es",
+    locale: "es",
+    pathname: "/servicios",
+    equivalentLocalePath: "/en/services",
+    page: "services",
+  },
+  {
+    routeKey: "services:en",
+    locale: "en",
+    pathname: "/en/services",
+    equivalentLocalePath: "/servicios",
+    page: "services",
+  },
+  {
+    routeKey: "business-websites:es",
+    locale: "es",
+    pathname: "/servicios/sitios-web-para-empresas",
+    equivalentLocalePath: "/en/services/business-websites",
+    page: "business-websites",
+  },
+  {
+    routeKey: "business-websites:en",
+    locale: "en",
+    pathname: "/en/services/business-websites",
+    equivalentLocalePath: "/servicios/sitios-web-para-empresas",
+    page: "business-websites",
+  },
+  {
+    routeKey: "custom-software:es",
+    locale: "es",
+    pathname: "/servicios/sistemas-a-medida",
+    equivalentLocalePath: "/en/services/custom-software",
+    page: "custom-software",
+  },
+  {
+    routeKey: "custom-software:en",
+    locale: "en",
+    pathname: "/en/services/custom-software",
+    equivalentLocalePath: "/servicios/sistemas-a-medida",
+    page: "custom-software",
+  },
+  {
     routeKey: "thank-you:es",
     locale: "es",
     pathname: "/gracias",
@@ -103,8 +145,36 @@ const lockedLemBoxMetadata = {
   },
 } as const;
 
+const lockedServicesMetadata = {
+  "services:es": {
+    title: "Servicios de desarrollo web y software a medida | Rodrigo Opalo",
+    canonical: "https://www.devrodri.com/servicios",
+  },
+  "services:en": {
+    title: "Web development and custom software services | Rodrigo Opalo",
+    canonical: "https://www.devrodri.com/en/services",
+  },
+  "business-websites:es": {
+    title: "Sitios web profesionales para empresas | Rodrigo Opalo",
+    canonical: "https://www.devrodri.com/servicios/sitios-web-para-empresas",
+  },
+  "business-websites:en": {
+    title: "Business website design and development | Rodrigo Opalo",
+    canonical: "https://www.devrodri.com/en/services/business-websites",
+  },
+  "custom-software:es": {
+    title: "Sistemas y aplicaciones a medida para empresas | Rodrigo Opalo",
+    canonical: "https://www.devrodri.com/servicios/sistemas-a-medida",
+  },
+  "custom-software:en": {
+    title:
+      "Custom software and web applications for businesses | Rodrigo Opalo",
+    canonical: "https://www.devrodri.com/en/services/custom-software",
+  },
+} as const;
+
 describe("public route registry", () => {
-  it("contains the six indexable routes and two localized confirmation routes", () => {
+  it("contains the twelve indexable routes and two localized confirmation routes", () => {
     expect(
       PUBLIC_ROUTES.map(
         ({
@@ -122,10 +192,10 @@ describe("public route registry", () => {
         }),
       ),
     ).toEqual(expectedRoutes);
-    expect(new Set(PUBLIC_ROUTES.map((route) => route.pathname)).size).toBe(8);
-    expect(new Set(PUBLIC_ROUTES.map((route) => route.routeKey)).size).toBe(8);
+    expect(new Set(PUBLIC_ROUTES.map((route) => route.pathname)).size).toBe(14);
+    expect(new Set(PUBLIC_ROUTES.map((route) => route.routeKey)).size).toBe(14);
     expect(PUBLIC_ROUTES.filter((route) => route.sitemap.include)).toHaveLength(
-      6,
+      12,
     );
     expect(PUBLIC_ROUTES.filter((route) => !route.sitemap.include)).toHaveLength(
       2,
@@ -207,6 +277,22 @@ describe("public route registry", () => {
     }
   });
 
+  it("publishes the exact approved services metadata", () => {
+    for (const [routeKey, expected] of Object.entries(lockedServicesMetadata)) {
+      const route = PUBLIC_ROUTES.find(
+        (candidate) => candidate.routeKey === routeKey,
+      );
+
+      expect(route).toBeDefined();
+      expect(route?.metadata.title).toBe(expected.title);
+      expect(route?.metadata.canonical).toBe(expected.canonical);
+      expect(route?.metadata.description).not.toBe("");
+      expect(route?.metadata.og?.title).toBe(expected.title);
+      expect(route?.metadata.twitter?.title).toBe(expected.title);
+      expect(route?.metadata.robots).toBe("index, follow");
+    }
+  });
+
   it("keeps the locked LEM-BOX metadata and social image unchanged", () => {
     for (const [routeKey, expected] of Object.entries(lockedLemBoxMetadata)) {
       const route = PUBLIC_ROUTES.find(
@@ -241,6 +327,22 @@ describe("public route registry", () => {
     );
     expect(getEquivalentLocalePath("/en/portfolio/lem-box", "es")).toBe(
       "/portfolio/lem-box",
+    );
+    expect(getLocalizedPath("services", "es")).toBe("/servicios");
+    expect(getLocalizedPath("services", "en")).toBe("/en/services");
+    expect(getEquivalentLocalePath("/servicios", "en")).toBe("/en/services");
+    expect(getEquivalentLocalePath("/en/services", "es")).toBe("/servicios");
+    expect(
+      getEquivalentLocalePath("/servicios/sitios-web-para-empresas", "en"),
+    ).toBe("/en/services/business-websites");
+    expect(
+      getEquivalentLocalePath("/en/services/business-websites", "es"),
+    ).toBe("/servicios/sitios-web-para-empresas");
+    expect(getEquivalentLocalePath("/servicios/sistemas-a-medida", "en")).toBe(
+      "/en/services/custom-software",
+    );
+    expect(getEquivalentLocalePath("/en/services/custom-software", "es")).toBe(
+      "/servicios/sistemas-a-medida",
     );
     expect(getLocalizedPath("thank-you", "es")).toBe("/gracias");
     expect(getLocalizedPath("thank-you", "en")).toBe("/en/thank-you");

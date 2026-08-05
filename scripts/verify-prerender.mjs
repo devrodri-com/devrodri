@@ -79,6 +79,79 @@ const expectedRoutes = [
       "a82aa0233255e55dded2e20c18b752f88b22965f1692be24dfe75fa34319a27c",
     noJavaScriptMarkers: 1,
   },
+  {
+    pathname: "/servicios",
+    file: "servicios/index.html",
+    lang: "es",
+    title: "Servicios de desarrollo web y software a medida | Rodrigo Opalo",
+    description:
+      "Desarrollo sitios web profesionales, sistemas a medida y automatizaciones para empresas. Trabajo directo conmigo, en español e inglés, desde South Florida y en remoto para Estados Unidos y Latinoamérica.",
+    content: "Sitios web, sistemas y automatización para empresas.",
+    metadataHash:
+      "270c8a9a1de7606d8bf4e9d6c09cda7fbb8757b1c42174417cbcc56f425fa21d",
+    noJavaScriptMarkers: 1,
+  },
+  {
+    pathname: "/en/services",
+    file: "en/services/index.html",
+    lang: "en",
+    title: "Web development and custom software services | Rodrigo Opalo",
+    description:
+      "I build business websites, custom software, and automations for companies. You work directly with me, in English or Spanish, from South Florida and remotely across the United States and Latin America.",
+    content: "Websites, custom systems, and automation for businesses.",
+    metadataHash:
+      "a739a0d0ae391f63797c2a285e3fe3d43b44afe75b9fb8bda18413b8dffb07df",
+    noJavaScriptMarkers: 1,
+  },
+  {
+    pathname: "/servicios/sitios-web-para-empresas",
+    file: "servicios/sitios-web-para-empresas/index.html",
+    lang: "es",
+    title: "Sitios web profesionales para empresas | Rodrigo Opalo",
+    description:
+      "Diseño y desarrollo de sitios web profesionales para empresas: institucionales, landings y catálogos bilingües, rápidos, con base técnica SEO y formularios o WhatsApp para captar consultas.",
+    content: "Sitios web profesionales para empresas.",
+    metadataHash:
+      "c187c60f21e06be64ab215566532b98faab3d813c7517ac88ab1a1c0e8ce4627",
+    noJavaScriptMarkers: 1,
+  },
+  {
+    pathname: "/en/services/business-websites",
+    file: "en/services/business-websites/index.html",
+    lang: "en",
+    title: "Business website design and development | Rodrigo Opalo",
+    description:
+      "Custom website development for businesses: institutional sites, landing pages, and bilingual catalogs that load fast, with a technical SEO foundation and forms or WhatsApp to capture inquiries.",
+    content: "Professional websites for businesses.",
+    metadataHash:
+      "40cbbc7774f39ffa5be5a080634a209a1bb47eb154c711f90592d554a3b26176",
+    noJavaScriptMarkers: 1,
+  },
+  {
+    pathname: "/servicios/sistemas-a-medida",
+    file: "servicios/sistemas-a-medida/index.html",
+    lang: "es",
+    title: "Sistemas y aplicaciones a medida para empresas | Rodrigo Opalo",
+    description:
+      "Desarrollo de software a medida: aplicaciones web, portales de clientes y paneles internos con autenticación, roles, datos e integraciones. Implementación por etapas para empresas de Estados Unidos y Latinoamérica.",
+    content: "Sistemas y aplicaciones a medida para empresas.",
+    metadataHash:
+      "4f8aa5c638a7a52dca18a493c6a12d856e6cdf959751ad1f2427596ebf749f12",
+    noJavaScriptMarkers: 1,
+  },
+  {
+    pathname: "/en/services/custom-software",
+    file: "en/services/custom-software/index.html",
+    lang: "en",
+    title:
+      "Custom software and web applications for businesses | Rodrigo Opalo",
+    description:
+      "Custom software development: web applications, client portals, and internal panels with authentication, roles, data, and integrations. Phased delivery for businesses in the United States and Latin America.",
+    content: "Custom software and web applications for businesses.",
+    metadataHash:
+      "094a6a33e91d01670b3b638fc24aff51161f035ed0cd849ba695caaa0feabbba",
+    noJavaScriptMarkers: 1,
+  },
 ];
 const expectedThankYouRoutes = [
   {
@@ -112,12 +185,17 @@ const localePairs = [
   ["/", "/en"],
   ["/portfolio", "/en/portfolio"],
   ["/portfolio/lem-box", "/en/portfolio/lem-box"],
+  ["/servicios", "/en/services"],
+  ["/servicios/sitios-web-para-empresas", "/en/services/business-websites"],
+  ["/servicios/sistemas-a-medida", "/en/services/custom-software"],
 ];
 const suspenseFallbacks = [
   "Cargando portfolio…",
   "Loading portfolio…",
   "Cargando caso LEM-BOX…",
   "Loading LEM-BOX case study…",
+  ">Cargando…<",
+  ">Loading…<",
 ];
 const expectedPersonContent = new Map([
   [
@@ -234,12 +312,14 @@ function assertNoJavaScriptNavigation(
   const navbar = html.slice(navbarStart, mobileFallbackEnd);
   const mobileFallback = html.slice(mobileFallbackStart, mobileFallbackEnd);
   const localizedHomePath = lang === "es" ? "/" : "/en";
+  const localizedServicesPath = lang === "es" ? "/servicios" : "/en/services";
   const localizedPortfolioPath = lang === "es"
     ? "/portfolio"
     : "/en/portfolio";
   const expectedNavigationHrefs = [
     `${localizedHomePath}#sobremi`,
     `${localizedHomePath}#porqueelegirnos`,
+    localizedServicesPath,
     localizedPortfolioPath,
     `${localizedHomePath}#contacto`,
     `${localizedHomePath}#faq`,
@@ -298,7 +378,7 @@ function assertNoJavaScriptNavigation(
     `${lang}: fallback hrefs`,
   );
   assert.ok(fallbackAnchors.every((anchor) => /\shref="[^"]+"/.test(anchor)));
-  assert.equal(count(mobileFallback, "focus-visible:ring-2"), 7);
+  assert.equal(count(mobileFallback, "focus-visible:ring-2"), 8);
   assert.ok(!mobileFallback.includes("<button"));
   assert.ok(!mobileFallback.includes("aria-pressed"));
   assert.ok(!mobileFallback.includes("tabindex="));
@@ -814,6 +894,19 @@ assert.equal(
   assetFiles.filter((file) => /^LemBoxCasePage-.*\.js$/.test(file)).length,
   1,
 );
+assert.equal(
+  assetFiles.filter((file) => /^ServicesHubPage-.*\.js$/.test(file)).length,
+  1,
+);
+assert.equal(
+  assetFiles.filter((file) => /^BusinessWebsitesPage-.*\.js$/.test(file))
+    .length,
+  1,
+);
+assert.equal(
+  assetFiles.filter((file) => /^CustomSoftwarePage-.*\.js$/.test(file)).length,
+  1,
+);
 
 const expectedNotFoundArtifacts = [
   {
@@ -902,8 +995,8 @@ for (const artifact of expectedNotFoundArtifacts) {
   prerenderedNoJavaScriptMarkerTotal += artifact.noJavaScriptMarkers;
 }
 assert.equal(new Set(notFoundDocuments).size, expectedNotFoundArtifacts.length);
-assert.equal(noJavaScriptDocuments.length, 10);
-assert.equal(prerenderedNoJavaScriptMarkerTotal, 58);
+assert.equal(noJavaScriptDocuments.length, 16);
+assert.equal(prerenderedNoJavaScriptMarkerTotal, 64);
 
 const expectedHtmlArtifacts = [
   ...expectedRoutes.map((route) => route.file),
@@ -982,7 +1075,7 @@ assert.equal(vercelConfiguration.trailingSlash, false);
 assert.deepEqual(vercelConfiguration.rewrites, []);
 assert.ok(!JSON.stringify(vercelConfiguration).includes('"/index.html"'));
 const localizedNotFoundRouteSource =
-  "/en/(?!(?:portfolio(?:/lem-box)?|thank-you)/?$).+$";
+  "/en/(?!(?:portfolio(?:/lem-box)?|services(?:/business-websites|/custom-software)?|thank-you)/?$).+$";
 assert.deepEqual(vercelConfiguration.routes, [
   {
     src: localizedNotFoundRouteSource,
@@ -1021,6 +1114,12 @@ for (const publicEnglishPath of [
   "/en/portfolio/",
   "/en/portfolio/lem-box",
   "/en/portfolio/lem-box/",
+  "/en/services",
+  "/en/services/",
+  "/en/services/business-websites",
+  "/en/services/business-websites/",
+  "/en/services/custom-software",
+  "/en/services/custom-software/",
   "/en/thank-you",
   "/en/thank-you/",
 ]) {
@@ -1029,6 +1128,7 @@ for (const publicEnglishPath of [
 for (const invalidEnglishPath of [
   "/en/no-existe",
   "/en/portfolio/no-existe",
+  "/en/services/no-existe",
 ]) {
   assert.equal(localizedNotFoundRoute.test(invalidEnglishPath), true);
 }

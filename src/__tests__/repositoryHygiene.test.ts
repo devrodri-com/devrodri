@@ -198,7 +198,7 @@ describe("repository hygiene", () => {
           /structured data is scoped per route/i,
           /hydrates the client after/i,
           /real HTTP 404 localized in Spanish or English/i,
-          /sitemap\.xml.*, which lists the six public URLs/is,
+          /sitemap\.xml.*, which lists the twelve public URLs/is,
         ],
       },
       {
@@ -210,7 +210,7 @@ describe("repository hygiene", () => {
           /datos estructurados se definen por ruta/i,
           /hidrata el cliente después/i,
           /HTTP 404 real localizado en español o\s+inglés/i,
-          /sitemap\.xml.*, que enumera las\s+seis URLs públicas/is,
+          /sitemap\.xml.*, que enumera las\s+doce URLs públicas/is,
         ],
       },
       {
@@ -222,7 +222,7 @@ describe("repository hygiene", () => {
           /structured data is scoped per route/i,
           /hydrates the client after/i,
           /real HTTP 404 localized in Spanish or English/i,
-          /sitemap\.xml.*, which lists the six public URLs/is,
+          /sitemap\.xml.*, which lists the twelve public URLs/is,
         ],
       },
     ];
@@ -230,9 +230,15 @@ describe("repository hygiene", () => {
       "`/`",
       "`/portfolio`",
       "`/portfolio/lem-box`",
+      "`/servicios`",
+      "`/servicios/sitios-web-para-empresas`",
+      "`/servicios/sistemas-a-medida`",
       "`/en`",
       "`/en/portfolio`",
       "`/en/portfolio/lem-box`",
+      "`/en/services`",
+      "`/en/services/business-websites`",
+      "`/en/services/custom-software`",
     ];
     const serverMetadata = [
       "`title`",
