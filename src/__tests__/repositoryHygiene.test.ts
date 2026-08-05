@@ -120,7 +120,7 @@ describe("repository hygiene", () => {
     for (const face of interFaces) {
       expect(face).toContain('font-family: "Inter"');
       expect(face).toContain("font-style: normal");
-      expect(face).toContain("font-display: swap");
+      expect(face).toContain("font-display: optional");
       expect(face).toContain('format("woff2")');
       expect(face.replace(/\s+/g, " ")).toContain(
         `unicode-range: ${latinUnicodeRange}`,
