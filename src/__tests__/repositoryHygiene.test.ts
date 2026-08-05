@@ -141,6 +141,23 @@ describe("repository hygiene", () => {
     expect(license).toContain("SIL OPEN FONT LICENSE Version 1.1");
   });
 
+  it("preloads the self-hosted Inter file before application styles", () => {
+    const indexHtml = fs.readFileSync(repositoryPath("index.html"), "utf8");
+    const interPreloads =
+      indexHtml.match(
+        /<link\s+[^>]*rel="preload"[^>]*href="\/src\/assets\/fonts\/Inter-latin\.woff2"[^>]*>/g,
+      ) ?? [];
+    const interPreload = interPreloads[0] ?? "";
+
+    expect(interPreloads).toHaveLength(1);
+    expect(interPreload).toContain('as="font"');
+    expect(interPreload).toContain('type="font/woff2"');
+    expect(interPreload).toMatch(/\scrossorigin(?:\s|\/>)/);
+    expect(indexHtml.indexOf(interPreload)).toBeLessThan(
+      indexHtml.indexOf('src="/src/main.tsx"'),
+    );
+  });
+
   it("removes only the confirmed dead modules and starter asset", () => {
     const removedPaths = [
       "src/Components/GallerySection.tsx",
