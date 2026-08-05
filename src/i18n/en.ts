@@ -263,7 +263,7 @@ export const en = {
               text: "In development: website and e-commerce with subscriptions, an admin panel, and inventory management.",
             },
           ],
-          note: "Each project had a different scope; the portfolio details the role and technology behind each one.",
+          note: "Each project had a different scope. In the portfolio, you can see the role and technologies used in each one.",
           portfolioLink: "See these projects in the portfolio",
         },
         method: {

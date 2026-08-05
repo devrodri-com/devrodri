@@ -108,7 +108,7 @@ export const es = {
         seo: {
           title: "Servicios de desarrollo web y software a medida | Rodrigo Opalo",
           description:
-            "Desarrollo sitios web profesionales, sistemas a medida y automatizaciones para empresas. Trabajo directo conmigo, en español e inglés, desde South Florida y en remoto para Estados Unidos y Latinoamérica.",
+            "Desarrollo sitios web profesionales, sistemas a medida y automatizaciones para empresas. Trabajo directo conmigo, en español e inglés, desde el sur de Florida y en remoto para Estados Unidos y Latinoamérica.",
         },
         header: {
           eyebrow: "Servicios",
@@ -173,7 +173,7 @@ export const es = {
         },
         coverage: {
           title: "Dónde trabajo",
-          text: "Estoy basado en South Florida y trabajo con empresas de Miami y del resto de Estados Unidos, y en remoto con Latinoamérica. La comunicación puede ser en español o en inglés durante todo el proyecto.",
+          text: "Trabajo desde el sur de Florida con empresas de Miami y del resto de Estados Unidos, y también de forma remota con clientes de Latinoamérica. La comunicación puede ser en español o en inglés durante todo el proyecto.",
         },
         proof: {
           title: "Trabajo real, no promesas",
@@ -260,7 +260,7 @@ export const es = {
               text: "Proyecto en desarrollo: sitio web y e-commerce con suscripciones, panel administrativo y gestión de stock.",
             },
           ],
-          note: "Cada proyecto tuvo un alcance distinto; en el portfolio está el detalle de rol y tecnología de cada uno.",
+          note: "Cada proyecto tuvo un alcance distinto. En el portfolio podés ver el rol y las tecnologías utilizadas en cada uno.",
           portfolioLink: "Ver estos proyectos en el portfolio",
         },
         method: {
@@ -274,7 +274,7 @@ export const es = {
         },
         coverage: {
           title: "Miami y trabajo remoto",
-          text: "Trabajo desde South Florida con empresas de Miami y del resto de Estados Unidos, y en remoto con Latinoamérica, en español e inglés.",
+          text: "Trabajo desde el sur de Florida con empresas de Miami y del resto de Estados Unidos, y también de forma remota con clientes de Latinoamérica. La comunicación puede ser en español o en inglés durante todo el proyecto.",
         },
         cta: {
           title: "¿Tu empresa necesita un sitio que trabaje?",
@@ -364,7 +364,7 @@ export const es = {
         },
         coverage: {
           title: "Dónde y cómo trabajo",
-          text: "Desde South Florida, con empresas de Miami y de Estados Unidos, y en remoto con Latinoamérica. El trabajo es directo conmigo, en español o en inglés, durante todo el proyecto.",
+          text: "Trabajo desde el sur de Florida con empresas de Miami y del resto de Estados Unidos, y también de forma remota con clientes de Latinoamérica. La comunicación puede ser en español o en inglés durante todo el proyecto.",
         },
         cta: {
           title: "¿Tu operación necesita su propio sistema?",

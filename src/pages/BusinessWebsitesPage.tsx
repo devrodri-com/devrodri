@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useLanguage } from "../i18n/useLanguage";
 import translations from "../i18n";
 import { getLocalizedPath } from "../routes/siteRoutes";
+import EditorialNote from "../Components/services/EditorialNote";
 
 export default function BusinessWebsitesPage() {
   const { language } = useLanguage();
@@ -24,7 +25,10 @@ export default function BusinessWebsitesPage() {
           <p className="mt-10 text-xs font-semibold uppercase leading-snug tracking-[0.14em] text-primary sm:text-sm">
             {page.header.eyebrow}
           </p>
-          <h1 className="mt-6 max-w-[52rem] text-4xl font-semibold leading-tight tracking-tight text-white sm:text-5xl">
+          <h1
+            data-hero-width="business-websites"
+            className="mt-6 max-w-[52rem] text-4xl font-semibold leading-tight tracking-tight text-white sm:text-5xl lg:max-w-[64rem]"
+          >
             {page.header.title}
           </h1>
           <p className="mt-5 max-w-[44rem] text-lg leading-relaxed text-gray-200 sm:text-xl">
@@ -89,9 +93,12 @@ export default function BusinessWebsitesPage() {
               </div>
             ))}
           </div>
-          <p className="mt-8 max-w-[44rem] text-base leading-relaxed text-gray-700">
+          <EditorialNote
+            tone="light"
+            className="mt-8 max-w-[44rem] lg:max-w-none"
+          >
             {page.cases.note}
-          </p>
+          </EditorialNote>
           <Link
             to={getLocalizedPath("portfolio", language)}
             className="mt-5 inline-flex min-h-[44px] items-center text-xs font-semibold uppercase tracking-[0.12em] text-primary-on-light no-underline transition-colors hover:text-primary-on-light-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-on-light focus-visible:ring-offset-4 focus-visible:ring-offset-neutral"
@@ -145,7 +152,7 @@ export default function BusinessWebsitesPage() {
         className="border-b border-white/10 px-4 py-12 sm:px-6 sm:py-24"
       >
         <div className="mx-auto max-w-6xl">
-          <div className="max-w-[48rem]">
+          <div className="max-w-[48rem] lg:max-w-[64rem]">
             <h2
               id="business-websites-coverage"
               className="text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl"
