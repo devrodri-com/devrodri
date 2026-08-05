@@ -97,7 +97,7 @@ export default function PortfolioSection() {
             >
               <motion.div
                 data-nojs-visible
-                className="group h-full overflow-hidden rounded-2xl bg-white/95 backdrop-blur border border-gray-200/80 shadow-md transition-all duration-300 motion-reduce:transition-none hover:-translate-y-1 hover:shadow-lg"
+                className="group h-full overflow-hidden rounded-2xl bg-white/95 backdrop-blur border border-gray-200/80 shadow-md transition-shadow duration-300 motion-reduce:transition-none hover:-translate-y-1 hover:shadow-lg"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.45, delay: 0.05 * index }}

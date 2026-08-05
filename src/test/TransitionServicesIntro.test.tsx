@@ -229,16 +229,22 @@ describe("TransitionServicesIntro portfolio bridge", () => {
       "/portfolio",
       "/portfolio",
     ]);
+    cardLinks.forEach((link) => {
+      expect(link).not.toHaveClass("transition-transform");
+      expect(link).not.toHaveClass("hover:-translate-y-1");
+    });
     cards.forEach((card) => {
       expect(card).toHaveClass(
         "backdrop-blur",
         "shadow-md",
-        "transition-all",
+        "transition-shadow",
         "duration-300",
         "motion-reduce:transition-none",
         "hover:-translate-y-1",
         "hover:shadow-lg",
       );
+      expect(card).not.toHaveClass("transition-all");
+      expect(card).not.toHaveClass("transition-transform");
     });
 
     expect(portfolioSource).toContain('<section\n      id="portfolio"');

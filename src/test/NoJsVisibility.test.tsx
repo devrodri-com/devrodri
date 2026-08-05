@@ -69,7 +69,7 @@ const approvedFiles = {
   },
   "src/Components/PortfolioSection.tsx": {
     baselineHash:
-      "89839bc9444158bb1e1a70a093876d1ca60ba583e388f63f8f578f6503c2101b",
+      "c44668e5f882394ab72307105fb20f748a4216cf749aac1f3019500066957b8b",
     markers: 4,
   },
   "src/Components/SobreMiSection.tsx": {
