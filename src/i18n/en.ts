@@ -166,7 +166,7 @@ export const en = {
             },
             {
               title: "Strategy, UX, and technology",
-              text: "First the problem and the user; then the interface; the tool comes last. Technology supports the solution — it doesn't define it.",
+              text: "First the problem and the user; then the interface; the tool comes last. Technology supports the solution. It doesn't define it.",
             },
             {
               title: "Phased development",
@@ -259,8 +259,8 @@ export const en = {
               text: "Optimized catalog with a dynamic quote form. Functional MVP currently live.",
             },
             {
-              name: "Boating Adventures Miami",
-              text: "Own project: multilanguage site with direct WhatsApp contact.",
+              name: "ZENTRA Scent",
+              text: "In development: website and e-commerce with subscriptions, an admin panel, and inventory management.",
             },
           ],
           note: "Each project had a different scope; the portfolio details the role and technology behind each one.",
@@ -338,7 +338,7 @@ export const en = {
         proof: {
           eyebrow: "Main case study",
           title: "LEM-BOX: a system running a real operation",
-          text: "LEM-BOX is the logistics platform I build and operate as my own product. Clients, partners, and the operations team use it through role-based experiences: package intake, photo evidence, box consolidation, shipments, and status tracking. It's not a demo — it's the business's real operation.",
+          text: "LEM-BOX is the logistics platform I build and operate as my own product. Clients, partners, and the operations team use it through role-based experiences: package intake, photo evidence, box consolidation, shipments, and status tracking. It's not a demo: it's the business's real operation.",
           linkLabel: "View the full LEM-BOX case study",
           supporting:
             "The portfolio also includes the Mutter Games e-commerce, with a managed catalog and Mercado Pago checkout, and a full-stack campground booking prototype.",
@@ -362,7 +362,7 @@ export const en = {
         },
         crossLink: {
           title: "Only need to communicate and sell?",
-          text: "If the goal is presence, inquiries, or sales — not managing an operation — a professional business website is probably enough.",
+          text: "If the goal is presence, inquiries, or sales (not managing an operation), a professional business website is probably enough.",
           linkLabel: "Explore business website development",
         },
         coverage: {

@@ -256,8 +256,8 @@ export const es = {
               text: "Catálogo optimizado con formulario dinámico de cotización. MVP funcional ya activo.",
             },
             {
-              name: "Boating Adventures Miami",
-              text: "Proyecto propio: sitio multilenguaje con contacto directo por WhatsApp.",
+              name: "ZENTRA Scent",
+              text: "Proyecto en desarrollo: sitio web y e-commerce con suscripciones, panel administrativo y gestión de stock.",
             },
           ],
           note: "Cada proyecto tuvo un alcance distinto; en el portfolio está el detalle de rol y tecnología de cada uno.",
@@ -359,7 +359,7 @@ export const es = {
         },
         crossLink: {
           title: "¿Solo necesitás comunicar y vender?",
-          text: "Si el objetivo es presencia, consultas o ventas —y no gestionar una operación—, probablemente alcance con un sitio web profesional.",
+          text: "Si el objetivo es presencia, consultas o ventas (y no gestionar una operación), probablemente alcance con un sitio web profesional.",
           linkLabel: "Ver desarrollo de sitios web para empresas",
         },
         coverage: {
