@@ -85,10 +85,10 @@ const expectedRoutes = [
     lang: "es",
     title: "Servicios de desarrollo web y software a medida | Rodrigo Opalo",
     description:
-      "Desarrollo sitios web profesionales, sistemas a medida y automatizaciones para empresas. Trabajo directo conmigo, en español e inglés, desde South Florida y en remoto para Estados Unidos y Latinoamérica.",
+      "Desarrollo sitios web profesionales, sistemas a medida y automatizaciones para empresas. Trabajo directo conmigo, en español e inglés, desde el sur de Florida y en remoto para Estados Unidos y Latinoamérica.",
     content: "Sitios web, sistemas y automatización para empresas.",
     metadataHash:
-      "270c8a9a1de7606d8bf4e9d6c09cda7fbb8757b1c42174417cbcc56f425fa21d",
+      "c028ef27f8fadbcb764f357884105455a8c3fa625c78f14ba2f2b70aa4d9d71c",
     noJavaScriptMarkers: 1,
   },
   {
