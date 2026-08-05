@@ -63,6 +63,7 @@ export default function Navbar() {
   const location = useLocation();
   const t = translations[language];
   const homePath = getLocalizedPath("home", language);
+  const servicesPath = getLocalizedPath("services", language);
   const portfolioPath = getLocalizedPath("portfolio", language);
   const navigationLinks = [
     { id: "about", href: `${homePath}#sobremi`, label: t.nav.about },
@@ -71,6 +72,7 @@ export default function Navbar() {
       href: `${homePath}#porqueelegirnos`,
       label: t.nav.why,
     },
+    { id: "services", href: servicesPath, label: t.nav.services },
     { id: "portfolio", href: portfolioPath, label: t.nav.portfolio },
     { id: "contact", href: `${homePath}#contacto`, label: t.nav.contact },
     { id: "faq", href: `${homePath}#faq`, label: t.nav.faq },

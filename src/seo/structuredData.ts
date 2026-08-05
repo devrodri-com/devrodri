@@ -189,6 +189,17 @@ export const STRUCTURED_DATA_BY_ROUTE = {
   "portfolio:en": null,
   "lem-box:es": createLemBoxStructuredData("es"),
   "lem-box:en": createLemBoxStructuredData("en"),
+  // Service routes intentionally publish no JSON-LD in this phase: Service
+  // schema has no documented rich-result benefit for solo-provider pages, the
+  // provider entity already lives on home (Person #person), and each published
+  // graph would add a hand-maintained CSP hash in vercel.json. Revisit only
+  // with visible breadcrumb navigation (BreadcrumbList) or explicit approval.
+  "services:es": null,
+  "services:en": null,
+  "business-websites:es": null,
+  "business-websites:en": null,
+  "custom-software:es": null,
+  "custom-software:en": null,
 } as const satisfies Record<PublicRouteKey, StructuredData | null>;
 
 export function getStructuredData(

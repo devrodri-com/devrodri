@@ -4,7 +4,13 @@ import type { Language } from "../i18n/language";
 
 export const SITE_ORIGIN = "https://www.devrodri.com";
 
-export type IndexablePageKey = "home" | "portfolio" | "lem-box";
+export type IndexablePageKey =
+  | "home"
+  | "portfolio"
+  | "lem-box"
+  | "services"
+  | "business-websites"
+  | "custom-software";
 export type ThankYouPageKey = "thank-you";
 export type PageKey = IndexablePageKey | ThankYouPageKey;
 export type PublicRouteKey = `${IndexablePageKey}:${Language}`;
@@ -13,9 +19,15 @@ export type IndexablePublicPathname =
   | "/"
   | "/portfolio"
   | "/portfolio/lem-box"
+  | "/servicios"
+  | "/servicios/sitios-web-para-empresas"
+  | "/servicios/sistemas-a-medida"
   | "/en"
   | "/en/portfolio"
-  | "/en/portfolio/lem-box";
+  | "/en/portfolio/lem-box"
+  | "/en/services"
+  | "/en/services/business-websites"
+  | "/en/services/custom-software";
 export type ThankYouPathname = "/gracias" | "/en/thank-you";
 export type PublicPathname = IndexablePublicPathname | ThankYouPathname;
 
@@ -153,6 +165,72 @@ const routeDefinitions = [
         ogImagePath: lemBoxCase.cover,
         ogImageAlt: lemBoxCase.caseStudy.content.en.header.coverAlt,
         ogType: "article",
+      },
+    },
+  },
+  {
+    page: "services",
+    localePath: { es: "/servicios", en: "/en/services" },
+    metadata: {
+      es: {
+        title: translations.es.servicesPages.hub.seo.title,
+        description: translations.es.servicesPages.hub.seo.description,
+        ogImagePath: "/img/social-preview.png",
+        ogImageAlt: "Vista previa de los servicios de devrodri",
+        ogType: "website",
+      },
+      en: {
+        title: translations.en.servicesPages.hub.seo.title,
+        description: translations.en.servicesPages.hub.seo.description,
+        ogImagePath: "/img/social-preview.png",
+        ogImageAlt: "devrodri services preview",
+        ogType: "website",
+      },
+    },
+  },
+  {
+    page: "business-websites",
+    localePath: {
+      es: "/servicios/sitios-web-para-empresas",
+      en: "/en/services/business-websites",
+    },
+    metadata: {
+      es: {
+        title: translations.es.servicesPages.web.seo.title,
+        description: translations.es.servicesPages.web.seo.description,
+        ogImagePath: "/img/social-preview.png",
+        ogImageAlt: "Vista previa del servicio de sitios web para empresas",
+        ogType: "website",
+      },
+      en: {
+        title: translations.en.servicesPages.web.seo.title,
+        description: translations.en.servicesPages.web.seo.description,
+        ogImagePath: "/img/social-preview.png",
+        ogImageAlt: "Business website development service preview",
+        ogType: "website",
+      },
+    },
+  },
+  {
+    page: "custom-software",
+    localePath: {
+      es: "/servicios/sistemas-a-medida",
+      en: "/en/services/custom-software",
+    },
+    metadata: {
+      es: {
+        title: translations.es.servicesPages.systems.seo.title,
+        description: translations.es.servicesPages.systems.seo.description,
+        ogImagePath: "/img/social-preview.png",
+        ogImageAlt: "Vista previa del servicio de sistemas a medida",
+        ogType: "website",
+      },
+      en: {
+        title: translations.en.servicesPages.systems.seo.title,
+        description: translations.en.servicesPages.systems.seo.description,
+        ogImagePath: "/img/social-preview.png",
+        ogImageAlt: "Custom software development service preview",
+        ogType: "website",
       },
     },
   },
