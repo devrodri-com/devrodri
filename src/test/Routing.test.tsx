@@ -114,9 +114,27 @@ describe("application routing", () => {
     { pathname: "/", routeKey: "home:es" },
     { pathname: "/portfolio", routeKey: "portfolio:es" },
     { pathname: "/portfolio/lem-box", routeKey: "lem-box:es" },
+    { pathname: "/servicios", routeKey: "services:es" },
+    {
+      pathname: "/servicios/sitios-web-para-empresas",
+      routeKey: "business-websites:es",
+    },
+    {
+      pathname: "/servicios/sistemas-a-medida",
+      routeKey: "custom-software:es",
+    },
     { pathname: "/en", routeKey: "home:en" },
     { pathname: "/en/portfolio", routeKey: "portfolio:en" },
     { pathname: "/en/portfolio/lem-box", routeKey: "lem-box:en" },
+    { pathname: "/en/services", routeKey: "services:en" },
+    {
+      pathname: "/en/services/business-websites",
+      routeKey: "business-websites:en",
+    },
+    {
+      pathname: "/en/services/custom-software",
+      routeKey: "custom-software:en",
+    },
   ] as const)(
     "keeps one client JSON-LD script at most for $pathname",
     async ({ pathname, routeKey }) => {
@@ -156,6 +174,128 @@ describe("application routing", () => {
       });
     },
   );
+
+  it.each([
+    {
+      path: "/servicios",
+      heading: "Sitios web, sistemas y automatización para empresas.",
+      canonical: "https://www.devrodri.com/servicios",
+      hreflangEn: "https://www.devrodri.com/en/services",
+    },
+    {
+      path: "/servicios/",
+      heading: "Sitios web, sistemas y automatización para empresas.",
+      canonical: "https://www.devrodri.com/servicios",
+      hreflangEn: "https://www.devrodri.com/en/services",
+    },
+    {
+      path: "/servicios/sitios-web-para-empresas",
+      heading: "Sitios web profesionales para empresas.",
+      canonical:
+        "https://www.devrodri.com/servicios/sitios-web-para-empresas",
+      hreflangEn: "https://www.devrodri.com/en/services/business-websites",
+    },
+    {
+      path: "/servicios/sistemas-a-medida",
+      heading: "Sistemas y aplicaciones a medida para empresas.",
+      canonical: "https://www.devrodri.com/servicios/sistemas-a-medida",
+      hreflangEn: "https://www.devrodri.com/en/services/custom-software",
+    },
+    {
+      path: "/en/services",
+      heading: "Websites, custom systems, and automation for businesses.",
+      canonical: "https://www.devrodri.com/en/services",
+      hreflangEn: "https://www.devrodri.com/en/services",
+    },
+    {
+      path: "/en/services/business-websites",
+      heading: "Professional websites for businesses.",
+      canonical: "https://www.devrodri.com/en/services/business-websites",
+      hreflangEn: "https://www.devrodri.com/en/services/business-websites",
+    },
+    {
+      path: "/en/services/custom-software",
+      heading: "Custom software and web applications for businesses.",
+      canonical: "https://www.devrodri.com/en/services/custom-software",
+      hreflangEn: "https://www.devrodri.com/en/services/custom-software",
+    },
+  ] as const)(
+    "loads the lazy services route and canonical metadata for $path",
+    async ({ path, heading, canonical, hreflangEn }) => {
+      renderApp(path);
+
+      expect(
+        await screen.findByRole("heading", { level: 1, name: heading }),
+      ).toBeInTheDocument();
+      await waitFor(() => {
+        expect(
+          document.head.querySelector('link[rel="canonical"]'),
+        ).toHaveAttribute("href", canonical);
+        expect(
+          document.head.querySelector('meta[name="robots"]'),
+        ).toHaveAttribute("content", "index, follow");
+        expect(
+          document.head.querySelector('link[rel="alternate"][hreflang="en"]'),
+        ).toHaveAttribute("href", hreflangEn);
+        const xDefault = document.head.querySelector(
+          'link[rel="alternate"][hreflang="x-default"]',
+        );
+        const spanish = document.head.querySelector(
+          'link[rel="alternate"][hreflang="es"]',
+        );
+        expect(xDefault?.getAttribute("href")).toBe(
+          spanish?.getAttribute("href"),
+        );
+      });
+    },
+  );
+
+  it("navigates from the services hub to both service pages", async () => {
+    const user = userEvent.setup();
+    renderApp("/servicios");
+
+    await screen.findByRole("heading", {
+      level: 1,
+      name: "Sitios web, sistemas y automatización para empresas.",
+    });
+
+    await user.click(
+      screen.getByRole("link", {
+        name: /Ver desarrollo de sitios web para empresas/,
+      }),
+    );
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Sitios web profesionales para empresas.",
+      }),
+    ).toBeInTheDocument();
+
+    await user.click(
+      screen.getByRole("link", { name: /Conocer sistemas a medida/ }),
+    );
+    expect(
+      await screen.findByRole("heading", {
+        level: 1,
+        name: "Sistemas y aplicaciones a medida para empresas.",
+      }),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByRole("link", { name: /Ver el caso LEM-BOX completo/ }),
+    ).toHaveAttribute("href", "/portfolio/lem-box");
+  });
+
+  it("links the LEM-BOX case study back to the custom software service", async () => {
+    renderApp("/portfolio/lem-box");
+
+    expect(
+      await screen.findByRole("heading", { level: 1, name: "LEM-BOX" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("link", { name: "Conocer sistemas a medida" }),
+    ).toHaveAttribute("href", "/servicios/sistemas-a-medida");
+  });
 
   it("navigates internally from home to portfolio without throwing", async () => {
     const user = userEvent.setup();

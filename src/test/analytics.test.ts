@@ -135,6 +135,31 @@ describe("analytics", () => {
       path: "/en/portfolio/lem-box",
       title: "LEM-BOX: logistics platform and own product | Rodrigo Opalo",
     },
+    {
+      path: "/servicios",
+      title: "Servicios de desarrollo web y software a medida | Rodrigo Opalo",
+    },
+    {
+      path: "/servicios/sitios-web-para-empresas",
+      title: "Sitios web profesionales para empresas | Rodrigo Opalo",
+    },
+    {
+      path: "/servicios/sistemas-a-medida",
+      title: "Sistemas y aplicaciones a medida para empresas | Rodrigo Opalo",
+    },
+    {
+      path: "/en/services",
+      title: "Web development and custom software services | Rodrigo Opalo",
+    },
+    {
+      path: "/en/services/business-websites",
+      title: "Business website design and development | Rodrigo Opalo",
+    },
+    {
+      path: "/en/services/custom-software",
+      title:
+        "Custom software and web applications for businesses | Rodrigo Opalo",
+    },
   ] as const)(
     "reports the canonical title for $path without an unknown bucket",
     async ({ path, title }) => {

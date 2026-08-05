@@ -41,7 +41,7 @@ function graphTypes(value: { "@graph": readonly { "@type": string }[] }) {
 }
 
 describe("route structured data", () => {
-  it("defines every public route and leaves Portfolio without JSON-LD", () => {
+  it("defines every public route and leaves Portfolio and services without JSON-LD", () => {
     expect(Object.keys(STRUCTURED_DATA_BY_ROUTE)).toEqual([
       "home:es",
       "home:en",
@@ -49,9 +49,21 @@ describe("route structured data", () => {
       "portfolio:en",
       "lem-box:es",
       "lem-box:en",
+      "services:es",
+      "services:en",
+      "business-websites:es",
+      "business-websites:en",
+      "custom-software:es",
+      "custom-software:en",
     ]);
     expect(getStructuredData("portfolio:es")).toBeNull();
     expect(getStructuredData("portfolio:en")).toBeNull();
+    expect(getStructuredData("services:es")).toBeNull();
+    expect(getStructuredData("services:en")).toBeNull();
+    expect(getStructuredData("business-websites:es")).toBeNull();
+    expect(getStructuredData("business-websites:en")).toBeNull();
+    expect(getStructuredData("custom-software:es")).toBeNull();
+    expect(getStructuredData("custom-software:en")).toBeNull();
   });
 
   it.each(["es", "en"] as const)(

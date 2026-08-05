@@ -45,6 +45,9 @@ import {
 
 const PortfolioPage = lazy(() => import("./pages/PortfolioPage"));
 const LemBoxCasePage = lazy(() => import("./pages/LemBoxCasePage"));
+const ServicesHubPage = lazy(() => import("./pages/ServicesHubPage"));
+const BusinessWebsitesPage = lazy(() => import("./pages/BusinessWebsitesPage"));
+const CustomSoftwarePage = lazy(() => import("./pages/CustomSoftwarePage"));
 
 const HomePage = () => (
   <>
@@ -75,6 +78,11 @@ const HomePage = () => (
 
 function PublicPage({ page }: { page: PageKey }) {
   const { language } = useLanguage();
+  const lazyPageFallback = (
+    <div className="min-h-[45vh] flex items-center justify-center bg-black text-white/70 text-sm px-4 text-center">
+      {language === "es" ? "Cargando…" : "Loading…"}
+    </div>
+  );
 
   if (page === "home") return <HomePage />;
   if (page === "thank-you") return <ThankYouPage />;
@@ -88,6 +96,27 @@ function PublicPage({ page }: { page: PageKey }) {
         }
       >
         <PortfolioPage />
+      </Suspense>
+    );
+  }
+  if (page === "services") {
+    return (
+      <Suspense fallback={lazyPageFallback}>
+        <ServicesHubPage />
+      </Suspense>
+    );
+  }
+  if (page === "business-websites") {
+    return (
+      <Suspense fallback={lazyPageFallback}>
+        <BusinessWebsitesPage />
+      </Suspense>
+    );
+  }
+  if (page === "custom-software") {
+    return (
+      <Suspense fallback={lazyPageFallback}>
+        <CustomSoftwarePage />
       </Suspense>
     );
   }

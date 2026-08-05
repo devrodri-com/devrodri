@@ -6,7 +6,7 @@ export const es = {
     nav: {
       about: "Sobre mí",
       why: "Por qué elegirme",
-      services: "Servicios", // si lo dejás o lo quitás depende de si usarás esa sección
+      services: "Servicios",
       portfolio: "Portfolio",
       contact: "Contacto",
       faq: "FAQ"
@@ -101,6 +101,276 @@ export const es = {
         description:
           "Creo sitios web rápidos, optimizados, multilingües y con posicionamiento SEO.",
         keywords: "desarrollo web, seo, internacionalización, diseño, servicios digitales",
+      },
+    },
+    servicesPages: {
+      hub: {
+        seo: {
+          title: "Servicios de desarrollo web y software a medida | Rodrigo Opalo",
+          description:
+            "Desarrollo sitios web profesionales, sistemas a medida y automatizaciones para empresas. Trabajo directo conmigo, en español e inglés, desde South Florida y en remoto para Estados Unidos y Latinoamérica.",
+        },
+        header: {
+          eyebrow: "Servicios",
+          title: "Sitios web, sistemas y automatización para empresas.",
+          subtitle:
+            "Una necesidad concreta puede convertirse en una solución digital clara: un sitio que comunica y convierte, un sistema que ordena la operación o una automatización que reduce trabajo manual. Trabajás directo conmigo en cada etapa.",
+        },
+        choose: {
+          title: "¿Qué necesita tu empresa?",
+          intro:
+            "No todos los proyectos empiezan igual. Esta es la forma más simple de orientarse:",
+          items: [
+            {
+              title: "Un sitio web",
+              text: "Cuando el objetivo es comunicar, captar consultas o vender: presencia institucional, landings, catálogos y experiencias bilingües.",
+            },
+            {
+              title: "Un sistema a medida",
+              text: "Cuando el problema es operativo: usuarios, roles, datos y flujos de trabajo que una herramienta genérica no resuelve bien.",
+            },
+            {
+              title: "Una automatización",
+              text: "Cuando el trabajo repetitivo está en copiar datos entre herramientas, avisar estados a mano o rearmar planillas: eso se puede conectar y resolver solo.",
+            },
+          ],
+          note: "Algunos proyectos combinan las tres cosas. El alcance se define por el problema, no por la tecnología.",
+        },
+        directory: {
+          title: "Servicios",
+          web: {
+            title: "Sitios web para empresas",
+            text: "Sitios institucionales, landings y catálogos bilingües con diseño responsive, base técnica SEO y foco en conversión.",
+            linkLabel: "Ver desarrollo de sitios web para empresas",
+          },
+          systems: {
+            title: "Sistemas y aplicaciones a medida",
+            text: "Aplicaciones web, portales de clientes y paneles internos con autenticación, roles, datos e integraciones.",
+            linkLabel: "Conocer sistemas a medida",
+          },
+          automation: {
+            title: "Automatización e integraciones",
+            text: "Conecto APIs, pagos, formularios, CRMs y webhooks para reducir tareas manuales. Hoy lo trabajo dentro de un sitio o de un sistema, no como servicio aislado.",
+            linkLabel: "Contame qué proceso querés automatizar",
+          },
+        },
+        method: {
+          title: "Cómo trabajo",
+          items: [
+            {
+              title: "Trabajo directo",
+              text: "Hablás conmigo de principio a fin. Sin intermediarios ni equipos rotativos: las decisiones se toman con contexto.",
+            },
+            {
+              title: "Estrategia, UX y tecnología",
+              text: "Primero el problema y el usuario; después la interfaz; al final la herramienta. La tecnología respalda la solución, no la define.",
+            },
+            {
+              title: "Desarrollo por etapas",
+              text: "Cada etapa entrega algo usable: primero una base clara, después las mejoras que el negocio realmente necesita.",
+            },
+          ],
+        },
+        coverage: {
+          title: "Dónde trabajo",
+          text: "Estoy basado en South Florida y trabajo con empresas de Miami y del resto de Estados Unidos, y en remoto con Latinoamérica. La comunicación puede ser en español o en inglés durante todo el proyecto.",
+        },
+        proof: {
+          title: "Trabajo real, no promesas",
+          text: "Podés revisar los proyectos publicados en el portfolio, incluido LEM-BOX: la plataforma logística que desarrollo y opero como producto propio.",
+          portfolioLink: "Ver portfolio completo",
+          lemboxLink: "Ver el caso LEM-BOX",
+        },
+        cta: {
+          title: "Contame qué necesita tu empresa",
+          text: "Compartime el contexto y el objetivo. Te respondo con una lectura honesta del alcance y un primer paso concreto.",
+          buttonLabel: "Contame tu proyecto",
+        },
+      },
+      web: {
+        seo: {
+          title: "Sitios web profesionales para empresas | Rodrigo Opalo",
+          description:
+            "Diseño y desarrollo de sitios web profesionales para empresas: institucionales, landings y catálogos bilingües, rápidos, con base técnica SEO y formularios o WhatsApp para captar consultas.",
+        },
+        header: {
+          eyebrow: "Servicios · Sitios web",
+          backLabel: "Volver a servicios",
+          title: "Sitios web profesionales para empresas.",
+          subtitle:
+            "Un buen sitio no es una tarjeta de presentación: es una herramienta comercial. Diseño y desarrollo sitios que comunican con claridad, cargan rápido y convierten visitas en consultas.",
+        },
+        deliverables: {
+          title: "Qué puede incluir tu sitio",
+          intro:
+            "El alcance se define según el objetivo del negocio. Estos son los componentes habituales:",
+          items: [
+            {
+              title: "Sitios institucionales y landings",
+              text: "Presencia profesional para la marca, o páginas enfocadas en una campaña o servicio específico.",
+            },
+            {
+              title: "Catálogos y contenido",
+              text: "Productos, proyectos o servicios organizados para que el cliente encuentre y consulte sin fricción.",
+            },
+            {
+              title: "Experiencia bilingüe",
+              text: "Versiones en español e inglés con URLs propias, pensadas para públicos de Estados Unidos y Latinoamérica.",
+            },
+            {
+              title: "Diseño responsive y UX",
+              text: "Jerarquía clara y navegación cómoda en celular, tablet y escritorio.",
+            },
+            {
+              title: "Performance y SEO técnico",
+              text: "Carga rápida, HTML indexable y metadata correcta como base. La base SEO no garantiza posiciones específicas en buscadores.",
+            },
+            {
+              title: "Formularios y WhatsApp",
+              text: "Canales directos para captar consultas, con confirmación y seguimiento.",
+            },
+            {
+              title: "Pagos y administración",
+              text: "Checkout y panel autoadministrable cuando el proyecto lo requiere.",
+            },
+            {
+              title: "Integraciones",
+              text: "Conexión con mapas, calendarios, pagos y otros servicios que el negocio ya usa.",
+            },
+          ],
+        },
+        cases: {
+          title: "Sitios reales",
+          intro: "Algunos de los sitios que diseñé y desarrollé para empresas:",
+          items: [
+            {
+              name: "Esteban Firpo · Miami Real Estate",
+              text: "Sitio inmobiliario bilingüe con catálogo de proyectos e integración con WhatsApp.",
+            },
+            {
+              name: "Mutter Games",
+              text: "E-commerce con catálogo dinámico y checkout con Mercado Pago.",
+            },
+            {
+              name: "Imprenta Magenta",
+              text: "Catálogo optimizado con formulario dinámico de cotización. MVP funcional ya activo.",
+            },
+            {
+              name: "ZENTRA Scent",
+              text: "Proyecto en desarrollo: sitio web y e-commerce con suscripciones, panel administrativo y gestión de stock.",
+            },
+          ],
+          note: "Cada proyecto tuvo un alcance distinto; en el portfolio está el detalle de rol y tecnología de cada uno.",
+          portfolioLink: "Ver estos proyectos en el portfolio",
+        },
+        method: {
+          title: "Evolución por etapas",
+          text: "Un sitio puede empezar simple y crecer: primero la base que el negocio necesita hoy; después catálogo, pagos, contenido o integraciones. Cada etapa se define con entregables claros.",
+        },
+        crossLink: {
+          title: "¿Y si el problema es operativo?",
+          text: "Cuando lo que falta no es comunicación sino orden en procesos, usuarios y datos, la respuesta suele ser un sistema a medida.",
+          linkLabel: "Conocer sistemas a medida",
+        },
+        coverage: {
+          title: "Miami y trabajo remoto",
+          text: "Trabajo desde South Florida con empresas de Miami y del resto de Estados Unidos, y en remoto con Latinoamérica, en español e inglés.",
+        },
+        cta: {
+          title: "¿Tu empresa necesita un sitio que trabaje?",
+          text: "Contame qué vendés, a quién y qué esperás del sitio. Te propongo un alcance inicial concreto.",
+          buttonLabel: "Contame tu proyecto",
+        },
+      },
+      systems: {
+        seo: {
+          title: "Sistemas y aplicaciones a medida para empresas | Rodrigo Opalo",
+          description:
+            "Desarrollo de software a medida: aplicaciones web, portales de clientes y paneles internos con autenticación, roles, datos e integraciones. Implementación por etapas para empresas de Estados Unidos y Latinoamérica.",
+        },
+        header: {
+          eyebrow: "Servicios · Sistemas a medida",
+          backLabel: "Volver a servicios",
+          title: "Sistemas y aplicaciones a medida para empresas.",
+          subtitle:
+            "Cuando las planillas y las herramientas genéricas quedan chicas, un sistema a medida ordena usuarios, datos y procesos alrededor de cómo trabaja realmente tu operación.",
+        },
+        scope: {
+          title: "Qué desarrollo",
+          items: [
+            {
+              title: "Aplicaciones web",
+              text: "Herramientas accesibles desde el navegador, sin instalación, construidas alrededor del flujo real de trabajo.",
+            },
+            {
+              title: "Portales de clientes",
+              text: "Acceso autenticado para que cada cliente vea su información, sus estados y sus documentos.",
+            },
+            {
+              title: "Paneles internos",
+              text: "Administración de operación, contenido y datos para el equipo, con permisos por rol.",
+            },
+            {
+              title: "Autenticación y roles",
+              text: "Cada perfil ve y hace únicamente lo que le corresponde.",
+            },
+            {
+              title: "Datos y archivos",
+              text: "Información estructurada, historial y documentación centralizada, incluyendo imágenes y evidencia.",
+            },
+            {
+              title: "Flujos operativos",
+              text: "Estados, seguimiento y trazabilidad de procesos de punta a punta.",
+            },
+            {
+              title: "Integraciones",
+              text: "Conexión con pagos, APIs y servicios externos que la operación ya usa.",
+            },
+            {
+              title: "Automatizaciones",
+              text: "Tareas repetitivas que el sistema resuelve solo, para reducir errores y trabajo manual.",
+            },
+          ],
+        },
+        proof: {
+          eyebrow: "Caso principal",
+          title: "LEM-BOX: un sistema operando de verdad",
+          text: "LEM-BOX es la plataforma logística que desarrollo y opero como producto propio. La usan clientes, partners y equipo operativo con experiencias por rol: ingreso de paquetes, evidencia fotográfica, consolidación de cajas, embarques y seguimiento de estados. No es un demo: es la operación real del negocio.",
+          linkLabel: "Ver el caso LEM-BOX completo",
+          supporting:
+            "En el portfolio también están el e-commerce Mutter Games, con catálogo administrado y checkout con Mercado Pago, y un prototipo full-stack de reservas de campings.",
+        },
+        method: {
+          title: "Implementación por etapas",
+          items: [
+            {
+              title: "Primero el proceso",
+              text: "Antes de programar, entiendo cómo trabaja la operación: usuarios, casos límite y prioridades.",
+            },
+            {
+              title: "Una base útil",
+              text: "La primera etapa entrega un sistema usable que resuelve el núcleo del problema.",
+            },
+            {
+              title: "Evolución con criterio",
+              text: "Roles, módulos e integraciones se suman cuando la operación los pide, con seguridad y mantenimiento considerados desde el inicio.",
+            },
+          ],
+        },
+        crossLink: {
+          title: "¿Solo necesitás comunicar y vender?",
+          text: "Si el objetivo es presencia, consultas o ventas (y no gestionar una operación), probablemente alcance con un sitio web profesional.",
+          linkLabel: "Ver desarrollo de sitios web para empresas",
+        },
+        coverage: {
+          title: "Dónde y cómo trabajo",
+          text: "Desde South Florida, con empresas de Miami y de Estados Unidos, y en remoto con Latinoamérica. El trabajo es directo conmigo, en español o en inglés, durante todo el proyecto.",
+        },
+        cta: {
+          title: "¿Tu operación necesita su propio sistema?",
+          text: "Contame cómo trabajan hoy y dónde duele. Te digo con honestidad si conviene un sistema a medida y por dónde empezar.",
+          buttonLabel: "Contame tu proceso",
+        },
       },
     },
     portfolio: {

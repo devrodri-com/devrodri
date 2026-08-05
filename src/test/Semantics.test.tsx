@@ -23,9 +23,21 @@ const publicRoutes = [
   { path: "/", skip: "Saltar al contenido principal" },
   { path: "/portfolio", skip: "Saltar al contenido principal" },
   { path: "/portfolio/lem-box", skip: "Saltar al contenido principal" },
+  { path: "/servicios", skip: "Saltar al contenido principal" },
+  {
+    path: "/servicios/sitios-web-para-empresas",
+    skip: "Saltar al contenido principal",
+  },
+  {
+    path: "/servicios/sistemas-a-medida",
+    skip: "Saltar al contenido principal",
+  },
   { path: "/en", skip: "Skip to main content" },
   { path: "/en/portfolio", skip: "Skip to main content" },
   { path: "/en/portfolio/lem-box", skip: "Skip to main content" },
+  { path: "/en/services", skip: "Skip to main content" },
+  { path: "/en/services/business-websites", skip: "Skip to main content" },
+  { path: "/en/services/custom-software", skip: "Skip to main content" },
   { path: "/no-existe", skip: "Saltar al contenido principal" },
   { path: "/en/no-existe", skip: "Skip to main content" },
 ] as const;

@@ -5,6 +5,7 @@ import {
   lemBoxPublicLinks,
   lemBoxPublicLinksSection,
 } from "../data/portfolio/cases/lemBox";
+import translations from "../i18n";
 import { useLanguage } from "../i18n/useLanguage";
 import { getLocalizedPath } from "../routes/siteRoutes";
 import { PortfolioCoverImage } from "../Components/portfolio/PortfolioCard";
@@ -414,6 +415,14 @@ export default function LemBoxCasePage() {
               >
                 {page.finalCta.buttonLabel}
               </Link>
+              <div className="mt-6">
+                <Link
+                  to={getLocalizedPath("custom-software", language)}
+                  className="inline-flex min-h-[44px] items-center text-xs font-semibold uppercase tracking-[0.12em] text-primary no-underline transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-black"
+                >
+                  {translations[language].servicesPages.hub.directory.systems.linkLabel}
+                </Link>
+              </div>
             </div>
           </section>
         </div>

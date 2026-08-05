@@ -11,11 +11,13 @@ Producción: [www.devrodri.com](https://www.devrodri.com)
 - Vitest 4
 - Node.js 22 y npm 9.9.4
 
-El sitio usa Vite + React y se prerenderiza durante el build. Publica seis rutas
-estáticas:
+El sitio usa Vite + React y se prerenderiza durante el build. Publica doce
+rutas estáticas:
 
-- Español: `/`, `/portfolio`, `/portfolio/lem-box`
-- Inglés: `/en`, `/en/portfolio`, `/en/portfolio/lem-box`
+- Español: `/`, `/portfolio`, `/portfolio/lem-box`, `/servicios`,
+  `/servicios/sitios-web-para-empresas`, `/servicios/sistemas-a-medida`
+- Inglés: `/en`, `/en/portfolio`, `/en/portfolio/lem-box`, `/en/services`,
+  `/en/services/business-websites`, `/en/services/custom-software`
 
 Cada ruta entrega HTML y contenido visibles desde el servidor, incluidos su
 `title`, descripción, URL canonical, `hreflang`, Open Graph y metadata de
@@ -23,7 +25,7 @@ Twitter localizados. Los datos estructurados se definen por ruta cuando
 corresponde, y React hidrata el cliente después de cargar el documento inicial.
 Las rutas desconocidas devuelven un HTTP 404 real localizado en español o
 inglés. El build también publica `robots.txt` y `sitemap.xml`, que enumera las
-seis URLs públicas.
+doce URLs públicas.
 
 ## Desarrollo
 

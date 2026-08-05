@@ -106,6 +106,276 @@ export const en = {
         keywords: "web development, seo, internationalization, design, digital services",
       },
     },
+    servicesPages: {
+      hub: {
+        seo: {
+          title: "Web development and custom software services | Rodrigo Opalo",
+          description:
+            "I build business websites, custom software, and automations for companies. You work directly with me, in English or Spanish, from South Florida and remotely across the United States and Latin America.",
+        },
+        header: {
+          eyebrow: "Services",
+          title: "Websites, custom systems, and automation for businesses.",
+          subtitle:
+            "A specific need can become a clear digital solution: a website that communicates and converts, a system that organizes the operation, or an automation that removes manual work. You work directly with me at every stage.",
+        },
+        choose: {
+          title: "What does your business need?",
+          intro:
+            "Not every project starts the same way. Here is the simplest way to get oriented:",
+          items: [
+            {
+              title: "A website",
+              text: "When the goal is to communicate, attract inquiries, or sell: a professional company presence, landing pages, catalogs, and bilingual experiences.",
+            },
+            {
+              title: "A custom system",
+              text: "When the problem is operational: users, roles, data, and workflows that a generic tool doesn't handle well.",
+            },
+            {
+              title: "An automation",
+              text: "When the repetitive work is copying data between tools, sending status updates by hand, or rebuilding spreadsheets: that can be connected and solved automatically.",
+            },
+          ],
+          note: "Some projects combine all three. Scope is defined by the problem, not by the technology.",
+        },
+        directory: {
+          title: "Services",
+          web: {
+            title: "Business websites",
+            text: "Company sites, landing pages, and bilingual catalogs with responsive design, a technical SEO foundation, and a focus on conversion.",
+            linkLabel: "Explore business website development",
+          },
+          systems: {
+            title: "Custom software and web applications",
+            text: "Web applications, client portals, and internal panels with authentication, roles, data, and integrations.",
+            linkLabel: "Explore custom software development",
+          },
+          automation: {
+            title: "Automation and integrations",
+            text: "I connect APIs, payments, forms, CRMs, and webhooks to reduce manual work. Today I deliver this inside a website or a system, not as a standalone service.",
+            linkLabel: "Tell me which process you want to automate",
+          },
+        },
+        method: {
+          title: "How I work",
+          items: [
+            {
+              title: "Direct work",
+              text: "You talk to me from start to finish. No intermediaries, no rotating teams: decisions are made with context.",
+            },
+            {
+              title: "Strategy, UX, and technology",
+              text: "First the problem and the user; then the interface; the tool comes last. Technology supports the solution. It doesn't define it.",
+            },
+            {
+              title: "Phased development",
+              text: "Every stage delivers something usable: first a clear foundation, then the improvements the business actually needs.",
+            },
+          ],
+        },
+        coverage: {
+          title: "Where I work",
+          text: "I'm based in South Florida and work with businesses in Miami and across the United States, and remotely with Latin America. Communication can be in English or Spanish throughout the project.",
+        },
+        proof: {
+          title: "Real work, not promises",
+          text: "You can review the projects published in the portfolio, including LEM-BOX: the logistics platform I build and operate as my own product.",
+          portfolioLink: "View the full portfolio",
+          lemboxLink: "View the LEM-BOX case study",
+        },
+        cta: {
+          title: "Tell me what your business needs",
+          text: "Share the context and the goal. I'll reply with an honest read on scope and a concrete first step.",
+          buttonLabel: "Tell me about your project",
+        },
+      },
+      web: {
+        seo: {
+          title: "Business website design and development | Rodrigo Opalo",
+          description:
+            "Custom website development for businesses: institutional sites, landing pages, and bilingual catalogs that load fast, with a technical SEO foundation and forms or WhatsApp to capture inquiries.",
+        },
+        header: {
+          eyebrow: "Services · Business websites",
+          backLabel: "Back to services",
+          title: "Professional websites for businesses.",
+          subtitle:
+            "A good website isn't a business card: it's a commercial tool. I design and build sites that communicate clearly, load fast, and turn visits into inquiries.",
+        },
+        deliverables: {
+          title: "What your website can include",
+          intro:
+            "Scope is defined by the business goal. These are the usual building blocks:",
+          items: [
+            {
+              title: "Company sites and landing pages",
+              text: "A professional presence for the brand, or pages focused on a specific campaign or service.",
+            },
+            {
+              title: "Catalogs and content",
+              text: "Products, projects, or services organized so customers can find them and reach out without friction.",
+            },
+            {
+              title: "Bilingual experience",
+              text: "English and Spanish versions with their own URLs, built for audiences in the United States and Latin America.",
+            },
+            {
+              title: "Responsive design and UX",
+              text: "Clear hierarchy and comfortable navigation on phone, tablet, and desktop.",
+            },
+            {
+              title: "Performance and technical SEO",
+              text: "Fast loading, indexable HTML, and correct metadata as a foundation. An SEO foundation does not guarantee specific search rankings.",
+            },
+            {
+              title: "Forms and WhatsApp",
+              text: "Direct channels to capture inquiries, with confirmation and follow-up.",
+            },
+            {
+              title: "Payments and administration",
+              text: "Checkout and a self-managed content panel when the project calls for it.",
+            },
+            {
+              title: "Integrations",
+              text: "Connections to maps, calendars, payments, and other services the business already uses.",
+            },
+          ],
+        },
+        cases: {
+          title: "Real websites",
+          intro: "Some of the websites I've designed and built for businesses:",
+          items: [
+            {
+              name: "Esteban Firpo · Miami Real Estate",
+              text: "Bilingual real-estate site with a project catalog and WhatsApp integration.",
+            },
+            {
+              name: "Mutter Games",
+              text: "E-commerce with a dynamic catalog and Mercado Pago checkout.",
+            },
+            {
+              name: "Imprenta Magenta",
+              text: "Optimized catalog with a dynamic quote form. Functional MVP currently live.",
+            },
+            {
+              name: "ZENTRA Scent",
+              text: "In development: website and e-commerce with subscriptions, an admin panel, and inventory management.",
+            },
+          ],
+          note: "Each project had a different scope; the portfolio details the role and technology behind each one.",
+          portfolioLink: "See these projects in the portfolio",
+        },
+        method: {
+          title: "Phased evolution",
+          text: "A website can start simple and grow: first the foundation the business needs today; later a catalog, payments, content, or integrations. Each stage is defined with clear deliverables.",
+        },
+        crossLink: {
+          title: "What if the problem is operational?",
+          text: "When what's missing isn't communication but order across processes, users, and data, the answer is usually a custom system.",
+          linkLabel: "Explore custom software development",
+        },
+        coverage: {
+          title: "Miami and remote work",
+          text: "I work from South Florida with businesses in Miami and across the United States, and remotely with Latin America, in English and Spanish.",
+        },
+        cta: {
+          title: "Does your business need a website that brings in inquiries?",
+          text: "Tell me what you sell, to whom, and what you expect from the site. I'll propose a concrete initial scope.",
+          buttonLabel: "Tell me about your project",
+        },
+      },
+      systems: {
+        seo: {
+          title: "Custom software and web applications for businesses | Rodrigo Opalo",
+          description:
+            "Custom software development: web applications, client portals, and internal panels with authentication, roles, data, and integrations. Phased delivery for businesses in the United States and Latin America.",
+        },
+        header: {
+          eyebrow: "Services · Custom software",
+          backLabel: "Back to services",
+          title: "Custom software and web applications for businesses.",
+          subtitle:
+            "When spreadsheets and generic tools fall short, a custom system organizes users, data, and processes around how your operation actually works.",
+        },
+        scope: {
+          title: "What I build",
+          items: [
+            {
+              title: "Web applications",
+              text: "Tools that run in the browser, with no installation, built around the real workflow.",
+            },
+            {
+              title: "Client portals",
+              text: "Authenticated access so each client can see their information, statuses, and documents.",
+            },
+            {
+              title: "Internal panels",
+              text: "Operations, content, and data administration for the team, with role-based permissions.",
+            },
+            {
+              title: "Authentication and roles",
+              text: "Each profile sees and does only what it's meant to.",
+            },
+            {
+              title: "Data and files",
+              text: "Structured information, history, and centralized documentation, including images and evidence.",
+            },
+            {
+              title: "Operational flows",
+              text: "Statuses, tracking, and end-to-end traceability of processes.",
+            },
+            {
+              title: "Integrations",
+              text: "Connections to payments, APIs, and external services the operation already uses.",
+            },
+            {
+              title: "Automations",
+              text: "Repetitive tasks the system handles on its own, reducing errors and manual work.",
+            },
+          ],
+        },
+        proof: {
+          eyebrow: "Main case study",
+          title: "LEM-BOX: a system running a real operation",
+          text: "LEM-BOX is the logistics platform I build and operate as my own product. Clients, partners, and the operations team use it through role-based experiences: package intake, photo evidence, box consolidation, shipments, and status tracking. It's not a demo: it's the business's real operation.",
+          linkLabel: "View the full LEM-BOX case study",
+          supporting:
+            "The portfolio also includes the Mutter Games e-commerce, with a managed catalog and Mercado Pago checkout, and a full-stack campground booking prototype.",
+        },
+        method: {
+          title: "Phased delivery",
+          items: [
+            {
+              title: "The process first",
+              text: "Before writing code, I understand how the operation works: users, edge cases, and priorities.",
+            },
+            {
+              title: "A useful foundation",
+              text: "The first stage delivers a usable system that solves the core of the problem.",
+            },
+            {
+              title: "Deliberate evolution",
+              text: "Roles, modules, and integrations are added when the operation calls for them, with security and maintenance considered from the start.",
+            },
+          ],
+        },
+        crossLink: {
+          title: "Only need to communicate and sell?",
+          text: "If the goal is presence, inquiries, or sales (not managing an operation), a professional business website is probably enough.",
+          linkLabel: "Explore business website development",
+        },
+        coverage: {
+          title: "Where and how I work",
+          text: "From South Florida, with businesses in Miami and across the United States, and remotely with Latin America. You work directly with me, in English or Spanish, throughout the project.",
+        },
+        cta: {
+          title: "Does your operation need its own system?",
+          text: "Tell me how you work today and what's slowing you down. I'll tell you honestly whether a custom system makes sense and where to start.",
+          buttonLabel: "Tell me about your process",
+        },
+      },
+    },
 
     portfolio: {
       title: "Some Work",

@@ -136,7 +136,7 @@ describe("Navbar color tokens", () => {
     renderNavbar();
     const navigation = getRequiredElement<HTMLElement>("[data-navbar-desktop]");
 
-    for (const label of ["Sobre mí", "Por qué elegirme", "Portfolio", "Contacto", "FAQ"]) {
+    for (const label of ["Sobre mí", "Por qué elegirme", "Servicios", "Portfolio", "Contacto", "FAQ"]) {
       expect(within(navigation).getByRole("link", { name: label })).toHaveClass("hover:text-primary");
     }
 
@@ -170,6 +170,7 @@ describe("Navbar no-JavaScript fallback", () => {
       navigationHrefs: [
         "/#sobremi",
         "/#porqueelegirnos",
+        "/servicios",
         "/portfolio",
         "/#contacto",
         "/#faq",
@@ -185,6 +186,7 @@ describe("Navbar no-JavaScript fallback", () => {
       navigationHrefs: [
         "/#sobremi",
         "/#porqueelegirnos",
+        "/servicios",
         "/portfolio",
         "/#contacto",
         "/#faq",
@@ -200,6 +202,7 @@ describe("Navbar no-JavaScript fallback", () => {
       navigationHrefs: [
         "/#sobremi",
         "/#porqueelegirnos",
+        "/servicios",
         "/portfolio",
         "/#contacto",
         "/#faq",
@@ -213,11 +216,66 @@ describe("Navbar no-JavaScript fallback", () => {
       languageLabel: "Selector de idioma",
     },
     {
+      initialEntry: "/servicios",
+      language: "es",
+      navigationHrefs: [
+        "/#sobremi",
+        "/#porqueelegirnos",
+        "/servicios",
+        "/portfolio",
+        "/#contacto",
+        "/#faq",
+      ],
+      languageHrefs: ["/servicios", "/en/services"],
+      currentLabel: "Español, idioma actual",
+      navigationLabel: "Navegación principal",
+      languageLabel: "Selector de idioma",
+    },
+    {
+      initialEntry: "/servicios/sitios-web-para-empresas",
+      language: "es",
+      navigationHrefs: [
+        "/#sobremi",
+        "/#porqueelegirnos",
+        "/servicios",
+        "/portfolio",
+        "/#contacto",
+        "/#faq",
+      ],
+      languageHrefs: [
+        "/servicios/sitios-web-para-empresas",
+        "/en/services/business-websites",
+      ],
+      currentLabel: "Español, idioma actual",
+      navigationLabel: "Navegación principal",
+      languageLabel: "Selector de idioma",
+    },
+    {
+      initialEntry: "/servicios/sistemas-a-medida",
+      language: "es",
+      navigationHrefs: [
+        "/#sobremi",
+        "/#porqueelegirnos",
+        "/servicios",
+        "/portfolio",
+        "/#contacto",
+        "/#faq",
+      ],
+      languageHrefs: [
+        "/servicios/sistemas-a-medida",
+        "/en/services/custom-software",
+      ],
+      currentLabel: "Español, idioma actual",
+      navigationLabel: "Navegación principal",
+      languageLabel: "Selector de idioma",
+    },
+    {
       initialEntry: "/en",
       language: "en",
       navigationHrefs: [
         "/en#sobremi",
         "/en#porqueelegirnos",
+        "/en/services",
         "/en/portfolio",
         "/en#contacto",
         "/en#faq",
@@ -233,6 +291,7 @@ describe("Navbar no-JavaScript fallback", () => {
       navigationHrefs: [
         "/en#sobremi",
         "/en#porqueelegirnos",
+        "/en/services",
         "/en/portfolio",
         "/en#contacto",
         "/en#faq",
@@ -248,6 +307,7 @@ describe("Navbar no-JavaScript fallback", () => {
       navigationHrefs: [
         "/en#sobremi",
         "/en#porqueelegirnos",
+        "/en/services",
         "/en/portfolio",
         "/en#contacto",
         "/en#faq",
@@ -255,6 +315,60 @@ describe("Navbar no-JavaScript fallback", () => {
       languageHrefs: [
         "/portfolio/lem-box",
         "/en/portfolio/lem-box",
+      ],
+      currentLabel: "English, current language",
+      navigationLabel: "Primary navigation",
+      languageLabel: "Language selector",
+    },
+    {
+      initialEntry: "/en/services",
+      language: "en",
+      navigationHrefs: [
+        "/en#sobremi",
+        "/en#porqueelegirnos",
+        "/en/services",
+        "/en/portfolio",
+        "/en#contacto",
+        "/en#faq",
+      ],
+      languageHrefs: ["/servicios", "/en/services"],
+      currentLabel: "English, current language",
+      navigationLabel: "Primary navigation",
+      languageLabel: "Language selector",
+    },
+    {
+      initialEntry: "/en/services/business-websites",
+      language: "en",
+      navigationHrefs: [
+        "/en#sobremi",
+        "/en#porqueelegirnos",
+        "/en/services",
+        "/en/portfolio",
+        "/en#contacto",
+        "/en#faq",
+      ],
+      languageHrefs: [
+        "/servicios/sitios-web-para-empresas",
+        "/en/services/business-websites",
+      ],
+      currentLabel: "English, current language",
+      navigationLabel: "Primary navigation",
+      languageLabel: "Language selector",
+    },
+    {
+      initialEntry: "/en/services/custom-software",
+      language: "en",
+      navigationHrefs: [
+        "/en#sobremi",
+        "/en#porqueelegirnos",
+        "/en/services",
+        "/en/portfolio",
+        "/en#contacto",
+        "/en#faq",
+      ],
+      languageHrefs: [
+        "/servicios/sistemas-a-medida",
+        "/en/services/custom-software",
       ],
       currentLabel: "English, current language",
       navigationLabel: "Primary navigation",

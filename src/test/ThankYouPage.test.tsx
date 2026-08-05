@@ -121,9 +121,27 @@ describe("localized confirmation pages", () => {
     { pathname: "/", routeKey: "home:es" },
     { pathname: "/portfolio", routeKey: "portfolio:es" },
     { pathname: "/portfolio/lem-box", routeKey: "lem-box:es" },
+    { pathname: "/servicios", routeKey: "services:es" },
+    {
+      pathname: "/servicios/sitios-web-para-empresas",
+      routeKey: "business-websites:es",
+    },
+    {
+      pathname: "/servicios/sistemas-a-medida",
+      routeKey: "custom-software:es",
+    },
     { pathname: "/en", routeKey: "home:en" },
     { pathname: "/en/portfolio", routeKey: "portfolio:en" },
     { pathname: "/en/portfolio/lem-box", routeKey: "lem-box:en" },
+    { pathname: "/en/services", routeKey: "services:en" },
+    {
+      pathname: "/en/services/business-websites",
+      routeKey: "business-websites:en",
+    },
+    {
+      pathname: "/en/services/custom-software",
+      routeKey: "custom-software:en",
+    },
   ] as const)(
     "preserves structured-data resolution for the indexable route $pathname",
     ({ pathname, routeKey }) => {
