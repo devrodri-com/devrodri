@@ -115,7 +115,7 @@ export default function CustomSoftwarePage() {
       </section>
 
       <div className="border-b border-white/10 px-4 py-12 sm:px-6 sm:py-24">
-        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-2 lg:gap-20">
+        <div className="mx-auto grid max-w-6xl gap-10 lg:max-w-7xl lg:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] lg:gap-20">
           <section
             aria-labelledby="custom-software-crosslink"
             className="border-t border-white/15 pt-7"
@@ -146,7 +146,7 @@ export default function CustomSoftwarePage() {
             >
               {page.coverage.title}
             </h2>
-            <p className="mt-5 max-w-[36rem] text-base leading-relaxed text-gray-300/90 sm:text-lg">
+            <p className="mt-5 max-w-[36rem] text-base leading-relaxed text-gray-300/90 sm:text-lg lg:max-w-none">
               {page.coverage.text}
             </p>
           </section>

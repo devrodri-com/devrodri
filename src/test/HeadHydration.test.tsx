@@ -13,8 +13,30 @@ type JsonLdNode = { "@type": string; "@id"?: string } & Record<
 type JsonLdGraph = { "@graph": JsonLdNode[] };
 
 const routes = [
-  { locale: "es" as const, pathname: "/" },
-  { locale: "en" as const, pathname: "/en" },
+  { hasJsonLd: true, locale: "es" as const, pathname: "/" },
+  { hasJsonLd: true, locale: "en" as const, pathname: "/en" },
+  { hasJsonLd: false, locale: "es" as const, pathname: "/servicios" },
+  { hasJsonLd: false, locale: "en" as const, pathname: "/en/services" },
+  {
+    hasJsonLd: false,
+    locale: "es" as const,
+    pathname: "/servicios/sitios-web-para-empresas",
+  },
+  {
+    hasJsonLd: false,
+    locale: "en" as const,
+    pathname: "/en/services/business-websites",
+  },
+  {
+    hasJsonLd: false,
+    locale: "es" as const,
+    pathname: "/servicios/sistemas-a-medida",
+  },
+  {
+    hasJsonLd: false,
+    locale: "en" as const,
+    pathname: "/en/services/custom-software",
+  },
 ];
 
 function jsonLdScripts() {
@@ -84,19 +106,21 @@ afterEach(() => {
 describe("prerendered head hydration", () => {
   it.each(routes)(
     "hydrates $pathname without duplicating the head or the Person node",
-    async ({ locale, pathname }) => {
+    async ({ hasJsonLd, locale, pathname }) => {
       const { appHtml, head } = await renderPrerenderedHead(pathname);
 
       document.head.innerHTML = head;
       document.body.innerHTML = `<div id="root">${appHtml}</div>`;
 
       const prerenderedScripts = jsonLdScripts();
-      expect(prerenderedScripts).toHaveLength(1);
-      expect(prerenderedScripts[0]).toHaveAttribute("data-rh", "true");
-      const prerenderedPerson = personNode(prerenderedScripts[0]);
-      expect(prerenderedPerson["@id"]).toBe(PERSON_ID);
-      expect(prerenderedPerson.description).toBe(PERSON_DESCRIPTIONS[locale]);
-      expect(prerenderedPerson.jobTitle).toBe(PERSON_JOB_TITLES[locale]);
+      expect(prerenderedScripts).toHaveLength(hasJsonLd ? 1 : 0);
+      if (hasJsonLd) {
+        expect(prerenderedScripts[0]).toHaveAttribute("data-rh", "true");
+        const prerenderedPerson = personNode(prerenderedScripts[0]);
+        expect(prerenderedPerson["@id"]).toBe(PERSON_ID);
+        expect(prerenderedPerson.description).toBe(PERSON_DESCRIPTIONS[locale]);
+        expect(prerenderedPerson.jobTitle).toBe(PERSON_JOB_TITLES[locale]);
+      }
 
       const container = document.getElementById("root");
       if (container === null) {
@@ -138,7 +162,7 @@ describe("prerendered head hydration", () => {
         });
 
         await waitFor(() => {
-          expect(jsonLdScripts()).toHaveLength(1);
+          expect(jsonLdScripts()).toHaveLength(hasJsonLd ? 1 : 0);
         });
 
         expect(consoleError.mock.calls.flat().join(" ")).not.toMatch(
@@ -157,11 +181,13 @@ describe("prerendered head hydration", () => {
         ).toHaveLength(3);
 
         const hydratedScripts = jsonLdScripts();
-        expect(hydratedScripts).toHaveLength(1);
-        const hydratedPerson = personNode(hydratedScripts[0]);
-        expect(hydratedPerson["@id"]).toBe(PERSON_ID);
-        expect(hydratedPerson.description).toBe(PERSON_DESCRIPTIONS[locale]);
-        expect(hydratedPerson.jobTitle).toBe(PERSON_JOB_TITLES[locale]);
+        expect(hydratedScripts).toHaveLength(hasJsonLd ? 1 : 0);
+        if (hasJsonLd) {
+          const hydratedPerson = personNode(hydratedScripts[0]);
+          expect(hydratedPerson["@id"]).toBe(PERSON_ID);
+          expect(hydratedPerson.description).toBe(PERSON_DESCRIPTIONS[locale]);
+          expect(hydratedPerson.jobTitle).toBe(PERSON_JOB_TITLES[locale]);
+        }
       } finally {
         consoleError.mockRestore();
         await act(async () => {

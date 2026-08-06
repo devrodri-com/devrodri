@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { ArrowUpRight as ArrowUpRightIcon } from "lucide-react";
 import {
   lemBoxAudienceIntro,
   lemBoxCase,
@@ -384,9 +385,15 @@ export default function LemBoxCasePage() {
                       </span>
                       <span
                         aria-hidden="true"
-                        className="mt-1 text-xl leading-none text-gray-500 transition-[color,transform] duration-200 group-hover:translate-x-0.5 group-hover:text-primary-on-light group-focus-visible:translate-x-0.5 group-focus-visible:text-primary-on-light motion-reduce:transform-none motion-reduce:transition-none"
+                        className="mt-1 text-gray-500 transition-[color,transform] duration-200 group-hover:translate-x-0.5 group-hover:text-primary-on-light group-focus-visible:translate-x-0.5 group-focus-visible:text-primary-on-light motion-reduce:transform-none motion-reduce:transition-none"
                       >
-                        ↗
+                        <ArrowUpRightIcon
+                          aria-hidden="true"
+                          data-navigation-icon="arrow-up-right"
+                          focusable="false"
+                          className="h-5 w-5"
+                          strokeWidth={1.5}
+                        />
                       </span>
                     </a>
                   );

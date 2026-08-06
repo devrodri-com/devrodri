@@ -2,9 +2,8 @@ import { Link } from "react-router-dom";
 import { useLanguage } from "../i18n/useLanguage";
 import translations from "../i18n";
 import { getLocalizedPath } from "../routes/siteRoutes";
-
-const SERVICE_ROW_CLASSNAME =
-  "group grid min-h-[44px] grid-cols-[minmax(0,1fr)_auto] gap-6 py-7 text-white no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary sm:py-8";
+import EditorialNote from "../Components/services/EditorialNote";
+import ServiceDirectoryItem from "../Components/services/ServiceDirectoryItem";
 
 export default function ServicesHubPage() {
   const { language } = useLanguage();
@@ -53,9 +52,9 @@ export default function ServicesHubPage() {
               </div>
             ))}
           </div>
-          <p className="mt-8 max-w-[44rem] border-l border-primary/60 pl-5 text-base leading-relaxed text-gray-300/90">
+          <EditorialNote className="mt-8 max-w-[44rem] lg:max-w-[64rem]">
             {page.choose.note}
-          </p>
+          </EditorialNote>
         </div>
       </section>
 
@@ -71,64 +70,26 @@ export default function ServicesHubPage() {
             {page.directory.title}
           </h2>
           <div className="mt-8 border-y border-white/15 sm:mt-12">
-            <Link
+            <ServiceDirectoryItem
               to={getLocalizedPath("business-websites", language)}
-              className={SERVICE_ROW_CLASSNAME}
-            >
-              <div className="flex flex-col">
-                <h3 className="text-xl font-semibold tracking-tight transition-colors group-hover:text-primary group-focus-visible:text-primary sm:text-2xl">
-                  {page.directory.web.title}
-                </h3>
-                <p className="mt-3 max-w-[40rem] text-base leading-relaxed text-gray-300/90">
-                  {page.directory.web.text}
-                </p>
-                <span className="mt-5 text-xs font-semibold uppercase tracking-[0.12em] text-primary">
-                  {page.directory.web.linkLabel}
-                </span>
-              </div>
-              <span
-                aria-hidden="true"
-                className="mt-1 text-xl leading-none text-gray-500 transition-[color,transform] duration-200 group-hover:translate-x-0.5 group-hover:text-primary group-focus-visible:translate-x-0.5 group-focus-visible:text-primary motion-reduce:transform-none motion-reduce:transition-none"
-              >
-                →
-              </span>
-            </Link>
-            <Link
+              title={page.directory.web.title}
+              description={page.directory.web.text}
+              ctaLabel={page.directory.web.linkLabel}
+            />
+            <ServiceDirectoryItem
+              bordered
               to={getLocalizedPath("custom-software", language)}
-              className={`${SERVICE_ROW_CLASSNAME} border-t border-white/15`}
-            >
-              <div className="flex flex-col">
-                <h3 className="text-xl font-semibold tracking-tight transition-colors group-hover:text-primary group-focus-visible:text-primary sm:text-2xl">
-                  {page.directory.systems.title}
-                </h3>
-                <p className="mt-3 max-w-[40rem] text-base leading-relaxed text-gray-300/90">
-                  {page.directory.systems.text}
-                </p>
-                <span className="mt-5 text-xs font-semibold uppercase tracking-[0.12em] text-primary">
-                  {page.directory.systems.linkLabel}
-                </span>
-              </div>
-              <span
-                aria-hidden="true"
-                className="mt-1 text-xl leading-none text-gray-500 transition-[color,transform] duration-200 group-hover:translate-x-0.5 group-hover:text-primary group-focus-visible:translate-x-0.5 group-focus-visible:text-primary motion-reduce:transform-none motion-reduce:transition-none"
-              >
-                →
-              </span>
-            </Link>
-            <div className="border-t border-white/15 py-7 sm:py-8">
-              <h3 className="text-xl font-semibold tracking-tight text-white sm:text-2xl">
-                {page.directory.automation.title}
-              </h3>
-              <p className="mt-3 max-w-[40rem] text-base leading-relaxed text-gray-300/90">
-                {page.directory.automation.text}
-              </p>
-              <Link
-                to={`${homePath}#contacto`}
-                className="mt-5 inline-flex min-h-[44px] items-center text-xs font-semibold uppercase tracking-[0.12em] text-primary no-underline transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-black"
-              >
-                {page.directory.automation.linkLabel}
-              </Link>
-            </div>
+              title={page.directory.systems.title}
+              description={page.directory.systems.text}
+              ctaLabel={page.directory.systems.linkLabel}
+            />
+            <ServiceDirectoryItem
+              bordered
+              to={`${homePath}#contacto`}
+              title={page.directory.automation.title}
+              description={page.directory.automation.text}
+              ctaLabel={page.directory.automation.linkLabel}
+            />
           </div>
         </div>
       </section>
@@ -161,7 +122,7 @@ export default function ServicesHubPage() {
       </section>
 
       <div className="border-b border-white/10 px-4 py-12 sm:px-6 sm:py-24">
-        <div className="mx-auto grid max-w-6xl gap-10 lg:grid-cols-2 lg:gap-20">
+        <div className="mx-auto grid max-w-6xl gap-10 lg:max-w-7xl lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:gap-20">
           <section
             aria-labelledby="services-coverage"
             className="border-t border-white/15 pt-7"
@@ -172,7 +133,7 @@ export default function ServicesHubPage() {
             >
               {page.coverage.title}
             </h2>
-            <p className="mt-5 max-w-[36rem] text-base leading-relaxed text-gray-300/90 sm:text-lg">
+            <p className="mt-5 max-w-[36rem] text-base leading-relaxed text-gray-300/90 sm:text-lg lg:max-w-none">
               {page.coverage.text}
             </p>
           </section>
