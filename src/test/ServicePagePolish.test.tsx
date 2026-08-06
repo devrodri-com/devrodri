@@ -85,7 +85,16 @@ describe("VIS-SVC-01 service page polish contracts", () => {
     ).toEqual(new Set(["service-directory-row"]));
 
     for (const row of rows) {
+      const accessibleName = [
+        row.querySelector("h3")?.textContent,
+        row.querySelector("p")?.textContent,
+        row.querySelector("span.mt-5")?.textContent,
+      ]
+        .map((value) => value?.trim())
+        .filter(Boolean)
+        .join(" ");
       expect(row.querySelector("a")).toBeNull();
+      expect(row).toHaveAccessibleName(accessibleName);
       expect(row).toHaveClass(
         "min-h-[44px]",
         "active:bg-white/[0.03]",
@@ -95,6 +104,15 @@ describe("VIS-SVC-01 service page polish contracts", () => {
       expect(row.querySelectorAll("[data-service-directory-arrow]")).toHaveLength(
         1,
       );
+      const icon = row.querySelector(
+        'svg[data-navigation-icon="arrow-right"]',
+      );
+      expect(icon).not.toBeNull();
+      expect(icon).toHaveAttribute("aria-hidden", "true");
+      expect(icon).toHaveAttribute("focusable", "false");
+      expect(icon).toHaveAttribute("fill", "none");
+      expect(icon).toHaveAttribute("stroke", "currentColor");
+      expect(icon).toHaveAttribute("viewBox", "0 0 24 24");
       expect(row.querySelector("h3")).toHaveClass(
         "group-hover:text-primary",
         "group-active:text-primary",
@@ -112,6 +130,30 @@ describe("VIS-SVC-01 service page polish contracts", () => {
     );
     expect(automationCta).toHaveClass("text-primary");
     expect(automationCta.className).not.toContain("hover:text-white");
+    expect(
+      automationRow.querySelector('svg[data-navigation-icon="arrow-right"]'),
+    ).not.toBeNull();
+  });
+
+  it("uses SVG-only navigation controls without Unicode arrows", () => {
+    const itemSource = fs.readFileSync(
+      path.join(
+        projectRoot,
+        "src/Components/services/ServiceDirectoryItem.tsx",
+      ),
+      "utf8",
+    );
+    const lemBoxSource = fs.readFileSync(
+      path.join(projectRoot, "src/pages/LemBoxCasePage.tsx"),
+      "utf8",
+    );
+
+    expect(itemSource).toContain("ArrowRight as ArrowRightIcon");
+    expect(lemBoxSource).toContain("ArrowUpRight as ArrowUpRightIcon");
+    for (const unicodeArrow of ["→", "↗", "➡", "\uFE0F"]) {
+      expect(itemSource).not.toContain(unicodeArrow);
+      expect(lemBoxSource).not.toContain(unicodeArrow);
+    }
   });
 
   it("reuses the editorial note pattern and scopes the wider H1 to Business Websites", async () => {

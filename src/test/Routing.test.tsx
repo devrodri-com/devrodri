@@ -1455,6 +1455,17 @@ describe("application routing", () => {
       section.querySelectorAll("[data-public-link-row]"),
     );
     expect(rows).toHaveLength(3);
+    const externalIcons = Array.from(
+      section.querySelectorAll('svg[data-navigation-icon="arrow-up-right"]'),
+    );
+    expect(externalIcons).toHaveLength(3);
+    for (const icon of externalIcons) {
+      expect(icon).toHaveAttribute("aria-hidden", "true");
+      expect(icon).toHaveAttribute("focusable", "false");
+      expect(icon).toHaveAttribute("fill", "none");
+      expect(icon).toHaveAttribute("stroke", "currentColor");
+      expect(icon).toHaveAttribute("viewBox", "0 0 24 24");
+    }
     expect(rows[0]).toHaveClass("lg:pl-0");
     expect(rows[0]).not.toHaveClass("border-t", "lg:border-l");
     expect(rows[1]).toHaveClass(

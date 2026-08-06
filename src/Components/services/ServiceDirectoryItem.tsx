@@ -1,3 +1,4 @@
+import { ArrowRight as ArrowRightIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface ServiceDirectoryItemProps {
@@ -38,9 +39,15 @@ export default function ServiceDirectoryItem({
       <span
         aria-hidden="true"
         data-service-directory-arrow
-        className="mt-1 text-xl leading-none text-gray-500 transition-[color,transform] duration-200 group-hover:translate-x-0.5 group-hover:text-primary group-active:translate-x-0.5 group-active:text-primary group-focus-visible:translate-x-0.5 group-focus-visible:text-primary motion-reduce:transform-none motion-reduce:transition-none"
+        className="mt-1 text-gray-500 transition-[color,transform] duration-200 group-hover:translate-x-0.5 group-hover:text-primary group-active:translate-x-0.5 group-active:text-primary group-focus-visible:translate-x-0.5 group-focus-visible:text-primary motion-reduce:transform-none motion-reduce:transition-none"
       >
-        →
+        <ArrowRightIcon
+          aria-hidden="true"
+          data-navigation-icon="arrow-right"
+          focusable="false"
+          className="h-5 w-5"
+          strokeWidth={1.5}
+        />
       </span>
     </Link>
   );
