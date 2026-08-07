@@ -42,6 +42,10 @@ import {
   getHashTarget,
   userPrefersReducedMotion,
 } from "./lib/navigationFocus";
+import {
+  isLocaleSwitchNavigationState,
+  restoreLocaleScrollContext,
+} from "./lib/localeScroll";
 
 const PortfolioPage = lazy(() => import("./pages/PortfolioPage"));
 const LemBoxCasePage = lazy(() => import("./pages/LemBoxCasePage"));
@@ -181,6 +185,7 @@ function NavigationFocusManager({ isNotFound }: { isNotFound: boolean }) {
     };
 
     if (location.hash === "") {
+      if (isLocaleSwitchNavigationState(location.state)) return;
       focusElement(main);
       scrollMainToTop();
       return;
@@ -225,7 +230,39 @@ function NavigationFocusManager({ isNotFound }: { isNotFound: boolean }) {
       observer.disconnect();
       window.clearTimeout(timeoutId);
     };
-  }, [isNotFound, location.hash, location.pathname, navigationType]);
+  }, [isNotFound, location.hash, location.pathname, location.state, navigationType]);
+
+  return null;
+}
+
+function LocaleSwitchScrollRestoration() {
+  const location = useLocation();
+  const navigationType = useNavigationType();
+  const frameIds = useRef<number[]>([]);
+
+  useEffect(() => {
+    frameIds.current.forEach((id) => window.cancelAnimationFrame(id));
+    frameIds.current = [];
+
+    if (navigationType === "POP") return;
+    if (location.hash !== "") return;
+    if (!isLocaleSwitchNavigationState(location.state)) return;
+
+    const { scrollContext } = location.state;
+
+    const firstFrame = window.requestAnimationFrame(() => {
+      const secondFrame = window.requestAnimationFrame(() => {
+        restoreLocaleScrollContext(scrollContext);
+      });
+      frameIds.current.push(secondFrame);
+    });
+    frameIds.current.push(firstFrame);
+
+    return () => {
+      frameIds.current.forEach((id) => window.cancelAnimationFrame(id));
+      frameIds.current = [];
+    };
+  }, [location.hash, location.key, location.state, navigationType]);
 
   return null;
 }
@@ -317,6 +354,7 @@ function App({
           </main>
 
           <NavigationFocusManager isNotFound={isNotFound} />
+          <LocaleSwitchScrollRestoration />
 
           <Footer />
         </div>

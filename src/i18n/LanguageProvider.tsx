@@ -11,7 +11,9 @@ import { LanguageContext } from "./languageContext";
 import {
   getEquivalentLocalePath,
   getLocaleForPathname,
+  getPublicRoute,
 } from "../routes/siteRoutes";
+import { captureLocaleScrollContext } from "../lib/localeScroll";
 
 function detectBrowserLanguage(): Language {
   if (typeof navigator === "undefined") return "es";
@@ -83,10 +85,15 @@ export function RoutedLanguageProvider({ children }: { children: ReactNode }) {
   const language = getLocaleForPathname(location.pathname);
 
   const handleLanguageChange = useCallback((nextLanguage: Language) => {
+    const currentPage = getPublicRoute(location.pathname)?.page ?? null;
+    const scrollContext = captureLocaleScrollContext(currentPage);
+
     navigate({
       pathname: getEquivalentLocalePath(location.pathname, nextLanguage),
       search: location.search,
       hash: location.hash,
+    }, {
+      state: { localeSwitch: true, scrollContext },
     });
   }, [location.hash, location.pathname, location.search, navigate]);
 
