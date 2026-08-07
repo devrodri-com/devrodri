@@ -69,7 +69,7 @@ const approvedFiles = {
   },
   "src/Components/PortfolioSection.tsx": {
     baselineHash:
-      "c44668e5f882394ab72307105fb20f748a4216cf749aac1f3019500066957b8b",
+      "74d84a2a8057249ed69c0f30f0069db03797ac1fd103722575edc09d9bd53ce8",
     markers: 4,
   },
   "src/Components/SobreMiSection.tsx": {
@@ -178,7 +178,7 @@ describe("targeted no-JavaScript visibility contract", () => {
       "<motion.section\n      data-nojs-visible",
     );
     expect(source("src/Components/PortfolioSection.tsx")).toContain(
-      "<motion.div\n                data-nojs-visible\n                className=\"group h-full",
+      "<motion.div\n                data-nojs-visible\n                className=\"group flex h-full",
     );
     expect(source("src/Components/portfolio/PortfolioCard.tsx")).toContain(
       "return (\n    <motion.div\n      data-nojs-visible",
