@@ -177,7 +177,7 @@ export default function Navbar() {
         <div
           id={MOBILE_NAVIGATION_ID}
           data-nojs-hide
-          className="sm:hidden px-4 pb-4 flex flex-col items-center space-y-4 text-sm font-medium bg-black/90 backdrop-blur-sm text-white"
+          className="sm:hidden px-4 pb-4 flex flex-col items-center space-y-4 text-sm font-medium text-white"
         >
           {navigationLinks.map((link) => (
             <Link
@@ -219,7 +219,7 @@ export default function Navbar() {
 
       <div
         data-nojs-mobile-nav
-        className="hidden px-4 pb-4 flex-col items-center gap-4 text-sm font-medium bg-black/90 backdrop-blur-sm text-white"
+        className="hidden px-4 pb-4 flex-col items-center gap-4 text-sm font-medium text-white"
       >
         <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3">
           {navigationLinks.map((link) => (

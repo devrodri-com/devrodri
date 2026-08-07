@@ -124,6 +124,65 @@ describe("Navbar mobile menu", () => {
     expect(document.getElementById("mobile-navigation-panel")).not.toBeInTheDocument();
     expect(localStorage.getItem("language")).toBe("en");
   });
+
+  it.each([
+    {
+      language: "es",
+      expectedLabels: [
+        "Sobre mí",
+        "Por qué elegirme",
+        "Servicios",
+        "Portfolio",
+        "Contacto",
+        "FAQ",
+      ],
+      servicesHref: "/servicios",
+    },
+    {
+      language: "en",
+      expectedLabels: [
+        "About me",
+        "Why choose me",
+        "Services",
+        "Portfolio",
+        "Contact",
+        "FAQ",
+      ],
+      servicesHref: "/en/services",
+    },
+  ] as const)(
+    "keeps $language desktop, mobile, and no-JavaScript navigation in parity",
+    async ({ language, expectedLabels, servicesHref }) => {
+      const user = userEvent.setup();
+      renderNavbar({ initialEntry: language === "es" ? "/" : "/en", language });
+
+      const desktop = getRequiredElement<HTMLElement>("[data-navbar-desktop]");
+      const trigger = screen.getByRole("button", {
+        name: language === "es" ? "Abrir menú" : "Open menu",
+      });
+      const fallback = getRequiredElement<HTMLElement>("[data-nojs-mobile-nav]");
+      const fallbackLinks = fallback.firstElementChild?.querySelectorAll("a");
+
+      await user.click(trigger);
+
+      const panel = getRequiredElement<HTMLElement>("#mobile-navigation-panel");
+      const desktopLinks = [...desktop.children].filter(
+        (element): element is HTMLAnchorElement =>
+          element instanceof HTMLAnchorElement,
+      );
+      const mobileLinks = [...panel.children].filter(
+        (element): element is HTMLAnchorElement =>
+          element instanceof HTMLAnchorElement,
+      );
+      const noJavaScriptLinks = [...(fallbackLinks ?? [])];
+
+      for (const links of [desktopLinks, mobileLinks, noJavaScriptLinks]) {
+        expect(links.map((link) => link.textContent)).toEqual(expectedLabels);
+        expect(links.filter((link) => link.getAttribute("href") === servicesHref))
+          .toHaveLength(1);
+      }
+    },
+  );
 });
 
 describe("Navbar color tokens", () => {
@@ -155,6 +214,29 @@ describe("Navbar color tokens", () => {
 
     expect(spanishButton).toHaveClass("text-white", "hover:text-primary");
     expect(englishButton).toHaveClass("text-primary", "hover:text-primary");
+  });
+
+  it("keeps one approved translucent surface around the mobile panels", async () => {
+    const user = userEvent.setup();
+    renderNavbar();
+    const navbar = getRequiredElement<HTMLElement>("nav[data-nojs-navbar]");
+    const trigger = screen.getByRole("button", { name: "Abrir menú" });
+    const fallback = getRequiredElement<HTMLElement>("[data-nojs-mobile-nav]");
+
+    expect(navbar).toHaveClass(
+      "bg-black/70",
+      "backdrop-blur-xl",
+      "backdrop-saturate-150",
+    );
+    expect(fallback.parentElement).toBe(navbar);
+    expect(fallback).not.toHaveClass("bg-black/90", "backdrop-blur-sm");
+
+    await user.click(trigger);
+
+    const panel = getRequiredElement<HTMLElement>("#mobile-navigation-panel");
+    expect(panel.parentElement).toBe(navbar);
+    expect(panel).not.toHaveClass("bg-black/90", "backdrop-blur-sm");
+    expect(navbar.querySelectorAll('[class*="backdrop-blur"]')).toHaveLength(0);
   });
 });
 
