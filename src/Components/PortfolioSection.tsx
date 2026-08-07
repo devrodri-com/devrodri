@@ -97,13 +97,13 @@ export default function PortfolioSection() {
             >
               <motion.div
                 data-nojs-visible
-                className="group h-full overflow-hidden rounded-2xl bg-white/95 backdrop-blur border border-gray-200/80 shadow-md transition-shadow duration-300 motion-reduce:transition-none hover:-translate-y-1 hover:shadow-lg"
+                className="group flex h-full flex-col overflow-hidden rounded-2xl bg-white/95 backdrop-blur border border-gray-200/80 shadow-md transition-shadow duration-300 motion-reduce:transition-none hover:-translate-y-1 hover:shadow-lg"
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.45, delay: 0.05 * index }}
                 viewport={{ once: true }}
               >
-                <div className="aspect-[2/1] overflow-hidden bg-white">
+                <div className="aspect-[2/1] shrink-0 overflow-hidden bg-white">
                   <PortfolioCoverImage
                     cover={p.cover}
                     alt=""
@@ -119,7 +119,7 @@ export default function PortfolioSection() {
                       : { responsiveCover: p.responsiveCover })}
                   />
                 </div>
-                <div className="flex h-full flex-col gap-3 p-5 sm:p-6">
+                <div className="flex min-h-0 flex-1 flex-col gap-3 p-5 sm:p-6">
                   <div className="flex flex-wrap items-center gap-2">
                     {p.status !== undefined && (
                       <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-800">
