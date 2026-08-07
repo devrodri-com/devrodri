@@ -867,4 +867,27 @@ describe("portfolio architecture invariants", () => {
     expect(portfolioCardSource).not.toContain("truncate");
     expect(portfolioCardSource).not.toContain("w-full h-full object-center");
   });
+
+  it("keeps the Home featured card a real flex column so mobile actions stay visible", () => {
+    const portfolioSectionSource = fs.readFileSync(
+      path.join(projectRoot, "src/Components/PortfolioSection.tsx"),
+      "utf8",
+    );
+
+    expect(portfolioSectionSource).toContain(
+      'className="group flex h-full flex-col overflow-hidden rounded-2xl',
+    );
+    expect(portfolioSectionSource).toContain(
+      'className="aspect-[2/1] shrink-0 overflow-hidden bg-white"',
+    );
+    expect(portfolioSectionSource).toContain(
+      'className="flex min-h-0 flex-1 flex-col gap-3 p-5 sm:p-6"',
+    );
+    expect(portfolioSectionSource).not.toMatch(
+      /className="group h-full overflow-hidden rounded-2xl/,
+    );
+    expect(portfolioSectionSource).not.toContain(
+      'className="flex h-full flex-col gap-3 p-5 sm:p-6"',
+    );
+  });
 });
