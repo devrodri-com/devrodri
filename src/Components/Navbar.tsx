@@ -1,6 +1,12 @@
 // src/Components/Navbar.tsx
 
-import { useState, useEffect, useRef } from "react";
+import {
+  useCallback,
+  useState,
+  useEffect,
+  useRef,
+  type MouseEvent as ReactMouseEvent,
+} from "react";
 import translations from "../i18n";
 import { useLanguage } from "../i18n/useLanguage";
 import { FaBars, FaTimes } from "react-icons/fa";
@@ -11,6 +17,7 @@ import {
   getLocalizedPath,
 } from "../routes/siteRoutes";
 import type { Language } from "../i18n/language";
+import { userPrefersReducedMotion } from "../lib/navigationFocus";
 
 const MOBILE_NAVIGATION_ID = "mobile-navigation-panel";
 
@@ -86,6 +93,37 @@ export default function Navbar() {
     menuTriggerRef.current?.focus();
   };
 
+  const handleBrandClick = useCallback(
+    (event: ReactMouseEvent<HTMLAnchorElement>) => {
+      setMenuOpen(false);
+
+      const isModifiedClick =
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey;
+      if (isModifiedClick) return;
+
+      const isAlreadyCleanHome =
+        location.pathname === homePath &&
+        location.search === "" &&
+        location.hash === "";
+      if (!isAlreadyCleanHome) return;
+
+      // Already at the target Home: there is no pathname/hash change for
+      // NavigationFocusManager to react to, so scroll here directly instead
+      // of letting Link push a redundant history entry to the same URL.
+      event.preventDefault();
+      window.scrollTo({
+        behavior: userPrefersReducedMotion() ? "auto" : "smooth",
+        left: 0,
+        top: 0,
+      });
+    },
+    [homePath, location.hash, location.pathname, location.search],
+  );
+
   useEffect(() => {
     if (!menuOpen) return;
 
@@ -109,6 +147,7 @@ export default function Navbar() {
         {/* Nombre (link to Home) */}
         <Link
           to={homePath}
+          onClick={handleBrandClick}
           className="text-lg font-medium text-white tracking-normal leading-snug hover:opacity-80 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded"
           aria-label={language === "es" ? "DEVRODRI - Inicio" : "DEVRODRI - Home"}
         >

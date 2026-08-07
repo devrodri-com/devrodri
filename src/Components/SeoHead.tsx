@@ -18,7 +18,7 @@ export default function SeoHead() {
     : null;
 
   return (
-    <Helmet>
+    <Helmet defer={false}>
       <html lang={locale} />
       <title>{metadata.title}</title>
       <meta name="description" content={metadata.description} />

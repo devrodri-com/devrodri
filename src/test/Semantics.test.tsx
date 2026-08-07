@@ -208,7 +208,7 @@ describe("semantic navigation contracts", () => {
     await waitFor(() => expect(nextMain).toHaveFocus());
   });
 
-  it("focuses main for Portfolio, language and 404 route transitions", async () => {
+  it("focuses main for Portfolio and 404 route transitions, but keeps focus on the language toggle for locale switches", async () => {
     const user = userEvent.setup();
     const portfolioRender = renderApp("/portfolio");
     const main = await screen.findByRole("main");
@@ -219,9 +219,13 @@ describe("semantic navigation contracts", () => {
     await screen.findByRole("heading", { level: 1, name: "LEM-BOX" });
     await waitFor(() => expect(main).toHaveFocus());
 
-    await user.click(screen.getByRole("button", { name: "Cambiar a inglés" }));
+    const languageToggle = screen.getByRole("button", {
+      name: "Cambiar a inglés",
+    });
+    await user.click(languageToggle);
     await screen.findByRole("heading", { level: 1, name: "LEM-BOX" });
-    await waitFor(() => expect(main).toHaveFocus());
+    await waitFor(() => expect(languageToggle).toHaveFocus());
+    expect(main).not.toHaveFocus();
 
     portfolioRender.unmount();
     renderApp("/no-existe");
