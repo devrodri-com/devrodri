@@ -279,22 +279,38 @@ const expectedStructuredData = new Map([
   [
     "/",
     {
-      types: ["WebSite", "Person", "EducationalOccupationalCredential"],
+      types: [
+        "WebSite",
+        "Person",
+        "EducationalOccupationalCredential",
+        "Brand",
+        "ImageObject",
+      ],
       ids: [
         "https://www.devrodri.com/#website",
         "https://www.devrodri.com/#person",
         "https://www.devrodri.com/#ibm-full-stack-credential",
+        "https://www.devrodri.com/#brand",
+        "https://www.devrodri.com/#brand-logo",
       ],
     },
   ],
   [
     "/en",
     {
-      types: ["WebSite", "Person", "EducationalOccupationalCredential"],
+      types: [
+        "WebSite",
+        "Person",
+        "EducationalOccupationalCredential",
+        "Brand",
+        "ImageObject",
+      ],
       ids: [
         "https://www.devrodri.com/#website",
         "https://www.devrodri.com/#person",
         "https://www.devrodri.com/#ibm-full-stack-credential",
+        "https://www.devrodri.com/#brand",
+        "https://www.devrodri.com/#brand-logo",
       ],
     },
   ],
@@ -877,6 +893,52 @@ for (const route of expectedRoutes) {
         personContent.jobTitle,
         `${route.pathname}: Person jobTitle`,
       );
+      assert.deepEqual(person.sameAs, [
+        "https://github.com/devrodri-com",
+        "https://www.linkedin.com/in/rodrigo-opalo-b56685390/",
+      ]);
+      assert.deepEqual(person.brand, {
+        "@id": "https://www.devrodri.com/#brand",
+      });
+
+      const website = parsed["@graph"].find(
+        (node) => node["@type"] === "WebSite",
+      );
+      assert.deepEqual(website.creator, {
+        "@id": "https://www.devrodri.com/#person",
+      });
+      assert.deepEqual(website.publisher, {
+        "@id": "https://www.devrodri.com/#person",
+      });
+      assert.deepEqual(website.mainEntity, {
+        "@id": "https://www.devrodri.com/#person",
+      });
+      assert.deepEqual(website.about, {
+        "@id": "https://www.devrodri.com/#brand",
+      });
+
+      const brand = parsed["@graph"].find(
+        (node) => node["@type"] === "Brand",
+      );
+      assert.deepEqual(brand, {
+        "@type": "Brand",
+        "@id": "https://www.devrodri.com/#brand",
+        name: "devrodri",
+        url: "https://www.devrodri.com/",
+        owner: { "@id": "https://www.devrodri.com/#person" },
+        logo: { "@id": "https://www.devrodri.com/#brand-logo" },
+      });
+
+      const brandLogo = parsed["@graph"].find(
+        (node) => node["@type"] === "ImageObject",
+      );
+      assert.deepEqual(brandLogo, {
+        "@type": "ImageObject",
+        "@id": "https://www.devrodri.com/#brand-logo",
+        contentUrl:
+          "https://www.devrodri.com/brand/devrodri-wordmark-w1-black.svg",
+        encodingFormat: "image/svg+xml",
+      });
     }
     const hash = sha256Source(jsonLd);
     liveInlineScriptHashes.add(hash);
@@ -896,6 +958,10 @@ for (const route of expectedRoutes) {
       '"review"',
       '"operatingSystem"',
       "SoftwareApplication",
+      '"@type":"Organization"',
+      '"@type":"ProfessionalService"',
+      '"@type":"LocalBusiness"',
+      '"@type":"ProfilePage"',
     ]) {
       assert.ok(!jsonLd.includes(forbidden), `${route.pathname}: ${forbidden}`);
     }
@@ -912,6 +978,34 @@ for (const route of expectedRoutes) {
     );
     assert.ok((await stat(assetPath)).isFile(), `${assetReference} is missing`);
   }
+}
+
+const brandLogoBuffer = await readFile(
+  path.join(distDirectory, "brand", "devrodri-wordmark-w1-black.svg"),
+);
+assert.equal(brandLogoBuffer.byteLength, 3968, "brand logo byte length");
+assert.equal(
+  createHash("sha256").update(brandLogoBuffer).digest("hex"),
+  "3be5eaecfa9569652886dc812f4f34e6c9b1c5f4407ac6e476b16300fed9715f",
+  "brand logo SHA-256",
+);
+const brandLogoSource = brandLogoBuffer.toString("utf8");
+assert.equal(count(brandLogoSource, "<svg "), 1, "brand logo SVG element");
+assert.equal(count(brandLogoSource, "<path "), 1, "brand logo path element");
+assert.ok(brandLogoSource.includes('viewBox="0 0 8158.408 1584"'));
+for (const forbidden of [
+  "<text",
+  "font-family",
+  "font-face",
+  "<image",
+  "data:image",
+  "<script",
+  "javascript:",
+  "href=",
+  "xlink:href",
+  "<use",
+]) {
+  assert.ok(!brandLogoSource.toLowerCase().includes(forbidden), forbidden);
 }
 
 assert.equal(new Set(renderedOgImageUrls).size, 12, "unique OG image URLs");

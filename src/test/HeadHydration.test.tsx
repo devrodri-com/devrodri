@@ -1,9 +1,12 @@
 import type { FilledContext } from "react-helmet-async";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
+  BRAND_ID,
+  BRAND_LOGO_ID,
   PERSON_DESCRIPTIONS,
   PERSON_ID,
   PERSON_JOB_TITLES,
+  WEBSITE_ID,
 } from "../seo/structuredData";
 
 type JsonLdNode = { "@type": string; "@id"?: string } & Record<
@@ -13,27 +16,37 @@ type JsonLdNode = { "@type": string; "@id"?: string } & Record<
 type JsonLdGraph = { "@graph": JsonLdNode[] };
 
 const routes = [
-  { hasJsonLd: true, locale: "es" as const, pathname: "/" },
-  { hasJsonLd: true, locale: "en" as const, pathname: "/en" },
-  { hasJsonLd: false, locale: "es" as const, pathname: "/servicios" },
-  { hasJsonLd: false, locale: "en" as const, pathname: "/en/services" },
+  { graphKind: "home" as const, locale: "es" as const, pathname: "/" },
+  { graphKind: "home" as const, locale: "en" as const, pathname: "/en" },
   {
-    hasJsonLd: false,
+    graphKind: "lemBox" as const,
+    locale: "es" as const,
+    pathname: "/portfolio/lem-box",
+  },
+  {
+    graphKind: "lemBox" as const,
+    locale: "en" as const,
+    pathname: "/en/portfolio/lem-box",
+  },
+  { graphKind: null, locale: "es" as const, pathname: "/servicios" },
+  { graphKind: null, locale: "en" as const, pathname: "/en/services" },
+  {
+    graphKind: null,
     locale: "es" as const,
     pathname: "/servicios/sitios-web-para-empresas",
   },
   {
-    hasJsonLd: false,
+    graphKind: null,
     locale: "en" as const,
     pathname: "/en/services/business-websites",
   },
   {
-    hasJsonLd: false,
+    graphKind: null,
     locale: "es" as const,
     pathname: "/servicios/sistemas-a-medida",
   },
   {
-    hasJsonLd: false,
+    graphKind: null,
     locale: "en" as const,
     pathname: "/en/services/custom-software",
   },
@@ -56,6 +69,39 @@ function personNode(script: Element | undefined): JsonLdNode {
     throw new Error("Missing Person node");
   }
   return person;
+}
+
+function expectUniqueGraphNodes(
+  script: Element | undefined,
+  graphKind: "home" | "lemBox",
+) {
+  const graph = JSON.parse(script?.textContent ?? "null") as JsonLdGraph;
+  const expectedTypes = graphKind === "home"
+    ? [
+      "WebSite",
+      "Person",
+      "EducationalOccupationalCredential",
+      "Brand",
+      "ImageObject",
+    ]
+    : ["CreativeWork", "WebApplication"];
+
+  expect(graph["@graph"].map((node) => node["@type"])).toEqual(expectedTypes);
+  for (const type of expectedTypes) {
+    expect(graph["@graph"].filter((node) => node["@type"] === type))
+      .toHaveLength(1);
+  }
+
+  if (graphKind === "home") {
+    expect(graph["@graph"].find((node) => node["@type"] === "WebSite")?.["@id"])
+      .toBe(WEBSITE_ID);
+    expect(graph["@graph"].find((node) => node["@type"] === "Person")?.["@id"])
+      .toBe(PERSON_ID);
+    expect(graph["@graph"].find((node) => node["@type"] === "Brand")?.["@id"])
+      .toBe(BRAND_ID);
+    expect(graph["@graph"].find((node) => node["@type"] === "ImageObject")?.["@id"])
+      .toBe(BRAND_LOGO_ID);
+  }
 }
 
 // react-helmet-async decides once, at module load, whether it can use the
@@ -106,7 +152,8 @@ afterEach(() => {
 describe("prerendered head hydration", () => {
   it.each(routes)(
     "hydrates $pathname without duplicating the head or the Person node",
-    async ({ hasJsonLd, locale, pathname }) => {
+    async ({ graphKind, locale, pathname }) => {
+      const hasJsonLd = graphKind !== null;
       const { appHtml, head } = await renderPrerenderedHead(pathname);
 
       document.head.innerHTML = head;
@@ -116,10 +163,13 @@ describe("prerendered head hydration", () => {
       expect(prerenderedScripts).toHaveLength(hasJsonLd ? 1 : 0);
       if (hasJsonLd) {
         expect(prerenderedScripts[0]).toHaveAttribute("data-rh", "true");
-        const prerenderedPerson = personNode(prerenderedScripts[0]);
-        expect(prerenderedPerson["@id"]).toBe(PERSON_ID);
-        expect(prerenderedPerson.description).toBe(PERSON_DESCRIPTIONS[locale]);
-        expect(prerenderedPerson.jobTitle).toBe(PERSON_JOB_TITLES[locale]);
+        expectUniqueGraphNodes(prerenderedScripts[0], graphKind);
+        if (graphKind === "home") {
+          const prerenderedPerson = personNode(prerenderedScripts[0]);
+          expect(prerenderedPerson["@id"]).toBe(PERSON_ID);
+          expect(prerenderedPerson.description).toBe(PERSON_DESCRIPTIONS[locale]);
+          expect(prerenderedPerson.jobTitle).toBe(PERSON_JOB_TITLES[locale]);
+        }
       }
 
       const container = document.getElementById("root");
@@ -183,10 +233,13 @@ describe("prerendered head hydration", () => {
         const hydratedScripts = jsonLdScripts();
         expect(hydratedScripts).toHaveLength(hasJsonLd ? 1 : 0);
         if (hasJsonLd) {
-          const hydratedPerson = personNode(hydratedScripts[0]);
-          expect(hydratedPerson["@id"]).toBe(PERSON_ID);
-          expect(hydratedPerson.description).toBe(PERSON_DESCRIPTIONS[locale]);
-          expect(hydratedPerson.jobTitle).toBe(PERSON_JOB_TITLES[locale]);
+          expectUniqueGraphNodes(hydratedScripts[0], graphKind);
+          if (graphKind === "home") {
+            const hydratedPerson = personNode(hydratedScripts[0]);
+            expect(hydratedPerson["@id"]).toBe(PERSON_ID);
+            expect(hydratedPerson.description).toBe(PERSON_DESCRIPTIONS[locale]);
+            expect(hydratedPerson.jobTitle).toBe(PERSON_JOB_TITLES[locale]);
+          }
         }
       } finally {
         consoleError.mockRestore();

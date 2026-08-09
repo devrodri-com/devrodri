@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import { once } from "node:events";
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
@@ -339,6 +340,23 @@ try {
   }
   assert.ok(!sitemap.includes("/gracias"));
   assert.ok(!sitemap.includes("/en/thank-you"));
+
+  const brandLogoResponse = await request(
+    "/brand/devrodri-wordmark-w1-black.svg",
+  );
+  assert.equal(brandLogoResponse.status, 200, "brand logo");
+  assert.equal(
+    brandLogoResponse.headers.get("content-type"),
+    "image/svg+xml",
+    "brand logo content type",
+  );
+  const brandLogo = Buffer.from(await brandLogoResponse.arrayBuffer());
+  assert.equal(brandLogo.byteLength, 3968, "brand logo byte length");
+  assert.equal(
+    createHash("sha256").update(brandLogo).digest("hex"),
+    "3be5eaecfa9569652886dc812f4f34e6c9b1c5f4407ac6e476b16300fed9715f",
+    "brand logo SHA-256",
+  );
 
   const homeHtml = await readFile(
     path.join(projectRoot, "dist", "index.html"),

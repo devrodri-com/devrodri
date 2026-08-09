@@ -7,6 +7,10 @@ const SITE_URL = "https://www.devrodri.com/";
 
 export const WEBSITE_ID = "https://www.devrodri.com/#website";
 export const PERSON_ID = "https://www.devrodri.com/#person";
+export const BRAND_ID = "https://www.devrodri.com/#brand";
+export const BRAND_LOGO_ID = "https://www.devrodri.com/#brand-logo";
+export const BRAND_LOGO_URL =
+  "https://www.devrodri.com/brand/devrodri-wordmark-w1-black.svg";
 export const IBM_CREDENTIAL_ID =
   "https://www.devrodri.com/#ibm-full-stack-credential";
 export const LEM_BOX_WEB_APPLICATION_ID =
@@ -29,6 +33,9 @@ type WebSiteNode = {
   name: "devrodri";
   inLanguage: readonly ["es", "en"];
   creator: Reference;
+  publisher: Reference;
+  mainEntity: Reference;
+  about: Reference;
 };
 
 type PersonNode = {
@@ -44,6 +51,7 @@ type PersonNode = {
     "https://www.linkedin.com/in/rodrigo-opalo-b56685390/",
   ];
   hasCredential: Reference;
+  brand: Reference;
 };
 
 type CredentialNode = {
@@ -53,6 +61,22 @@ type CredentialNode = {
   credentialCategory: "Professional Certificate";
   url: typeof IBM_CREDLY_URL;
   description: string;
+};
+
+type BrandNode = {
+  "@type": "Brand";
+  "@id": typeof BRAND_ID;
+  name: "devrodri";
+  url: typeof SITE_URL;
+  owner: Reference;
+  logo: Reference;
+};
+
+type BrandLogoNode = {
+  "@type": "ImageObject";
+  "@id": typeof BRAND_LOGO_ID;
+  contentUrl: typeof BRAND_LOGO_URL;
+  encodingFormat: "image/svg+xml";
 };
 
 type CreativeWorkNode = {
@@ -80,7 +104,13 @@ type WebApplicationNode = {
 
 export type HomeStructuredData = {
   "@context": typeof SCHEMA_CONTEXT;
-  "@graph": readonly [WebSiteNode, PersonNode, CredentialNode];
+  "@graph": readonly [
+    WebSiteNode,
+    PersonNode,
+    CredentialNode,
+    BrandNode,
+    BrandLogoNode,
+  ];
 };
 
 export type LemBoxStructuredData = {
@@ -122,6 +152,9 @@ function createHomeStructuredData(locale: Language): HomeStructuredData {
         name: "devrodri",
         inLanguage: ["es", "en"],
         creator: reference(PERSON_ID),
+        publisher: reference(PERSON_ID),
+        mainEntity: reference(PERSON_ID),
+        about: reference(BRAND_ID),
       },
       {
         "@type": "Person",
@@ -136,6 +169,7 @@ function createHomeStructuredData(locale: Language): HomeStructuredData {
           "https://www.linkedin.com/in/rodrigo-opalo-b56685390/",
         ],
         hasCredential: reference(IBM_CREDENTIAL_ID),
+        brand: reference(BRAND_ID),
       },
       {
         "@type": "EducationalOccupationalCredential",
@@ -144,6 +178,20 @@ function createHomeStructuredData(locale: Language): HomeStructuredData {
         credentialCategory: "Professional Certificate",
         url: IBM_CREDLY_URL,
         description: credentialDescriptions[locale],
+      },
+      {
+        "@type": "Brand",
+        "@id": BRAND_ID,
+        name: "devrodri",
+        url: SITE_URL,
+        owner: reference(PERSON_ID),
+        logo: reference(BRAND_LOGO_ID),
+      },
+      {
+        "@type": "ImageObject",
+        "@id": BRAND_LOGO_ID,
+        contentUrl: BRAND_LOGO_URL,
+        encodingFormat: "image/svg+xml",
       },
     ],
   };
