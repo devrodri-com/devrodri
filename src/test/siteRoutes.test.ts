@@ -173,6 +173,57 @@ const lockedServicesMetadata = {
   },
 } as const;
 
+const approvedSocialImages = {
+  "home:es": {
+    path: "/img/og/brand-v1/home-es-1200x630.png",
+    alt: "devrodri, de Rodrigo Opalo: Sitios, sistemas y productos digitales a medida.",
+  },
+  "home:en": {
+    path: "/img/og/brand-v1/home-en-1200x630.png",
+    alt: "devrodri by Rodrigo Opalo: Custom websites, systems, and digital products.",
+  },
+  "portfolio:es": {
+    path: "/img/og/brand-v1/portfolio-es-1200x630.png",
+    alt: "Portfolio de devrodri: sitios, sistemas y productos digitales.",
+  },
+  "portfolio:en": {
+    path: "/img/og/brand-v1/portfolio-en-1200x630.png",
+    alt: "devrodri portfolio: websites, systems, and digital products.",
+  },
+  "lem-box:es": {
+    path: "/img/og/brand-v1/lem-box-es-1200x630.png",
+    alt: "Caso de estudio de LEM-BOX: una plataforma digital conectada a una operación logística real.",
+  },
+  "lem-box:en": {
+    path: "/img/og/brand-v1/lem-box-en-1200x630.png",
+    alt: "LEM-BOX case study: a digital platform connected to a real logistics operation.",
+  },
+  "services:es": {
+    path: "/img/og/brand-v1/services-es-1200x630.png",
+    alt: "Servicios de devrodri: sitios web, sistemas y automatización para empresas.",
+  },
+  "services:en": {
+    path: "/img/og/brand-v1/services-en-1200x630.png",
+    alt: "devrodri services: websites, custom systems, and automation for businesses.",
+  },
+  "business-websites:es": {
+    path: "/img/og/brand-v1/business-websites-es-1200x630.png",
+    alt: "Servicio de devrodri: sitios web profesionales para empresas.",
+  },
+  "business-websites:en": {
+    path: "/img/og/brand-v1/business-websites-en-1200x630.png",
+    alt: "devrodri service: professional websites for businesses.",
+  },
+  "custom-software:es": {
+    path: "/img/og/brand-v1/custom-software-es-1200x630.png",
+    alt: "Servicio de devrodri: sistemas y aplicaciones a medida para empresas.",
+  },
+  "custom-software:en": {
+    path: "/img/og/brand-v1/custom-software-en-1200x630.png",
+    alt: "devrodri service: custom software and web applications for businesses.",
+  },
+} as const;
+
 describe("public route registry", () => {
   it("contains the twelve indexable routes and two localized confirmation routes", () => {
     expect(
@@ -293,7 +344,7 @@ describe("public route registry", () => {
     }
   });
 
-  it("keeps the locked LEM-BOX metadata and social image unchanged", () => {
+  it("keeps the locked LEM-BOX title and canonical metadata", () => {
     for (const [routeKey, expected] of Object.entries(lockedLemBoxMetadata)) {
       const route = PUBLIC_ROUTES.find(
         (candidate) => candidate.routeKey === routeKey,
@@ -302,15 +353,48 @@ describe("public route registry", () => {
       expect(route).toBeDefined();
       expect(route?.metadata.title).toBe(expected.title);
       expect(route?.metadata.canonical).toBe(expected.canonical);
-      expect(route?.metadata.og?.image).toEqual({
-        alt: route?.locale === "es"
-          ? "Portada de LEM-BOX"
-          : "LEM-BOX cover",
-        height: 630,
-        url: "https://www.devrodri.com/img/lem-box-cover.png",
-        width: 1200,
-      });
+      expect(route?.metadata.robots).toBe("index, follow");
     }
+  });
+
+  it("publishes the exact approved localized social image for every indexable route", () => {
+    const indexableRoutes = PUBLIC_ROUTES.filter((route) =>
+      route.sitemap.include
+    );
+
+    expect(indexableRoutes).toHaveLength(12);
+    expect(indexableRoutes.filter((route) => route.locale === "es"))
+      .toHaveLength(6);
+    expect(indexableRoutes.filter((route) => route.locale === "en"))
+      .toHaveLength(6);
+
+    for (const [routeKey, expected] of Object.entries(approvedSocialImages)) {
+      const route = PUBLIC_ROUTES.find(
+        (candidate) => candidate.routeKey === routeKey,
+      );
+      const expectedImage = {
+        alt: expected.alt,
+        height: 630,
+        url: `${SITE_ORIGIN}${expected.path}`,
+        width: 1200,
+      };
+
+      expect(route).toBeDefined();
+      expect(route?.metadata.og?.image).toEqual(expectedImage);
+      expect(route?.metadata.twitter?.image).toEqual(expectedImage);
+      expect(route?.metadata.twitter?.image).toEqual(route?.metadata.og?.image);
+      expect(expectedImage.url.startsWith(`${SITE_ORIGIN}/`)).toBe(true);
+      expect(expectedImage.url).not.toContain(".vercel.app");
+    }
+
+    const imageUrls = indexableRoutes.map((route) =>
+      route.metadata.og?.image.url
+    );
+    expect(new Set(imageUrls).size).toBe(12);
+    expect(imageUrls.some((url) => url?.endsWith("/social-preview.png")))
+      .toBe(false);
+    expect(imageUrls.some((url) => url?.endsWith("/lem-box-cover.png")))
+      .toBe(false);
   });
 
   it("maps each page to its equivalent locale without regex routing", () => {

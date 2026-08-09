@@ -870,7 +870,7 @@ describe("application routing", () => {
           document.head.querySelector('meta[property="og:image"]'),
         ).toHaveAttribute(
           "content",
-          "https://www.devrodri.com/img/lem-box-cover.png",
+          "https://www.devrodri.com/img/og/brand-v1/lem-box-es-1200x630.png",
         );
         expect(
           document.head.querySelector('meta[name="robots"]'),

@@ -11,145 +11,205 @@ const expectedRoutes = [
     pathname: "/",
     file: "index.html",
     lang: "es",
+    ogImage: {
+      path: "/img/og/brand-v1/home-es-1200x630.png",
+      alt: "devrodri, de Rodrigo Opalo: Sitios, sistemas y productos digitales a medida.",
+      sha256: "8b9de91627cecabd980bf49052308aa1b0daabeb1374a00e454eb07b7fb81934",
+    },
     title: "Rodrigo Opalo | Sitios, sistemas y automatización",
     description:
       "Desarrollo sitios, aplicaciones y sistemas a medida, además de automatizaciones e integraciones orientadas a objetivos reales de negocio.",
     content: "Sitios web que comunican y convierten.",
     metadataHash:
-      "5ac1c1ca09ea94009f771a4e855df20938c2095f9e2e1e77f5bfa9ef75d6badb",
+      "aca8bbb6ec446419f199cc7fa32df16e3f818f64f9a0b21537f6f6d566e9f992",
     noJavaScriptMarkers: 17,
   },
   {
     pathname: "/portfolio",
     file: "portfolio/index.html",
     lang: "es",
+    ogImage: {
+      path: "/img/og/brand-v1/portfolio-es-1200x630.png",
+      alt: "Portfolio de devrodri: sitios, sistemas y productos digitales.",
+      sha256: "adff8e5429a3139b6087a74a8e522e6d9c64657fdc1f60ee6d90abaf5624d0bf",
+    },
     title: "Portfolio: sitios, sistemas y productos | Rodrigo Opalo",
     description:
       "Explorá proyectos de sistemas, sitios web, e-commerce y estrategia de marca, con detalles de alcance, rol y tecnología.",
     content: "Algunos trabajos",
     metadataHash:
-      "cd512b5198897bcb9be4842be31e3abeb34c90dfffa40aa1f8cb1f2ac235df64",
+      "e71cd38df788eae0835cd411fed71d20e75aec9e2b8659841559758753416cc7",
     noJavaScriptMarkers: 9,
   },
   {
     pathname: "/portfolio/lem-box",
     file: "portfolio/lem-box/index.html",
     lang: "es",
+    ogImage: {
+      path: "/img/og/brand-v1/lem-box-es-1200x630.png",
+      alt: "Caso de estudio de LEM-BOX: una plataforma digital conectada a una operación logística real.",
+      sha256: "86b91da86ef4815db42894319737b8638e7cfa0f4dc5fd549cecd4d9b8e43d53",
+    },
     title: "LEM-BOX: plataforma logística y producto propio | Rodrigo Opalo",
     description:
       "Caso de producto propio: un ecosistema digital conectado con la operación logística de LEM-BOX en Estados Unidos, Uruguay y Argentina.",
     content: "Un producto conectado a una operación real",
     metadataHash:
-      "15285d851d28855ec6ec1ea965d8f7d8f82eb32fb35bfded55e17a916a15929b",
+      "10ae192625ddec2c5603c58a455d99c251190809b112b79b5aab8c7f9aec3e71",
     noJavaScriptMarkers: 1,
   },
   {
     pathname: "/en",
     file: "en/index.html",
     lang: "en",
+    ogImage: {
+      path: "/img/og/brand-v1/home-en-1200x630.png",
+      alt: "devrodri by Rodrigo Opalo: Custom websites, systems, and digital products.",
+      sha256: "ca829838b11b8aabc12e68e6bc955f533cf267175d95997ddd8caf82d99d8537",
+    },
     title: "Rodrigo Opalo | Websites, systems and automation",
     description:
       "I build custom websites, applications, and systems, plus automations and integrations aligned with real business goals.",
     content: "Websites built to communicate and convert.",
     metadataHash:
-      "4efb4c65eb51e9c52f20d5b49072a135ad73791dc89e81facae035c68a86a647",
+      "261dab1d1914a931c67830443b56daa50d0958bfd068cd5cfbb5aa775867654d",
     noJavaScriptMarkers: 17,
   },
   {
     pathname: "/en/portfolio",
     file: "en/portfolio/index.html",
     lang: "en",
+    ogImage: {
+      path: "/img/og/brand-v1/portfolio-en-1200x630.png",
+      alt: "devrodri portfolio: websites, systems, and digital products.",
+      sha256: "dce128997291a0d2094a38e8083327e72c04636a32a59212ccdcc5a8b58df56e",
+    },
     title: "Portfolio: websites, systems and products | Rodrigo Opalo",
     description:
       "Explore systems, websites, e-commerce, and brand strategy projects with details on scope, role, and technology.",
     content: "Some Work",
     metadataHash:
-      "12917e19570724e638b29b068da29f0122c5fb8b576adfa55bd748dced4a35f9",
+      "c1ac372e3b0249fa16ff041e2e97b7bde63aa062a851f287ea2aebec92d0549b",
     noJavaScriptMarkers: 9,
   },
   {
     pathname: "/en/portfolio/lem-box",
     file: "en/portfolio/lem-box/index.html",
     lang: "en",
+    ogImage: {
+      path: "/img/og/brand-v1/lem-box-en-1200x630.png",
+      alt: "LEM-BOX case study: a digital platform connected to a real logistics operation.",
+      sha256: "3efe5980a6ddb71abf6cee9743b22fcdce026ed8be033a9b80495ac929d83b09",
+    },
     title: "LEM-BOX: logistics platform and own product | Rodrigo Opalo",
     description:
       "Own-product case study: a digital ecosystem connected to LEM-BOX's logistics operation across the United States, Uruguay, and Argentina.",
     content: "A product connected to a real operation",
     metadataHash:
-      "a82aa0233255e55dded2e20c18b752f88b22965f1692be24dfe75fa34319a27c",
+      "7cef537d87cf4f20c6ea73146f1e5b119cd0e60885cc957d12e231276d1676a7",
     noJavaScriptMarkers: 1,
   },
   {
     pathname: "/servicios",
     file: "servicios/index.html",
     lang: "es",
+    ogImage: {
+      path: "/img/og/brand-v1/services-es-1200x630.png",
+      alt: "Servicios de devrodri: sitios web, sistemas y automatización para empresas.",
+      sha256: "61319523d564908a7906166c79732163c85145d790654de8904b40d4a3ce93fb",
+    },
     title: "Servicios de desarrollo web y software a medida | Rodrigo Opalo",
     description:
       "Desarrollo sitios web profesionales, sistemas a medida y automatizaciones para empresas. Trabajo directo conmigo, en español e inglés, desde el sur de Florida y en remoto para Estados Unidos y Latinoamérica.",
     content: "Sitios web, sistemas y automatización para empresas.",
     metadataHash:
-      "c028ef27f8fadbcb764f357884105455a8c3fa625c78f14ba2f2b70aa4d9d71c",
+      "71305031c1b44c17f10d39782992c2c353b8bc134ba2506a6dd35b321ed7cae1",
     noJavaScriptMarkers: 1,
   },
   {
     pathname: "/en/services",
     file: "en/services/index.html",
     lang: "en",
+    ogImage: {
+      path: "/img/og/brand-v1/services-en-1200x630.png",
+      alt: "devrodri services: websites, custom systems, and automation for businesses.",
+      sha256: "02b8fd91fb876a86877b58b19fc35adb10090d897698d264d5dc06f66609b789",
+    },
     title: "Web development and custom software services | Rodrigo Opalo",
     description:
       "I build business websites, custom software, and automations for companies. You work directly with me, in English or Spanish, from South Florida and remotely across the United States and Latin America.",
     content: "Websites, custom systems, and automation for businesses.",
     metadataHash:
-      "a739a0d0ae391f63797c2a285e3fe3d43b44afe75b9fb8bda18413b8dffb07df",
+      "d1faf7474c730bd0f8ff1ef1339c2df468ec9289c362f6825f4092c9bf9366d5",
     noJavaScriptMarkers: 1,
   },
   {
     pathname: "/servicios/sitios-web-para-empresas",
     file: "servicios/sitios-web-para-empresas/index.html",
     lang: "es",
+    ogImage: {
+      path: "/img/og/brand-v1/business-websites-es-1200x630.png",
+      alt: "Servicio de devrodri: sitios web profesionales para empresas.",
+      sha256: "33b2c7eaef4a1fac65585678735254094c806a3d8d90b23779c05b9cc902282e",
+    },
     title: "Sitios web profesionales para empresas | Rodrigo Opalo",
     description:
       "Diseño y desarrollo de sitios web profesionales para empresas: institucionales, landings y catálogos bilingües, rápidos, con base técnica SEO y formularios o WhatsApp para captar consultas.",
     content: "Sitios web profesionales para empresas.",
     metadataHash:
-      "c187c60f21e06be64ab215566532b98faab3d813c7517ac88ab1a1c0e8ce4627",
+      "66c30fb7c69684a1fff5459c5009955440d4bfbfe74b6439168ad39c4485641a",
     noJavaScriptMarkers: 1,
   },
   {
     pathname: "/en/services/business-websites",
     file: "en/services/business-websites/index.html",
     lang: "en",
+    ogImage: {
+      path: "/img/og/brand-v1/business-websites-en-1200x630.png",
+      alt: "devrodri service: professional websites for businesses.",
+      sha256: "a9ddbeec5d98be6dd82b7dd7143b0732c47d83d3f17a41dd4e91a1140a3176a1",
+    },
     title: "Business website design and development | Rodrigo Opalo",
     description:
       "Custom website development for businesses: institutional sites, landing pages, and bilingual catalogs that load fast, with a technical SEO foundation and forms or WhatsApp to capture inquiries.",
     content: "Professional websites for businesses.",
     metadataHash:
-      "40cbbc7774f39ffa5be5a080634a209a1bb47eb154c711f90592d554a3b26176",
+      "6a606f76406b583b1c735fe20b20195782066101f4af3becb1d25d2585c3afd7",
     noJavaScriptMarkers: 1,
   },
   {
     pathname: "/servicios/sistemas-a-medida",
     file: "servicios/sistemas-a-medida/index.html",
     lang: "es",
+    ogImage: {
+      path: "/img/og/brand-v1/custom-software-es-1200x630.png",
+      alt: "Servicio de devrodri: sistemas y aplicaciones a medida para empresas.",
+      sha256: "ed64cd69bd1465b52ca77f7f60217cd940f6989516a96aa87a21f8f418edde70",
+    },
     title: "Sistemas y aplicaciones a medida para empresas | Rodrigo Opalo",
     description:
       "Desarrollo de software a medida: aplicaciones web, portales de clientes y paneles internos con autenticación, roles, datos e integraciones. Implementación por etapas para empresas de Estados Unidos y Latinoamérica.",
     content: "Sistemas y aplicaciones a medida para empresas.",
     metadataHash:
-      "4f8aa5c638a7a52dca18a493c6a12d856e6cdf959751ad1f2427596ebf749f12",
+      "a959ab051f322bf2d88f83a445313008122c2ee07f6e5201581b7e1ee4619a6e",
     noJavaScriptMarkers: 1,
   },
   {
     pathname: "/en/services/custom-software",
     file: "en/services/custom-software/index.html",
     lang: "en",
+    ogImage: {
+      path: "/img/og/brand-v1/custom-software-en-1200x630.png",
+      alt: "devrodri service: custom software and web applications for businesses.",
+      sha256: "dbde14efcba9d1583abbde0c8b0cd0a913266907cecbe4385cd1fa598c400056",
+    },
     title:
       "Custom software and web applications for businesses | Rodrigo Opalo",
     description:
       "Custom software development: web applications, client portals, and internal panels with authentication, roles, data, and integrations. Phased delivery for businesses in the United States and Latin America.",
     content: "Custom software and web applications for businesses.",
     metadataHash:
-      "094a6a33e91d01670b3b638fc24aff51161f035ed0cd849ba695caaa0feabbba",
+      "758920283757d7467cbb2916a71e38dc19b626655cb6d05562716ed2b581fde0",
     noJavaScriptMarkers: 1,
   },
 ];
@@ -580,11 +640,30 @@ assert.ok(!vercelConfigurationSource.includes(previousNoJavaScriptStyleHash));
 
 const routeDocuments = [];
 const routeDocumentHashes = [];
+const renderedOgImageUrls = [];
+const renderedOgImageHashes = [];
 const liveInlineScriptHashes = new Set();
 const noJavaScriptDocuments = [];
 let prerenderedNoJavaScriptMarkerTotal = 0;
 for (const route of expectedRoutes) {
   const html = await readFile(path.join(distDirectory, route.file), "utf8");
+  const absoluteOgImageUrl = canonical(route.ogImage.path);
+  const ogImageBuffer = await readFile(
+    path.join(distDirectory, route.ogImage.path.replace(/^\/+/, "")),
+  );
+  const ogImageHash = createHash("sha256").update(ogImageBuffer).digest("hex");
+  renderedOgImageUrls.push(absoluteOgImageUrl);
+  renderedOgImageHashes.push(ogImageHash);
+  assert.deepEqual(
+    [...ogImageBuffer.subarray(0, 8)],
+    [137, 80, 78, 71, 13, 10, 26, 10],
+    `${route.pathname}: PNG signature`,
+  );
+  assert.equal(ogImageBuffer.readUInt32BE(16), 1200, `${route.pathname}: width`);
+  assert.equal(ogImageBuffer.readUInt32BE(20), 630, `${route.pathname}: height`);
+  assert.equal(ogImageBuffer[24], 8, `${route.pathname}: 8-bit PNG`);
+  assert.equal(ogImageBuffer[25], 2, `${route.pathname}: opaque RGB PNG`);
+  assert.equal(ogImageHash, route.ogImage.sha256, `${route.pathname}: SHA-256`);
   routeDocuments.push(html);
   noJavaScriptDocuments.push(html);
   routeDocumentHashes.push(
@@ -619,10 +698,32 @@ for (const route of expectedRoutes) {
     `${route.pathname}: og:description`,
   );
   assert.ok(html.includes(`property="og:url" content="${canonical(route.pathname)}"`));
-  assert.ok(html.includes('property="og:image"'));
+  assert.ok(html.includes('property="og:site_name" content="devrodri"'));
+  assert.ok(
+    html.includes(
+      `property="og:locale" content="${route.lang === "es" ? "es_ES" : "en_US"}"`,
+    ),
+    `${route.pathname}: og:locale`,
+  );
+  assert.ok(
+    html.includes(
+      `property="og:locale:alternate" content="${route.lang === "es" ? "en_US" : "es_ES"}"`,
+    ),
+    `${route.pathname}: og:locale:alternate`,
+  );
+  assert.ok(
+    html.includes(`property="og:image" content="${absoluteOgImageUrl}"`),
+    `${route.pathname}: og:image`,
+  );
   assert.ok(html.includes('property="og:image:width" content="1200"'));
   assert.ok(html.includes('property="og:image:height" content="630"'));
-  assert.ok(html.includes('property="og:image:alt"'));
+  assert.ok(html.includes('property="og:image:type" content="image/png"'));
+  assert.ok(
+    html.includes(
+      `property="og:image:alt" content="${escapeHtmlAttribute(route.ogImage.alt)}"`,
+    ),
+    `${route.pathname}: og:image:alt`,
+  );
   assert.ok(html.includes('name="twitter:card" content="summary_large_image"'));
   assert.ok(html.includes('name="twitter:title"'));
   assert.ok(
@@ -636,8 +737,20 @@ for (const route of expectedRoutes) {
     `${route.pathname}: twitter:description`,
   );
   assert.ok(html.includes('name="twitter:description"'));
-  assert.ok(html.includes('name="twitter:image"'));
-  assert.ok(html.includes('name="twitter:image:alt"'));
+  assert.ok(
+    html.includes(`name="twitter:image" content="${absoluteOgImageUrl}"`),
+    `${route.pathname}: twitter:image`,
+  );
+  assert.ok(
+    html.includes(
+      `name="twitter:image:alt" content="${escapeHtmlAttribute(route.ogImage.alt)}"`,
+    ),
+    `${route.pathname}: twitter:image:alt`,
+  );
+  assert.ok(
+    !helmetMetadataSource(html).includes(".vercel.app"),
+    `${route.pathname}: preview URL in metadata`,
+  );
   assert.equal(count(html, "<title"), 1);
   assert.equal(count(html, 'name="description"'), 1);
   assert.equal(count(html, 'name="robots"'), 1);
@@ -647,10 +760,14 @@ for (const route of expectedRoutes) {
     'property="og:title"',
     'property="og:description"',
     'property="og:type"',
+    'property="og:locale"',
+    'property="og:locale:alternate"',
+    'property="og:site_name"',
     'property="og:url"',
     'property="og:image"',
     'property="og:image:width"',
     'property="og:image:height"',
+    'property="og:image:type"',
     'property="og:image:alt"',
     'name="twitter:card"',
     'name="twitter:title"',
@@ -796,6 +913,23 @@ for (const route of expectedRoutes) {
     assert.ok((await stat(assetPath)).isFile(), `${assetReference} is missing`);
   }
 }
+
+assert.equal(new Set(renderedOgImageUrls).size, 12, "unique OG image URLs");
+assert.equal(new Set(renderedOgImageHashes).size, 12, "unique OG image hashes");
+assert.equal(expectedRoutes.filter((route) => route.lang === "es").length, 6);
+assert.equal(expectedRoutes.filter((route) => route.lang === "en").length, 6);
+assert.ok(
+  renderedOgImageUrls.every((url) => url.startsWith("https://www.devrodri.com/")),
+  "OG images use the canonical production origin",
+);
+assert.ok(
+  renderedOgImageUrls.every(
+    (url) =>
+      !url.endsWith("/img/social-preview.png") &&
+      !url.endsWith("/img/lem-box-cover.png"),
+  ),
+  "indexable OG images do not use legacy assets",
+);
 
 for (const route of expectedThankYouRoutes) {
   const html = await readFile(path.join(distDirectory, route.file), "utf8");
