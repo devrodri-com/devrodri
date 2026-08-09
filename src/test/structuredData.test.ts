@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
+  BRAND_ID,
+  BRAND_LOGO_ID,
+  BRAND_LOGO_URL,
   IBM_CREDENTIAL_ID,
   IBM_CREDLY_URL,
   LEM_BOX_CASE_STUDY_IDS,
@@ -36,6 +39,13 @@ const forbiddenLemBoxProperties = [
   "operatingSystem",
 ] as const;
 
+const forbiddenSchemaTypes = [
+  "Organization",
+  "ProfessionalService",
+  "LocalBusiness",
+  "ProfilePage",
+] as const;
+
 function graphTypes(value: { "@graph": readonly { "@type": string }[] }) {
   return value["@graph"].map((node) => node["@type"]);
 }
@@ -70,7 +80,7 @@ describe("route structured data", () => {
     "publishes one connected, prudent Home graph in %s",
     (locale) => {
       const graph = STRUCTURED_DATA_BY_ROUTE[`home:${locale}`];
-      const [website, person, credential] = graph["@graph"];
+      const [website, person, credential, brand, brandLogo] = graph["@graph"];
 
       expect(JSON.parse(JSON.stringify(graph))).toEqual(graph);
       expect(graph["@context"]).toBe("https://schema.org");
@@ -78,6 +88,8 @@ describe("route structured data", () => {
         "WebSite",
         "Person",
         "EducationalOccupationalCredential",
+        "Brand",
+        "ImageObject",
       ]);
       expect(website).toEqual({
         "@type": "WebSite",
@@ -86,6 +98,9 @@ describe("route structured data", () => {
         name: "devrodri",
         inLanguage: ["es", "en"],
         creator: { "@id": PERSON_ID },
+        publisher: { "@id": PERSON_ID },
+        mainEntity: { "@id": PERSON_ID },
+        about: { "@id": BRAND_ID },
       });
       expect(person).toEqual({
         "@type": "Person",
@@ -100,6 +115,7 @@ describe("route structured data", () => {
           "https://www.linkedin.com/in/rodrigo-opalo-b56685390/",
         ],
         hasCredential: { "@id": IBM_CREDENTIAL_ID },
+        brand: { "@id": BRAND_ID },
       });
       expect(person.jobTitle).toBe(
         locale === "es"
@@ -111,24 +127,50 @@ describe("route structured data", () => {
           ? "Creo sitios, aplicaciones y sistemas a medida combinando estrategia, experiencia de usuario y tecnología. También implemento automatizaciones, integraciones y asistentes con IA para conectar herramientas, optimizar procesos y reducir trabajo manual."
           : "I create custom websites, applications, and systems by combining strategy, user experience, and technology. I also implement automations, integrations, and AI assistants to connect tools, optimize processes, and reduce manual work.",
       );
-      expect(credential).toMatchObject({
+      expect(credential).toEqual({
         "@type": "EducationalOccupationalCredential",
         "@id": IBM_CREDENTIAL_ID,
         name: "IBM Full Stack Software Developer Professional Certificate (V5)",
         credentialCategory: "Professional Certificate",
         url: IBM_CREDLY_URL,
+        description:
+          locale === "es"
+            ? "Certificación profesional verificada por IBM Skills Network y Credly."
+            : "Professional certification verified by IBM Skills Network and Credly.",
       });
       expect(credential.description).toBe(
         locale === "es"
           ? "Certificación profesional verificada por IBM Skills Network y Credly."
           : "Professional certification verified by IBM Skills Network and Credly.",
       );
+      expect(brand).toEqual({
+        "@type": "Brand",
+        "@id": BRAND_ID,
+        name: "devrodri",
+        url: "https://www.devrodri.com/",
+        owner: { "@id": PERSON_ID },
+        logo: { "@id": BRAND_LOGO_ID },
+      });
+      expect(brandLogo).toEqual({
+        "@type": "ImageObject",
+        "@id": BRAND_LOGO_ID,
+        contentUrl: BRAND_LOGO_URL,
+        encodingFormat: "image/svg+xml",
+      });
+
+      for (const type of ["WebSite", "Person", "Brand", "ImageObject"]) {
+        expect(graph["@graph"].filter((node) => node["@type"] === type))
+          .toHaveLength(1);
+      }
 
       const source = JSON.stringify(graph);
       expect(source).not.toContain("Meta React");
       expect(source).not.toContain("https://www.ibm.com/skills-network");
       for (const property of forbiddenHomeProperties) {
         expect(source).not.toContain(`"${property}"`);
+      }
+      for (const type of forbiddenSchemaTypes) {
+        expect(source).not.toContain(`"@type":"${type}"`);
       }
     },
   );
@@ -175,6 +217,18 @@ describe("route structured data", () => {
       expect(source).not.toContain("SoftwareApplication");
       expect(source).not.toContain("Android");
       expect(source).not.toContain("iOS");
+      for (const type of forbiddenSchemaTypes) {
+        expect(source).not.toContain(`"@type":"${type}"`);
+      }
     },
   );
+
+  it("keeps the ES and EN LEM-BOX graphs serialized exactly", () => {
+    expect(JSON.stringify(STRUCTURED_DATA_BY_ROUTE["lem-box:es"])).toBe(
+      '{"@context":"https://schema.org","@graph":[{"@type":"CreativeWork","@id":"https://www.devrodri.com/portfolio/lem-box#case-study","name":"LEM-BOX: plataforma logística y producto propio","description":"LEM-BOX es un negocio logístico con más de 10 años de trayectoria. Su ecosistema digital actual forma parte de una evolución más reciente y conecta los sitios comerciales de Uruguay y Argentina con una plataforma central utilizada por clientes, partners y el equipo operativo.","url":"https://www.devrodri.com/portfolio/lem-box","image":"https://www.devrodri.com/img/lem-box-cover.png","inLanguage":"es","author":{"@id":"https://www.devrodri.com/#person"},"isPartOf":{"@id":"https://www.devrodri.com/#website"},"about":{"@id":"https://www.devrodri.com/#lem-box-web-application"}},{"@type":"WebApplication","@id":"https://www.devrodri.com/#lem-box-web-application","name":"LEM-BOX","url":"https://lem-box.com","description":"Diseñé y desarrollé una plataforma central conectada con las superficies comerciales de cada mercado. El resultado es un ecosistema donde la información acompaña el recorrido desde la captación hasta la operación y el seguimiento.","applicationCategory":"BusinessApplication","creator":{"@id":"https://www.devrodri.com/#person"}}]}',
+    );
+    expect(JSON.stringify(STRUCTURED_DATA_BY_ROUTE["lem-box:en"])).toBe(
+      '{"@context":"https://schema.org","@graph":[{"@type":"CreativeWork","@id":"https://www.devrodri.com/en/portfolio/lem-box#case-study","name":"LEM-BOX: logistics platform and own product","description":"LEM-BOX is a logistics business with more than 10 years of experience. Its current digital ecosystem is part of a more recent evolution and connects the commercial websites for Uruguay and Argentina with a central platform used by customers, partners, and the operations team.","url":"https://www.devrodri.com/en/portfolio/lem-box","image":"https://www.devrodri.com/img/lem-box-cover.png","inLanguage":"en","author":{"@id":"https://www.devrodri.com/#person"},"isPartOf":{"@id":"https://www.devrodri.com/#website"},"about":{"@id":"https://www.devrodri.com/#lem-box-web-application"}},{"@type":"WebApplication","@id":"https://www.devrodri.com/#lem-box-web-application","name":"LEM-BOX","url":"https://lem-box.com","description":"I designed and developed a central platform connected to the commercial surfaces of each market. The result is an ecosystem where information follows the journey from acquisition through operations and tracking.","applicationCategory":"BusinessApplication","creator":{"@id":"https://www.devrodri.com/#person"}}]}',
+    );
+  });
 });
