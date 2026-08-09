@@ -53,7 +53,13 @@ export default function SeoHead() {
         />
       )}
       {metadata.og !== null && (
-        <meta property="og:site_name" content="Rodrigo Opalo" />
+        <meta
+          property="og:locale:alternate"
+          content={route?.locale === "en" ? "es_ES" : "en_US"}
+        />
+      )}
+      {metadata.og !== null && (
+        <meta property="og:site_name" content="devrodri" />
       )}
       {metadata.og !== null && (
         <meta property="og:url" content={metadata.og.url} />
@@ -72,6 +78,9 @@ export default function SeoHead() {
           property="og:image:height"
           content={String(metadata.og.image.height)}
         />
+      )}
+      {metadata.og !== null && (
+        <meta property="og:image:type" content="image/png" />
       )}
       {metadata.og !== null && (
         <meta property="og:image:alt" content={metadata.og.image.alt} />

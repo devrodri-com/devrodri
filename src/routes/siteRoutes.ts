@@ -112,15 +112,17 @@ const routeDefinitions = [
       es: {
         title: translations.es.seo.title,
         description: translations.es.seo.description,
-        ogImagePath: "/img/social-preview.png",
-        ogImageAlt: "Vista previa de devrodri",
+        ogImagePath: "/img/og/brand-v1/home-es-1200x630.png",
+        ogImageAlt:
+          "devrodri, de Rodrigo Opalo: Sitios, sistemas y productos digitales a medida.",
         ogType: "website",
       },
       en: {
         title: translations.en.seo.title,
         description: translations.en.seo.description,
-        ogImagePath: "/img/social-preview.png",
-        ogImageAlt: "devrodri social preview",
+        ogImagePath: "/img/og/brand-v1/home-en-1200x630.png",
+        ogImageAlt:
+          "devrodri by Rodrigo Opalo: Custom websites, systems, and digital products.",
         ogType: "website",
       },
     },
@@ -132,15 +134,17 @@ const routeDefinitions = [
       es: {
         title: translations.es.portfolio.seo.title,
         description: translations.es.portfolio.seo.description,
-        ogImagePath: "/img/social-preview.png",
-        ogImageAlt: "Vista previa del portfolio de Rodrigo Opalo",
+        ogImagePath: "/img/og/brand-v1/portfolio-es-1200x630.png",
+        ogImageAlt:
+          "Portfolio de devrodri: sitios, sistemas y productos digitales.",
         ogType: "website",
       },
       en: {
         title: translations.en.portfolio.seo.title,
         description: translations.en.portfolio.seo.description,
-        ogImagePath: "/img/social-preview.png",
-        ogImageAlt: "Rodrigo Opalo portfolio preview",
+        ogImagePath: "/img/og/brand-v1/portfolio-en-1200x630.png",
+        ogImageAlt:
+          "devrodri portfolio: websites, systems, and digital products.",
         ogType: "website",
       },
     },
@@ -155,15 +159,17 @@ const routeDefinitions = [
       es: {
         title: lemBoxCase.caseStudy.content.es.seo.title,
         description: lemBoxCase.caseStudy.content.es.seo.description,
-        ogImagePath: lemBoxCase.cover,
-        ogImageAlt: lemBoxCase.caseStudy.content.es.header.coverAlt,
+        ogImagePath: "/img/og/brand-v1/lem-box-es-1200x630.png",
+        ogImageAlt:
+          "Caso de estudio de LEM-BOX: una plataforma digital conectada a una operación logística real.",
         ogType: "article",
       },
       en: {
         title: lemBoxCase.caseStudy.content.en.seo.title,
         description: lemBoxCase.caseStudy.content.en.seo.description,
-        ogImagePath: lemBoxCase.cover,
-        ogImageAlt: lemBoxCase.caseStudy.content.en.header.coverAlt,
+        ogImagePath: "/img/og/brand-v1/lem-box-en-1200x630.png",
+        ogImageAlt:
+          "LEM-BOX case study: a digital platform connected to a real logistics operation.",
         ogType: "article",
       },
     },
@@ -175,15 +181,17 @@ const routeDefinitions = [
       es: {
         title: translations.es.servicesPages.hub.seo.title,
         description: translations.es.servicesPages.hub.seo.description,
-        ogImagePath: "/img/social-preview.png",
-        ogImageAlt: "Vista previa de los servicios de devrodri",
+        ogImagePath: "/img/og/brand-v1/services-es-1200x630.png",
+        ogImageAlt:
+          "Servicios de devrodri: sitios web, sistemas y automatización para empresas.",
         ogType: "website",
       },
       en: {
         title: translations.en.servicesPages.hub.seo.title,
         description: translations.en.servicesPages.hub.seo.description,
-        ogImagePath: "/img/social-preview.png",
-        ogImageAlt: "devrodri services preview",
+        ogImagePath: "/img/og/brand-v1/services-en-1200x630.png",
+        ogImageAlt:
+          "devrodri services: websites, custom systems, and automation for businesses.",
         ogType: "website",
       },
     },
@@ -198,15 +206,17 @@ const routeDefinitions = [
       es: {
         title: translations.es.servicesPages.web.seo.title,
         description: translations.es.servicesPages.web.seo.description,
-        ogImagePath: "/img/social-preview.png",
-        ogImageAlt: "Vista previa del servicio de sitios web para empresas",
+        ogImagePath: "/img/og/brand-v1/business-websites-es-1200x630.png",
+        ogImageAlt:
+          "Servicio de devrodri: sitios web profesionales para empresas.",
         ogType: "website",
       },
       en: {
         title: translations.en.servicesPages.web.seo.title,
         description: translations.en.servicesPages.web.seo.description,
-        ogImagePath: "/img/social-preview.png",
-        ogImageAlt: "Business website development service preview",
+        ogImagePath: "/img/og/brand-v1/business-websites-en-1200x630.png",
+        ogImageAlt:
+          "devrodri service: professional websites for businesses.",
         ogType: "website",
       },
     },
@@ -221,15 +231,17 @@ const routeDefinitions = [
       es: {
         title: translations.es.servicesPages.systems.seo.title,
         description: translations.es.servicesPages.systems.seo.description,
-        ogImagePath: "/img/social-preview.png",
-        ogImageAlt: "Vista previa del servicio de sistemas a medida",
+        ogImagePath: "/img/og/brand-v1/custom-software-es-1200x630.png",
+        ogImageAlt:
+          "Servicio de devrodri: sistemas y aplicaciones a medida para empresas.",
         ogType: "website",
       },
       en: {
         title: translations.en.servicesPages.systems.seo.title,
         description: translations.en.servicesPages.systems.seo.description,
-        ogImagePath: "/img/social-preview.png",
-        ogImageAlt: "Custom software development service preview",
+        ogImagePath: "/img/og/brand-v1/custom-software-en-1200x630.png",
+        ogImageAlt:
+          "devrodri service: custom software and web applications for businesses.",
         ogType: "website",
       },
     },
