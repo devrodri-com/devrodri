@@ -148,10 +148,16 @@ export default function Navbar() {
         <Link
           to={homePath}
           onClick={handleBrandClick}
-          className="text-lg font-medium text-white tracking-normal leading-snug hover:opacity-80 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded"
+          className="inline-flex h-[1.375em] items-center text-lg font-medium text-white tracking-normal leading-snug hover:opacity-80 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded"
           aria-label={language === "es" ? "DEVRODRI - Inicio" : "DEVRODRI - Home"}
         >
-          <span className="font-semibold">devrodri</span>
+          <img
+            src="/brand/devrodri-wordmark-w1-white.svg"
+            alt="devrodri"
+            width="72"
+            height="14"
+            className="block"
+          />
         </Link>
 
         {/* Ícono hamburguesa mobile */}
