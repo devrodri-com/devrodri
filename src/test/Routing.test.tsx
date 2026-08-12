@@ -18,6 +18,13 @@ type TestRouteEntry =
 const expandablePortfolioCases = [
   { key: "zentra", title: { es: "ZENTRA", en: "ZENTRA" } },
   {
+    key: "jacquie",
+    title: {
+      es: "Jacquie Zárate · Real Estate e Inversión",
+      en: "Jacquie Zárate · Real Estate & Investment",
+    },
+  },
+  {
     key: "esteban",
     title: {
       es: "Esteban Firpo · Miami Real Estate",
@@ -415,28 +422,28 @@ describe("application routing", () => {
         (source) => source.getAttribute("type"),
       ),
     ).toEqual(["image/avif", "image/webp"]);
-    const estebanHomeLink = screen.getByRole("link", {
-      name: "Ver este caso en el portfolio: Esteban Firpo · Miami Real Estate",
+    const jacquieHomeLink = screen.getByRole("link", {
+      name: "Ver este caso en el portfolio: Jacquie Zárate · Real Estate e Inversión",
     });
-    const estebanHomePicture = estebanHomeLink.querySelector("picture");
-    const estebanHomeImage = estebanHomePicture?.querySelector("img");
-    expect(estebanHomePicture).not.toBeNull();
-    expect(estebanHomePicture?.querySelectorAll("img")).toHaveLength(1);
-    expect(estebanHomeImage).toHaveAttribute("src", "/img/esteban.png");
-    expect(estebanHomeImage).toHaveAttribute("width", "1200");
-    expect(estebanHomeImage).toHaveAttribute("height", "630");
-    expect(estebanHomeImage).toHaveAttribute("loading", "lazy");
-    expect(estebanHomeImage).toHaveAttribute("decoding", "async");
-    expect(estebanHomeImage).not.toHaveAttribute("fetchpriority");
-    expect(estebanHomeImage).toHaveClass("object-cover");
-    const estebanHomeSources = Array.from(
-      estebanHomePicture?.querySelectorAll("source") ?? [],
+    const jacquieHomePicture = jacquieHomeLink.querySelector("picture");
+    const jacquieHomeImage = jacquieHomePicture?.querySelector("img");
+    expect(jacquieHomePicture).not.toBeNull();
+    expect(jacquieHomePicture?.querySelectorAll("img")).toHaveLength(1);
+    expect(jacquieHomeImage).toHaveAttribute("src", "/img/jacquie-cover.jpg");
+    expect(jacquieHomeImage).toHaveAttribute("width", "1200");
+    expect(jacquieHomeImage).toHaveAttribute("height", "630");
+    expect(jacquieHomeImage).toHaveAttribute("loading", "lazy");
+    expect(jacquieHomeImage).toHaveAttribute("decoding", "async");
+    expect(jacquieHomeImage).not.toHaveAttribute("fetchpriority");
+    expect(jacquieHomeImage).toHaveClass("object-cover");
+    const jacquieHomeSources = Array.from(
+      jacquieHomePicture?.querySelectorAll("source") ?? [],
     );
-    expect(estebanHomeSources.map((source) => source.type)).toEqual([
+    expect(jacquieHomeSources.map((source) => source.type)).toEqual([
       "image/avif",
       "image/webp",
     ]);
-    for (const source of estebanHomeSources) {
+    for (const source of jacquieHomeSources) {
       expect(responsiveWidths(source)).toEqual([480, 768, 1200]);
     }
     expect(
@@ -448,9 +455,14 @@ describe("application routing", () => {
         .map((link) => link.getAttribute("aria-label")),
     ).toEqual([
       "Ver este caso en el portfolio: ZENTRA",
-      "Ver este caso en el portfolio: Esteban Firpo · Miami Real Estate",
+      "Ver este caso en el portfolio: Jacquie Zárate · Real Estate e Inversión",
       "Ver este caso en el portfolio: Mutter Games",
     ]);
+    expect(
+      screen.queryByRole("link", {
+        name: "Ver este caso en el portfolio: Esteban Firpo · Miami Real Estate",
+      }),
+    ).not.toBeInTheDocument();
   });
 
   it("filters the central portfolio catalog", async () => {
@@ -504,7 +516,7 @@ describe("application routing", () => {
           "button[data-nojs-hide][aria-expanded]",
         ),
       );
-      expect(detailToggles).toHaveLength(7);
+      expect(detailToggles).toHaveLength(8);
       for (const button of detailToggles) {
         expect(button).toHaveAttribute("data-nojs-hide", "true");
         expect(button).toHaveAttribute("aria-expanded", "false");
@@ -515,8 +527,8 @@ describe("application routing", () => {
       const cards = Array.from(
         portfolio.querySelectorAll<HTMLElement>('[id^="portfolio-case-"]'),
       );
-      expect(cards).toHaveLength(8);
-      expect(portfolio.querySelectorAll("[data-nojs-hide]")).toHaveLength(8);
+      expect(cards).toHaveLength(9);
+      expect(portfolio.querySelectorAll("[data-nojs-hide]")).toHaveLength(9);
       for (const card of cards) {
         expect(card).not.toHaveAttribute("data-nojs-hide");
       }
@@ -595,7 +607,7 @@ describe("application routing", () => {
       }
       return image;
     });
-    expect(portfolioImages).toHaveLength(8);
+    expect(portfolioImages).toHaveLength(9);
     expect(portfolioImages[0]).toHaveAttribute("loading", "eager");
     expect(portfolioImages[0]).toHaveAttribute("fetchpriority", "high");
     expect(portfolioImages[0]).toHaveClass("object-contain");
@@ -609,6 +621,12 @@ describe("application routing", () => {
     }
 
     const responsiveContracts = [
+      {
+        key: "jacquie",
+        fallback: "/img/jacquie-cover.jpg",
+        dimensions: [1200, 630],
+        widths: [480, 768, 1200],
+      },
       {
         key: "esteban",
         fallback: "/img/esteban.png",
@@ -657,7 +675,7 @@ describe("application routing", () => {
 
     expect(
       document.querySelectorAll('[id^="portfolio-case-"] picture'),
-    ).toHaveLength(4);
+    ).toHaveLength(5);
   });
 
   it.each([
@@ -674,7 +692,7 @@ describe("application routing", () => {
       path: "/en/portfolio",
     },
   ] as const)(
-    "keeps all seven $language Portfolio controls aligned with rendered panels",
+    "keeps all eight $language Portfolio controls aligned with rendered panels",
     async ({ collapseLabel, expandLabel, language, path }) => {
       const user = userEvent.setup();
       renderApp(path);

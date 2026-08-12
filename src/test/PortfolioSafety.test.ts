@@ -55,6 +55,7 @@ const projectRoot = path.join(
 const expectedProjectKeys = [
   "lem_box",
   "zentra",
+  "jacquie",
   "esteban",
   "mutter",
   "magenta",
@@ -62,10 +63,11 @@ const expectedProjectKeys = [
   "boating",
   "campings_demo",
 ] as const;
-const expectedHomeKeys = ["lem_box", "zentra", "esteban", "mutter"];
+const expectedHomeKeys = ["lem_box", "zentra", "jacquie", "mutter"];
 const expectedCategories = {
   lem_box: "systems",
   zentra: "brand",
+  jacquie: "web",
   esteban: "web",
   mutter: "ecommerce",
   magenta: "web",
@@ -222,11 +224,17 @@ function readPngDimensions(data: Uint8Array) {
 }
 
 describe("portfolio architecture invariants", () => {
-  it("derives eight unique keys in the exact approved order", () => {
+  it("derives nine unique keys in the exact approved order", () => {
     expect(projectKeys).toEqual(expectedProjectKeys);
-    expect(new Set(projectKeys).size).toBe(8);
+    expect(new Set(projectKeys).size).toBe(9);
     expect(portfolioCases.map(({ portfolioOrder }) => portfolioOrder)).toEqual(
-      [0, 1, 2, 3, 4, 5, 6, 7],
+      [0, 1, 2, 3, 4, 5, 6, 7, 8],
+    );
+    expect(projectKeys.indexOf("jacquie")).toBe(
+      projectKeys.indexOf("zentra") + 1,
+    );
+    expect(projectKeys.indexOf("esteban")).toBe(
+      projectKeys.indexOf("jacquie") + 1,
     );
     expect(projectKeys).not.toContain("lem_web");
     expect(projectKeys).not.toContain("lem_portal");
@@ -258,6 +266,22 @@ describe("portfolio architecture invariants", () => {
     expect(homePortfolioCases.map(({ home }) => home.order)).toEqual([
       0, 1, 2, 3,
     ]);
+    expect(
+      new Set(homePortfolioCases.map(({ home }) => home.order)).size,
+    ).toBe(4);
+    expect(homePortfolioCases.map(({ category }) => category)).toEqual([
+      "systems",
+      "brand",
+      "web",
+      "ecommerce",
+    ]);
+    expect(
+      homePortfolioCases.every(
+        ({ content }) => content.es.tags.length > 0 && content.en.tags.length > 0,
+      ),
+    ).toBe(true);
+    expect(getCase("esteban").home).toBeUndefined();
+    expect(projectKeys).toContain("esteban");
   });
 
   it("publishes only the approved LEM-BOX links and claims", () => {
@@ -594,6 +618,16 @@ describe("portfolio architecture invariants", () => {
         effectiveFit: "contain",
       },
       {
+        key: "jacquie",
+        fallback: "/img/jacquie-cover.jpg",
+        directory: "src/assets/portfolio/jacquie",
+        stem: "jacquie",
+        dimensions: { width: 1200, height: 630 },
+        widths: [480, 768, 1200],
+        declaredFit: "cover",
+        effectiveFit: "cover",
+      },
+      {
         key: "esteban",
         fallback: "/img/esteban.png",
         directory: "src/assets/portfolio/esteban",
@@ -631,7 +665,7 @@ describe("portfolio architecture invariants", () => {
       portfolioCases
         .filter(({ responsiveCover }) => responsiveCover !== undefined)
         .map(({ key }) => key),
-    ).toEqual(["lem_box", "esteban", "federico", "campings_demo"]);
+    ).toEqual(["lem_box", "jacquie", "esteban", "federico", "campings_demo"]);
 
     for (const contract of contracts) {
       const portfolioCase = getCase(contract.key);

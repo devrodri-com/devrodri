@@ -247,8 +247,8 @@ export const en = {
           intro: "Some of the websites I've designed and built for businesses:",
           items: [
             {
-              name: "Esteban Firpo · Miami Real Estate",
-              text: "Bilingual real-estate site with a project catalog and WhatsApp integration.",
+              name: "Jacquie Zárate · Real Estate & Investment",
+              text: "Trilingual real estate site with a filterable pre-construction catalog, per-language SEO, and direct WhatsApp contact.",
             },
             {
               name: "Mutter Games",
@@ -413,6 +413,11 @@ export const en = {
         desc: "ZENTRA is a professional scenting brand for commercial and residential spaces. The project began with a broader need than a website: define its positioning, naming, identity, and a coherent digital foundation for launch and growth.",
         status: "In development",
         link: "Visit site in development",
+      },
+      jacquie: {
+        title: "Jacquie Zárate · Real Estate & Investment",
+        desc: "Trilingual real estate site for buying, selling, and investing in Miami, with a filterable pre-construction catalog, property pages, financing guidance, and direct WhatsApp contact.",
+        link: "View website",
       },
       esteban: {
         title: "Esteban Firpo · Miami Real Estate",

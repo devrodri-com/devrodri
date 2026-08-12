@@ -13,7 +13,7 @@ const integrationsEn = integrationsEs;
 
 export const boatingCase = definePortfolioCase({
   key: "boating",
-  portfolioOrder: 6,
+  portfolioOrder: 7,
   category: "web",
   cover: "/img/Fondo.jpg",
   actions: [

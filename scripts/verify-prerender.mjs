@@ -39,7 +39,7 @@ const expectedRoutes = [
     content: "Algunos trabajos",
     metadataHash:
       "e71cd38df788eae0835cd411fed71d20e75aec9e2b8659841559758753416cc7",
-    noJavaScriptMarkers: 9,
+    noJavaScriptMarkers: 10,
   },
   {
     pathname: "/portfolio/lem-box",
@@ -90,7 +90,7 @@ const expectedRoutes = [
     content: "Some Work",
     metadataHash:
       "c1ac372e3b0249fa16ff041e2e97b7bde63aa062a851f287ea2aebec92d0549b",
-    noJavaScriptMarkers: 9,
+    noJavaScriptMarkers: 10,
   },
   {
     pathname: "/en/portfolio/lem-box",
@@ -569,7 +569,7 @@ function assertNoJavaScriptOnlyControls(html, { lang, pathname }) {
         button.includes('aria-expanded="false"') &&
         button.includes(`aria-label="${detailLabelPrefix}`),
     );
-    assert.equal(detailButtons.length, 7, `${pathname}: detail toggle count`);
+    assert.equal(detailButtons.length, 8, `${pathname}: detail toggle count`);
     assert.ok(
       detailButtons.every((button) =>
         button.includes('data-nojs-hide="true"')
@@ -585,12 +585,12 @@ function assertNoJavaScriptOnlyControls(html, { lang, pathname }) {
         html,
         lang === "es" ? ">Ver más</button>" : ">View details</button>",
       ),
-      7,
+      8,
       `${pathname}: localized detail toggle copy`,
     );
     assert.equal(
       count(html, 'id="portfolio-case-'),
-      8,
+      9,
       `${pathname}: prerendered Portfolio cards`,
     );
     assert.ok(
@@ -601,7 +601,7 @@ function assertNoJavaScriptOnlyControls(html, { lang, pathname }) {
     );
     assert.equal(
       count(html, 'data-nojs-hide="true"'),
-      10,
+      11,
       `${pathname}: approved no-JavaScript hide markers`,
     );
     assert.equal(nativeSubmitButtons.length, 0, `${pathname}: no form submit`);
@@ -1224,7 +1224,7 @@ for (const artifact of expectedNotFoundArtifacts) {
 }
 assert.equal(new Set(notFoundDocuments).size, expectedNotFoundArtifacts.length);
 assert.equal(noJavaScriptDocuments.length, 16);
-assert.equal(prerenderedNoJavaScriptMarkerTotal, 64);
+assert.equal(prerenderedNoJavaScriptMarkerTotal, 66);
 
 const expectedHtmlArtifacts = [
   ...expectedRoutes.map((route) => route.file),

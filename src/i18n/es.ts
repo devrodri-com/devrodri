@@ -244,8 +244,8 @@ export const es = {
           intro: "Algunos de los sitios que diseñé y desarrollé para empresas:",
           items: [
             {
-              name: "Esteban Firpo · Miami Real Estate",
-              text: "Sitio inmobiliario bilingüe con catálogo de proyectos e integración con WhatsApp.",
+              name: "Jacquie Zárate · Real Estate e Inversión",
+              text: "Sitio inmobiliario trilingüe con catálogo de preconstrucción filtrable, SEO por idioma y contacto directo por WhatsApp.",
             },
             {
               name: "Mutter Games",
@@ -409,6 +409,11 @@ export const es = {
         desc: "ZENTRA es una marca de aromatización profesional para espacios comerciales y residenciales. El proyecto comenzó con una necesidad más amplia que una web: definir posicionamiento, naming, identidad y una base digital coherente para presentarse y crecer.",
         status: "En desarrollo",
         link: "Visitar sitio en desarrollo",
+      },
+      jacquie: {
+        title: "Jacquie Zárate · Real Estate e Inversión",
+        desc: "Sitio inmobiliario trilingüe para comprar, vender e invertir en Miami, con catálogo de preconstrucción filtrable, fichas de propiedades, guía de financiación y contacto directo por WhatsApp.",
+        link: "Ver sitio web",
       },
       esteban: {
         title: "Esteban Firpo · Miami Real Estate",

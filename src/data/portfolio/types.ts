@@ -143,6 +143,7 @@ type PortfolioCaseDefinitionBase<
   category: ProjectCategory;
   cover: string;
   responsiveCover?: ResponsivePortfolioCover;
+  coverAlt?: Localized<string>;
   actions: readonly PortfolioAction[];
   content: Localized<Content>;
   home?: {

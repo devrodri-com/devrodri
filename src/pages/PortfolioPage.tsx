@@ -173,6 +173,9 @@ export default function PortfolioPage() {
                   }
                   cover={portfolioCase.cover}
                   desc={content.description}
+                  {...(portfolioCase.coverAlt === undefined
+                    ? {}
+                    : { coverAlt: portfolioCase.coverAlt[language] })}
                   details={
                     detailsExpanded && content.details !== undefined ? (
                       <PortfolioCaseDetails

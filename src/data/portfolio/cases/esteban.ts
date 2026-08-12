@@ -45,7 +45,7 @@ const integrationsEn = integrationsEs;
 
 export const estebanCase = definePortfolioCase({
   key: "esteban",
-  portfolioOrder: 2,
+  portfolioOrder: 3,
   category: "web",
   cover: "/img/esteban.png",
   responsiveCover: estebanResponsiveCover,
@@ -116,13 +116,6 @@ export const estebanCase = definePortfolioCase({
           "Active sales tool to capture investors"
         ],
       },
-    },
-  },
-  home: {
-    order: 2,
-    summary: {
-      "es": "Real estate · Landing, catálogo y SEO técnico para captar leads de preconstrucción.",
-      "en": "Real estate · Landing, catalog and technical SEO to capture pre-construction leads."
     },
   },
 });

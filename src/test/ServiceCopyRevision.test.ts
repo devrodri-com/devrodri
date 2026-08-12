@@ -47,24 +47,34 @@ describe("SEO-COM-01 copy revision contract", () => {
     );
   });
 
-  it("keeps the four featured website cases with ZENTRA replacing Boating", () => {
+  it("keeps four featured website cases with Jacquie replacing Esteban", () => {
     const esItems = translations.es.servicesPages.web.cases.items;
     const enItems = translations.en.servicesPages.web.cases.items;
 
+    expect(esItems).toHaveLength(4);
+    expect(enItems).toHaveLength(4);
     expect(esItems.map(({ name }) => name)).toEqual([
-      "Esteban Firpo · Miami Real Estate",
+      "Jacquie Zárate · Real Estate e Inversión",
       "Mutter Games",
       "Imprenta Magenta",
       "ZENTRA Scent",
     ]);
     expect(enItems.map(({ name }) => name)).toEqual([
-      "Esteban Firpo · Miami Real Estate",
+      "Jacquie Zárate · Real Estate & Investment",
       "Mutter Games",
       "Imprenta Magenta",
       "ZENTRA Scent",
     ]);
+    expect(esItems[0]?.text).toBe(
+      "Sitio inmobiliario trilingüe con catálogo de preconstrucción filtrable, SEO por idioma y contacto directo por WhatsApp.",
+    );
+    expect(enItems[0]?.text).toBe(
+      "Trilingual real estate site with a filterable pre-construction catalog, per-language SEO, and direct WhatsApp contact.",
+    );
     expect(esItems.some(({ name }) => name.includes("Boating"))).toBe(false);
     expect(enItems.some(({ name }) => name.includes("Boating"))).toBe(false);
+    expect(esItems.some(({ name }) => name.includes("Esteban"))).toBe(false);
+    expect(enItems.some(({ name }) => name.includes("Esteban"))).toBe(false);
   });
 
   it("preserves Magenta's existing factual qualifier", () => {

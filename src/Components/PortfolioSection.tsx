@@ -13,6 +13,7 @@ export default function PortfolioSection() {
     category: portfolioCase.content[language].tags[0],
     key: portfolioCase.key,
     cover: portfolioCase.cover,
+    coverAlt: portfolioCase.coverAlt?.[language] ?? "",
     coverFit: getPortfolioCoverFit(portfolioCase.responsiveCover),
     responsiveCover: portfolioCase.responsiveCover,
     status: portfolioCase.content[language].status,
@@ -106,7 +107,7 @@ export default function PortfolioSection() {
                 <div className="aspect-[2/1] shrink-0 overflow-hidden bg-white">
                   <PortfolioCoverImage
                     cover={p.cover}
-                    alt=""
+                    alt={p.coverAlt}
                     className={`h-full w-full ${
                       p.coverFit === "cover"
                         ? "object-cover"
