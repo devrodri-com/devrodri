@@ -925,3 +925,176 @@ describe("portfolio architecture invariants", () => {
     );
   });
 });
+
+describe("Jacquie Zárate portfolio contract", () => {
+  const jacquie = getCase("jacquie");
+
+  it("publishes exactly one approved Jacquie card without a badge", () => {
+    expect(portfolioCases.filter(({ key }) => key === "jacquie")).toHaveLength(
+      1,
+    );
+    expect(
+      JSON.stringify(portfolioCases).split("jacquiezarate.com").length - 1,
+    ).toBe(1);
+    expect(jacquie.category).toBe("web");
+    expect(jacquie.content.es.status).toBeUndefined();
+    expect(jacquie.content.en.status).toBeUndefined();
+    expect(jacquie.content.es.disclaimer).toBeUndefined();
+    expect(jacquie.content.en.disclaimer).toBeUndefined();
+    expect(jacquie.content.es.role).toBeUndefined();
+    expect(jacquie.content.en.role).toBeUndefined();
+  });
+
+  it("exposes one live-site action with the approved URL and localized CTA", () => {
+    expect(jacquie.actions).toHaveLength(1);
+    expect(jacquie.actions[0]?.href).toBe("https://jacquiezarate.com");
+    expect(jacquie.actions[0]?.label).toEqual({
+      es: "Ver sitio web",
+      en: "View website",
+    });
+    expect(jacquie.actions[0]?.note).toBeUndefined();
+  });
+
+  it("uses the approved bilingual titles, descriptions and tags", () => {
+    expect(jacquie.content.es.title).toBe(
+      "Jacquie Zárate · Real Estate e Inversión",
+    );
+    expect(jacquie.content.en.title).toBe(
+      "Jacquie Zárate · Real Estate & Investment",
+    );
+    expect(jacquie.content.es.description).toBe(
+      "Sitio inmobiliario trilingüe para comprar, vender e invertir en Miami, con catálogo de preconstrucción filtrable, fichas de propiedades, guía de financiación y contacto directo por WhatsApp.",
+    );
+    expect(jacquie.content.en.description).toBe(
+      "Trilingual real estate site for buying, selling, and investing in Miami, with a filterable pre-construction catalog, property pages, financing guidance, and direct WhatsApp contact.",
+    );
+    expect(jacquie.content.es.tags).toEqual([
+      "Real Estate",
+      "Trilingüe",
+      "Next.js",
+    ]);
+    expect(jacquie.content.en.tags).toEqual([
+      "Real Estate",
+      "Trilingual",
+      "Next.js",
+    ]);
+    expect(jacquie.home?.summary).toEqual({
+      es: "Sitio inmobiliario trilingüe con catálogo filtrable, SEO por idioma y contacto directo por WhatsApp.",
+      en: "Trilingual real estate site with a filterable catalog, per-language SEO, and direct WhatsApp contact.",
+    });
+  });
+
+  it("expands through details instead of a case study or a new route", () => {
+    expect(jacquie.caseStudy).toBeUndefined();
+    expect(jacquie.content.es.details).toBeDefined();
+    expect(jacquie.content.en.details).toBeDefined();
+    expect(jacquie.content.es.details?.stack).toEqual([
+      "Next.js 15",
+      "React 19",
+      "TypeScript",
+      "Tailwind CSS",
+      "next-intl",
+      "ImageKit",
+      "Vercel",
+    ]);
+    expect(jacquie.content.en.details?.stack).toEqual(
+      jacquie.content.es.details?.stack,
+    );
+    for (const language of ["es", "en"] as const) {
+      const details = jacquie.content[language].details;
+      expect(details?.challenges).toHaveLength(1);
+      expect(details?.solution).toHaveLength(1);
+      expect(details?.impact).toHaveLength(1);
+      expect(details?.integrations.length).toBeGreaterThan(0);
+      expect(details?.summary.length).toBeGreaterThan(0);
+    }
+    expect(JSON.stringify(jacquie)).not.toMatch(
+      /"(?:caseStudy|slug|path)":/,
+    );
+    expect(
+      portfolioCases
+        .filter((portfolioCase) => portfolioCase.caseStudy !== undefined)
+        .map(({ key }) => key),
+    ).toEqual(["lem_box"]);
+  });
+
+  it("keeps the published copy free of unsupported claims", () => {
+    const serialized = JSON.stringify(jacquie);
+
+    expect(serialized).not.toMatch(
+      /\bCMS\b|panel administrativo|admin panel|base de datos|database|catálogo dinámico|dynamic catalog|tiempo real|real[- ]time|\bMLS\b|\bCRM\b|API de datos|data API/i,
+    );
+    expect(serialized).not.toMatch(
+      /automatizacion|automation|autenticaci|authentication|generación automática de leads|automatic lead generation/i,
+    );
+    expect(serialized).not.toMatch(
+      /\bsistema\b|\bsystem\b|\bplataforma\b|\bplatform\b|métricas|metrics|conversiones|conversions|\bventas\b|\bsales\b|ranking/i,
+    );
+    expect(serialized).not.toMatch(
+      /Lighthouse|First Load|WCAG|analytics|CI con tests|automated tests/i,
+    );
+    expect(serialized).not.toMatch(
+      /comparaci[óo]n de proyectos|project comparison|calculadora|calculator|property management|gestión de propiedades/i,
+    );
+    expect(serialized).not.toMatch(
+      /branding|fotograf|photograph|traducciones|translations|copywriting/i,
+    );
+    expect(serialized).not.toMatch(/\d+\s*(?:proyectos|propiedades|projects|properties)/i);
+    expect(serialized).not.toMatch(/Esteban|Firpo|estebanfirpo/i);
+  });
+
+  it("ships the full responsive cover set with a localized alt", () => {
+    const responsiveCover = jacquie.responsiveCover;
+    if (responsiveCover === undefined) {
+      throw new Error("Missing Jacquie responsive cover");
+    }
+
+    expect(jacquie.cover).toBe("/img/jacquie-cover.jpg");
+    expect(responsiveCover.fit).toBe("cover");
+    expect(getPortfolioCoverFit(responsiveCover)).toBe("cover");
+    expect({
+      width: responsiveCover.width,
+      height: responsiveCover.height,
+    }).toEqual({ width: 1200, height: 630 });
+
+    const coverPath = path.join(projectRoot, "public/img/jacquie-cover.jpg");
+    expect(fs.existsSync(coverPath)).toBe(true);
+    expect(readJpegDimensions(fs.readFileSync(coverPath))).toEqual({
+      width: 1200,
+      height: 630,
+    });
+    expect(fs.statSync(coverPath).size).toBeLessThanOrEqual(300_000);
+
+    const seenSources = new Set<string>();
+    for (const format of ["avif", "webp"] as const) {
+      const candidates = responsiveCover.sources[format];
+      expect(candidates.map(({ width }) => width)).toEqual([480, 768, 1200]);
+
+      for (const candidate of candidates) {
+        const fileName = `jacquie-${candidate.width}.${format}`;
+        expect(candidate.src).toContain(fileName);
+        expect(seenSources.has(candidate.src)).toBe(false);
+        seenSources.add(candidate.src);
+
+        const assetPath = path.join(
+          projectRoot,
+          "src/assets/portfolio/jacquie",
+          fileName,
+        );
+        expect(fs.existsSync(assetPath)).toBe(true);
+        expect(fs.statSync(assetPath).size).toBeGreaterThan(0);
+      }
+    }
+    expect(seenSources.size).toBe(6);
+
+    expect(jacquie.coverAlt).toEqual({
+      es: "Página de proyectos del sitio de Jacquie Zárate, con el titular del catálogo de preconstrucción y el panel de búsqueda y filtros.",
+      en: "Jacquie Zárate website projects page, showing the pre-construction catalog headline and the search and filters panel.",
+    });
+    expect(
+      portfolioCases
+        .filter(({ coverAlt }) => coverAlt !== undefined)
+        .map(({ key }) => key),
+    ).toEqual(["jacquie"]);
+  });
+});
