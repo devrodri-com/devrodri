@@ -1,4 +1,5 @@
 import { magentaCase } from "./cases/magenta";
+import { jacquieCase } from "./cases/jacquie";
 import { estebanCase } from "./cases/esteban";
 import { lemBoxCase } from "./cases/lemBox";
 import { zentraCase } from "./cases/zentra";
@@ -11,6 +12,7 @@ import type { Localized, ProjectCategory } from "./types";
 const registeredCases = [
   lemBoxCase,
   zentraCase,
+  jacquieCase,
   estebanCase,
   mutterCase,
   magentaCase,

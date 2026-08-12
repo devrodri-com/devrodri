@@ -69,7 +69,7 @@ const approvedFiles = {
   },
   "src/Components/PortfolioSection.tsx": {
     baselineHash:
-      "74d84a2a8057249ed69c0f30f0069db03797ac1fd103722575edc09d9bd53ce8",
+      "081743ff5a84eda1878c1590392d703463c5ae994215a90e1892305a1245d080",
     markers: 4,
   },
   "src/Components/SobreMiSection.tsx": {
@@ -84,7 +84,7 @@ const approvedFiles = {
   },
   "src/Components/portfolio/PortfolioCard.tsx": {
     baselineHash:
-      "88eabddb08798b1e6d638a6a7cde97c36afd61dfb32c595fce627894b333e47d",
+      "e8599c1cc33fafca2b6e9e2d098e335cc49f2bce93055b5e6609465cfe16794b",
     markers: 1,
   },
 } as const;

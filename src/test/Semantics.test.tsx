@@ -431,7 +431,7 @@ describe("headings, controls and image semantics", () => {
     homeRender.unmount();
     renderApp("/portfolio");
     const caseHeadings = await screen.findAllByRole("heading", { level: 2 });
-    expect(caseHeadings).toHaveLength(8);
+    expect(caseHeadings).toHaveLength(9);
     const zentraHeading = screen.getByRole("heading", { level: 2, name: "ZENTRA" });
     const zentraCard = zentraHeading.closest("[id^='portfolio-case-']");
     if (!(zentraCard instanceof HTMLElement)) throw new Error("Missing ZENTRA card");
@@ -470,12 +470,12 @@ describe("headings, controls and image semantics", () => {
     }
   });
 
-  it("keeps unique Portfolio names, visible copy, focus and all eight cases", async () => {
+  it("keeps unique Portfolio names, visible copy, focus and all nine cases", async () => {
     const user = userEvent.setup();
     renderApp("/portfolio");
     await screen.findByRole("heading", { level: 1, name: "Algunos trabajos" });
 
-    expect(document.querySelectorAll("[id^='portfolio-case-']")).toHaveLength(8);
+    expect(document.querySelectorAll("[id^='portfolio-case-']")).toHaveLength(9);
     expect(
       screen.getByRole("link", {
         name: "Ver sitio web: Esteban Firpo · Miami Real Estate",

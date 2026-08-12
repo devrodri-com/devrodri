@@ -241,15 +241,19 @@ export const es = {
         },
         cases: {
           title: "Sitios reales",
-          intro: "Algunos de los sitios que diseñé y desarrollé para empresas:",
+          intro: "Algunos de los sitios que diseñé y desarrollé para empresas y marcas personales:",
           items: [
             {
-              name: "Esteban Firpo · Miami Real Estate",
-              text: "Sitio inmobiliario bilingüe con catálogo de proyectos e integración con WhatsApp.",
+              name: "Jacquie Zárate · Real Estate e Inversión",
+              text: "Sitio inmobiliario trilingüe con catálogo de preconstrucción filtrable, SEO por idioma y contacto directo por WhatsApp.",
             },
             {
               name: "Mutter Games",
               text: "E-commerce con catálogo dinámico y checkout con Mercado Pago.",
+            },
+            {
+              name: "Esteban Firpo · Miami Real Estate",
+              text: "Sitio inmobiliario bilingüe con catálogo de proyectos e integración con WhatsApp.",
             },
             {
               name: "Imprenta Magenta",
@@ -258,6 +262,10 @@ export const es = {
             {
               name: "ZENTRA Scent",
               text: "Proyecto en desarrollo: sitio web y e-commerce con suscripciones, panel administrativo y gestión de stock.",
+            },
+            {
+              name: "Federico Roma",
+              text: "Sitio web personal y profesional con biografía, cursos en video, fotografías y productos exclusivos.",
             },
           ],
           note: "Cada proyecto tuvo un alcance distinto. En el portfolio podés ver el rol y las tecnologías utilizadas en cada uno.",
@@ -409,6 +417,11 @@ export const es = {
         desc: "ZENTRA es una marca de aromatización profesional para espacios comerciales y residenciales. El proyecto comenzó con una necesidad más amplia que una web: definir posicionamiento, naming, identidad y una base digital coherente para presentarse y crecer.",
         status: "En desarrollo",
         link: "Visitar sitio en desarrollo",
+      },
+      jacquie: {
+        title: "Jacquie Zárate · Real Estate e Inversión",
+        desc: "Sitio inmobiliario trilingüe para comprar, vender e invertir en Miami, con catálogo de preconstrucción filtrable, fichas de propiedades, guía de financiación y contacto directo por WhatsApp.",
+        link: "Ver sitio web",
       },
       esteban: {
         title: "Esteban Firpo · Miami Real Estate",

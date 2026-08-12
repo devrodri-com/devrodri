@@ -50,7 +50,7 @@ const integrationsEn = integrationsEs;
 
 export const federicoCase = definePortfolioCase({
   key: "federico",
-  portfolioOrder: 5,
+  portfolioOrder: 6,
   category: "web",
   cover: "/img/federico-cover.jpg",
   responsiveCover: federicoResponsiveCover,

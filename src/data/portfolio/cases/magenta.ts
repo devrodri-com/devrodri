@@ -36,7 +36,7 @@ const integrationsEn = [
 
 export const magentaCase = definePortfolioCase({
   key: "magenta",
-  portfolioOrder: 4,
+  portfolioOrder: 5,
   category: "web",
   cover: "/img/magenta-cover.png",
   actions: [

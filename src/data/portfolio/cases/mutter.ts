@@ -22,7 +22,7 @@ const integrationsEn = integrationsEs;
 
 export const mutterCase = definePortfolioCase({
   key: "mutter",
-  portfolioOrder: 3,
+  portfolioOrder: 4,
   category: "ecommerce",
   cover: "/img/mutter-cover.png",
   actions: [

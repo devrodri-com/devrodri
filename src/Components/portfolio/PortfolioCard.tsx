@@ -69,6 +69,7 @@ export function PortfolioCoverImage({
 interface PortfolioCardProps {
   actions: ReactNode;
   cover: string;
+  coverAlt?: string;
   desc: string;
   details: ReactNode;
   headingLevel?: "h2" | "h3";
@@ -83,6 +84,7 @@ interface PortfolioCardProps {
 export default function PortfolioCard({
   actions,
   cover,
+  coverAlt = "",
   desc,
   details,
   headingLevel = "h3",
@@ -110,7 +112,7 @@ export default function PortfolioCard({
           <div className="w-full p-4 sm:p-5 rounded-2xl bg-white overflow-hidden flex items-center justify-center">
             <PortfolioCoverImage
               cover={cover}
-              alt=""
+              alt={coverAlt}
               className={`w-full h-auto max-w-[280px] sm:max-w-[360px] lg:max-w-none aspect-[40/21] object-center rounded-xl ${
                 coverFit === "cover" ? "object-cover" : "object-contain"
               }`}
