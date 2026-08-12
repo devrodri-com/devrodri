@@ -241,7 +241,7 @@ export const es = {
         },
         cases: {
           title: "Sitios reales",
-          intro: "Algunos de los sitios que diseñé y desarrollé para empresas:",
+          intro: "Algunos de los sitios que diseñé y desarrollé para empresas y marcas personales:",
           items: [
             {
               name: "Jacquie Zárate · Real Estate e Inversión",
@@ -252,12 +252,20 @@ export const es = {
               text: "E-commerce con catálogo dinámico y checkout con Mercado Pago.",
             },
             {
+              name: "Esteban Firpo · Miami Real Estate",
+              text: "Sitio inmobiliario bilingüe con catálogo de proyectos e integración con WhatsApp.",
+            },
+            {
               name: "Imprenta Magenta",
               text: "Catálogo optimizado con formulario dinámico de cotización. MVP funcional ya activo.",
             },
             {
               name: "ZENTRA Scent",
               text: "Proyecto en desarrollo: sitio web y e-commerce con suscripciones, panel administrativo y gestión de stock.",
+            },
+            {
+              name: "Federico Roma",
+              text: "Sitio web personal y profesional con biografía, cursos en video, fotografías y productos exclusivos.",
             },
           ],
           note: "Cada proyecto tuvo un alcance distinto. En el portfolio podés ver el rol y las tecnologías utilizadas en cada uno.",

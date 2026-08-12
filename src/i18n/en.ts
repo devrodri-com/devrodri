@@ -244,7 +244,7 @@ export const en = {
         },
         cases: {
           title: "Real websites",
-          intro: "Some of the websites I've designed and built for businesses:",
+          intro: "Some of the websites I designed and developed for businesses and personal brands:",
           items: [
             {
               name: "Jacquie Zárate · Real Estate & Investment",
@@ -255,12 +255,20 @@ export const en = {
               text: "E-commerce with a dynamic catalog and Mercado Pago checkout.",
             },
             {
+              name: "Esteban Firpo · Miami Real Estate",
+              text: "Bilingual real-estate site with a project catalog and WhatsApp integration.",
+            },
+            {
               name: "Imprenta Magenta",
               text: "Optimized catalog with a dynamic quote form. Functional MVP currently live.",
             },
             {
               name: "ZENTRA Scent",
               text: "In development: website and e-commerce with subscriptions, an admin panel, and inventory management.",
+            },
+            {
+              name: "Federico Roma",
+              text: "Personal and professional website with biography, video courses, photography, and exclusive products.",
             },
           ],
           note: "Each project had a different scope. In the portfolio, you can see the role and technologies used in each one.",

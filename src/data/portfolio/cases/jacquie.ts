@@ -45,8 +45,8 @@ export const jacquieCase = definePortfolioCase({
   cover: "/img/jacquie-cover.jpg",
   responsiveCover: jacquieResponsiveCover,
   coverAlt: {
-    es: "Página de proyectos del sitio de Jacquie Zárate, con el titular del catálogo de preconstrucción y el panel de búsqueda y filtros.",
-    en: "Jacquie Zárate website projects page, showing the pre-construction catalog headline and the search and filters panel.",
+    es: "Portada del sitio de Jacquie Zárate, con su retrato editorial junto al monograma JZ, su nombre y la referencia Realtor en Florida.",
+    en: "Jacquie Zárate website cover, featuring her editorial portrait next to the JZ monogram, her name, and the Realtor in Florida credential.",
   },
   actions: [
     {
