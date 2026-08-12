@@ -47,34 +47,112 @@ describe("SEO-COM-01 copy revision contract", () => {
     );
   });
 
-  it("keeps four featured website cases with Jacquie replacing Esteban", () => {
+  it("lists exactly six website proofs in the approved order", () => {
     const esItems = translations.es.servicesPages.web.cases.items;
     const enItems = translations.en.servicesPages.web.cases.items;
 
-    expect(esItems).toHaveLength(4);
-    expect(enItems).toHaveLength(4);
+    expect(esItems).toHaveLength(6);
+    expect(enItems).toHaveLength(6);
     expect(esItems.map(({ name }) => name)).toEqual([
       "Jacquie Zárate · Real Estate e Inversión",
       "Mutter Games",
+      "Esteban Firpo · Miami Real Estate",
       "Imprenta Magenta",
       "ZENTRA Scent",
+      "Federico Roma",
     ]);
     expect(enItems.map(({ name }) => name)).toEqual([
       "Jacquie Zárate · Real Estate & Investment",
       "Mutter Games",
+      "Esteban Firpo · Miami Real Estate",
       "Imprenta Magenta",
       "ZENTRA Scent",
+      "Federico Roma",
     ]);
-    expect(esItems[0]?.text).toBe(
+
+    for (const items of [esItems, enItems]) {
+      expect(new Set(items.map(({ name }) => name)).size).toBe(6);
+      expect(items.filter(({ name }) => name.includes("Jacquie"))).toHaveLength(
+        1,
+      );
+      expect(items.some(({ name }) => name.includes("Esteban"))).toBe(true);
+      expect(items.some(({ name }) => name.includes("Federico"))).toBe(true);
+      expect(items.some(({ name }) => name.includes("Boating"))).toBe(false);
+      expect(items.every(({ text }) => text.trim().length > 0)).toBe(true);
+    }
+  });
+
+  it("uses the revised intro while keeping the approved heading", () => {
+    expect(translations.es.servicesPages.web.cases.title).toBe("Sitios reales");
+    expect(translations.en.servicesPages.web.cases.title).toBe("Real websites");
+    expect(translations.es.servicesPages.web.cases.intro).toBe(
+      "Algunos de los sitios que diseñé y desarrollé para empresas y marcas personales:",
+    );
+    expect(translations.en.servicesPages.web.cases.intro).toBe(
+      "Some of the websites I designed and developed for businesses and personal brands:",
+    );
+  });
+
+  it("reuses the existing copy for every non-Jacquie website proof", () => {
+    const esItems = translations.es.servicesPages.web.cases.items;
+    const enItems = translations.en.servicesPages.web.cases.items;
+    const esText = (name: string) =>
+      esItems.find((item) => item.name === name)?.text;
+    const enText = (name: string) =>
+      enItems.find((item) => item.name === name)?.text;
+
+    expect(esText("Jacquie Zárate · Real Estate e Inversión")).toBe(
       "Sitio inmobiliario trilingüe con catálogo de preconstrucción filtrable, SEO por idioma y contacto directo por WhatsApp.",
     );
-    expect(enItems[0]?.text).toBe(
+    expect(enText("Jacquie Zárate · Real Estate & Investment")).toBe(
       "Trilingual real estate site with a filterable pre-construction catalog, per-language SEO, and direct WhatsApp contact.",
     );
-    expect(esItems.some(({ name }) => name.includes("Boating"))).toBe(false);
-    expect(enItems.some(({ name }) => name.includes("Boating"))).toBe(false);
-    expect(esItems.some(({ name }) => name.includes("Esteban"))).toBe(false);
-    expect(enItems.some(({ name }) => name.includes("Esteban"))).toBe(false);
+    expect(esText("Mutter Games")).toBe(
+      "E-commerce con catálogo dinámico y checkout con Mercado Pago.",
+    );
+    expect(enText("Mutter Games")).toBe(
+      "E-commerce with a dynamic catalog and Mercado Pago checkout.",
+    );
+    expect(esText("Esteban Firpo · Miami Real Estate")).toBe(
+      "Sitio inmobiliario bilingüe con catálogo de proyectos e integración con WhatsApp.",
+    );
+    expect(enText("Esteban Firpo · Miami Real Estate")).toBe(
+      "Bilingual real-estate site with a project catalog and WhatsApp integration.",
+    );
+    expect(esText("ZENTRA Scent")).toBe(
+      "Proyecto en desarrollo: sitio web y e-commerce con suscripciones, panel administrativo y gestión de stock.",
+    );
+    expect(enText("ZENTRA Scent")).toBe(
+      "In development: website and e-commerce with subscriptions, an admin panel, and inventory management.",
+    );
+  });
+
+  it("describes Federico only with his canonical Portfolio content", () => {
+    const esFederico = translations.es.servicesPages.web.cases.items.find(
+      ({ name }) => name === "Federico Roma",
+    );
+    const enFederico = translations.en.servicesPages.web.cases.items.find(
+      ({ name }) => name === "Federico Roma",
+    );
+
+    expect(esFederico?.text).toBe(
+      "Sitio web personal y profesional con biografía, cursos en video, fotografías y productos exclusivos.",
+    );
+    expect(enFederico?.text).toBe(
+      "Personal and professional website with biography, video courses, photography, and exclusive products.",
+    );
+    // Every claim is already carried by the canonical Portfolio entry.
+    for (const [summary, canonical] of [
+      [esFederico?.text ?? "", translations.es.portfolio.federico.desc],
+      [enFederico?.text ?? "", translations.en.portfolio.federico.desc],
+    ] as const) {
+      expect(canonical).toMatch(/biograf|biography/i);
+      expect(canonical).toMatch(/cursos en video|video courses/i);
+      expect(canonical).toMatch(/productos exclusivos|exclusive products/i);
+      expect(summary).not.toMatch(
+        /\d|campe[óo]n|champion|ranking|ventas|sales|conversi/i,
+      );
+    }
   });
 
   it("preserves Magenta's existing factual qualifier", () => {

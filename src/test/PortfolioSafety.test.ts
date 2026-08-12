@@ -20,6 +20,7 @@ import translations from "../i18n";
 
 interface FileSystemApi {
   existsSync(path: string): boolean;
+  readdirSync(path: string): string[];
   readFileSync(path: string, encoding: "utf8"): string;
   readFileSync(path: string): Uint8Array;
   statSync(path: string): { size: number };
@@ -1043,6 +1044,68 @@ describe("Jacquie Zárate portfolio contract", () => {
     expect(serialized).not.toMatch(/Esteban|Firpo|estebanfirpo/i);
   });
 
+  it("derives every Jacquie asset from the approved Open Graph master", () => {
+    // Byte contract for the cover set generated from the published social image
+    // (jacquie-zarate-og-2026.jpg, 1200x630). Reverting to the discarded
+    // /es/proyectos filters capture changes these digests and fails here.
+    const openGraphDerivedAssets = {
+      "public/img/jacquie-cover.jpg":
+        "c0266bb186b237fd9422154bccc259968c4ab0ae910343a95c1eb8d91e246304",
+      "src/assets/portfolio/jacquie/jacquie-480.avif":
+        "9462416577ff55bcd88561cf3b53d883443acd38b06c13ee8272a47d242609ba",
+      "src/assets/portfolio/jacquie/jacquie-768.avif":
+        "3ad5f8d5e3184d16f27898c01eae1d8fc01921f16c7e035bad4938cb14642abb",
+      "src/assets/portfolio/jacquie/jacquie-1200.avif":
+        "3f7566693669822e4dcb578367b8d628acefaec4704423ddfd1b226895b05e74",
+      "src/assets/portfolio/jacquie/jacquie-480.webp":
+        "4c540a71b6a2f87ea0ba9cead84a39f8e90eba471fad8d49d9bd6b31ab90cfa9",
+      "src/assets/portfolio/jacquie/jacquie-768.webp":
+        "549061aacae96393e461bb18b53fff4678950a152910ed7e7d89b7d26ac5cdd7",
+      "src/assets/portfolio/jacquie/jacquie-1200.webp":
+        "50cad8ac54f9c4240e76a8d27adf4bae08b111af1d63d4ebe837a507f71cac5c",
+    } as const;
+    // Digests of the superseded /es/proyectos capture, kept as a negative guard.
+    const discardedCaptureDigests = new Set([
+      "bd13bf14973209c4fd9594307242498d6052c812497d2d6c44d0ffd673c0b424",
+      "7d7acd362a22933c587b7e44b44ba2f19350b733a5ef09a61f048a3b0decd78f",
+      "2838ad42087144541395497dd91526d4569b6db5f2ea650d76d1422f043b7eb2",
+      "971ca044ffea5e8d30d387deb7093debd996f3e3d80ee8e319563a9d9ebda454",
+      "edcd0855b62ba802c2b4b321cd8b88d7ee78fa0251ef88b17fa24df4f396724c",
+      "a8c8de84caa40d6767ea5df8bdfcbdac94a78baaa1d12fb24b901e44ac9f4daf",
+      "7dbc9426da30e1e7bee791095afb104e7073410fb4af2caef95dda846cd88d38",
+    ]);
+
+    for (const [file, expectedDigest] of Object.entries(
+      openGraphDerivedAssets,
+    )) {
+      const assetPath = path.join(projectRoot, file);
+      expect(fs.existsSync(assetPath)).toBe(true);
+      const digest = crypto
+        .createHash("sha256")
+        .update(fs.readFileSync(assetPath))
+        .digest("hex");
+      expect(digest, file).toBe(expectedDigest);
+      expect(discardedCaptureDigests.has(digest), file).toBe(false);
+    }
+
+    // No orphans left behind by the discarded cover.
+    expect(
+      fs.readdirSync(path.join(projectRoot, "src/assets/portfolio/jacquie")).sort(),
+    ).toEqual([
+      "jacquie-1200.avif",
+      "jacquie-1200.webp",
+      "jacquie-480.avif",
+      "jacquie-480.webp",
+      "jacquie-768.avif",
+      "jacquie-768.webp",
+    ]);
+    expect(
+      fs
+        .readdirSync(path.join(projectRoot, "public/img"))
+        .filter((file) => file.startsWith("jacquie")),
+    ).toEqual(["jacquie-cover.jpg"]);
+  });
+
   it("ships the full responsive cover set with a localized alt", () => {
     const responsiveCover = jacquie.responsiveCover;
     if (responsiveCover === undefined) {
@@ -1088,9 +1151,16 @@ describe("Jacquie Zárate portfolio contract", () => {
     expect(seenSources.size).toBe(6);
 
     expect(jacquie.coverAlt).toEqual({
-      es: "Página de proyectos del sitio de Jacquie Zárate, con el titular del catálogo de preconstrucción y el panel de búsqueda y filtros.",
-      en: "Jacquie Zárate website projects page, showing the pre-construction catalog headline and the search and filters panel.",
+      es: "Portada del sitio de Jacquie Zárate, con su retrato editorial junto al monograma JZ, su nombre y la referencia Realtor en Florida.",
+      en: "Jacquie Zárate website cover, featuring her editorial portrait next to the JZ monogram, her name, and the Realtor in Florida credential.",
     });
+    // The alt describes the Open Graph cover, not the discarded filters capture.
+    for (const alt of Object.values(jacquie.coverAlt ?? {})) {
+      expect(alt).not.toMatch(
+        /panel de búsqueda|filtros|catálogo de preconstrucción y el|search and filters|catalog headline/i,
+      );
+      expect(alt).toMatch(/retrato editorial|editorial portrait/);
+    }
     expect(
       portfolioCases
         .filter(({ coverAlt }) => coverAlt !== undefined)
