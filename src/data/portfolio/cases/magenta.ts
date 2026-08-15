@@ -41,7 +41,7 @@ export const magentaCase = definePortfolioCase({
   cover: "/img/magenta-cover.png",
   actions: [
     {
-      href: "https://magenta-paysandu-m5in.vercel.app",
+      href: "https://magenta-paysandu.vercel.app",
       label: {
         es: es.portfolio.magenta.link,
         en: en.portfolio.magenta.link,
