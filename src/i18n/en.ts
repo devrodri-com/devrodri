@@ -434,7 +434,7 @@ export const en = {
       },
       magenta: {
         title: "Imprenta Magenta · Paysandú, Uruguay",
-        desc: "Modern print shop specializing in digital printing, offset and food packaging. Optimized catalog, dynamic quote form and full SEO. Functional MVP currently live.",
+        desc: "Public pre-cutover MVP for Imprenta Magenta, operating in Paysandú since 2010, with a product and service catalog and a Turnstile-protected quote form.",
         link: "Visit site",
       },
       campings_demo: {

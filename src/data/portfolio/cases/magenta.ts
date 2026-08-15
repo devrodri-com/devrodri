@@ -2,36 +2,36 @@ import { en, es } from "../../../i18n";
 import { definePortfolioCase } from "../types";
 
 const stackEs = [
-  "Frontend: Next.js 16 (App Router) + TypeScript + TailwindCSS",
-  "Infraestructura: Vercel (deploy continuo)",
-  "Optimización SEO: metadata personalizada, OG automáticas, sitemap.xml y robots.txt",
-  "Automatización: generación de imágenes con IA (Sora/OpenAI)",
-  "Diseño: mockups personalizados + UI modular",
-  "Gestión de datos: estructuras centralizadas en /src/data"
+  "Frontend: Next.js 16 (App Router) + TypeScript + Tailwind CSS",
+  "Infraestructura: Vercel con despliegue continuo",
+  "SEO técnico: metadata, Open Graph, sitemap y robots controlados por un gate de indexación hasta el cutover",
+  "Recursos visuales del MVP: mockups generados con GPT Image 2",
+  "Gestión de datos: productos y servicios centralizados en src/data"
 ] as const;
 const stackEn = [
-  "Frontend: Next.js 16 (App Router) + TypeScript + TailwindCSS",
-  "Infrastructure: Vercel (continuous deploy)",
-  "SEO optimization: custom metadata, automatic OG, sitemap.xml and robots.txt",
-  "Automation: AI image generation with Sora/OpenAI",
-  "Design: custom mockups + modular UI",
-  "Data management: centralized structures in /src/data"
+  "Frontend: Next.js 16 (App Router) + TypeScript + Tailwind CSS",
+  "Infrastructure: Vercel with continuous deployment",
+  "Technical SEO: metadata, Open Graph, sitemap, and robots controlled by an indexing gate until cutover",
+  "MVP visual assets: mockups generated with GPT Image 2",
+  "Data management: products and services centralized in src/data"
 ] as const;
 const integrationsEs = [
-  "Mockups personalizados generados por IA (Sora)",
-  "Formularios dinámicos por servicio",
-  "WhatsApp API para contacto inmediato",
+  "Formulario dinámico de presupuesto por servicio",
+  "Cloudflare Turnstile para protección antiabuso",
+  "Integración con Resend para entrega transaccional por email",
+  "Enlace directo a WhatsApp",
   "Mapa de ubicación embebido",
-  "Carrusel automático de marcas/clientes",
-  "Favicon y OG card personalizada para redes sociales"
+  "Carrusel de marcas y clientes",
+  "Favicon y Open Graph card para redes sociales"
 ] as const;
 const integrationsEn = [
-  "Custom AI-generated mockups (Sora)",
-  "Service-based dynamic forms",
-  "WhatsApp API for instant contact",
+  "Service-based dynamic quote form",
+  "Cloudflare Turnstile for abuse protection",
+  "Resend integration for transactional email delivery",
+  "Direct WhatsApp link",
   "Embedded location map",
-  "Automatic brand/client carousel",
-  "Custom favicon and OG card for social media"
+  "Brand and client carousel",
+  "Favicon and Open Graph card for social sharing"
 ] as const;
 
 export const magentaCase = definePortfolioCase({
@@ -41,7 +41,7 @@ export const magentaCase = definePortfolioCase({
   cover: "/img/magenta-cover.png",
   actions: [
     {
-      href: "https://magenta-paysandu-m5in.vercel.app",
+      href: "https://magenta-paysandu.vercel.app",
       label: {
         es: es.portfolio.magenta.link,
         en: en.portfolio.magenta.link,
@@ -57,7 +57,7 @@ export const magentaCase = definePortfolioCase({
         "Next.js"
       ],
       details: {
-        summary: "MVP funcional para una imprenta con 15 años de trayectoria. Incluye catálogo optimizado con mockups generados por IA, formulario dinámico de presupuestos y arquitectura moderna con Next.js 16.",
+        summary: "MVP público en etapa pre-cutover para una imprenta de Paysandú activa desde 2010. Centraliza productos, servicios y solicitudes de presupuesto en una arquitectura modular construida con Next.js 16.",
         stack: stackEs,
         integrations: integrationsEs,
         challenges: [
@@ -71,15 +71,15 @@ export const magentaCase = definePortfolioCase({
           "Catálogo de productos y servicios centralizado en estructuras de datos (src/data).",
           "Formularios dinámicos basados en reglas por servicio (libretas, tarjetas, afiches, etc.).",
           "Diseño limpio estilo Apple minimal con foco en claridad y velocidad de acceso.",
-          "Optimización SEO completa (metadata, OG card, sitemap, robots).",
+          "Contrato SEO pre-cutover con metadata, Open Graph, sitemap y robots controlados por configuración; la indexación permanece deshabilitada hasta el cutover.",
           "Deploy automatizado en Vercel con imágenes optimizadas."
         ],
         impact: [
-          "Web rápida y confiable para un negocio local con mucha competencia.",
-          "Mejor experiencia de usuario para pedidos de presupuesto (menos fricción).",
-          "Imagen profesional consistente con la marca Magenta.",
-          "Catálogo visual con mockups de alta calidad que elevan el branding.",
-          "Preparado para futuras expansiones: e-commerce, panel administrativo, etc."
+          "MVP público disponible en Vercel para revisión previa al cutover.",
+          "Productos, servicios y solicitud de presupuesto reunidos en una experiencia responsive.",
+          "Flujo de presupuesto con protección Turnstile e integración de entrega por email mediante Resend.",
+          "Sistema visual coherente con la identidad de Magenta y mockups creados con GPT Image 2.",
+          "Arquitectura modular preparada para nuevas iteraciones, sin presentar e-commerce ni panel administrativo como funciones implementadas."
         ],
       },
     },
@@ -91,7 +91,7 @@ export const magentaCase = definePortfolioCase({
         "Next.js"
       ],
       details: {
-        summary: "Functional MVP for a print shop with 15 years of experience. Includes an optimized catalog with AI-generated mockups, a dynamic quote form and a modern architecture with Next.js 16.",
+        summary: "Public pre-cutover MVP for a Paysandú print shop operating since 2010. It centralizes products, services, and quote requests in a modular architecture built with Next.js 16.",
         stack: stackEn,
         integrations: integrationsEn,
         challenges: [
@@ -105,15 +105,15 @@ export const magentaCase = definePortfolioCase({
           "Centralized product and service catalog in reusable data structures (src/data).",
           "Dynamic forms driven by per-service rules (notebooks, cards, posters, etc.).",
           "Clean Apple-like minimal design focused on clarity and fast access.",
-          "Full SEO optimization (metadata, OG card, sitemap, robots).",
+          "Pre-cutover SEO contract with metadata, Open Graph, sitemap, and robots controlled through configuration; indexing remains disabled until cutover.",
           "Automated deployment on Vercel with optimized images."
         ],
         impact: [
-          "Fast and reliable website for a local business in a competitive market.",
-          "Better user experience for quote requests (less friction).",
-          "Professional image consistent with the Magenta brand.",
-          "Visual catalog with high-quality mockups that elevate the branding.",
-          "Ready for future expansions: e-commerce, admin panel, etc."
+          "Public MVP available on Vercel for pre-cutover review.",
+          "Products, services, and quote requests brought together in a responsive experience.",
+          "Quote flow with Turnstile protection and email delivery integrated through Resend.",
+          "Visual system consistent with the Magenta identity, with mockups created using GPT Image 2.",
+          "Modular architecture ready for further iterations, without presenting e-commerce or an admin panel as implemented features."
         ],
       },
     },
