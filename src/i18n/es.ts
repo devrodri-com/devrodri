@@ -430,7 +430,7 @@ export const es = {
       },
       magenta: {
         title: "Imprenta Magenta · Paysandú, Uruguay",
-        desc: "MVP público pre-cutover para Imprenta Magenta, activa en Paysandú desde 2010, con catálogo de productos y servicios y formulario de presupuesto protegido con Turnstile.",
+        desc: "MVP público de Imprenta Magenta, activa en Paysandú desde 2010. Disponible para revisión antes de la publicación definitiva, con catálogo y formulario de presupuesto protegido con Turnstile.",
         link: "Ver sitio",
       },
       campings_demo: {

@@ -4,7 +4,7 @@ import { definePortfolioCase } from "../types";
 const stackEs = [
   "Frontend: Next.js 16 (App Router) + TypeScript + Tailwind CSS",
   "Infraestructura: Vercel con despliegue continuo",
-  "SEO técnico: metadata, Open Graph, sitemap y robots controlados por un gate de indexación hasta el cutover",
+  "SEO técnico: metadata y Open Graph; sitemap y robots controlados por una configuración que mantiene deshabilitada la indexación hasta la publicación definitiva",
   "Recursos visuales del MVP: mockups generados con GPT Image 2",
   "Gestión de datos: productos y servicios centralizados en src/data"
 ] as const;
@@ -57,7 +57,7 @@ export const magentaCase = definePortfolioCase({
         "Next.js"
       ],
       details: {
-        summary: "MVP público en etapa pre-cutover para una imprenta de Paysandú activa desde 2010. Centraliza productos, servicios y solicitudes de presupuesto en una arquitectura modular construida con Next.js 16.",
+        summary: "MVP público para una imprenta de Paysandú activa desde 2010, disponible para revisión antes de la publicación definitiva. Centraliza productos, servicios y solicitudes de presupuesto en una arquitectura modular con Next.js 16.",
         stack: stackEs,
         integrations: integrationsEs,
         challenges: [
@@ -71,11 +71,11 @@ export const magentaCase = definePortfolioCase({
           "Catálogo de productos y servicios centralizado en estructuras de datos (src/data).",
           "Formularios dinámicos basados en reglas por servicio (libretas, tarjetas, afiches, etc.).",
           "Diseño limpio estilo Apple minimal con foco en claridad y velocidad de acceso.",
-          "Contrato SEO pre-cutover con metadata, Open Graph, sitemap y robots controlados por configuración; la indexación permanece deshabilitada hasta el cutover.",
+          "Configuración SEO para la etapa previa a la publicación definitiva, con metadata, Open Graph, sitemap y robots; la indexación permanece deshabilitada hasta completar esa transición.",
           "Deploy automatizado en Vercel con imágenes optimizadas."
         ],
         impact: [
-          "MVP público disponible en Vercel para revisión previa al cutover.",
+          "MVP público disponible en Vercel para revisión antes de la publicación definitiva.",
           "Productos, servicios y solicitud de presupuesto reunidos en una experiencia responsive.",
           "Flujo de presupuesto con protección Turnstile e integración de entrega por email mediante Resend.",
           "Sistema visual coherente con la identidad de Magenta y mockups creados con GPT Image 2.",
