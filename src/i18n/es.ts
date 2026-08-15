@@ -430,7 +430,7 @@ export const es = {
       },
       magenta: {
         title: "Imprenta Magenta · Paysandú, Uruguay",
-        desc: "Imprenta moderna especializada en impresión digital, offset y packaging gastronómico. Catálogo optimizado, formulario dinámico y SEO completo. MVP funcional ya activo.",
+        desc: "MVP público de Imprenta Magenta, activa en Paysandú desde 2010. Disponible para revisión antes de la publicación definitiva, con catálogo y formulario de presupuesto protegido con Turnstile.",
         link: "Ver sitio",
       },
       campings_demo: {
